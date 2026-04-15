@@ -661,6 +661,16 @@ button:focus-visible {
   font-weight: 800;
 }
 
+.settings-warning {
+  margin: 0;
+  padding: 12px;
+  color: var(--ink);
+  background: #fff8df;
+  border: 2px solid var(--sun);
+  border-radius: 8px;
+  font-weight: 900;
+}
+
 .settings-steps {
   display: grid;
   gap: 8px;
@@ -697,6 +707,40 @@ button:focus-visible {
   display: none;
 }
 
+.qr-share-box {
+  display: grid;
+  grid-template-columns: 180px minmax(0, 1fr);
+  gap: 16px;
+  align-items: center;
+}
+
+.qr-share-box h3 {
+  margin-bottom: 6px;
+  color: var(--teal-dark);
+}
+
+.qr-share-box p {
+  margin: 0;
+  color: var(--muted);
+  font-weight: 800;
+}
+
+.qr-code {
+  display: grid;
+  place-items: center;
+  width: 180px;
+  min-height: 180px;
+  padding: 10px;
+  background: var(--paper);
+  border: 2px solid var(--line);
+  border-radius: 8px;
+}
+
+.qr-code svg {
+  width: 100%;
+  height: auto;
+}
+
 .settings-form label,
 .share-link-panel label {
   display: grid;
@@ -717,6 +761,12 @@ button:focus-visible {
 }
 
 .settings-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+
+.share-actions {
   display: flex;
   flex-wrap: wrap;
   gap: 10px;
@@ -1043,5 +1093,16 @@ button:focus-visible {
 
   .settings-actions {
     display: grid;
+  }
+
+  .share-actions,
+  .qr-share-box {
+    grid-template-columns: 1fr;
+  }
+
+  .qr-code {
+    width: min(100%, 240px);
+    min-height: 0;
+    justify-self: center;
   }
 }

@@ -4,6 +4,7 @@ const path = require("path");
 const root = path.resolve(__dirname, "..");
 const dist = path.join(root, "dist");
 const filesToCopy = ["index.html", "styles.css", "app.js"];
+const directoriesToCopy = ["vendor"];
 
 const defaultQuestionTool = {
   enabled: false,
@@ -107,6 +108,10 @@ function copyStaticFiles() {
 
   for (const file of filesToCopy) {
     fs.copyFileSync(path.join(root, file), path.join(dist, file));
+  }
+
+  for (const directory of directoriesToCopy) {
+    fs.cpSync(path.join(root, directory), path.join(dist, directory), { recursive: true });
   }
 
   fs.writeFileSync(

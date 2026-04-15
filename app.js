@@ -168,6 +168,8 @@ const els = {
   shareLinkPanel: document.querySelector("#shareLinkPanel"),
   shareLinkOutput: document.querySelector("#shareLinkOutput"),
   copyShareLink: document.querySelector("#copyShareLink"),
+  downloadQr: document.querySelector("#downloadQr"),
+  qrCode: document.querySelector("#qrCode"),
   settingsMessage: document.querySelector("#settingsMessage"),
   roomTemplateLink: document.querySelector("#roomTemplateLink")
 };
@@ -224,6 +226,7 @@ function init() {
   els.questionSettingsForm.addEventListener("submit", saveQuestionSettings);
   els.clearQuestionUrl.addEventListener("click", clearQuestionSettings);
   els.copyShareLink.addEventListener("click", copyShareLink);
+  els.downloadQr.addEventListener("click", downloadQrImage);
   els.resetProgress.addEventListener("click", resetProgress);
   els.gameCriterion.addEventListener("change", event => {
     state.game.criterion = event.target.value;
@@ -507,6 +510,7 @@ function renderShareLinkPanel() {
   const shareLink = buildShareLink(appConfig.questionTool.url);
   els.shareLinkPanel.hidden = !shareLink;
   els.shareLinkOutput.value = shareLink;
+  renderQrCode(shareLink);
 }
 
 async function copyShareLink() {
@@ -521,6 +525,39 @@ async function copyShareLink() {
     document.execCommand("copy");
     els.settingsMessage.textContent = "수업용 도감 링크를 복사했어요.";
   }
+}
+
+function renderQrCode(shareLink) {
+  els.qrCode.innerHTML = "";
+  els.qrCode.removeAttribute("data-url");
+
+  if (!shareLink) return;
+
+  if (typeof qrcode !== "function") {
+    els.settingsMessage.textContent = "QR을 만드는 도구를 불러오지 못했어요. 수업용 도감 링크를 복사해 주세요.";
+    return;
+  }
+
+  const qr = qrcode(0, "M");
+  qr.addData(shareLink);
+  qr.make();
+  els.qrCode.innerHTML = qr.createSvgTag(5, 3, "수업용 도감 QR", "수업용 도감 QR");
+  els.qrCode.dataset.url = shareLink;
+}
+
+function downloadQrImage() {
+  const shareLink = els.qrCode.dataset.url || "";
+  if (!shareLink || typeof qrcode !== "function") return;
+
+  const qr = qrcode(0, "M");
+  qr.addData(shareLink);
+  qr.make();
+
+  const link = document.createElement("a");
+  link.href = qr.createDataURL(8, 4);
+  link.download = "animal-encyclopedia-qr.gif";
+  link.click();
+  els.settingsMessage.textContent = "QR 이미지를 저장했어요.";
 }
 
 function buildShareLink(questionUrl) {

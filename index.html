@@ -118,6 +118,7 @@
         <p class="section-kicker">교사용 설정</p>
         <h2 id="settingsTitle">MagicSchool 질문방 연결</h2>
         <p class="settings-intro">교사가 만든 질문방의 학생용 링크를 넣으면, 도감 상세창에 질문 버튼이 나타나요.</p>
+        <p class="settings-warning">기본 GitHub Pages 주소를 그대로 공유하면 질문방이 연결되지 않아요. 설정 저장 뒤 아래 QR 또는 수업용 도감 링크를 학생에게 공유하세요.</p>
 
         <ol class="settings-steps">
           <li>아래 템플릿으로 MagicSchool 방을 만들어요.</li>
@@ -141,11 +142,21 @@
         </form>
 
         <div id="shareLinkPanel" class="share-link-panel" hidden>
+          <div class="qr-share-box">
+            <div id="qrCode" class="qr-code" aria-label="학생에게 보낼 수업용 도감 QR"></div>
+            <div>
+              <h3>학생용 QR</h3>
+              <p>이 QR에는 교사별 질문방 정보가 함께 들어 있어요.</p>
+            </div>
+          </div>
           <label for="shareLinkOutput">
             <span>학생에게 보낼 수업용 도감 링크</span>
             <input id="shareLinkOutput" type="text" readonly>
           </label>
-          <button id="copyShareLink" class="primary-button secondary" type="button">링크 복사</button>
+          <div class="share-actions">
+            <button id="copyShareLink" class="primary-button secondary" type="button">링크 복사</button>
+            <button id="downloadQr" class="primary-button secondary" type="button">QR 이미지 저장</button>
+          </div>
         </div>
 
         <p id="settingsMessage" class="settings-message" aria-live="polite"></p>
@@ -160,6 +171,7 @@
   </footer>
 
   <script src="./app-config.js"></script>
+  <script src="./vendor/qrcode.js"></script>
   <script src="./app.js"></script>
 </body>
 </html>
