@@ -1,0 +1,9 @@
+{
+  "name": "animal-encyclopedia",
+  "version": "1.0.0",
+  "private": true,
+  "scripts": {
+    "build:internal": "node scripts/build.js --mode=internal",
+    "build:distribution": "node scripts/build.js --mode=distribution"
+  }
+}

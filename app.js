@@ -1,0 +1,822 @@
+const filters = [
+  { id: "all", label: "전체" },
+  { id: "around", label: "우리 주변" },
+  { id: "land", label: "땅" },
+  { id: "water", label: "물" },
+  { id: "special", label: "특별한 환경" }
+];
+
+const criteria = [
+  { id: "hasLegs", label: "다리가 있는가?" },
+  { id: "hasWings", label: "날개가 있는가?" },
+  { id: "hasFins", label: "지느러미가 있는가?" },
+  { id: "inWater", label: "물에서 사는가?" },
+  { id: "crawls", label: "기어서 이동하는가?" }
+];
+
+const defaultAppConfig = {
+  questionTool: {
+    enabled: false,
+    url: "",
+    label: "더 궁금한 점 물어보기",
+    note: "선생님이 준비한 질문 도구가 있으면 함께 이용해 보세요."
+  }
+};
+
+const appConfig = normalizeAppConfig(typeof window === "undefined" ? {} : window.APP_CONFIG);
+
+const imageSources = {
+  "무당벌레": "https://upload.wikimedia.org/wikipedia/commons/thumb/3/39/Asian_lady_beetle-%28Harmonia-axyridis%29.jpg/330px-Asian_lady_beetle-%28Harmonia-axyridis%29.jpg",
+  "달팽이": "https://upload.wikimedia.org/wikipedia/commons/thumb/6/6d/Common_snail.jpg/330px-Common_snail.jpg",
+  "고양이": "https://upload.wikimedia.org/wikipedia/commons/thumb/3/3a/Cat03.jpg/960px-Cat03.jpg",
+  "거미": "https://upload.wikimedia.org/wikipedia/commons/thumb/f/f3/Araneus_diadematus_%28Clerck%2C_1757%29.JPG/960px-Araneus_diadematus_%28Clerck%2C_1757%29.JPG",
+  "박새": "https://upload.wikimedia.org/wikipedia/commons/thumb/1/1b/Great_tit_%28Parus_major%29%2C_Parc_du_Rouge-Cloitre%2C_For%C3%AAt_de_Soignes%2C_Brussels_%2826194636951%29.jpg/330px-Great_tit_%28Parus_major%29%2C_Parc_du_Rouge-Cloitre%2C_For%C3%AAt_de_Soignes%2C_Brussels_%2826194636951%29.jpg",
+  "꿀벌": "https://upload.wikimedia.org/wikipedia/commons/thumb/5/5e/Bee_on_Geraldton_Wax_Flower.JPG/330px-Bee_on_Geraldton_Wax_Flower.JPG",
+  "공벌레": "https://upload.wikimedia.org/wikipedia/commons/thumb/4/4e/Armadillidium_vulgare_001.jpg/330px-Armadillidium_vulgare_001.jpg",
+  "나비": "https://upload.wikimedia.org/wikipedia/commons/thumb/9/9c/Butterfly_macro_shot.jpg/330px-Butterfly_macro_shot.jpg",
+  "참새": "https://upload.wikimedia.org/wikipedia/commons/thumb/9/98/Tree_Sparrow_August_2007_Osaka_Japan.jpg/330px-Tree_Sparrow_August_2007_Osaka_Japan.jpg",
+  "토끼": "https://upload.wikimedia.org/wikipedia/commons/thumb/d/d5/Arctic_Hare.jpg/330px-Arctic_Hare.jpg",
+  "호랑이": "https://upload.wikimedia.org/wikipedia/commons/thumb/d/d4/Siberian_Tiger_by_Malene_Th.jpg/330px-Siberian_Tiger_by_Malene_Th.jpg",
+  "참돔": "https://upload.wikimedia.org/wikipedia/commons/thumb/b/b9/Pagrus_major_Red_seabream_ja01.jpg/330px-Pagrus_major_Red_seabream_ja01.jpg",
+  "붕어": "https://upload.wikimedia.org/wikipedia/commons/thumb/1/1b/CarassiusCarassius8.JPG/330px-CarassiusCarassius8.JPG",
+  "지렁이": "https://upload.wikimedia.org/wikipedia/commons/thumb/3/30/Regenwurm1.jpg/330px-Regenwurm1.jpg",
+  "뱀": "https://upload.wikimedia.org/wikipedia/commons/thumb/0/0c/Grass_snake_%28Natrix_natrix%29_Pieniny.jpg/960px-Grass_snake_%28Natrix_natrix%29_Pieniny.jpg",
+  "개미": "https://upload.wikimedia.org/wikipedia/commons/thumb/a/a6/Meat_eater_ant_feeding_on_honey02.jpg/330px-Meat_eater_ant_feeding_on_honey02.jpg",
+  "노루": "https://upload.wikimedia.org/wikipedia/commons/thumb/e/ed/Siberian_roe_deer.jpg/330px-Siberian_roe_deer.jpg",
+  "너구리": "https://upload.wikimedia.org/wikipedia/commons/thumb/9/92/Nyctereutes_procyonoides_16072008.jpg/330px-Nyctereutes_procyonoides_16072008.jpg",
+  "오색딱따구리": "https://upload.wikimedia.org/wikipedia/commons/thumb/c/c5/Greater_Spotted_Woodpecker_%2841554059345%29.jpg/330px-Greater_Spotted_Woodpecker_%2841554059345%29.jpg",
+  "낙타": "https://upload.wikimedia.org/wikipedia/commons/thumb/4/43/07._Camel_Profile%2C_near_Silverton%2C_NSW%2C_07.07.2007.jpg/330px-07._Camel_Profile%2C_near_Silverton%2C_NSW%2C_07.07.2007.jpg",
+  "도루묵도마뱀": "https://upload.wikimedia.org/wikipedia/commons/thumb/2/2d/Apothekerskink01.jpg/330px-Apothekerskink01.jpg",
+  "북극곰": "https://upload.wikimedia.org/wikipedia/commons/thumb/9/9a/Polarb%C3%A4r_12_2004-11-17.jpg/330px-Polarb%C3%A4r_12_2004-11-17.jpg",
+  "펭귄": "https://upload.wikimedia.org/wikipedia/commons/thumb/a/a3/Aptenodytes_forsteri_-Snow_Hill_Island%2C_Antarctica_-adults_and_juvenile-8.jpg/330px-Aptenodytes_forsteri_-Snow_Hill_Island%2C_Antarctica_-adults_and_juvenile-8.jpg",
+  "산양": "https://upload.wikimedia.org/wikipedia/commons/thumb/0/03/Adult_male_amur_goral_standing_on_rock_at_National_Institute_of_Ecology%2C_Korea.jpg/330px-Adult_male_amur_goral_standing_on_rock_at_National_Institute_of_Ecology%2C_Korea.jpg",
+  "수달": "https://upload.wikimedia.org/wikipedia/commons/thumb/b/b5/Fischotter_Lutra_lutra1.jpg/330px-Fischotter_Lutra_lutra1.jpg",
+  "다슬기": "https://upload.wikimedia.org/wikipedia/commons/thumb/7/70/Semisulcospira_kurodai2.jpg/330px-Semisulcospira_kurodai2.jpg",
+  "송사리": "https://upload.wikimedia.org/wikipedia/commons/thumb/4/49/Nihonmedaka.jpg/330px-Nihonmedaka.jpg",
+  "메기": "https://upload.wikimedia.org/wikipedia/commons/thumb/a/af/Silurus.jpg/330px-Silurus.jpg",
+  "개구리": "https://upload.wikimedia.org/wikipedia/commons/thumb/5/58/Dark-spotted_Frog_%28Pelophylax_nigromaculatus%29.jpg/960px-Dark-spotted_Frog_%28Pelophylax_nigromaculatus%29.jpg",
+  "청둥오리": "https://upload.wikimedia.org/wikipedia/commons/thumb/3/35/%D0%9F%D0%B0%D1%80%D0%B0_%D1%83%D1%82%D0%BE%D0%BA_%D0%BA%D1%80%D1%8F%D0%BA%D0%B2_%28Anas_platyrhynchos%29%2C_%D0%9A%D0%BE%D0%BB%D0%BE%D0%BC%D0%B5%D0%BD%D1%81%D0%BA%D0%BE%D0%B5.jpg/330px-%D0%9F%D0%B0%D1%80%D0%B0_%D1%83%D1%82%D0%BE%D0%BA_%D0%BA%D1%80%D1%8F%D0%BA%D0%B2_%28Anas_platyrhynchos%29%2C_%D0%9A%D0%BE%D0%BB%D0%BE%D0%BC%D0%B5%D0%BD%D1%81%D0%BA%D0%BE%D0%B5.jpg",
+  "조개": "https://upload.wikimedia.org/wikipedia/commons/thumb/4/46/Seashells_in_the_basket.jpg/330px-Seashells_in_the_basket.jpg",
+  "소라": "https://upload.wikimedia.org/wikipedia/commons/thumb/2/23/Turbo_cornutus_%28horned_turban_snail%29_2_%2825031884946%29.jpg/330px-Turbo_cornutus_%28horned_turban_snail%29_2_%2825031884946%29.jpg",
+  "돌돔": "https://upload.wikimedia.org/wikipedia/commons/thumb/8/8f/K231003%EB%8F%8C%EB%8F%94.jpg/330px-K231003%EB%8F%8C%EB%8F%94.jpg",
+  "해삼": "https://upload.wikimedia.org/wikipedia/commons/thumb/c/c0/Holothuria_cf_arguinensis.jpg/330px-Holothuria_cf_arguinensis.jpg",
+  "칠게": "https://upload.wikimedia.org/wikipedia/commons/thumb/3/36/Yamatoosagani_07h9903c.jpg/330px-Yamatoosagani_07h9903c.jpg",
+  "돌고래": "https://upload.wikimedia.org/wikipedia/commons/thumb/d/da/NMMP_dolphin_with_locator.jpeg/330px-NMMP_dolphin_with_locator.jpeg",
+  "오징어": "https://upload.wikimedia.org/wikipedia/commons/9/94/Squidu.jpg",
+  "바다거북": "https://upload.wikimedia.org/wikipedia/commons/thumb/b/bb/Hawaii_turtle_2.JPG/330px-Hawaii_turtle_2.JPG",
+  "고등어": "https://upload.wikimedia.org/wikipedia/commons/3/3e/Scomber_japonicus.png",
+  "해마": "https://upload.wikimedia.org/wikipedia/commons/thumb/2/25/Hippocampus_hippocampus_%28on_Ascophyllum_nodosum%29.jpg/330px-Hippocampus_hippocampus_%28on_Ascophyllum_nodosum%29.jpg"
+};
+
+const animals = [
+  makeAnimal("무당벌레", "무당벌레", ["around"], "풀밭, 나뭇잎", "다리로 걷고 날개로 날아가요.", ["단단한 겉날개", "작은 다리", "점무늬"], "학교 풀밭에서 볼 수 있는 작은 곤충이에요.", "날개와 다리로 나뭇잎 사이를 옮겨 다녀요.", { hasLegs: true, hasWings: true, hasFins: false, inWater: false, crawls: false }, "38쪽"),
+  makeAnimal("달팽이", "달팽이", ["around"], "화단, 축축한 그늘", "배처럼 넓은 발로 천천히 기어가요.", ["껍데기", "촉각", "끈끈한 발"], "우리 주변에서 관찰할 수 있는 동물이에요.", "몸이 마르지 않도록 축축한 곳에서 생활해요.", { hasLegs: false, hasWings: false, hasFins: false, inWater: false, crawls: true }, "38쪽"),
+  makeAnimal("고양이", "고양이", ["around"], "집 주변, 마을", "네 다리로 걷거나 뛰어요.", ["털", "수염", "발톱"], "주변에서 자주 볼 수 있는 동물이에요.", "발톱과 수염은 움직이고 주변을 살피는 데 도움을 줘요.", { hasLegs: true, hasWings: false, hasFins: false, inWater: false, crawls: false }, "38쪽"),
+  makeAnimal("거미", "거미", ["around"], "나무, 벽, 풀숲", "여덟 개의 다리로 걸어요.", ["다리 8개", "거미줄", "작은 몸"], "학교 주변에서 볼 수 있는 작은 동물이에요.", "긴 다리와 거미줄을 이용해 먹이를 잡아요.", { hasLegs: true, hasWings: false, hasFins: false, inWater: false, crawls: true }, "39쪽"),
+  makeAnimal("박새", { title: "Great_tit", lang: "en" }, ["around"], "나무와 숲", "날개로 날고 다리로 앉아요.", ["날개", "부리", "깃털"], "나무가 있는 곳에서 관찰할 수 있는 새예요.", "깃털과 날개가 있어 나뭇가지 사이를 날아다녀요.", { hasLegs: true, hasWings: true, hasFins: false, inWater: false, crawls: false }, "39쪽"),
+  makeAnimal("꿀벌", "꿀벌", ["around"], "꽃이 핀 곳", "날개로 날아다녀요.", ["날개", "다리", "몸의 털"], "우리 주변 꽃밭에서 볼 수 있는 동물이에요.", "꽃가루를 옮기며 꽃 사이를 날아다녀요.", { hasLegs: true, hasWings: true, hasFins: false, inWater: false, crawls: false }, "39쪽"),
+  makeAnimal("공벌레", "공벌레", ["around"], "돌 밑, 축축한 흙", "여러 다리로 기어가요.", ["여러 개의 다리", "단단한 몸", "동그랗게 말리는 몸"], "주변의 흙이나 돌 아래에서 볼 수 있어요.", "위험하면 몸을 둥글게 말아 자신을 지켜요.", { hasLegs: true, hasWings: false, hasFins: false, inWater: false, crawls: true }, "39쪽"),
+  makeAnimal("나비", "나비", ["land"], "풀밭, 꽃밭", "날개로 날아요.", ["큰 날개", "더듬이", "가느다란 다리"], "동물 카드로 생김새를 관찰해요.", "날개가 있어 꽃 사이를 날며 생활해요.", { hasLegs: true, hasWings: true, hasFins: false, inWater: false, crawls: false }, "40쪽"),
+  makeAnimal("참새", "참새", ["land"], "나무, 들판, 마을", "날개로 날고 다리로 걸어요.", ["날개", "부리", "다리"], "참새는 다리와 날개가 있는 동물이에요.", "날개가 있어 빠르게 이동하고 부리로 먹이를 먹어요.", { hasLegs: true, hasWings: true, hasFins: false, inWater: false, crawls: false }, "41쪽"),
+  makeAnimal("토끼", "토끼", ["land"], "풀밭, 숲 가장자리", "다리로 뛰어 이동해요.", ["털", "긴 귀", "튼튼한 뒷다리"], "토끼는 털로 덮여 있고 다리가 있어요.", "긴 귀와 튼튼한 다리가 주변을 살피고 빠르게 도망치는 데 도움을 줘요.", { hasLegs: true, hasWings: false, hasFins: false, inWater: false, crawls: false }, "41쪽"),
+  makeAnimal("호랑이", "호랑이", ["land"], "숲, 산", "네 다리로 걷고 뛰어요.", ["털", "발톱", "날카로운 이"], "동물 카드에서 생김새를 비교할 수 있어요.", "강한 다리와 발톱으로 땅에서 먹이를 찾아요.", { hasLegs: true, hasWings: false, hasFins: false, inWater: false, crawls: false }, "40쪽"),
+  makeAnimal("참돔", "참돔", ["water"], "바다", "지느러미로 헤엄쳐요.", ["지느러미", "비늘", "아가미"], "물에서 사는 동물 카드로 관찰해요.", "비늘과 지느러미는 물속 생활에 알맞아요.", { hasLegs: false, hasWings: false, hasFins: true, inWater: true, crawls: false }, "40쪽"),
+  makeAnimal("붕어", "붕어", ["water"], "강이나 호수", "지느러미로 헤엄쳐요.", ["지느러미", "비늘", "아가미"], "붕어는 지느러미와 비늘이 있어요.", "지느러미를 이용해 물속에서 헤엄쳐 이동해요.", { hasLegs: false, hasWings: false, hasFins: true, inWater: true, crawls: false }, "41쪽, 49쪽"),
+  makeAnimal("지렁이", "지렁이", ["around", "land"], "축축한 흙", "다리 없이 기어서 이동해요.", ["긴 몸", "다리 없음", "마디"], "지렁이는 다리가 없는 동물로 분류할 수 있어요.", "축축한 땅속에서 몸을 줄였다 늘이며 움직여요.", { hasLegs: false, hasWings: false, hasFins: false, inWater: false, crawls: true }, "39쪽, 45쪽"),
+  makeAnimal("뱀", "뱀", ["land"], "풀숲, 숲, 산", "다리 없이 기어서 이동해요.", ["긴 몸", "비늘", "다리 없음"], "뱀은 다리가 없는 동물로 분류할 수 있어요.", "긴 몸과 비늘이 땅 위를 기어 이동하는 데 도움을 줘요.", { hasLegs: false, hasWings: false, hasFins: false, inWater: false, crawls: true }, "40쪽, 45쪽"),
+  makeAnimal("개미", "개미", ["land"], "땅, 흙 속", "다리를 이용해 걸어요.", ["다리 6개", "더듬이", "작은 몸"], "개미의 생김새와 이동 방법을 관찰해요.", "작은 몸과 다리로 흙 위와 틈 사이를 잘 다녀요.", { hasLegs: true, hasWings: false, hasFins: false, inWater: false, crawls: false }, "44쪽"),
+  makeAnimal("노루", "노루", ["land"], "숲, 산기슭", "다리로 걷거나 뛰어요.", ["다리", "털", "큰 귀"], "땅에서 사는 동물의 예예요.", "긴 다리로 숲과 산을 빠르게 이동해요.", { hasLegs: true, hasWings: false, hasFins: false, inWater: false, crawls: false }, "45쪽"),
+  makeAnimal("너구리", "너구리", ["land"], "숲, 들, 물가 주변", "네 다리로 걸어요.", ["털", "다리", "긴 꼬리"], "땅에서 사는 동물의 예예요.", "다리와 발을 이용해 여러 장소를 돌아다니며 먹이를 찾아요.", { hasLegs: true, hasWings: false, hasFins: false, inWater: false, crawls: false }, "45쪽"),
+  makeAnimal("오색딱따구리", "오색딱따구리", ["land"], "숲의 나무", "날개로 날고 발로 나무에 붙어요.", ["날개", "부리", "발톱"], "땅에서 사는 동물의 예로 제시돼요.", "단단한 부리와 발톱은 나무에서 생활하는 데 알맞아요.", { hasLegs: true, hasWings: true, hasFins: false, inWater: false, crawls: false }, "45쪽"),
+  makeAnimal("낙타", "낙타", ["special", "land"], "사막", "다리로 걸어요.", ["혹", "긴 다리", "두꺼운 발바닥"], "사막에서 사는 동물의 예예요.", "혹 속 영양분과 넓은 발바닥이 건조한 사막 생활에 도움을 줘요.", { hasLegs: true, hasWings: false, hasFins: false, inWater: false, crawls: false }, "46쪽"),
+  makeAnimal("도루묵도마뱀", "도루묵도마뱀", ["special", "land"], "사막", "모래 위와 속을 빠르게 움직여요.", ["비늘", "짧은 다리", "매끈한 몸"], "사막에서 사는 동물의 예예요.", "뜨거운 낮에는 모래 속에서 생활하며 더위를 피할 수 있어요.", { hasLegs: true, hasWings: false, hasFins: false, inWater: false, crawls: true }, "47쪽"),
+  makeAnimal("북극곰", "북극곰", ["special"], "극지방", "얼음 위를 걷고 물에서 헤엄쳐요.", ["두꺼운 털", "넓은 발", "두꺼운 피부"], "극지방에서 사는 동물의 예예요.", "털과 두꺼운 피부가 추위를 견디는 데 도움을 줘요.", { hasLegs: true, hasWings: false, hasFins: false, inWater: true, crawls: false }, "47쪽"),
+  makeAnimal("펭귄", "펭귄", ["special"], "극지방과 바다", "물속에서 헤엄치고 배로 미끄러지듯 이동해요.", ["깃털", "날개", "짧은 다리"], "극지방에서 사는 동물의 예예요.", "깃털은 추위를 견디게 하고, 배로 미끄러지면 얼음 위에서 빠르게 움직일 수 있어요.", { hasLegs: true, hasWings: true, hasFins: false, inWater: true, crawls: false }, "47쪽"),
+  makeAnimal("산양", "산양", ["special", "land"], "높고 가파른 산악 지형", "다리와 발굽으로 바위를 올라요.", ["다리", "발굽", "털"], "산악 지형에서 사는 동물의 예예요.", "발굽과 다리는 높은 산의 바위에서 균형을 잡는 데 도움을 줘요.", { hasLegs: true, hasWings: false, hasFins: false, inWater: false, crawls: false }, "47쪽"),
+  makeAnimal("수달", "수달", ["water"], "강가나 호숫가", "물갈퀴가 있는 발로 헤엄쳐요.", ["물갈퀴", "털", "긴 꼬리"], "물에서 사는 동물의 예예요.", "물갈퀴가 있는 발은 물속에서 헤엄치는 데 알맞아요.", { hasLegs: true, hasWings: false, hasFins: false, inWater: true, crawls: false }, "34쪽, 48쪽"),
+  makeAnimal("다슬기", "다슬기", ["water"], "강이나 호수 바닥", "물속 바닥을 기어서 이동해요.", ["껍데기", "부드러운 몸", "발"], "강이나 호수에 사는 동물의 예예요.", "단단한 껍데기와 발이 물속 바닥 생활에 도움을 줘요.", { hasLegs: false, hasWings: false, hasFins: false, inWater: true, crawls: true }, "48쪽"),
+  makeAnimal("송사리", "송사리", ["water"], "강이나 호수", "지느러미로 헤엄쳐요.", ["지느러미", "작은 몸", "아가미"], "강이나 호수에 사는 동물의 예예요.", "작은 몸과 지느러미가 얕은 물에서 움직이는 데 알맞아요.", { hasLegs: false, hasWings: false, hasFins: true, inWater: true, crawls: false }, "48쪽"),
+  makeAnimal("메기", "메기", ["water"], "강이나 호수", "지느러미로 헤엄쳐요.", ["지느러미", "수염", "아가미"], "강이나 호수에 사는 동물의 예예요.", "수염은 흐린 물속에서 주변을 느끼는 데 도움을 줘요.", { hasLegs: false, hasWings: false, hasFins: true, inWater: true, crawls: false }, "48쪽"),
+  makeAnimal("개구리", "개구리", ["water", "land"], "연못, 논, 물가", "다리로 뛰고 물갈퀴로 헤엄쳐요.", ["다리", "물갈퀴", "축축한 피부"], "강이나 호수에 사는 동물의 예예요.", "물갈퀴가 있는 발은 물속 이동에 도움을 줘요.", { hasLegs: true, hasWings: false, hasFins: false, inWater: true, crawls: false }, "49쪽"),
+  makeAnimal("청둥오리", "청둥오리", ["water"], "강이나 호수", "날개로 날고 물갈퀴 발로 헤엄쳐요.", ["날개", "물갈퀴", "부리"], "강이나 호수에 사는 동물의 예예요.", "물갈퀴가 있는 발은 물 위와 물속에서 움직이는 데 도움을 줘요.", { hasLegs: true, hasWings: true, hasFins: false, inWater: true, crawls: false }, "49쪽"),
+  makeAnimal("조개", "조개", ["water"], "바다, 갯벌", "물속 바닥에서 천천히 움직여요.", ["껍데기", "부드러운 몸", "발"], "바다와 갯벌에 사는 동물의 예예요.", "껍데기는 부드러운 몸을 보호하는 데 도움을 줘요.", { hasLegs: false, hasWings: false, hasFins: false, inWater: true, crawls: true }, "50쪽, 51쪽"),
+  makeAnimal("소라", "소라", ["water"], "바다 바닥", "물속 바닥을 기어서 이동해요.", ["껍데기", "부드러운 몸", "발"], "바다에 사는 동물의 예예요.", "나선 모양 껍데기는 몸을 보호해요.", { hasLegs: false, hasWings: false, hasFins: false, inWater: true, crawls: true }, "50쪽"),
+  makeAnimal("돌돔", "돌돔", ["water"], "바다", "지느러미로 헤엄쳐요.", ["지느러미", "비늘", "줄무늬"], "바다에 사는 동물의 예예요.", "지느러미와 비늘은 바다에서 헤엄치는 데 알맞아요.", { hasLegs: false, hasWings: false, hasFins: true, inWater: true, crawls: false }, "50쪽"),
+  makeAnimal("해삼", "해삼", ["water"], "바다 바닥", "물속 바닥을 천천히 기어가요.", ["길쭉한 몸", "다리 없음", "부드러운 몸"], "바다에 사는 동물의 예예요.", "바닥에 붙어 천천히 움직이며 생활해요.", { hasLegs: false, hasWings: false, hasFins: false, inWater: true, crawls: true }, "50쪽"),
+  makeAnimal("칠게", { title: "Macrophthalmus_japonicus", lang: "en" }, ["water"], "갯벌", "다리로 걸어요.", ["집게", "다리", "단단한 껍질"], "갯벌에 사는 동물의 예예요.", "다리와 집게가 갯벌에서 움직이고 먹이를 찾는 데 도움을 줘요.", { hasLegs: true, hasWings: false, hasFins: false, inWater: true, crawls: false }, "50쪽, 57쪽"),
+  makeAnimal("돌고래", "돌고래", ["water"], "바다", "지느러미와 꼬리로 헤엄쳐요.", ["지느러미", "매끈한 몸", "꼬리"], "바다에 사는 동물의 예예요.", "매끈한 몸과 지느러미가 빠르게 헤엄치는 데 도움을 줘요.", { hasLegs: false, hasWings: false, hasFins: true, inWater: true, crawls: false }, "51쪽"),
+  makeAnimal("오징어", "오징어", ["water"], "바다", "몸에서 물을 뿜어 빠르게 움직여요.", ["긴 팔", "빨판", "부드러운 몸"], "바다에 사는 동물의 예예요.", "팔의 빨판은 먹이를 붙잡는 데 도움을 줘요.", { hasLegs: false, hasWings: false, hasFins: false, inWater: true, crawls: false }, "51쪽"),
+  makeAnimal("바다거북", "바다거북", ["water"], "바다", "넓은 앞다리로 헤엄쳐요.", ["넓은 앞다리", "등딱지", "부리 모양 입"], "바다에 사는 동물의 예예요.", "넓은 앞다리는 물속에서 노처럼 움직여요.", { hasLegs: true, hasWings: false, hasFins: false, inWater: true, crawls: false }, "51쪽"),
+  makeAnimal("고등어", "고등어", ["water"], "바다", "지느러미로 헤엄쳐요.", ["지느러미", "비늘", "매끈한 몸"], "바다에 사는 동물의 예예요.", "지느러미와 매끈한 몸은 물속 이동에 알맞아요.", { hasLegs: false, hasWings: false, hasFins: true, inWater: true, crawls: false }, "51쪽"),
+  makeAnimal("해마", { title: "Seahorse", lang: "en" }, ["water"], "바다", "작은 지느러미를 움직여 천천히 헤엄쳐요.", ["작은 지느러미", "말처럼 생긴 머리", "말린 꼬리"], "바다에서 이동하는 방법을 생김새와 연결해 생각해요.", "작은 지느러미와 꼬리가 바닷속에서 몸을 조절하는 데 도움을 줘요.", { hasLegs: false, hasWings: false, hasFins: true, inWater: true, crawls: false }, "51쪽")
+];
+
+const storageKey = "animal-encyclopedia-collected-v1";
+const imageCache = new Map();
+const state = {
+  view: "catalog",
+  filter: "all",
+  query: "",
+  criterion: "hasLegs",
+  collected: new Set(readCollected()),
+  game: {
+    criterion: "hasLegs",
+    round: [],
+    placements: {},
+    selected: null,
+    checked: false
+  },
+  quiz: null,
+  lastFocus: null
+};
+
+const els = {
+  modeButtons: document.querySelectorAll("[data-view]"),
+  catalogView: document.querySelector("#catalogView"),
+  gameView: document.querySelector("#gameView"),
+  filterTabs: document.querySelector("#filterTabs"),
+  animalGrid: document.querySelector("#animalGrid"),
+  resultCount: document.querySelector("#resultCount"),
+  collectedCount: document.querySelector("#collectedCount"),
+  totalCount: document.querySelector("#totalCount"),
+  progressFill: document.querySelector("#progressFill"),
+  searchInput: document.querySelector("#searchInput"),
+  gameCriterion: document.querySelector("#gameCriterion"),
+  gamePool: document.querySelector("#gamePool"),
+  gameYes: document.querySelector("#gameYes"),
+  gameNo: document.querySelector("#gameNo"),
+  gameScore: document.querySelector("#gameScore"),
+  gameFeedback: document.querySelector("#gameFeedback"),
+  yesHint: document.querySelector("#yesHint"),
+  noHint: document.querySelector("#noHint"),
+  newRound: document.querySelector("#newRound"),
+  checkGame: document.querySelector("#checkGame"),
+  modal: document.querySelector("#animalModal"),
+  modalImage: document.querySelector("#modalImage"),
+  modalBody: document.querySelector("#modalBody"),
+  closeModal: document.querySelector("#closeModal"),
+  resetProgress: document.querySelector("#resetProgress")
+};
+
+function makeAnimal(name, wiki, categories, habitat, move, body, point, relation, flags, page) {
+  const wikiInfo = typeof wiki === "string" ? { title: wiki, lang: "ko" } : wiki;
+  return {
+    id: name,
+    name,
+    wikiTitle: wikiInfo.title,
+    wikiLang: wikiInfo.lang,
+    categories,
+    habitat,
+    move,
+    body,
+    point,
+    relation,
+    page,
+    image: imageSources[name],
+    source: wikiUrl(wikiInfo.lang, wikiInfo.title),
+    ...flags
+  };
+}
+
+function init() {
+  els.totalCount.textContent = animals.length;
+  bindViewTabs();
+  renderFilters();
+  renderAnimals();
+  renderGameCriterionOptions();
+  startNewRound();
+  updateProgress();
+
+  els.searchInput.addEventListener("input", event => {
+    state.query = event.target.value.trim();
+    renderAnimals();
+  });
+
+  els.closeModal.addEventListener("click", closeModal);
+  els.modal.addEventListener("click", event => {
+    if (event.target === els.modal) closeModal();
+  });
+  document.addEventListener("keydown", event => {
+    if (event.key === "Escape" && !els.modal.hidden) closeModal();
+  });
+  els.resetProgress.addEventListener("click", resetProgress);
+  els.gameCriterion.addEventListener("change", event => {
+    state.game.criterion = event.target.value;
+    startNewRound();
+  });
+  els.newRound.addEventListener("click", startNewRound);
+  els.checkGame.addEventListener("click", checkGame);
+  document.querySelectorAll(".drop-zone").forEach(zone => {
+    zone.addEventListener("dragover", event => {
+      event.preventDefault();
+      zone.classList.add("drag-over");
+    });
+    zone.addEventListener("dragleave", () => zone.classList.remove("drag-over"));
+    zone.addEventListener("drop", event => {
+      event.preventDefault();
+      zone.classList.remove("drag-over");
+      const animalId = event.dataTransfer.getData("text/plain");
+      moveGameToken(animalId, zone.dataset.answer);
+    });
+    zone.addEventListener("click", () => {
+      if (state.game.selected) moveGameToken(state.game.selected, zone.dataset.answer);
+    });
+  });
+}
+
+function bindViewTabs() {
+  els.modeButtons.forEach(button => {
+    button.addEventListener("click", () => setView(button.dataset.view));
+  });
+}
+
+function setView(view) {
+  state.view = view;
+  els.catalogView.hidden = view !== "catalog";
+  els.gameView.hidden = view !== "game";
+  els.catalogView.classList.toggle("active", view === "catalog");
+  els.gameView.classList.toggle("active", view === "game");
+  els.modeButtons.forEach(button => {
+    button.classList.toggle("active", button.dataset.view === view);
+  });
+}
+
+function renderFilters() {
+  els.filterTabs.innerHTML = "";
+  filters.forEach(filter => {
+    const button = document.createElement("button");
+    button.type = "button";
+    button.className = "filter-button";
+    button.textContent = filter.label;
+    button.setAttribute("role", "tab");
+    button.setAttribute("aria-selected", String(filter.id === state.filter));
+    if (filter.id === state.filter) button.classList.add("active");
+    button.addEventListener("click", () => {
+      state.filter = filter.id;
+      renderFilters();
+      renderAnimals();
+    });
+    els.filterTabs.append(button);
+  });
+}
+
+function renderGameCriterionOptions() {
+  els.gameCriterion.innerHTML = "";
+  criteria.forEach(criterion => {
+    const option = document.createElement("option");
+    option.value = criterion.id;
+    option.textContent = criterion.label;
+    els.gameCriterion.append(option);
+  });
+}
+
+function renderAnimals() {
+  const visible = getVisibleAnimals();
+  els.animalGrid.innerHTML = "";
+  els.resultCount.textContent = `${visible.length}마리`;
+
+  if (!visible.length) {
+    const empty = document.createElement("div");
+    empty.className = "empty-state";
+    empty.textContent = "조건에 맞는 동물이 없어요. 다른 말로 찾아볼까요?";
+    els.animalGrid.append(empty);
+    return;
+  }
+
+  visible.forEach(animal => {
+    const card = document.createElement("button");
+    card.type = "button";
+    card.className = "animal-card";
+    if (state.collected.has(animal.id)) card.classList.add("collected");
+    card.addEventListener("click", event => openAnimal(animal, event.currentTarget));
+
+    const imageFrame = document.createElement("div");
+    imageFrame.className = "image-frame";
+    imageFrame.textContent = "사진 준비 중";
+    const image = document.createElement("img");
+    image.alt = `${animal.name} 사진`;
+    image.loading = "lazy";
+    imageFrame.append(image);
+    setImage(animal, image, imageFrame);
+
+    const cardBody = document.createElement("div");
+    cardBody.className = "animal-card-body";
+    cardBody.innerHTML = `
+      <div class="animal-name-row">
+        <h3>${animal.name}</h3>
+        ${state.collected.has(animal.id) ? '<span class="mini-badge collected-badge">등록</span>' : ""}
+      </div>
+      <div class="card-meta">
+        ${animal.body.slice(0, 3).map(item => `<span class="tag">${item}</span>`).join("")}
+      </div>
+      <p class="card-point">${animal.habitat}에서 살며 ${animal.move}</p>
+    `;
+
+    card.append(imageFrame, cardBody);
+    els.animalGrid.append(card);
+  });
+}
+
+function getVisibleAnimals() {
+  const query = state.query.toLowerCase();
+  return animals.filter(animal => {
+    const inFilter = state.filter === "all" || animal.categories.includes(state.filter);
+    const searchText = [
+      animal.name,
+      animal.habitat,
+      animal.move,
+      animal.point,
+      animal.relation,
+      animal.body.join(" ")
+    ].join(" ").toLowerCase();
+    return inFilter && (!query || searchText.includes(query));
+  });
+}
+
+function openAnimal(animal, trigger) {
+  state.lastFocus = trigger || document.activeElement;
+  state.quiz = null;
+  const photoFrame = document.querySelector(".modal-photo");
+  els.modal.hidden = false;
+  els.modalImage.removeAttribute("src");
+  els.modalImage.alt = `${animal.name} 사진`;
+  photoFrame.textContent = "사진 준비 중";
+  photoFrame.append(els.modalImage);
+  setImage(animal, els.modalImage, photoFrame);
+  renderAnimalInfo(animal);
+  els.closeModal.focus();
+}
+
+function renderAnimalInfo(animal) {
+  const isCollected = state.collected.has(animal.id);
+  const observation = buildObservationDetails(animal);
+  els.modalBody.innerHTML = `
+    <div class="modal-title-row">
+      <h2 id="modalTitle">${animal.name}</h2>
+      <span class="mini-badge ${isCollected ? "collected-badge" : ""}">${isCollected ? "도감 등록됨" : "퀴즈 대기"}</span>
+    </div>
+    <p class="encyclopedia-lede">${observation.intro}</p>
+    <div class="encyclopedia-article">
+      <section class="encyclopedia-section">
+        <h3>생김새와 움직임</h3>
+        <p>${observation.appearance}</p>
+        <p>${observation.lifestyle}</p>
+      </section>
+      <section class="encyclopedia-section">
+        <h3>사는 곳과 생활</h3>
+        <p>${observation.habitatLife}</p>
+      </section>
+      <section class="encyclopedia-section">
+        <h3>환경에 알맞은 점</h3>
+        <p>${observation.habitatLink}</p>
+      </section>
+    </div>
+    ${renderQuestionTool()}
+    <a class="source-link" href="${animal.source}" target="_blank" rel="noreferrer">사진 출처 보기</a>
+    <button class="primary-button" type="button" data-start-quiz="${animal.id}">
+      도감 등록 퀴즈 시작
+    </button>
+  `;
+  els.modalBody.querySelector("[data-start-quiz]").addEventListener("click", () => startQuiz(animal));
+}
+
+function renderQuestionTool() {
+  const tool = appConfig.questionTool;
+  const label = escapeHTML(tool.label);
+  const note = escapeHTML(tool.note);
+
+  if (!tool.enabled) {
+    return `
+      <section class="question-tool question-tool-muted" aria-label="추가 질문 안내">
+        <div>
+          <h3>더 궁금한 점이 있나요?</h3>
+          <p>${note}</p>
+        </div>
+      </section>
+    `;
+  }
+
+  return `
+    <section class="question-tool" aria-label="추가 질문 도구">
+      <div>
+        <h3>더 궁금한 점이 있나요?</h3>
+        <p>${note}</p>
+      </div>
+      <a class="question-link" href="${escapeAttribute(tool.url)}" target="_blank" rel="noopener noreferrer">
+        ${label}
+      </a>
+    </section>
+  `;
+}
+
+function buildObservationDetails(animal) {
+  const visibleParts = animal.body.join(", ");
+
+  return {
+    intro: `${animal.name}은/는 ${animal.habitat}에서 볼 수 있는 동물입니다. ${lifeBrief(animal)}`,
+    appearance: `${animal.name}의 몸에서는 ${visibleParts}이/가 잘 보입니다. 이 부분들은 몸을 보호하거나 움직이고 먹이를 찾는 데 쓰입니다.`,
+    lifestyle: `${animal.move} ${lifestyleExplanation(animal)}`,
+    habitatLife: `${animal.habitat}에서 먹이나 쉴 곳을 찾으며 살아갑니다. ${animal.move}`,
+    habitatLink: `${animal.relation} 이런 특징 때문에 ${animal.name}은/는 ${animal.habitat}에서 생활하기에 알맞습니다.`
+  };
+}
+
+function lifeBrief(animal) {
+  if (animal.inWater && animal.hasFins) return "물속에서 헤엄치며 생활합니다.";
+  if (animal.inWater) return "물가나 물속을 오가며 생활합니다.";
+  if (animal.hasWings) return "날아다니며 먹이나 쉴 곳을 찾습니다.";
+  if (animal.crawls) return "바닥 가까이에서 기어 다닙니다.";
+  if (animal.hasLegs) return "다리로 걸거나 뛰며 생활합니다.";
+  return "몸을 움직여 천천히 이동합니다.";
+}
+
+function lifestyleExplanation(animal) {
+  if (animal.hasFins) {
+    return `물속에서 살기 좋아요. 몸을 좌우로 움직이며 앞으로 나아가요.`;
+  }
+  if (animal.hasWings && animal.inWater) {
+    return `물 위에서 쉬거나 먹이를 찾고, 필요할 때 날아가요. 발 모양도 함께 봐요.`;
+  }
+  if (animal.hasWings) {
+    return `나무, 풀, 꽃 사이를 옮겨 다닐 수 있어요. 날개와 다리를 함께 봐요.`;
+  }
+  if (animal.crawls && !animal.hasLegs) {
+    return `다리가 없거나 잘 보이지 않아요. 몸을 구부리며 기어가요.`;
+  }
+  if (animal.crawls) {
+    return `몸을 낮게 두고 기어가요. 바닥이나 벽에 가까이 붙어 움직여요.`;
+  }
+  if (animal.hasLegs) {
+    return `다리로 걷거나 뛰며 먹이를 찾아요. 다리의 길이와 발 모양을 봐요.`;
+  }
+  return `몸 전체를 움직여 이동해요. 어디에서 먹이를 찾는지 봐요.`;
+}
+
+function startQuiz(animal) {
+  state.quiz = {
+    animal,
+    index: 0,
+    score: 0,
+    answered: null,
+    questions: buildQuestions(animal)
+  };
+  renderQuiz();
+}
+
+function buildQuestions(animal) {
+  return [
+    {
+      text: `${animal.name}이/가 주로 사는 곳은 어디일까요?`,
+      correct: animal.habitat,
+      options: makeOptions(animal.habitat, "habitat", animal.id)
+    },
+    {
+      text: `${animal.name}은/는 어떻게 이동할까요?`,
+      correct: animal.move,
+      options: makeOptions(animal.move, "move", animal.id)
+    },
+    {
+      text: `${animal.name}의 특징으로 알맞은 것은 무엇일까요?`,
+      correct: animal.relation,
+      options: makeOptions(animal.relation, "relation", animal.id)
+    }
+  ];
+}
+
+function makeOptions(correct, key, currentId) {
+  const wrongs = shuffle(
+    animals
+      .filter(animal => animal.id !== currentId)
+      .map(animal => animal[key])
+      .filter((value, index, array) => value && value !== correct && array.indexOf(value) === index)
+  ).slice(0, 2);
+  return shuffle([correct, ...wrongs]);
+}
+
+function renderQuiz() {
+  const quiz = state.quiz;
+  const question = quiz.questions[quiz.index];
+  const selected = quiz.answered;
+  els.modalBody.innerHTML = `
+    <div class="modal-title-row">
+      <h2 id="modalTitle">${quiz.animal.name} 퀴즈</h2>
+      <span class="mini-badge">문제 ${quiz.index + 1} / ${quiz.questions.length}</span>
+    </div>
+    <div class="quiz-box">
+      <h3>${question.text}</h3>
+      <div class="quiz-options">
+        ${question.options.map(option => {
+          const isCorrect = option === question.correct;
+          const isChosen = option === selected;
+          const className = selected
+            ? isCorrect
+              ? "answer-button correct"
+              : isChosen
+                ? "answer-button wrong"
+                : "answer-button"
+            : "answer-button";
+          return `<button type="button" class="${className}" data-answer="${escapeAttribute(option)}" ${selected ? "disabled" : ""}>${option}</button>`;
+        }).join("")}
+      </div>
+      ${selected ? renderFeedback(selected === question.correct, quiz.index === quiz.questions.length - 1) : "<p class=\"card-point\">도감 내용을 떠올리며 골라 봐요.</p>"}
+    </div>
+  `;
+
+  els.modalBody.querySelectorAll("[data-answer]").forEach(button => {
+    button.addEventListener("click", () => answerQuestion(button.dataset.answer));
+  });
+
+  const next = els.modalBody.querySelector("[data-next]");
+  if (next) next.addEventListener("click", nextQuestion);
+}
+
+function renderFeedback(correct, isLast) {
+  const message = correct ? "맞았어요. 관찰을 잘했어요." : "괜찮아요. 다시 살펴보면 보여요.";
+  return `
+    <p class="feedback ${correct ? "good" : "retry"}">${message}</p>
+    <button type="button" class="next-button" data-next>${isLast ? "결과 보기" : "다음 문제"}</button>
+  `;
+}
+
+function answerQuestion(answer) {
+  const quiz = state.quiz;
+  const question = quiz.questions[quiz.index];
+  quiz.answered = answer;
+  if (answer === question.correct) quiz.score += 1;
+  renderQuiz();
+}
+
+function nextQuestion() {
+  const quiz = state.quiz;
+  if (quiz.index < quiz.questions.length - 1) {
+    quiz.index += 1;
+    quiz.answered = null;
+    renderQuiz();
+    return;
+  }
+  finishQuiz();
+}
+
+function finishQuiz() {
+  const quiz = state.quiz;
+  const passed = quiz.score >= 2;
+  if (passed) {
+    state.collected.add(quiz.animal.id);
+    saveCollected();
+    updateProgress();
+    renderAnimals();
+  }
+
+  els.modalBody.innerHTML = `
+    <div class="modal-title-row">
+      <h2 id="modalTitle">${passed ? "도감 등록 성공" : "다시 도전하기"}</h2>
+      <span class="mini-badge">${quiz.score} / ${quiz.questions.length}</span>
+    </div>
+    <p>${passed ? `${quiz.animal.name} 카드가 도감에 등록되었어요.` : "2문제 이상 맞히면 카드가 등록돼요."}</p>
+    <button class="primary-button" type="button" data-review>${passed ? "카드 다시 보기" : "내용 다시 보기"}</button>
+  `;
+  els.modalBody.querySelector("[data-review]").addEventListener("click", () => renderAnimalInfo(quiz.animal));
+}
+
+function startNewRound() {
+  const criterion = state.game.criterion;
+  state.criterion = criterion;
+  const yes = shuffle(animals.filter(animal => animal[criterion])).slice(0, 4);
+  const no = shuffle(animals.filter(animal => !animal[criterion])).slice(0, 4);
+  const round = shuffle([...yes, ...no]);
+  state.game.round = round.map(animal => animal.id);
+  state.game.placements = Object.fromEntries(round.map(animal => [animal.id, "pool"]));
+  state.game.selected = null;
+  state.game.checked = false;
+  els.gameFeedback.textContent = "";
+  updateGameHints();
+  renderGameBoard();
+  renderAnimals();
+}
+
+function updateGameHints() {
+  const criterion = criteria.find(item => item.id === state.game.criterion);
+  els.yesHint.textContent = `${criterion.label} - 그렇다`;
+  els.noHint.textContent = `${criterion.label} - 그렇지 않다`;
+}
+
+function renderGameBoard() {
+  const zones = {
+    pool: els.gamePool,
+    yes: els.gameYes,
+    no: els.gameNo
+  };
+
+  Object.values(zones).forEach(zone => {
+    zone.innerHTML = "";
+  });
+
+  state.game.round.forEach(id => {
+    const animal = animals.find(item => item.id === id);
+    const place = state.game.placements[id] || "pool";
+    zones[place].append(createGameToken(animal));
+  });
+
+  updateGameScore();
+  document.querySelectorAll(".drop-zone").forEach(zone => {
+    zone.classList.remove("correct-zone", "needs-work");
+  });
+}
+
+function createGameToken(animal) {
+  const button = document.createElement("button");
+  button.type = "button";
+  button.className = "game-token";
+  button.draggable = true;
+  button.dataset.animal = animal.id;
+  if (state.game.selected === animal.id) button.classList.add("selected");
+
+  if (state.game.checked && state.game.placements[animal.id] !== "pool") {
+    const correct = isGamePlacementCorrect(animal.id);
+    button.classList.add(correct ? "correct-token" : "wrong-token");
+  }
+
+  button.innerHTML = `
+    <img alt="${animal.name} 사진" src="${animal.image}">
+    <span>${animal.name}</span>
+  `;
+  button.addEventListener("dragstart", event => {
+    event.dataTransfer.setData("text/plain", animal.id);
+  });
+  button.addEventListener("click", () => {
+    state.game.selected = state.game.selected === animal.id ? null : animal.id;
+    renderGameBoard();
+  });
+  return button;
+}
+
+function moveGameToken(animalId, answer) {
+  if (!state.game.round.includes(animalId)) return;
+  state.game.placements[animalId] = answer;
+  state.game.selected = null;
+  state.game.checked = false;
+  els.gameFeedback.textContent = "";
+  renderGameBoard();
+}
+
+function checkGame() {
+  state.game.checked = true;
+  const placed = state.game.round.filter(id => state.game.placements[id] !== "pool");
+  const correct = placed.filter(id => isGamePlacementCorrect(id));
+  renderGameBoard();
+
+  const yesWrong = state.game.round.some(id => state.game.placements[id] === "yes" && !isGamePlacementCorrect(id));
+  const noWrong = state.game.round.some(id => state.game.placements[id] === "no" && !isGamePlacementCorrect(id));
+  document.querySelector('[data-answer="yes"]').classList.add(yesWrong ? "needs-work" : "correct-zone");
+  document.querySelector('[data-answer="no"]').classList.add(noWrong ? "needs-work" : "correct-zone");
+
+  if (placed.length < state.game.round.length) {
+    els.gameFeedback.textContent = `아직 ${state.game.round.length - placed.length}장을 옮겨야 해요. 모든 카드를 두 무리 중 하나에 넣어 봐요.`;
+    updateGameScore(correct.length);
+    return;
+  }
+
+  const criterion = criteria.find(item => item.id === state.game.criterion);
+  els.gameFeedback.textContent = correct.length === state.game.round.length
+    ? `모두 맞았어요. "${criterion.label}" 기준으로 겹치거나 빠진 동물 없이 분류했어요.`
+    : `${correct.length}장을 맞혔어요. 빨간 테두리 카드는 몸의 단서와 이동 방법을 다시 보고 옮겨 보세요.`;
+  updateGameScore(correct.length);
+}
+
+function isGamePlacementCorrect(animalId) {
+  const animal = animals.find(item => item.id === animalId);
+  const place = state.game.placements[animalId];
+  return (animal[state.game.criterion] && place === "yes") || (!animal[state.game.criterion] && place === "no");
+}
+
+function updateGameScore(score) {
+  const placed = state.game.round.filter(id => state.game.placements[id] !== "pool");
+  const value = typeof score === "number" ? score : placed.length;
+  els.gameScore.textContent = `${value} / ${state.game.round.length}`;
+}
+
+async function setImage(animal, image, frame) {
+  frame.classList.add("loading");
+  try {
+    const source = await getImageSource(animal);
+    if (!source) throw new Error("no image");
+    image.onerror = () => {
+      image.removeAttribute("src");
+      frame.textContent = `${animal.name} 사진`;
+    };
+    image.src = source;
+    frame.textContent = "";
+    frame.append(image);
+  } catch {
+    image.removeAttribute("src");
+    image.alt = `${animal.name} 사진을 불러오지 못했어요.`;
+    frame.textContent = `${animal.name} 사진`;
+  } finally {
+    frame.classList.remove("loading");
+  }
+}
+
+async function getImageSource(animal) {
+  if (animal.image) return animal.image;
+  const key = `${animal.wikiLang}:${animal.wikiTitle}`;
+  if (imageCache.has(key)) return imageCache.get(key);
+  const response = await fetch(`https://${animal.wikiLang}.wikipedia.org/api/rest_v1/page/summary/${encodeURIComponent(animal.wikiTitle)}`);
+  if (!response.ok) throw new Error("image lookup failed");
+  const data = await response.json();
+  const source = data.thumbnail?.source || "";
+  const page = data.content_urls?.desktop?.page;
+  if (page) animal.source = page;
+  imageCache.set(key, source);
+  return source;
+}
+
+function updateProgress() {
+  const count = state.collected.size;
+  els.collectedCount.textContent = count;
+  els.progressFill.style.width = `${Math.round((count / animals.length) * 100)}%`;
+}
+
+function closeModal() {
+  els.modal.hidden = true;
+  state.quiz = null;
+  if (state.lastFocus && typeof state.lastFocus.focus === "function") {
+    state.lastFocus.focus();
+  }
+}
+
+function resetProgress() {
+  const ok = confirm("등록한 카드 기록을 모두 지울까요?");
+  if (!ok) return;
+  state.collected.clear();
+  saveCollected();
+  updateProgress();
+  renderAnimals();
+}
+
+function readCollected() {
+  try {
+    return JSON.parse(localStorage.getItem(storageKey) || "[]");
+  } catch {
+    return [];
+  }
+}
+
+function saveCollected() {
+  localStorage.setItem(storageKey, JSON.stringify([...state.collected]));
+}
+
+function shuffle(items) {
+  const copy = [...items];
+  for (let index = copy.length - 1; index > 0; index -= 1) {
+    const swap = Math.floor(Math.random() * (index + 1));
+    [copy[index], copy[swap]] = [copy[swap], copy[index]];
+  }
+  return copy;
+}
+
+function wikiUrl(lang, title) {
+  return `https://${lang}.wikipedia.org/wiki/${encodeURIComponent(title).replace(/%20/g, "_")}`;
+}
+
+function normalizeAppConfig(config) {
+  const questionTool = {
+    ...defaultAppConfig.questionTool,
+    ...((config && config.questionTool) || {})
+  };
+  const url = normalizeHttpUrl(questionTool.url);
+
+  return {
+    questionTool: {
+      ...questionTool,
+      url,
+      enabled: Boolean(questionTool.enabled && url)
+    }
+  };
+}
+
+function normalizeHttpUrl(url) {
+  if (!url) return "";
+
+  try {
+    const parsed = new URL(url);
+    if (!["http:", "https:"].includes(parsed.protocol)) return "";
+    return parsed.toString();
+  } catch {
+    return "";
+  }
+}
+
+function escapeHTML(value) {
+  return String(value)
+    .replace(/&/g, "&amp;")
+    .replace(/</g, "&lt;")
+    .replace(/>/g, "&gt;")
+    .replace(/"/g, "&quot;")
+    .replace(/'/g, "&#39;");
+}
+
+function escapeAttribute(value) {
+  return String(value).replace(/&/g, "&amp;").replace(/"/g, "&quot;");
+}
+
+init();
