@@ -1,6 +1,6 @@
 # 동물도감 배포 안내
 
-이 도감은 정적 웹앱입니다. `dist` 폴더만 공유하면 학생용 화면을 열 수 있습니다.
+이 도감은 정적 웹앱입니다. GitHub Pages 주소를 교사에게 공유하면, 각 교사가 설정 메뉴에서 자기 MagicSchool 질문방을 연결할 수 있습니다.
 
 ## 내부용 빌드
 
@@ -14,13 +14,13 @@ npm run build:internal
 
 ## 교사용 배포 빌드
 
-다른 교사가 그대로 사용할 수 있는 배포본을 만듭니다. 기본값으로는 질문 버튼에 외부 링크가 연결되지 않습니다.
+다른 교사가 그대로 사용할 수 있는 배포본을 만듭니다. 기본값으로는 질문 버튼에 외부 링크가 연결되지 않습니다. 교사는 화면 오른쪽 위 `질문방 설정`에서 자기 MagicSchool 학생용 참여 링크를 넣습니다.
 
 ```bash
 npm run build:distribution
 ```
 
-교사가 자기 MagicSchool 링크를 넣고 싶다면 아래처럼 빌드합니다.
+교사가 자기 MagicSchool 링크를 빌드 단계에서 미리 넣고 싶다면 아래처럼 빌드할 수도 있습니다.
 
 ```bash
 npm run build:distribution -- --questionUrl="https://student.magicschool.ai/s/join?joinCode=교사별코드"
@@ -31,6 +31,16 @@ npm run build:distribution -- --questionUrl="https://student.magicschool.ai/s/jo
 ## GitHub Pages 자동 배포
 
 `main` 브랜치에 푸시하면 GitHub Actions가 `build:distribution`을 실행한 뒤 `dist`를 GitHub Pages로 배포합니다.
+
+공유 주소: https://122yjs.github.io/animal-encyclopedia/
+
+## 교사별 MagicSchool 질문방 연결
+
+1. 도감 화면의 `질문방 설정`을 엽니다.
+2. `MagicSchool 방 템플릿 열기`로 방을 만듭니다.
+3. MagicSchool에서 학생용 참여 링크를 복사합니다.
+4. 도감 설정창에 링크를 붙여넣고 `설정 저장`을 누릅니다.
+5. 생성된 `학생에게 보낼 수업용 도감 링크`를 학생에게 공유합니다.
 
 ### 선택 설정
 

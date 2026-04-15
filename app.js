@@ -23,7 +23,9 @@ const defaultAppConfig = {
   }
 };
 
-const appConfig = normalizeAppConfig(typeof window === "undefined" ? {} : window.APP_CONFIG);
+const questionToolStorageKey = "animal-encyclopedia-question-url-v1";
+const magicRoomTemplateUrl = "https://app.magicschool.ai/magic-student/rooms?room-sharing-id=1a3dc4fb-2391-4d7b-9e77-dfaacddf7a35";
+let appConfig = normalizeAppConfig(typeof window === "undefined" ? {} : window.APP_CONFIG);
 
 const imageSources = {
   "무당벌레": "https://upload.wikimedia.org/wikipedia/commons/thumb/3/39/Asian_lady_beetle-%28Harmonia-axyridis%29.jpg/330px-Asian_lady_beetle-%28Harmonia-axyridis%29.jpg",
@@ -127,7 +129,8 @@ const state = {
     checked: false
   },
   quiz: null,
-  lastFocus: null
+  lastFocus: null,
+  settingsLastFocus: null
 };
 
 const els = {
@@ -155,7 +158,18 @@ const els = {
   modalImage: document.querySelector("#modalImage"),
   modalBody: document.querySelector("#modalBody"),
   closeModal: document.querySelector("#closeModal"),
-  resetProgress: document.querySelector("#resetProgress")
+  resetProgress: document.querySelector("#resetProgress"),
+  openSettings: document.querySelector("#openSettings"),
+  settingsModal: document.querySelector("#settingsModal"),
+  closeSettings: document.querySelector("#closeSettings"),
+  questionSettingsForm: document.querySelector("#questionSettingsForm"),
+  questionUrlInput: document.querySelector("#questionUrlInput"),
+  clearQuestionUrl: document.querySelector("#clearQuestionUrl"),
+  shareLinkPanel: document.querySelector("#shareLinkPanel"),
+  shareLinkOutput: document.querySelector("#shareLinkOutput"),
+  copyShareLink: document.querySelector("#copyShareLink"),
+  settingsMessage: document.querySelector("#settingsMessage"),
+  roomTemplateLink: document.querySelector("#roomTemplateLink")
 };
 
 function makeAnimal(name, wiki, categories, habitat, move, body, point, relation, flags, page) {
@@ -179,7 +193,9 @@ function makeAnimal(name, wiki, categories, habitat, move, body, point, relation
 }
 
 function init() {
+  hydrateQuestionToolConfig();
   els.totalCount.textContent = animals.length;
+  els.roomTemplateLink.href = magicRoomTemplateUrl;
   bindViewTabs();
   renderFilters();
   renderAnimals();
@@ -197,8 +213,17 @@ function init() {
     if (event.target === els.modal) closeModal();
   });
   document.addEventListener("keydown", event => {
+    if (event.key === "Escape" && !els.settingsModal.hidden) closeSettings();
     if (event.key === "Escape" && !els.modal.hidden) closeModal();
   });
+  els.openSettings.addEventListener("click", openSettings);
+  els.closeSettings.addEventListener("click", closeSettings);
+  els.settingsModal.addEventListener("click", event => {
+    if (event.target === els.settingsModal) closeSettings();
+  });
+  els.questionSettingsForm.addEventListener("submit", saveQuestionSettings);
+  els.clearQuestionUrl.addEventListener("click", clearQuestionSettings);
+  els.copyShareLink.addEventListener("click", copyShareLink);
   els.resetProgress.addEventListener("click", resetProgress);
   els.gameCriterion.addEventListener("change", event => {
     state.game.criterion = event.target.value;
@@ -407,6 +432,121 @@ function renderQuestionTool() {
       </a>
     </section>
   `;
+}
+
+function hydrateQuestionToolConfig() {
+  const urlFromShareLink = getQuestionUrlFromPageUrl();
+  const savedUrl = readQuestionToolUrl();
+  const runtimeUrl = urlFromShareLink || savedUrl;
+
+  if (urlFromShareLink) saveQuestionToolUrl(urlFromShareLink);
+  if (!runtimeUrl) return;
+
+  appConfig = normalizeAppConfig({
+    questionTool: {
+      ...appConfig.questionTool,
+      enabled: true,
+      url: runtimeUrl,
+      note: "새 창에서 질문 도우미가 열려요."
+    }
+  });
+}
+
+function openSettings() {
+  state.settingsLastFocus = document.activeElement;
+  els.questionUrlInput.value = appConfig.questionTool.url || "";
+  els.settingsMessage.textContent = "";
+  renderShareLinkPanel();
+  els.settingsModal.hidden = false;
+  els.questionUrlInput.focus();
+}
+
+function closeSettings() {
+  els.settingsModal.hidden = true;
+  if (state.settingsLastFocus && typeof state.settingsLastFocus.focus === "function") {
+    state.settingsLastFocus.focus();
+  }
+}
+
+function saveQuestionSettings(event) {
+  event.preventDefault();
+  const url = normalizeHttpUrl(els.questionUrlInput.value.trim());
+
+  if (!url) {
+    els.settingsMessage.textContent = "학생용 참여 링크를 확인해 주세요. https://로 시작하는 주소를 넣어야 해요.";
+    return;
+  }
+
+  saveQuestionToolUrl(url);
+  appConfig = normalizeAppConfig({
+    questionTool: {
+      ...appConfig.questionTool,
+      enabled: true,
+      url,
+      note: "새 창에서 질문 도우미가 열려요."
+    }
+  });
+  els.questionUrlInput.value = url;
+  els.settingsMessage.textContent = "질문방을 저장했어요. 아래 수업용 도감 링크를 학생에게 보내면 같은 질문방이 열려요.";
+  renderShareLinkPanel();
+}
+
+function clearQuestionSettings() {
+  localStorage.removeItem(questionToolStorageKey);
+  appConfig = normalizeAppConfig({
+    questionTool: {
+      ...defaultAppConfig.questionTool
+    }
+  });
+  els.questionUrlInput.value = "";
+  els.settingsMessage.textContent = "이 브라우저의 질문방 설정을 지웠어요.";
+  renderShareLinkPanel();
+}
+
+function renderShareLinkPanel() {
+  const shareLink = buildShareLink(appConfig.questionTool.url);
+  els.shareLinkPanel.hidden = !shareLink;
+  els.shareLinkOutput.value = shareLink;
+}
+
+async function copyShareLink() {
+  const link = els.shareLinkOutput.value;
+  if (!link) return;
+
+  try {
+    await navigator.clipboard.writeText(link);
+    els.settingsMessage.textContent = "수업용 도감 링크를 복사했어요.";
+  } catch {
+    els.shareLinkOutput.select();
+    document.execCommand("copy");
+    els.settingsMessage.textContent = "수업용 도감 링크를 복사했어요.";
+  }
+}
+
+function buildShareLink(questionUrl) {
+  const safeUrl = normalizeHttpUrl(questionUrl);
+  if (!safeUrl) return "";
+
+  const current = new URL(window.location.href);
+  current.searchParams.set("questionUrl", safeUrl);
+  return current.toString();
+}
+
+function getQuestionUrlFromPageUrl() {
+  const params = new URLSearchParams(window.location.search);
+  return normalizeHttpUrl(params.get("questionUrl") || "");
+}
+
+function readQuestionToolUrl() {
+  try {
+    return normalizeHttpUrl(localStorage.getItem(questionToolStorageKey) || "");
+  } catch {
+    return "";
+  }
+}
+
+function saveQuestionToolUrl(url) {
+  localStorage.setItem(questionToolStorageKey, url);
 }
 
 function buildObservationDetails(animal) {

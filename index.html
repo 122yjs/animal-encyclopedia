@@ -4,6 +4,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>동물도감 40</title>
+  <link rel="icon" href="data:,">
   <link rel="stylesheet" href="./styles.css">
 </head>
 <body>
@@ -19,6 +20,7 @@
       <div class="progress-track" aria-hidden="true">
         <span id="progressFill"></span>
       </div>
+      <button id="openSettings" class="settings-button" type="button">질문방 설정</button>
     </div>
   </header>
 
@@ -106,6 +108,48 @@
         <img id="modalImage" alt="">
       </div>
       <div id="modalBody" class="modal-body"></div>
+    </div>
+  </div>
+
+  <div id="settingsModal" class="modal" hidden>
+    <div class="settings-sheet" role="dialog" aria-modal="true" aria-labelledby="settingsTitle">
+      <button id="closeSettings" class="close-button" type="button" aria-label="닫기">닫기</button>
+      <div class="settings-body">
+        <p class="section-kicker">교사용 설정</p>
+        <h2 id="settingsTitle">MagicSchool 질문방 연결</h2>
+        <p class="settings-intro">교사가 만든 질문방의 학생용 링크를 넣으면, 도감 상세창에 질문 버튼이 나타나요.</p>
+
+        <ol class="settings-steps">
+          <li>아래 템플릿으로 MagicSchool 방을 만들어요.</li>
+          <li>방에서 학생용 참여 링크를 복사해요.</li>
+          <li>복사한 링크를 붙여넣고 수업용 도감 링크를 학생에게 보내요.</li>
+        </ol>
+
+        <a id="roomTemplateLink" class="template-link" href="https://app.magicschool.ai/magic-student/rooms?room-sharing-id=1a3dc4fb-2391-4d7b-9e77-dfaacddf7a35" target="_blank" rel="noopener noreferrer">
+          MagicSchool 방 템플릿 열기
+        </a>
+
+        <form id="questionSettingsForm" class="settings-form">
+          <label for="questionUrlInput">
+            <span>학생용 MagicSchool 참여 링크</span>
+            <input id="questionUrlInput" type="url" placeholder="https://student.magicschool.ai/s/join?joinCode=..." autocomplete="off">
+          </label>
+          <div class="settings-actions">
+            <button class="primary-button" type="submit">설정 저장</button>
+            <button id="clearQuestionUrl" class="primary-button secondary" type="button">질문방 지우기</button>
+          </div>
+        </form>
+
+        <div id="shareLinkPanel" class="share-link-panel" hidden>
+          <label for="shareLinkOutput">
+            <span>학생에게 보낼 수업용 도감 링크</span>
+            <input id="shareLinkOutput" type="text" readonly>
+          </label>
+          <button id="copyShareLink" class="primary-button secondary" type="button">링크 복사</button>
+        </div>
+
+        <p id="settingsMessage" class="settings-message" aria-live="polite"></p>
+      </div>
     </div>
   </div>
 
