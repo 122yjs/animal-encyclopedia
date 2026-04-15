@@ -16,10 +16,14 @@ const criteria = [
 
 const defaultAppConfig = {
   questionTool: {
+    featureEnabled: true,
     enabled: false,
     url: "",
     label: "더 궁금한 점 물어보기",
-    note: "선생님이 준비한 질문 도구가 있으면 함께 이용해 보세요."
+    note: "선생님이 준비한 질문 도구가 있으면 함께 이용해 보세요.",
+    allowTeacherSettings: true,
+    hideTeacherSettingsOnSharedPage: true,
+    showWhenDisabled: true
   }
 };
 
@@ -196,8 +200,11 @@ function makeAnimal(name, wiki, categories, habitat, move, body, point, relation
 
 function init() {
   hydrateQuestionToolConfig();
+  applyQuestionToolMode();
   els.totalCount.textContent = animals.length;
-  els.roomTemplateLink.href = magicRoomTemplateUrl;
+  if (els.roomTemplateLink) {
+    els.roomTemplateLink.href = magicRoomTemplateUrl;
+  }
   bindViewTabs();
   renderFilters();
   renderAnimals();
@@ -218,15 +225,17 @@ function init() {
     if (event.key === "Escape" && !els.settingsModal.hidden) closeSettings();
     if (event.key === "Escape" && !els.modal.hidden) closeModal();
   });
-  els.openSettings.addEventListener("click", openSettings);
-  els.closeSettings.addEventListener("click", closeSettings);
-  els.settingsModal.addEventListener("click", event => {
-    if (event.target === els.settingsModal) closeSettings();
-  });
-  els.questionSettingsForm.addEventListener("submit", saveQuestionSettings);
-  els.clearQuestionUrl.addEventListener("click", clearQuestionSettings);
-  els.copyShareLink.addEventListener("click", copyShareLink);
-  els.downloadQr.addEventListener("click", downloadQrImage);
+  if (els.openSettings) els.openSettings.addEventListener("click", openSettings);
+  if (els.closeSettings) els.closeSettings.addEventListener("click", closeSettings);
+  if (els.settingsModal) {
+    els.settingsModal.addEventListener("click", event => {
+      if (event.target === els.settingsModal) closeSettings();
+    });
+  }
+  if (els.questionSettingsForm) els.questionSettingsForm.addEventListener("submit", saveQuestionSettings);
+  if (els.clearQuestionUrl) els.clearQuestionUrl.addEventListener("click", clearQuestionSettings);
+  if (els.copyShareLink) els.copyShareLink.addEventListener("click", copyShareLink);
+  if (els.downloadQr) els.downloadQr.addEventListener("click", downloadQrImage);
   els.resetProgress.addEventListener("click", resetProgress);
   els.gameCriterion.addEventListener("change", event => {
     state.game.criterion = event.target.value;
@@ -410,10 +419,13 @@ function renderAnimalInfo(animal) {
 
 function renderQuestionTool() {
   const tool = appConfig.questionTool;
+  if (!tool.featureEnabled) return "";
+
   const label = escapeHTML(tool.label);
   const note = escapeHTML(tool.note);
 
   if (!tool.enabled) {
+    if (!tool.showWhenDisabled) return "";
     return `
       <section class="question-tool question-tool-muted" aria-label="추가 질문 안내">
         <div>
@@ -438,11 +450,12 @@ function renderQuestionTool() {
 }
 
 function hydrateQuestionToolConfig() {
+  if (!appConfig.questionTool.featureEnabled) return;
+
   const urlFromShareLink = getQuestionUrlFromPageUrl();
   const savedUrl = readQuestionToolUrl();
   const runtimeUrl = urlFromShareLink || savedUrl;
 
-  if (urlFromShareLink) saveQuestionToolUrl(urlFromShareLink);
   if (!runtimeUrl) return;
 
   appConfig = normalizeAppConfig({
@@ -455,7 +468,27 @@ function hydrateQuestionToolConfig() {
   });
 }
 
+function applyQuestionToolMode() {
+  const canOpenSettings = canOpenQuestionSettings();
+  if (!els.openSettings) return;
+  els.openSettings.hidden = !canOpenSettings;
+  els.openSettings.setAttribute("aria-hidden", canOpenSettings ? "false" : "true");
+}
+
+function canOpenQuestionSettings() {
+  const tool = appConfig.questionTool;
+  if (!tool.featureEnabled || !tool.allowTeacherSettings) return false;
+  if (tool.hideTeacherSettingsOnSharedPage && isSharedStudentView()) return false;
+  return true;
+}
+
+function isSharedStudentView() {
+  return Boolean(getQuestionUrlFromPageUrl());
+}
+
 function openSettings() {
+  if (!canOpenQuestionSettings()) return;
+  if (!els.questionUrlInput || !els.settingsMessage || !els.settingsModal) return;
   state.settingsLastFocus = document.activeElement;
   els.questionUrlInput.value = appConfig.questionTool.url || "";
   els.settingsMessage.textContent = "";
@@ -465,6 +498,7 @@ function openSettings() {
 }
 
 function closeSettings() {
+  if (!els.settingsModal) return;
   els.settingsModal.hidden = true;
   if (state.settingsLastFocus && typeof state.settingsLastFocus.focus === "function") {
     state.settingsLastFocus.focus();
@@ -473,6 +507,7 @@ function closeSettings() {
 
 function saveQuestionSettings(event) {
   event.preventDefault();
+  if (!els.questionUrlInput || !els.settingsMessage) return;
   const url = normalizeHttpUrl(els.questionUrlInput.value.trim());
 
   if (!url) {
@@ -490,15 +525,20 @@ function saveQuestionSettings(event) {
     }
   });
   els.questionUrlInput.value = url;
-  els.settingsMessage.textContent = "질문방을 저장했어요. 아래 수업용 도감 링크를 학생에게 보내면 같은 질문방이 열려요.";
+  els.settingsMessage.textContent = "학생용 참여 링크를 저장했어요. 아래 수업용 도감 링크를 학생에게 보내면 같은 질문방이 열려요.";
   renderShareLinkPanel();
 }
 
 function clearQuestionSettings() {
+  if (!els.questionUrlInput || !els.settingsMessage) return;
   localStorage.removeItem(questionToolStorageKey);
   appConfig = normalizeAppConfig({
     questionTool: {
-      ...defaultAppConfig.questionTool
+      ...defaultAppConfig.questionTool,
+      featureEnabled: appConfig.questionTool.featureEnabled,
+      allowTeacherSettings: appConfig.questionTool.allowTeacherSettings,
+      hideTeacherSettingsOnSharedPage: appConfig.questionTool.hideTeacherSettingsOnSharedPage,
+      showWhenDisabled: appConfig.questionTool.showWhenDisabled
     }
   });
   els.questionUrlInput.value = "";
@@ -507,6 +547,7 @@ function clearQuestionSettings() {
 }
 
 function renderShareLinkPanel() {
+  if (!els.shareLinkPanel || !els.shareLinkOutput) return;
   const shareLink = buildShareLink(appConfig.questionTool.url);
   els.shareLinkPanel.hidden = !shareLink;
   els.shareLinkOutput.value = shareLink;
@@ -514,6 +555,7 @@ function renderShareLinkPanel() {
 }
 
 async function copyShareLink() {
+  if (!els.shareLinkOutput || !els.settingsMessage) return;
   const link = els.shareLinkOutput.value;
   if (!link) return;
 
@@ -528,6 +570,7 @@ async function copyShareLink() {
 }
 
 function renderQrCode(shareLink) {
+  if (!els.qrCode || !els.settingsMessage) return;
   els.qrCode.innerHTML = "";
   els.qrCode.removeAttribute("data-url");
 
@@ -546,6 +589,7 @@ function renderQrCode(shareLink) {
 }
 
 function downloadQrImage() {
+  if (!els.qrCode || !els.settingsMessage) return;
   const shareLink = els.qrCode.dataset.url || "";
   if (!shareLink || typeof qrcode !== "function") return;
 
@@ -966,7 +1010,11 @@ function normalizeAppConfig(config) {
     questionTool: {
       ...questionTool,
       url,
-      enabled: Boolean(questionTool.enabled && url)
+      featureEnabled: Boolean(questionTool.featureEnabled),
+      enabled: Boolean(questionTool.featureEnabled && questionTool.enabled && url),
+      allowTeacherSettings: Boolean(questionTool.allowTeacherSettings),
+      hideTeacherSettingsOnSharedPage: Boolean(questionTool.hideTeacherSettingsOnSharedPage),
+      showWhenDisabled: Boolean(questionTool.showWhenDisabled)
     }
   };
 }

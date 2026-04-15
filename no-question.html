@@ -20,7 +20,7 @@
       <div class="progress-track" aria-hidden="true">
         <span id="progressFill"></span>
       </div>
-      <button id="openSettings" class="settings-button" type="button">질문방 설정</button>
+      <button id="openSettings" class="settings-button" type="button" hidden aria-hidden="true">질문방 설정</button>
     </div>
   </header>
 
@@ -116,50 +116,8 @@
       <button id="closeSettings" class="close-button" type="button" aria-label="닫기">닫기</button>
       <div class="settings-body">
         <p class="section-kicker">교사용 설정</p>
-        <h2 id="settingsTitle">MagicSchool 질문방 연결</h2>
-        <p class="settings-intro">MagicSchool에서 복사한 학생용 참여 링크를 붙여 넣으면 도감 상세창에 질문 버튼이 나타나요.</p>
-        <p class="settings-warning">QR 값을 넣는 곳이 아니에요. MagicSchool 학생용 참여 링크를 그대로 붙여 넣으세요. 기본 GitHub Pages 주소를 그대로 공유하면 질문방이 연결되지 않아요. 설정 저장 뒤 아래 QR 또는 수업용 도감 링크를 학생에게 공유하세요.</p>
-
-        <ol class="settings-steps">
-          <li>아래 템플릿으로 MagicSchool 질문방을 만들어요.</li>
-          <li>MagicSchool에서 학생용 참여 링크를 복사해요.</li>
-          <li>복사한 링크를 붙여 넣고, 생성된 수업용 도감 링크나 QR을 학생에게 보내요.</li>
-        </ol>
-
-        <a id="roomTemplateLink" class="template-link" href="https://app.magicschool.ai/magic-student/rooms?room-sharing-id=1a3dc4fb-2391-4d7b-9e77-dfaacddf7a35" target="_blank" rel="noopener noreferrer">
-          MagicSchool 방 템플릿 열기
-        </a>
-
-        <form id="questionSettingsForm" class="settings-form">
-          <label for="questionUrlInput">
-            <span>학생용 MagicSchool 참여 링크</span>
-            <input id="questionUrlInput" type="url" placeholder="https://student.magicschool.ai/s/join?joinCode=..." autocomplete="off">
-          </label>
-          <p class="field-hint">QR 번호가 아니라 MagicSchool에서 복사한 학생용 참여 링크를 붙여 넣는 칸입니다.</p>
-          <div class="settings-actions">
-            <button class="primary-button" type="submit">설정 저장</button>
-            <button id="clearQuestionUrl" class="primary-button secondary" type="button">질문방 지우기</button>
-          </div>
-        </form>
-
-        <div id="shareLinkPanel" class="share-link-panel" hidden>
-          <div class="qr-share-box">
-            <div id="qrCode" class="qr-code" aria-label="학생에게 보낼 수업용 도감 QR"></div>
-            <div>
-              <h3>학생용 QR</h3>
-              <p>이 QR에는 교사별 질문방이 연결된 수업용 도감 링크가 들어 있어요.</p>
-            </div>
-          </div>
-          <label for="shareLinkOutput">
-            <span>학생에게 보낼 수업용 도감 링크</span>
-            <input id="shareLinkOutput" type="text" readonly>
-          </label>
-          <div class="share-actions">
-            <button id="copyShareLink" class="primary-button secondary" type="button">링크 복사</button>
-            <button id="downloadQr" class="primary-button secondary" type="button">QR 이미지 저장</button>
-          </div>
-        </div>
-
+        <h2 id="settingsTitle">질문방 기능 없음</h2>
+        <p class="settings-intro">이 버전은 질문방 기능을 사용하지 않도록 만든 도감입니다.</p>
         <p id="settingsMessage" class="settings-message" aria-live="polite"></p>
       </div>
     </div>
@@ -171,8 +129,20 @@
     <button id="resetProgress" class="text-button" type="button">등록 기록 지우기</button>
   </footer>
 
-  <script src="./app-config.js"></script>
-  <script src="./vendor/qrcode.js"></script>
+  <script>
+    window.APP_CONFIG = {
+      questionTool: {
+        featureEnabled: false,
+        enabled: false,
+        url: "",
+        label: "더 궁금한 점 물어보기",
+        note: "",
+        allowTeacherSettings: false,
+        hideTeacherSettingsOnSharedPage: true,
+        showWhenDisabled: false
+      }
+    };
+  </script>
   <script src="./app.js"></script>
 </body>
 </html>

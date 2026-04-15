@@ -3,14 +3,18 @@ const path = require("path");
 
 const root = path.resolve(__dirname, "..");
 const dist = path.join(root, "dist");
-const filesToCopy = ["index.html", "styles.css", "app.js"];
+const filesToCopy = ["index.html", "no-question.html", "styles.css", "app.js"];
 const directoriesToCopy = ["vendor"];
 
 const defaultQuestionTool = {
+  featureEnabled: true,
   enabled: false,
   url: "",
   label: "더 궁금한 점 물어보기",
-  note: "선생님이 준비한 질문 도구가 있으면 함께 이용해 보세요."
+  note: "선생님이 준비한 질문 도구가 있으면 함께 이용해 보세요.",
+  allowTeacherSettings: true,
+  hideTeacherSettingsOnSharedPage: true,
+  showWhenDisabled: true
 };
 const linkedQuestionToolNote = "새 창에서 질문 도우미가 열려요.";
 
