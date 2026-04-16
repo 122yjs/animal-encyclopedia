@@ -770,7 +770,7 @@ function makeOptions(correct, key, currentId) {
 function renderQuiz() {
   const quiz = state.quiz;
   const question = quiz.questions[quiz.index];
-  const selected = quiz.answered;
+  
   els.detailBody.innerHTML = `
     <div class="modal-title-row">
       <h2 id="modalTitle">${quiz.animal.name} 퀴즈</h2>
@@ -781,18 +781,28 @@ function renderQuiz() {
       <div class="quiz-options">
         ${question.options.map(option => {
           const isCorrect = option === question.correct;
-          const isChosen = option === selected;
-          const className = selected
-            ? isCorrect
-              ? "answer-button correct"
-              : isChosen
-                ? "answer-button wrong"
-                : "answer-button"
-            : "answer-button";
-          return `<button type="button" class="${className}" data-answer="${escapeAttribute(option)}" ${selected ? "disabled" : ""}>${option}</button>`;
+          const isChosenWrong = quiz.wrongAnswers && quiz.wrongAnswers.has(option);
+          
+          let className = "answer-button";
+          let disabled = false;
+          
+          if (quiz.answered) {
+            disabled = true;
+            if (isCorrect) className += " correct";
+          } else {
+            if (isChosenWrong) {
+               className += " wrong";
+               disabled = true;
+            }
+          }
+          return `<button type="button" class="${className}" data-answer="${escapeAttribute(option)}" ${disabled ? "disabled" : ""}>${option}</button>`;
         }).join("")}
       </div>
-      ${selected ? renderFeedback(selected === question.correct, quiz.index === quiz.questions.length - 1) : "<p class=\"card-point\">도감 내용을 떠올리며 골라 봐요.</p>"}
+      ${quiz.answered 
+         ? renderFeedback(true, quiz.index === quiz.questions.length - 1) 
+         : (quiz.wrongAnswers && quiz.wrongAnswers.size > 0 
+            ? renderFeedback(false, false)
+            : `<p class="card-point">도감 내용을 떠올리며 골라 봐요.</p>`)}
     </div>
   `;
 
@@ -802,21 +812,41 @@ function renderQuiz() {
 
   const next = els.detailBody.querySelector("[data-next]");
   if (next) next.addEventListener("click", nextQuestion);
+
+  // 자동 스크롤 UX 개선
+  if (quiz.answered || (quiz.wrongAnswers && quiz.wrongAnswers.size > 0)) {
+    setTimeout(() => {
+      const box = els.detailBody.querySelector(".quiz-box");
+      if (box) box.scrollIntoView({ behavior: 'smooth', block: 'end' });
+    }, 50);
+  }
 }
 
 function renderFeedback(correct, isLast) {
-  const message = correct ? "맞았어요. 관찰을 잘했어요." : "괜찮아요. 다시 살펴보면 보여요.";
-  return `
-    <p class="feedback ${correct ? "good" : "retry"}">${message}</p>
-    <button type="button" class="next-button" data-next>${isLast ? "결과 보기" : "다음 문제"}</button>
-  `;
+  if (correct) {
+    return `
+      <p class="feedback good">맞았어요! 관찰을 정말 잘했네요.</p>
+      <button type="button" class="next-button" data-next>${isLast ? "결과 보기" : "다음 문제"}</button>
+    `;
+  } else {
+    return `
+      <p class="feedback retry">틀렸어요. 다시 한번 도전해 보세요!</p>
+    `;
+  }
 }
 
 function answerQuestion(answer) {
   const quiz = state.quiz;
   const question = quiz.questions[quiz.index];
-  quiz.answered = answer;
-  if (answer === question.correct) quiz.score += 1;
+  
+  if (answer === question.correct) {
+    quiz.answered = answer;
+    quiz.score += 1;
+  } else {
+    quiz.wrongAnswers = quiz.wrongAnswers || new Set();
+    quiz.wrongAnswers.add(answer);
+  }
+  
   renderQuiz();
 }
 
@@ -825,6 +855,7 @@ function nextQuestion() {
   if (quiz.index < quiz.questions.length - 1) {
     quiz.index += 1;
     quiz.answered = null;
+    quiz.wrongAnswers = new Set();
     renderQuiz();
     return;
   }
@@ -833,21 +864,19 @@ function nextQuestion() {
 
 function finishQuiz() {
   const quiz = state.quiz;
-  const passed = quiz.score >= 2;
-  if (passed) {
-    state.collected.add(quiz.animal.id);
-    saveCollected();
-    updateProgress();
-    renderAnimals();
-  }
+  
+  state.collected.add(quiz.animal.id);
+  saveCollected();
+  updateProgress();
+  renderAnimals();
 
   els.detailBody.innerHTML = `
     <div class="modal-title-row">
-      <h2 id="modalTitle">${passed ? "도감 등록 성공" : "다시 도전하기"}</h2>
-      <span class="mini-badge">${quiz.score} / ${quiz.questions.length}</span>
+      <h2 id="modalTitle">도감 등록 성공</h2>
+      <span class="mini-badge">미션 완료!</span>
     </div>
-    <p>${passed ? `${quiz.animal.name} 카드가 도감에 등록되었어요.` : "2문제 이상 맞히면 카드가 등록돼요."}</p>
-    <button class="primary-button" type="button" data-review>${passed ? "카드 다시 보기" : "내용 다시 보기"}</button>
+    <p>${quiz.animal.name} 카드가 도감에 새롭게 등록되었어요. 모든 퀴즈를 정확히 맞혔습니다!</p>
+    <button class="primary-button" type="button" data-review>카드 내용 보기</button>
   `;
   els.detailBody.querySelector("[data-review]").addEventListener("click", () => renderAnimalInfo(quiz.animal));
 }
