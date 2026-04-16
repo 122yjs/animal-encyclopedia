@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="ko">
+
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -7,6 +8,7 @@
   <link rel="icon" href="data:,">
   <link rel="stylesheet" href="./styles.css">
 </head>
+
 <body>
   <header class="topbar">
     <div class="title-block">
@@ -29,7 +31,7 @@
       <h2>도감 보기 약속</h2>
       <ul>
         <li>화면 속 동물의 생김새와 사는 모습을 차분히 살펴봐요.</li>
-        <li>도감과 관련 없는 질문은 잠깐 멈추고, 동물의 특징에 먼저 집중해요.</li>
+        <li>동물의 특징에 먼저 집중해요.</li>
         <li>태블릿이나 컴퓨터는 손으로 살살 다루고, 화면은 깨끗하게 써요.</li>
       </ul>
     </section>
@@ -118,7 +120,9 @@
         <p class="section-kicker">교사용 설정</p>
         <h2 id="settingsTitle">MagicSchool 질문방 연결</h2>
         <p class="settings-intro">아래 템플릿을 열어 AI교사를 만들고, 만들어진 학생용 참여 링크를 붙여 넣으면 도감 상세창에 질문 버튼이 나타나요.</p>
-        <p class="settings-warning">현재 페이지의 주소나 QR을 학생에게 바로 공유하는 곳이 아니에요. 템플릿으로 AI교사를 만든 뒤, 나온 학생용 참여 링크를 그대로 붙여 넣으세요. 기본 GitHub Pages 주소를 그대로 공유하면 질문방이 연결되지 않아요. 설정을 저장하면 아래 QR과 수업용 도감 링크를 학생에게 보낼 수 있어요.</p>
+        <p class="settings-warning">현재 페이지의 주소나 QR을 학생에게 바로 공유하면 질문이 나오지 않습니다. 템플릿으로 AI교사를 만든 뒤, 나온 학생용 참여 링크를 그대로 붙여
+          넣으세요.
+          현재 페이지 주소를 그대로 공유하면 질문방이 연결되지 않아요. 설정을 저장하면 아래 QR과 수업용 도감 링크를 학생에게 보낼 수 있어요.</p>
 
         <ol class="settings-steps">
           <li>아래 템플릿을 열어 AI교사를 만들어요.</li>
@@ -127,16 +131,19 @@
           <li>아래 QR이나 수업용 도감 링크를 학생에게 보내요.</li>
         </ol>
 
-        <a id="roomTemplateLink" class="template-link" href="https://app.magicschool.ai/magic-student/rooms?room-sharing-id=1a3dc4fb-2391-4d7b-9e77-dfaacddf7a35" target="_blank" rel="noopener noreferrer">
+        <a id="roomTemplateLink" class="template-link"
+          href="https://app.magicschool.ai/magic-student/rooms?room-sharing-id=1a3dc4fb-2391-4d7b-9e77-dfaacddf7a35"
+          target="_blank" rel="noopener noreferrer">
           AI교사 템플릿 열기
         </a>
 
         <form id="questionSettingsForm" class="settings-form">
           <label for="questionUrlInput">
             <span>학생용 MagicSchool 참여 링크</span>
-            <input id="questionUrlInput" type="url" placeholder="https://student.magicschool.ai/s/join?joinCode=..." autocomplete="off">
+            <input id="questionUrlInput" type="url" placeholder="https://student.magicschool.ai/s/join?joinCode=..."
+              autocomplete="off">
           </label>
-          <p class="field-hint">현재 페이지 주소나 QR을 넣는 칸이 아니에요. MagicSchool에서 복사한 학생용 참여 링크를 붙여 넣으세요.</p>
+          <p class="field-hint">MagicSchool에서 생성한 학생용 참여 링크를 붙여 넣으세요.</p>
           <div class="settings-actions">
             <button class="primary-button" type="submit">설정 저장</button>
             <button id="clearQuestionUrl" class="primary-button secondary" type="button">질문방 지우기</button>
@@ -176,4 +183,5 @@
   <script src="./vendor/qrcode.js"></script>
   <script src="./app.js"></script>
 </body>
+
 </html>
