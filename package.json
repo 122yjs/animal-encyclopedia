@@ -4,6 +4,10 @@
   "private": true,
   "scripts": {
     "build:internal": "node scripts/build.js --mode=internal",
-    "build:distribution": "node scripts/build.js --mode=distribution"
+    "build:distribution": "node scripts/build.js --mode=distribution",
+    "record:demo": "node scripts/record-demo.mjs"
+  },
+  "devDependencies": {
+    "playwright-core": "^1.59.1"
   }
 }

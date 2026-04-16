@@ -1,2 +1,6 @@
 dist/
 config/internal.local.json
+videos/
+.webreel/
+node_modules/
+package-lock.json
