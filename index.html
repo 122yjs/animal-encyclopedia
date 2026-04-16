@@ -26,6 +26,11 @@
         </div>
       </div>
 
+      <div class="sidebar-section sidebar-settings-section">
+        <button id="openSettings" class="settings-button" type="button">⚙️ 질문방 설정</button>
+        <p class="sidebar-settings-hint">AI 교사 질문방을 연결하려면 여기를 누르세요.</p>
+      </div>
+
       <div class="sidebar-section">
         <h2 class="sidebar-section-title">찾기</h2>
         <label class="search-field">
@@ -46,7 +51,6 @@
           <div class="progress-track" aria-hidden="true">
             <span id="progressFill"></span>
           </div>
-          <button id="openSettings" class="settings-button" type="button">질문방 설정</button>
         </div>
       </div>
     </aside>
@@ -72,24 +76,11 @@
       </section>
     </section>
 
-    <aside class="detail-panel" id="detailPanel" hidden>
-      <div class="detail-empty" id="detailEmpty">
-        <div class="detail-empty-icon" aria-hidden="true">&#128062;</div>
-        <p>동물 카드를 누르면 상세 정보가 나와요.</p>
-      </div>
-      <div class="detail-content" id="detailContent" hidden>
-        <div class="detail-photo" id="detailPhoto">
-          <button id="closeDetail" class="close-detail" type="button" aria-label="닫기">닫기</button>
-          <img id="detailImage" alt="">
-        </div>
-        <div id="detailBody" class="detail-body"></div>
-      </div>
-    </aside>
-
     <section class="game-view" id="gameView">
       <div class="game-header">
         <div>
-          <p class="section-kicker">분류 게임</p>
+          <button id="backToCatalog" class="back-to-catalog" type="button">← 도감으로 돌아가기</button>
+          <p class="section-kicker" style="margin-top:12px">분류 게임</p>
           <h2>카드를 기준에 따라 나누기</h2>
           <p>분류 기준을 보고 동물 카드를 직접 옮겨 보세요. 채점하면 어떤 특징을 다시 살펴봐야 하는지 알려 줍니다.</p>
         </div>
@@ -127,6 +118,16 @@
     </section>
   </div>
 
+  <div id="detailModal" class="detail-modal" hidden>
+    <div class="detail-sheet">
+      <button id="closeDetail" class="close-detail" type="button" aria-label="닫기">닫기</button>
+      <div class="detail-photo" id="detailPhoto">
+        <img id="detailImage" alt="">
+      </div>
+      <div id="detailBody" class="detail-body"></div>
+    </div>
+  </div>
+
   <div id="settingsModal" class="modal" hidden>
     <div class="settings-sheet" role="dialog" aria-modal="true" aria-labelledby="settingsTitle">
       <button id="closeSettings" class="close-button" type="button" aria-label="닫기">닫기</button>
@@ -134,8 +135,7 @@
         <p class="section-kicker">교사용 설정</p>
         <h2 id="settingsTitle">MagicSchool 질문방 연결</h2>
         <p class="settings-intro">아래 템플릿을 열어 AI교사를 만들고, 만들어진 학생용 참여 링크를 붙여 넣으면 도감 상세창에 질문 버튼이 나타나요.</p>
-        <p class="settings-warning">현재 페이지의 주소나 QR 값을 학생에게 바로 공유하면 질문이 나오지 않습니다. 템플릿으로 AI교사를 만든 뒤, 나온 학생용 참여 링크를 그대로 붙여 넣으세요.
-          현재 페이지 주소를 그대로 공유하면 질문방이 연결되지 않아요. 설정을 저장하면 아래 QR과 수업용 도감 링크를 학생에게 보낼 수 있어요.</p>
+        <p class="settings-warning">이 페이지 주소를 학생에게 바로 보내면 질문방이 연결되지 않아요. 아래 수업용 도감 링크나 QR로 공유하세요.</p>
 
         <ol class="settings-steps">
           <li>아래 템플릿을 열어 AI교사를 만들어요.</li>

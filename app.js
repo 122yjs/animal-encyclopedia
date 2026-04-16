@@ -61,14 +61,14 @@ const imageSources = {
   "송사리": "https://upload.wikimedia.org/wikipedia/commons/thumb/4/49/Nihonmedaka.jpg/330px-Nihonmedaka.jpg",
   "메기": "https://upload.wikimedia.org/wikipedia/commons/thumb/a/af/Silurus.jpg/330px-Silurus.jpg",
   "개구리": "https://upload.wikimedia.org/wikipedia/commons/thumb/5/58/Dark-spotted_Frog_%28Pelophylax_nigromaculatus%29.jpg/960px-Dark-spotted_Frog_%28Pelophylax_nigromaculatus%29.jpg",
-  "청둥오리": "https://upload.wikimedia.org/wikipedia/commons/thumb/3/35/%D0%9F%D0%B0%D1%80%D0%B0_%D1%83%D1%82%D0%BE%D0%BA_%D0%BA%D1%80%D1%8F%D0%BA%D0%B2_%28Anas_platyrhynchos%29%2C_%D0%9A%D0%BE%D0%BB%D0%BE%D0%BC%D0%B5%D0%BD%D1%82%D1%81%D0%BA%D0%BE%D0%B5.jpg/330px-%D0%9F%D0%B0%D1%80%D0%B0_%D1%83%D1%82%D0%BE%D0%BA_%D0%BA%D1%80%D1%8F%D0%BA%D0%B2_%28Anas_platyrhynchos%29%2C_%D0%9A%D0%BE%D0%BB%D0%BE%D0%BC%D0%B5%D0%BD%D1%82%D1%81%D0%BA%D0%BE%D0%B5.jpg",
+  "청둥오리": "https://upload.wikimedia.org/wikipedia/commons/thumb/b/bf/Anas_platyrhynchos_male_female_quadrat.jpg/330px-Anas_platyrhynchos_male_female_quadrat.jpg",
   "조개": "https://upload.wikimedia.org/wikipedia/commons/thumb/4/46/Seashells_in_the_basket.jpg/330px-Seashells_in_the_basket.jpg",
   "소라": "https://upload.wikimedia.org/wikipedia/commons/thumb/2/23/Turbo_cornutus_%28horned_turban_snail%29_2_%2825031884946%29.jpg/330px-Turbo_cornutus_%28horned_turban_snail%29_2_%2825031884946%29.jpg",
   "돌돔": "https://upload.wikimedia.org/wikipedia/commons/thumb/8/8f/K231003%EB%8F%8C%EB%8F%94.jpg/330px-K231003%EB%8F%8C%EB%8F%94.jpg",
   "해삼": "https://upload.wikimedia.org/wikipedia/commons/thumb/c/c0/Holothuria_cf_arguinensis.jpg/330px-Holothuria_cf_arguinensis.jpg",
   "칠게": "https://upload.wikimedia.org/wikipedia/commons/thumb/3/36/Yamatoosagani_07h9903c.jpg/330px-Yamatoosagani_07h9903c.jpg",
-  "돌고래": "https://upload.wikimedia.org/wikipedia/commons/thumb/d/da/NMMP_dolphin_with_locator.jpeg/330px-NMMP_dolphin_with_locator.jpeg",
-  "오징어": "https://upload.wikimedia.org/wikipedia/commons/9/94/Squidu.jpg",
+  "돌고래": "https://upload.wikimedia.org/wikipedia/commons/thumb/1/10/Tursiops_truncatus_01.jpg/330px-Tursiops_truncatus_01.jpg",
+  "오징어": "https://upload.wikimedia.org/wikipedia/commons/thumb/d/dd/Loligo_vulgaris.jpg/960px-Loligo_vulgaris.jpg",
   "바다거북": "https://upload.wikimedia.org/wikipedia/commons/thumb/b/bb/Hawaii_turtle_2.JPG/330px-Hawaii_turtle_2.JPG",
   "고등어": "https://upload.wikimedia.org/wikipedia/commons/3/3e/Scomber_japonicus.png",
   "해마": "https://upload.wikimedia.org/wikipedia/commons/thumb/2/25/Hippocampus_hippocampus_%28on_Ascophyllum_nodosum%29.jpg/330px-Hippocampus_hippocampus_%28on_Ascophyllum_nodosum%29.jpg"
@@ -118,6 +118,7 @@ const animals = [
 ];
 
 const storageKey = "animal-encyclopedia-collected-v1";
+const settingsSeenKey = "animal-encyclopedia-settings-seen-v1";
 const imageCache = new Map();
 const state = {
   view: "catalog",
@@ -160,13 +161,12 @@ const els = {
   newRound: document.querySelector("#newRound"),
   checkGame: document.querySelector("#checkGame"),
   resetProgress: document.querySelector("#resetProgress"),
-  detailPanel: document.querySelector("#detailPanel"),
-  detailContent: document.querySelector("#detailContent"),
-  detailEmpty: document.querySelector("#detailEmpty"),
+  detailModal: document.querySelector("#detailModal"),
   detailPhoto: document.querySelector("#detailPhoto"),
   detailImage: document.querySelector("#detailImage"),
   detailBody: document.querySelector("#detailBody"),
   closeDetail: document.querySelector("#closeDetail"),
+  backToCatalog: document.querySelector("#backToCatalog"),
   openSettings: document.querySelector("#openSettings"),
   settingsModal: document.querySelector("#settingsModal"),
   closeSettings: document.querySelector("#closeSettings"),
@@ -224,11 +224,19 @@ function init() {
   if (els.closeDetail) {
     els.closeDetail.addEventListener("click", closeDetail);
   }
+  if (els.detailModal) {
+    els.detailModal.addEventListener("click", event => {
+      if (event.target === els.detailModal) closeDetail();
+    });
+  }
+  if (els.backToCatalog) {
+    els.backToCatalog.addEventListener("click", () => setView("catalog"));
+  }
   document.addEventListener("keydown", event => {
     if (event.key === "Escape") {
       if (!els.settingsModal.hidden) {
         closeSettings();
-      } else if (els.detailPanel && !els.detailPanel.hidden) {
+      } else if (els.detailModal && !els.detailModal.hidden) {
         closeDetail();
       }
     }
@@ -267,6 +275,11 @@ function init() {
       if (state.game.selected) moveGameToken(state.game.selected, zone.dataset.answer);
     });
   });
+
+  // 첫 방문 시 설정 모달 자동 표시
+  if (!hasSeenSettingsModal() && canOpenQuestionSettings()) {
+    setTimeout(() => openSettings(), 500);
+  }
 }
 
 function bindViewTabs() {
@@ -278,20 +291,17 @@ function bindViewTabs() {
 function setView(view) {
   state.view = view;
   const sidebar = document.querySelector(".sidebar");
-  const detailPanel = els.detailPanel;
 
   if (view === "catalog") {
     els.catalogView.style.display = "";
     els.gameView.classList.remove("active");
     els.gameView.style.display = "none";
     if (sidebar) sidebar.style.display = "";
-    if (detailPanel) detailPanel.style.display = "";
   } else {
     els.catalogView.style.display = "none";
     els.gameView.classList.add("active");
     els.gameView.style.display = "";
     if (sidebar) sidebar.style.display = "none";
-    if (detailPanel) detailPanel.style.display = "none";
   }
   els.modeButtons.forEach(button => {
     button.classList.toggle("active", button.dataset.view === view);
@@ -394,23 +404,19 @@ function getVisibleAnimals() {
 function openAnimal(animal) {
   state.selectedAnimal = animal.id;
   state.quiz = null;
-  els.detailEmpty.hidden = true;
-  els.detailContent.hidden = false;
-  els.detailPanel.hidden = false;
   els.detailImage.removeAttribute("src");
   els.detailImage.alt = `${animal.name} 사진`;
   els.detailPhoto.textContent = "사진 준비 중";
   els.detailPhoto.append(els.detailImage);
   setImage(animal, els.detailImage, els.detailPhoto);
   renderAnimalInfo(animal);
+  els.detailModal.hidden = false;
   renderAnimals();
 }
 
 function closeDetail() {
   state.selectedAnimal = null;
-  els.detailPanel.hidden = true;
-  els.detailContent.hidden = true;
-  els.detailEmpty.hidden = false;
+  els.detailModal.hidden = true;
   renderAnimals();
 }
 
@@ -530,8 +536,25 @@ function openSettings() {
 function closeSettings() {
   if (!els.settingsModal) return;
   els.settingsModal.hidden = true;
+  markSettingsModalSeen();
   if (state.settingsLastFocus && typeof state.settingsLastFocus.focus === "function") {
     state.settingsLastFocus.focus();
+  }
+}
+
+function hasSeenSettingsModal() {
+  try {
+    return localStorage.getItem(settingsSeenKey) === "true";
+  } catch {
+    return false;
+  }
+}
+
+function markSettingsModalSeen() {
+  try {
+    localStorage.setItem(settingsSeenKey, "true");
+  } catch {
+    // ignore
   }
 }
 

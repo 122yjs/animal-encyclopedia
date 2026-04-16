@@ -46,9 +46,10 @@
           <div class="progress-track" aria-hidden="true">
             <span id="progressFill"></span>
           </div>
-          <button id="openSettings" class="settings-button" type="button" hidden aria-hidden="true">질문방 설정</button>
         </div>
       </div>
+
+      <button id="openSettings" class="settings-button" type="button" hidden aria-hidden="true" style="display:none">질문방 설정</button>
     </aside>
 
     <section class="center-area" id="catalogView">
@@ -72,24 +73,11 @@
       </section>
     </section>
 
-    <aside class="detail-panel" id="detailPanel">
-      <div class="detail-empty" id="detailEmpty">
-        <div class="detail-empty-icon" aria-hidden="true">&#128062;</div>
-        <p>동물 카드를 누르면 상세 정보가 나와요.</p>
-      </div>
-      <div class="detail-content" id="detailContent" hidden>
-        <div class="detail-photo" id="detailPhoto">
-          <button id="closeDetail" class="close-detail" type="button" aria-label="닫기">닫기</button>
-          <img id="detailImage" alt="">
-        </div>
-        <div id="detailBody" class="detail-body"></div>
-      </div>
-    </aside>
-
     <section class="game-view" id="gameView">
       <div class="game-header">
         <div>
-          <p class="section-kicker">분류 게임</p>
+          <button id="backToCatalog" class="back-to-catalog" type="button">← 도감으로 돌아가기</button>
+          <p class="section-kicker" style="margin-top:12px">분류 게임</p>
           <h2>카드를 기준에 따라 나누기</h2>
           <p>분류 기준을 보고 동물 카드를 직접 옮겨 보세요. 채점하면 어떤 특징을 다시 살펴봐야 하는지 알려 줍니다.</p>
         </div>
@@ -127,6 +115,16 @@
     </section>
   </div>
 
+  <div id="detailModal" class="detail-modal" hidden>
+    <div class="detail-sheet">
+      <button id="closeDetail" class="close-detail" type="button" aria-label="닫기">닫기</button>
+      <div class="detail-photo" id="detailPhoto">
+        <img id="detailImage" alt="">
+      </div>
+      <div id="detailBody" class="detail-body"></div>
+    </div>
+  </div>
+
   <div id="settingsModal" class="modal" hidden>
     <div class="settings-sheet" role="dialog" aria-modal="true" aria-labelledby="settingsTitle">
       <button id="closeSettings" class="close-button" type="button" aria-label="닫기">닫기</button>
@@ -140,7 +138,7 @@
   </div>
 
   <footer class="footer-note">
-    <p>자료: 미래엔 초등 과학 3-1, 2단원 동물의 생활 34-51쪽을 바탕으로 구성했어요.</p>
+    <p>자료: 미래엔 초과 과학 3-1, 2단원 동물의 생활 34-51쪽을 바탕으로 구성했어요.</p>
     <p>사진: 위키백과와 위키미디어 공용에서 제공하는 공개 라이선스 자료를 사용했어요.</p>
     <button id="resetProgress" class="text-button" type="button">등록 기록 지우기</button>
   </footer>

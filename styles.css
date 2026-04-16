@@ -16,7 +16,6 @@
   --shadow-md: 0 4px 12px rgba(0,0,0,0.08);
   --shadow-lg: 0 10px 24px rgba(15,139,141,0.16);
   --sidebar-w: 280px;
-  --detail-w: 380px;
   --radius: 12px;
 }
 
@@ -206,14 +205,38 @@ img {
 }
 
 .settings-button {
-  min-height: 38px;
-  padding: 8px 12px;
-  color: var(--teal-dark);
-  background: var(--paper);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  width: 100%;
+  min-height: 42px;
+  padding: 10px 14px;
+  color: var(--paper);
+  background: var(--teal);
   border: 2px solid var(--teal);
   border-radius: 8px;
   font-weight: 900;
-  font-size: 0.88rem;
+  font-size: 0.92rem;
+  transition: background 150ms ease, border-color 150ms ease;
+}
+
+.settings-button:hover {
+  background: var(--teal-dark);
+  border-color: var(--teal-dark);
+}
+
+.sidebar-settings-section {
+  display: grid;
+  gap: 6px;
+}
+
+.sidebar-settings-hint {
+  margin: 0;
+  color: var(--muted);
+  font-size: 0.82rem;
+  font-weight: 700;
+  line-height: 1.3;
 }
 
 .center-area {
@@ -432,50 +455,55 @@ button:focus-visible {
   font-size: 0.92rem;
 }
 
-.detail-panel {
-  width: var(--detail-w);
-  flex-shrink: 0;
-  display: flex;
-  flex-direction: column;
-  border-left: 2px solid var(--line);
-  background: var(--paper);
-  overflow-y: auto;
+/* ── Animal detail modal ── */
+.detail-modal {
+  position: fixed;
+  inset: 0;
+  z-index: 20;
+  display: grid;
+  place-items: center;
+  padding: 24px;
+  background: rgba(20,31,38,0.74);
 }
 
-.detail-panel[hidden] {
+.detail-modal[hidden] {
   display: none;
 }
 
-.detail-empty {
+.detail-sheet {
+  position: relative;
+  width: min(520px, 100%);
+  max-height: 90vh;
   display: flex;
   flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  height: 100%;
-  padding: 40px 24px;
-  color: var(--muted);
-  text-align: center;
+  overflow-y: auto;
+  background: var(--paper);
+  border-radius: var(--radius);
+  box-shadow: var(--shadow-lg);
 }
 
-.detail-empty-icon {
-  font-size: 3rem;
-  margin-bottom: 12px;
-  opacity: 0.4;
+.detail-sheet .close-detail {
+  position: sticky;
+  top: 0;
+  z-index: 2;
+  align-self: flex-end;
+  margin: 10px 10px 0;
+  min-height: 36px;
+  padding: 6px 14px;
+  color: var(--ink);
+  background: var(--paper);
+  border: 2px solid var(--line);
+  border-radius: 8px;
+  font-weight: 900;
+  font-size: 0.9rem;
 }
 
-.detail-empty p {
-  margin: 0;
-  font-weight: 700;
-}
-
-.detail-content {
-  display: flex;
-  flex-direction: column;
-  height: 100%;
+.detail-sheet .close-detail:hover {
+  background: var(--mist);
+  border-color: var(--teal);
 }
 
 .detail-photo {
-  position: relative;
   display: grid;
   place-items: center;
   min-height: 280px;
@@ -485,31 +513,34 @@ button:focus-visible {
 
 .detail-photo img {
   width: 100%;
-  max-height: 320px;
+  max-height: 360px;
   object-fit: contain;
 }
 
-.detail-photo .close-detail {
-  position: absolute;
-  top: 10px;
-  right: 10px;
-  z-index: 2;
-  min-height: 36px;
-  padding: 6px 10px;
-  color: var(--paper);
-  background: rgba(31,41,51,0.7);
-  border: 0;
-  border-radius: 8px;
-  font-weight: 900;
-  font-size: 0.85rem;
-}
-
 .detail-body {
-  flex: 1;
   display: grid;
   gap: 16px;
   padding: 24px;
-  overflow-y: auto;
+}
+
+.back-to-catalog {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  min-height: 42px;
+  padding: 8px 16px;
+  color: var(--paper);
+  background: var(--teal);
+  border: 2px solid var(--teal);
+  border-radius: 8px;
+  font-weight: 900;
+  font-size: 0.95rem;
+  text-decoration: none;
+}
+
+.back-to-catalog:hover {
+  background: var(--teal-dark);
+  border-color: var(--teal-dark);
 }
 
 .modal-title-row {
@@ -1066,28 +1097,15 @@ button:focus-visible {
     padding: 0 16px 24px;
   }
 
-  .detail-panel {
-    position: fixed;
-    inset: 0;
-    z-index: 20;
+  .detail-sheet {
     width: 100%;
-    background: var(--paper);
-    overflow-y: auto;
+    max-height: 100vh;
+    border-radius: 0;
+    margin: 0;
+  }
+
+  .detail-modal {
     padding: 0;
-    border-left: none;
-  }
-
-  .detail-panel[hidden] {
-    display: none;
-  }
-
-  .detail-photo {
-    min-height: 220px;
-    max-height: 320px;
-  }
-
-  .detail-photo img {
-    max-height: 320px;
   }
 
   .game-header {
