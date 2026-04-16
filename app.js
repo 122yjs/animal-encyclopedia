@@ -276,9 +276,18 @@ function init() {
     });
   });
 
-  // 첫 방문 시 설정 모달 자동 표시
+  // 첫 방문 시 안내 — URL이 없으면 설정 버튼만 강조, 모달 자동 오픈은 URL 있을 때만
   if (!hasSeenSettingsModal() && canOpenQuestionSettings()) {
-    setTimeout(() => openSettings(), 500);
+    const hasUrl = appConfig.questionTool.url;
+    if (hasUrl) {
+      setTimeout(() => openSettings(), 500);
+    } else {
+      const btn = els.openSettings;
+      if (btn) {
+        btn.classList.add("first-visit-highlight");
+        setTimeout(() => btn.classList.remove("first-visit-highlight"), 4000);
+      }
+    }
   }
 }
 
