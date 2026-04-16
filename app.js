@@ -61,7 +61,7 @@ const imageSources = {
   "송사리": "https://upload.wikimedia.org/wikipedia/commons/thumb/4/49/Nihonmedaka.jpg/330px-Nihonmedaka.jpg",
   "메기": "https://upload.wikimedia.org/wikipedia/commons/thumb/a/af/Silurus.jpg/330px-Silurus.jpg",
   "개구리": "https://upload.wikimedia.org/wikipedia/commons/thumb/5/58/Dark-spotted_Frog_%28Pelophylax_nigromaculatus%29.jpg/960px-Dark-spotted_Frog_%28Pelophylax_nigromaculatus%29.jpg",
-  "청둥오리": "https://upload.wikimedia.org/wikipedia/commons/thumb/3/35/%D0%9F%D0%B0%D1%80%D0%B0_%D1%83%D1%82%D0%BE%D0%BA_%D0%BA%D1%80%D1%8F%D0%BA%D0%B2_%28Anas_platyrhynchos%29%2C_%D0%9A%D0%BE%D0%BB%D0%BE%D0%BC%D0%B5%D0%BD%D1%81%D0%BA%D0%BE%D0%B5.jpg/330px-%D0%9F%D0%B0%D1%80%D0%B0_%D1%83%D1%82%D0%BE%D0%BA_%D0%BA%D1%80%D1%8F%D0%BA%D0%B2_%28Anas_platyrhynchos%29%2C_%D0%9A%D0%BE%D0%BB%D0%BE%D0%BC%D0%B5%D0%BD%D1%81%D0%BA%D0%BE%D0%B5.jpg",
+  "청둥오리": "https://upload.wikimedia.org/wikipedia/commons/thumb/3/35/%D0%9F%D0%B0%D1%80%D0%B0_%D1%83%D1%82%D0%BE%D0%BA_%D0%BA%D1%80%D1%8F%D0%BA%D0%B2_%28Anas_platyrhynchos%29%2C_%D0%9A%D0%BE%D0%BB%D0%BE%D0%BC%D0%B5%D0%BD%D1%82%D1%81%D0%BA%D0%BE%D0%B5.jpg/330px-%D0%9F%D0%B0%D1%80%D0%B0_%D1%83%D1%82%D0%BE%D0%BA_%D0%BA%D1%80%D1%8F%D0%BA%D0%B2_%28Anas_platyrhynchos%29%2C_%D0%9A%D0%BE%D0%BB%D0%BE%D0%BC%D0%B5%D0%BD%D1%82%D1%81%D0%BA%D0%BE%D0%B5.jpg",
   "조개": "https://upload.wikimedia.org/wikipedia/commons/thumb/4/46/Seashells_in_the_basket.jpg/330px-Seashells_in_the_basket.jpg",
   "소라": "https://upload.wikimedia.org/wikipedia/commons/thumb/2/23/Turbo_cornutus_%28horned_turban_snail%29_2_%2825031884946%29.jpg/330px-Turbo_cornutus_%28horned_turban_snail%29_2_%2825031884946%29.jpg",
   "돌돔": "https://upload.wikimedia.org/wikipedia/commons/thumb/8/8f/K231003%EB%8F%8C%EB%8F%94.jpg/330px-K231003%EB%8F%8C%EB%8F%94.jpg",
@@ -93,7 +93,7 @@ const animals = [
   makeAnimal("개미", "개미", ["land"], "땅, 흙 속", "다리를 이용해 걸어요.", ["다리 6개", "더듬이", "작은 몸"], "개미의 생김새와 이동 방법을 관찰해요.", "작은 몸과 다리로 흙 위와 틈 사이를 잘 다녀요.", { hasLegs: true, hasWings: false, hasFins: false, inWater: false, crawls: false }, "44쪽"),
   makeAnimal("노루", "노루", ["land"], "숲, 산기슭", "다리로 걷거나 뛰어요.", ["다리", "털", "큰 귀"], "땅에서 사는 동물의 예예요.", "긴 다리로 숲과 산을 빠르게 이동해요.", { hasLegs: true, hasWings: false, hasFins: false, inWater: false, crawls: false }, "45쪽"),
   makeAnimal("너구리", "너구리", ["land"], "숲, 들, 물가 주변", "네 다리로 걸어요.", ["털", "다리", "긴 꼬리"], "땅에서 사는 동물의 예예요.", "다리와 발을 이용해 여러 장소를 돌아다니며 먹이를 찾아요.", { hasLegs: true, hasWings: false, hasFins: false, inWater: false, crawls: false }, "45쪽"),
-  makeAnimal("오색딱따구리", "오색딱따구리", ["land"], "숲의 나무", "날개로 날고 발로 나무에 붙어요.", ["날개", "부리", "발톱"], "땅에서 사는 동물의 예로 제시돼요.", "단단한 부리와 발톱은 나무에서 생활하는 데 알맞아요.", { hasLegs: true, hasWings: true, hasFins: false, inWater: false, crawls: false }, "45쪽"),
+  makeAnimal("오색딱따구리", "오색딱따구리", ["land"], "숲의 나무", "날개로 날고 발으로 나무에 붙어요.", ["날개", "부리", "발톱"], "땅에서 사는 동물의 예로 제시돼요.", "단단한 부리와 발톱은 나무에서 생활하는 데 알맞아요.", { hasLegs: true, hasWings: true, hasFins: false, inWater: false, crawls: false }, "45쪽"),
   makeAnimal("낙타", "낙타", ["special", "land"], "사막", "다리로 걸어요.", ["혹", "긴 다리", "두꺼운 발바닥"], "사막에서 사는 동물의 예예요.", "혹 속 영양분과 넓은 발바닥이 건조한 사막 생활에 도움을 줘요.", { hasLegs: true, hasWings: false, hasFins: false, inWater: false, crawls: false }, "46쪽"),
   makeAnimal("도루묵도마뱀", "도루묵도마뱀", ["special", "land"], "사막", "모래 위와 속을 빠르게 움직여요.", ["비늘", "짧은 다리", "매끈한 몸"], "사막에서 사는 동물의 예예요.", "뜨거운 낮에는 모래 속에서 생활하며 더위를 피할 수 있어요.", { hasLegs: true, hasWings: false, hasFins: false, inWater: false, crawls: true }, "47쪽"),
   makeAnimal("북극곰", "북극곰", ["special"], "극지방", "얼음 위를 걷고 물에서 헤엄쳐요.", ["두꺼운 털", "넓은 발", "두꺼운 피부"], "극지방에서 사는 동물의 예예요.", "털과 두꺼운 피부가 추위를 견디는 데 도움을 줘요.", { hasLegs: true, hasWings: false, hasFins: false, inWater: true, crawls: false }, "47쪽"),
@@ -125,6 +125,7 @@ const state = {
   query: "",
   criterion: "hasLegs",
   collected: new Set(readCollected()),
+  selectedAnimal: null,
   game: {
     criterion: "hasLegs",
     round: [],
@@ -158,11 +159,14 @@ const els = {
   noHint: document.querySelector("#noHint"),
   newRound: document.querySelector("#newRound"),
   checkGame: document.querySelector("#checkGame"),
-  modal: document.querySelector("#animalModal"),
-  modalImage: document.querySelector("#modalImage"),
-  modalBody: document.querySelector("#modalBody"),
-  closeModal: document.querySelector("#closeModal"),
   resetProgress: document.querySelector("#resetProgress"),
+  detailPanel: document.querySelector("#detailPanel"),
+  detailContent: document.querySelector("#detailContent"),
+  detailEmpty: document.querySelector("#detailEmpty"),
+  detailPhoto: document.querySelector("#detailPhoto"),
+  detailImage: document.querySelector("#detailImage"),
+  detailBody: document.querySelector("#detailBody"),
+  closeDetail: document.querySelector("#closeDetail"),
   openSettings: document.querySelector("#openSettings"),
   settingsModal: document.querySelector("#settingsModal"),
   closeSettings: document.querySelector("#closeSettings"),
@@ -217,13 +221,17 @@ function init() {
     renderAnimals();
   });
 
-  els.closeModal.addEventListener("click", closeModal);
-  els.modal.addEventListener("click", event => {
-    if (event.target === els.modal) closeModal();
-  });
+  if (els.closeDetail) {
+    els.closeDetail.addEventListener("click", closeDetail);
+  }
   document.addEventListener("keydown", event => {
-    if (event.key === "Escape" && !els.settingsModal.hidden) closeSettings();
-    if (event.key === "Escape" && !els.modal.hidden) closeModal();
+    if (event.key === "Escape") {
+      if (!els.settingsModal.hidden) {
+        closeSettings();
+      } else if (els.detailPanel && !els.detailPanel.hidden) {
+        closeDetail();
+      }
+    }
   });
   if (els.openSettings) els.openSettings.addEventListener("click", openSettings);
   if (els.closeSettings) els.closeSettings.addEventListener("click", closeSettings);
@@ -269,10 +277,22 @@ function bindViewTabs() {
 
 function setView(view) {
   state.view = view;
-  els.catalogView.hidden = view !== "catalog";
-  els.gameView.hidden = view !== "game";
-  els.catalogView.classList.toggle("active", view === "catalog");
-  els.gameView.classList.toggle("active", view === "game");
+  const sidebar = document.querySelector(".sidebar");
+  const detailPanel = els.detailPanel;
+
+  if (view === "catalog") {
+    els.catalogView.style.display = "";
+    els.gameView.classList.remove("active");
+    els.gameView.style.display = "none";
+    if (sidebar) sidebar.style.display = "";
+    if (detailPanel) detailPanel.style.display = "";
+  } else {
+    els.catalogView.style.display = "none";
+    els.gameView.classList.add("active");
+    els.gameView.style.display = "";
+    if (sidebar) sidebar.style.display = "none";
+    if (detailPanel) detailPanel.style.display = "none";
+  }
   els.modeButtons.forEach(button => {
     button.classList.toggle("active", button.dataset.view === view);
   });
@@ -325,7 +345,8 @@ function renderAnimals() {
     card.type = "button";
     card.className = "animal-card";
     if (state.collected.has(animal.id)) card.classList.add("collected");
-    card.addEventListener("click", event => openAnimal(animal, event.currentTarget));
+    if (state.selectedAnimal === animal.id) card.classList.add("selected");
+    card.addEventListener("click", () => openAnimal(animal));
 
     const imageFrame = document.createElement("div");
     imageFrame.className = "image-frame";
@@ -370,24 +391,33 @@ function getVisibleAnimals() {
   });
 }
 
-function openAnimal(animal, trigger) {
-  state.lastFocus = trigger || document.activeElement;
+function openAnimal(animal) {
+  state.selectedAnimal = animal.id;
   state.quiz = null;
-  const photoFrame = document.querySelector(".modal-photo");
-  els.modal.hidden = false;
-  els.modalImage.removeAttribute("src");
-  els.modalImage.alt = `${animal.name} 사진`;
-  photoFrame.textContent = "사진 준비 중";
-  photoFrame.append(els.modalImage);
-  setImage(animal, els.modalImage, photoFrame);
+  els.detailEmpty.hidden = true;
+  els.detailContent.hidden = false;
+  els.detailPanel.hidden = false;
+  els.detailImage.removeAttribute("src");
+  els.detailImage.alt = `${animal.name} 사진`;
+  els.detailPhoto.textContent = "사진 준비 중";
+  els.detailPhoto.append(els.detailImage);
+  setImage(animal, els.detailImage, els.detailPhoto);
   renderAnimalInfo(animal);
-  els.closeModal.focus();
+  renderAnimals();
+}
+
+function closeDetail() {
+  state.selectedAnimal = null;
+  els.detailPanel.hidden = true;
+  els.detailContent.hidden = true;
+  els.detailEmpty.hidden = false;
+  renderAnimals();
 }
 
 function renderAnimalInfo(animal) {
   const isCollected = state.collected.has(animal.id);
   const observation = buildObservationDetails(animal);
-  els.modalBody.innerHTML = `
+  els.detailBody.innerHTML = `
     <div class="modal-title-row">
       <h2 id="modalTitle">${animal.name}</h2>
       <span class="mini-badge ${isCollected ? "collected-badge" : ""}">${isCollected ? "도감 등록됨" : "퀴즈 대기"}</span>
@@ -414,7 +444,7 @@ function renderAnimalInfo(animal) {
       도감 등록 퀴즈 시작
     </button>
   `;
-  els.modalBody.querySelector("[data-start-quiz]").addEventListener("click", () => startQuiz(animal));
+  els.detailBody.querySelector("[data-start-quiz]").addEventListener("click", () => startQuiz(animal));
 }
 
 function renderQuestionTool() {
@@ -647,7 +677,7 @@ function lifeBrief(animal) {
   if (animal.inWater) return "물가나 물속을 오가며 생활합니다.";
   if (animal.hasWings) return "날아다니며 먹이나 쉴 곳을 찾습니다.";
   if (animal.crawls) return "바닥 가까이에서 기어 다닙니다.";
-  if (animal.hasLegs) return "다리로 걸거나 뛰며 생활합니다.";
+  if (animal.hasLegs) return "다리로 걷거나 뛰며 생활합니다.";
   return "몸을 움직여 천천히 이동합니다.";
 }
 
@@ -718,7 +748,7 @@ function renderQuiz() {
   const quiz = state.quiz;
   const question = quiz.questions[quiz.index];
   const selected = quiz.answered;
-  els.modalBody.innerHTML = `
+  els.detailBody.innerHTML = `
     <div class="modal-title-row">
       <h2 id="modalTitle">${quiz.animal.name} 퀴즈</h2>
       <span class="mini-badge">문제 ${quiz.index + 1} / ${quiz.questions.length}</span>
@@ -743,11 +773,11 @@ function renderQuiz() {
     </div>
   `;
 
-  els.modalBody.querySelectorAll("[data-answer]").forEach(button => {
+  els.detailBody.querySelectorAll("[data-answer]").forEach(button => {
     button.addEventListener("click", () => answerQuestion(button.dataset.answer));
   });
 
-  const next = els.modalBody.querySelector("[data-next]");
+  const next = els.detailBody.querySelector("[data-next]");
   if (next) next.addEventListener("click", nextQuestion);
 }
 
@@ -788,7 +818,7 @@ function finishQuiz() {
     renderAnimals();
   }
 
-  els.modalBody.innerHTML = `
+  els.detailBody.innerHTML = `
     <div class="modal-title-row">
       <h2 id="modalTitle">${passed ? "도감 등록 성공" : "다시 도전하기"}</h2>
       <span class="mini-badge">${quiz.score} / ${quiz.questions.length}</span>
@@ -796,7 +826,7 @@ function finishQuiz() {
     <p>${passed ? `${quiz.animal.name} 카드가 도감에 등록되었어요.` : "2문제 이상 맞히면 카드가 등록돼요."}</p>
     <button class="primary-button" type="button" data-review>${passed ? "카드 다시 보기" : "내용 다시 보기"}</button>
   `;
-  els.modalBody.querySelector("[data-review]").addEventListener("click", () => renderAnimalInfo(quiz.animal));
+  els.detailBody.querySelector("[data-review]").addEventListener("click", () => renderAnimalInfo(quiz.animal));
 }
 
 function startNewRound() {
@@ -955,14 +985,6 @@ function updateProgress() {
   const count = state.collected.size;
   els.collectedCount.textContent = count;
   els.progressFill.style.width = `${Math.round((count / animals.length) * 100)}%`;
-}
-
-function closeModal() {
-  els.modal.hidden = true;
-  state.quiz = null;
-  if (state.lastFocus && typeof state.lastFocus.focus === "function") {
-    state.lastFocus.focus();
-  }
 }
 
 function resetProgress() {

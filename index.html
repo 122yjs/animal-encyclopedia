@@ -10,60 +10,84 @@
 </head>
 
 <body>
-  <header class="topbar">
-    <div class="title-block">
-      <p class="eyebrow">초등 3학년 과학 2. 동물의 생활</p>
-      <h1>동물도감 40</h1>
-      <p class="lede">동물을 관찰하고, 생김새와 사는 모습을 살펴보며, 서로 다른 환경과의 관계를 익혀 보세요.</p>
-    </div>
-    <div class="progress-panel" aria-live="polite">
-      <span class="progress-label">등록한 카드</span>
-      <strong><span id="collectedCount">0</span> / <span id="totalCount">40</span></strong>
-      <div class="progress-track" aria-hidden="true">
-        <span id="progressFill"></span>
+  <div class="app-layout">
+    <aside class="sidebar">
+      <div class="sidebar-header">
+        <p class="eyebrow">초등 3학년 과학 2. 동물의 생활</p>
+        <h1>동물도감 40</h1>
+        <p class="sidebar-lede">동물을 관찰하고, 생김새와 사는 모습을 살펴보며, 서로 다른 환경과의 관계를 익혀 보세요.</p>
       </div>
-      <button id="openSettings" class="settings-button" type="button">질문방 설정</button>
-    </div>
-  </header>
 
-  <main>
-    <section class="safety-strip" aria-label="도감 보기 약속">
-      <h2>도감 보기 약속</h2>
-      <ul>
-        <li>화면 속 동물의 생김새와 사는 모습을 차분히 살펴봐요.</li>
-        <li>동물의 특징에 먼저 집중해요.</li>
-        <li>태블릿이나 컴퓨터는 손으로 살살 다루고, 화면은 깨끗하게 써요.</li>
-      </ul>
-    </section>
+      <div class="sidebar-section">
+        <h2 class="sidebar-section-title">모드</h2>
+        <div class="mode-buttons">
+          <button class="mode-button active" type="button" data-view="catalog">도감 보기</button>
+          <button class="mode-button" type="button" data-view="game">분류 게임</button>
+        </div>
+      </div>
 
-    <section class="mode-tabs" aria-label="학습 화면">
-      <button class="mode-button active" type="button" data-view="catalog">도감 보기</button>
-      <button class="mode-button" type="button" data-view="game">분류 게임</button>
-    </section>
-
-    <section id="catalogView" class="view-panel active">
-      <section class="toolbar" aria-label="도감 찾기">
-        <label class="search-field" for="searchInput">
-          <span>동물 찾기</span>
+      <div class="sidebar-section">
+        <h2 class="sidebar-section-title">찾기</h2>
+        <label class="search-field">
+          <span class="search-icon" aria-hidden="true">&#128269;</span>
           <input id="searchInput" type="search" placeholder="예: 수달, 지느러미, 갯벌" autocomplete="off">
         </label>
-        <div class="filter-tabs" id="filterTabs" role="tablist" aria-label="동물 묶음"></div>
-      </section>
+      </div>
 
-      <section class="catalog-area" aria-labelledby="catalogTitle">
-        <div class="section-heading">
-          <div>
-            <p class="section-kicker">카드 모음</p>
-            <h2 id="catalogTitle">동물 카드</h2>
+      <div class="sidebar-section">
+        <h2 class="sidebar-section-title">묶음</h2>
+        <nav class="sidebar-nav" id="filterTabs" role="tablist" aria-label="동물 묶음"></nav>
+      </div>
+
+      <div class="sidebar-section">
+        <div class="progress-panel" aria-live="polite">
+          <span class="progress-label">등록한 카드</span>
+          <strong><span id="collectedCount">0</span> / <span id="totalCount">40</span></strong>
+          <div class="progress-track" aria-hidden="true">
+            <span id="progressFill"></span>
           </div>
+          <button id="openSettings" class="settings-button" type="button">질문방 설정</button>
+        </div>
+      </div>
+    </aside>
+
+    <section class="center-area" id="catalogView">
+      <div class="center-header">
+        <section class="safety-strip" aria-label="도감 보기 약속">
+          <h2>도감 보기 약속</h2>
+          <ul>
+            <li>화면 속 동물의 생김새와 사는 모습을 차분히 살펴봐요.</li>
+            <li>동물의 특징에 먼저 집중해요.</li>
+            <li>태블릿이나 컴퓨터는 손으로 살살 다루고, 화면은 깨끗하게 써요.</li>
+          </ul>
+        </section>
+
+        <div class="toolbar">
           <p id="resultCount" class="result-count"></p>
         </div>
+      </div>
+
+      <section class="catalog-area">
         <div id="animalGrid" class="animal-grid" aria-live="polite"></div>
       </section>
     </section>
 
-    <section id="gameView" class="view-panel" hidden>
-      <div class="game-hero">
+    <aside class="detail-panel" id="detailPanel" hidden>
+      <div class="detail-empty" id="detailEmpty">
+        <div class="detail-empty-icon" aria-hidden="true">&#128062;</div>
+        <p>동물 카드를 누르면 상세 정보가 나와요.</p>
+      </div>
+      <div class="detail-content" id="detailContent" hidden>
+        <div class="detail-photo" id="detailPhoto">
+          <button id="closeDetail" class="close-detail" type="button" aria-label="닫기">닫기</button>
+          <img id="detailImage" alt="">
+        </div>
+        <div id="detailBody" class="detail-body"></div>
+      </div>
+    </aside>
+
+    <section class="game-view" id="gameView">
+      <div class="game-header">
         <div>
           <p class="section-kicker">분류 게임</p>
           <h2>카드를 기준에 따라 나누기</h2>
@@ -101,16 +125,6 @@
 
       <div id="gameFeedback" class="game-feedback" aria-live="polite"></div>
     </section>
-  </main>
-
-  <div id="animalModal" class="modal" hidden>
-    <div class="modal-sheet" role="dialog" aria-modal="true" aria-labelledby="modalTitle">
-      <button id="closeModal" class="close-button" type="button" aria-label="닫기">닫기</button>
-      <div class="modal-photo">
-        <img id="modalImage" alt="">
-      </div>
-      <div id="modalBody" class="modal-body"></div>
-    </div>
   </div>
 
   <div id="settingsModal" class="modal" hidden>
@@ -120,8 +134,7 @@
         <p class="section-kicker">교사용 설정</p>
         <h2 id="settingsTitle">MagicSchool 질문방 연결</h2>
         <p class="settings-intro">아래 템플릿을 열어 AI교사를 만들고, 만들어진 학생용 참여 링크를 붙여 넣으면 도감 상세창에 질문 버튼이 나타나요.</p>
-        <p class="settings-warning">현재 페이지의 주소나 QR을 학생에게 바로 공유하면 질문이 나오지 않습니다. 템플릿으로 AI교사를 만든 뒤, 나온 학생용 참여 링크를 그대로 붙여
-          넣으세요.
+        <p class="settings-warning">현재 페이지의 주소나 QR 값을 학생에게 바로 공유하면 질문이 나오지 않습니다. 템플릿으로 AI교사를 만든 뒤, 나온 학생용 참여 링크를 그대로 붙여 넣으세요.
           현재 페이지 주소를 그대로 공유하면 질문방이 연결되지 않아요. 설정을 저장하면 아래 QR과 수업용 도감 링크를 학생에게 보낼 수 있어요.</p>
 
         <ol class="settings-steps">
