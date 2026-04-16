@@ -426,7 +426,7 @@ function renderAnimalInfo(animal) {
   els.detailBody.innerHTML = `
     <div class="modal-title-row">
       <h2 id="modalTitle">${animal.name}</h2>
-      <span class="mini-badge ${isCollected ? "collected-badge" : ""}">${isCollected ? "도감 등록됨" : "퀴즈 대기"}</span>
+      <span class="mini-badge ${isCollected ? "collected-badge" : ""}">${isCollected ? "⭐ 도감 등록 완료" : "퀴즈 대기"}</span>
     </div>
     <p class="encyclopedia-lede">${observation.intro}</p>
     <div class="encyclopedia-article">
@@ -447,7 +447,7 @@ function renderAnimalInfo(animal) {
     ${renderQuestionTool()}
     <a class="source-link" href="${animal.source}" target="_blank" rel="noreferrer">사진 출처 보기</a>
     <button class="primary-button" type="button" data-start-quiz="${animal.id}">
-      도감 등록 퀴즈 시작
+      🎯 퀴즈 풀고 도감에 등록하기
     </button>
   `;
   els.detailBody.querySelector("[data-start-quiz]").addEventListener("click", () => startQuiz(animal));

@@ -5,13 +5,13 @@
   --line: #c9d9df;
   --ink: #1f2933;
   --muted: #5b6b75;
-  --teal: #0f8b8d;
-  --teal-dark: #096567;
-  --coral: #f25f5c;
-  --sun: #ffd166;
-  --leaf: #2e9d61;
+  --teal: #00A896;
+  --teal-dark: #028090;
+  --coral: #F45B69;
+  --sun: #FFC300;
+  --leaf: #06D6A0;
   --panel: #e8f6f3;
-  --focus: #ffbc42;
+  --focus: #FF9F1C;
   --shadow-sm: 0 1px 3px rgba(0,0,0,0.06);
   --shadow-md: 0 4px 12px rgba(0,0,0,0.08);
   --shadow-lg: 0 10px 24px rgba(15,139,141,0.16);
@@ -155,31 +155,37 @@ img {
   color: var(--ink);
   background: var(--paper);
   border: 2px solid var(--line);
-  border-radius: 8px;
-  font-weight: 800;
+  border-bottom-width: 4px;
+  border-radius: 12px;
+  font-weight: 900;
   font-size: 0.88rem;
-  transition: background 150ms ease, border-color 150ms ease;
+  transition: all 150ms ease;
+}
+
+.mode-button:active {
+  transform: translateY(2px);
+  border-bottom-width: 2px;
 }
 
 .mode-button.active {
   color: var(--paper);
   background: var(--teal);
-  border-color: var(--teal);
+  border-color: var(--teal-dark);
 }
 
 .progress-panel {
   display: grid;
   gap: 8px;
   padding: 14px;
-  background: #f8fdff;
-  border: 2px solid var(--line);
-  border-radius: 8px;
+  background: #FFFDE7;
+  border: 3px solid var(--sun);
+  border-radius: 12px;
 }
 
 .progress-label {
-  color: var(--muted);
-  font-weight: 800;
-  font-size: 0.85rem;
+  color: var(--teal-dark);
+  font-weight: 900;
+  font-size: 0.9rem;
 }
 
 .progress-panel strong {
@@ -190,18 +196,19 @@ img {
 
 .progress-track {
   width: 100%;
-  height: 10px;
+  height: 14px;
   overflow: hidden;
   background: #dfecef;
-  border-radius: 8px;
+  border-radius: 12px;
 }
 
 .progress-track span {
   display: block;
   width: 0;
   height: 100%;
-  background: var(--coral);
+  background: linear-gradient(90deg, var(--sun), #FF9F1C);
   transition: width 240ms ease;
+  border-radius: 12px;
 }
 
 .settings-button {
@@ -367,7 +374,7 @@ button:focus-visible {
 }
 
 .animal-card:hover {
-  transform: translateY(-3px);
+  transform: translateY(-4px) scale(1.02);
   border-color: var(--teal);
   box-shadow: var(--shadow-lg);
 }
@@ -378,11 +385,13 @@ button:focus-visible {
 }
 
 .animal-card.collected {
-  border-color: var(--sun);
+  border: 3px solid var(--sun);
+  background: #FFFDF0;
+  box-shadow: 0 0 12px rgba(255, 195, 0, 0.4);
 }
 
 .animal-card.collected.selected {
-  border-color: var(--teal);
+  border: 4px solid var(--teal);
 }
 
 .image-frame {
@@ -431,6 +440,7 @@ button:focus-visible {
 .mini-badge.collected-badge {
   color: #6b5100;
   background: var(--sun);
+  box-shadow: 0 0 8px rgba(255, 195, 0, 0.6);
 }
 
 .card-meta {
@@ -585,9 +595,18 @@ button:focus-visible {
   padding: 10px 14px;
   color: var(--paper);
   background: var(--teal);
-  border: 2px solid var(--teal);
-  border-radius: 8px;
+  border: 2px solid var(--teal-dark);
+  border-bottom-width: 5px;
+  border-radius: 12px;
   font-weight: 900;
+  transition: transform 100ms ease, border-bottom-width 100ms ease;
+}
+
+.primary-button:active,
+.answer-button:active,
+.next-button:active {
+  transform: translateY(3px);
+  border-bottom-width: 2px;
 }
 
 .answer-button {
