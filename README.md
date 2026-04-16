@@ -11,6 +11,12 @@
 
 학생용 공유 링크로 접속한 페이지에서는 `질문방 설정` 버튼이 보이지 않도록 구성되어 있습니다.
 
+## 포켓볼 포획 데모
+
+<video src="./docs/media/pokeball-catch.webm" controls muted playsinline></video>
+
+[영상 파일 바로 열기](./docs/media/pokeball-catch.webm)
+
 ## 내부용 빌드
 
 개인 수업에서 사용하는 MagicSchool 질문 링크를 포함합니다.
