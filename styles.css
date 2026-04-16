@@ -1810,3 +1810,16 @@ button:focus-visible {
     transition-duration: 0.01ms !important;
   }
 }
+
+.first-visit-highlight {
+  animation: first-visit-pulse 0.8s ease-in-out 3;
+}
+
+@keyframes first-visit-pulse {
+  0%, 100% { box-shadow: 0 0 0 0 rgba(255, 159, 28, 0); }
+  50% { box-shadow: 0 0 0 8px rgba(255, 159, 28, 0.5), 0 0 20px rgba(255, 159, 28, 0.3); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .first-visit-highlight { animation: none; }
+}
