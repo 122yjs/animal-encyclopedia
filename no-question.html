@@ -29,26 +29,8 @@
       </div>
 
       <div class="sidebar-section">
-        <h2 class="sidebar-section-title">찾기</h2>
-        <label class="search-field">
-          <span class="search-icon" aria-hidden="true">&#128269;</span>
-          <input id="searchInput" type="search" placeholder="예: 수달, 지느러미, 갯벌" autocomplete="off">
-        </label>
-      </div>
-
-      <div class="sidebar-section">
         <h2 class="sidebar-section-title">묶음</h2>
         <nav class="sidebar-nav" id="filterTabs" role="tablist" aria-label="동물 묶음"></nav>
-      </div>
-
-      <div class="sidebar-section">
-        <div class="progress-panel" aria-live="polite">
-          <span class="progress-label">🏆 내 도감 완성도</span>
-          <strong><span id="collectedCount">0</span> / <span id="totalCount">40</span></strong>
-          <div class="progress-track" aria-hidden="true">
-            <span id="progressFill"></span>
-          </div>
-        </div>
       </div>
 
       <button id="openSettings" class="settings-button" type="button" hidden aria-hidden="true" style="display:none">질문방 설정</button>
@@ -65,8 +47,20 @@
           </ul>
         </section>
 
+        <div class="progress-panel" aria-live="polite">
+          <span class="progress-label">🏆 내 도감 완성도</span>
+          <strong><span id="collectedCount">0</span> / <span id="totalCount">40</span></strong>
+          <div class="progress-track" aria-hidden="true">
+            <span id="progressFill"></span>
+          </div>
+        </div>
+
         <div class="toolbar">
           <p id="resultCount" class="result-count"></p>
+          <label class="search-field">
+            <span class="search-icon" aria-hidden="true">&#128269;</span>
+            <input id="searchInput" type="search" placeholder="예: 토끼, 숲, 다리" autocomplete="off">
+          </label>
         </div>
       </div>
 

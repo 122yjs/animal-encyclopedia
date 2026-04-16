@@ -221,6 +221,24 @@ img {
   background: #FFFDE7;
   border: 3px solid var(--sun);
   border-radius: 12px;
+  margin-bottom: 18px;
+}
+
+@media (min-width: 681px) {
+  .progress-panel {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    padding: 16px 24px;
+    box-shadow: 0 4px 10px rgba(255,195,0,0.15);
+  }
+  .progress-panel strong {
+    font-size: 1.8rem;
+  }
+  .progress-track {
+    flex: 1;
+    height: 18px;
+  }
 }
 
 .progress-label {
@@ -337,9 +355,17 @@ img {
 
 .toolbar {
   display: flex;
+  flex-wrap: wrap;
   gap: 12px;
   align-items: center;
+  justify-content: space-between;
   margin-bottom: 18px;
+}
+
+.result-count {
+  font-weight: 900;
+  color: var(--teal-dark);
+  font-size: 1.1rem;
 }
 
 .search-field {
