@@ -920,12 +920,13 @@ button:focus-visible {
   grid-template-columns: minmax(240px, 0.8fr) minmax(240px, 1fr) minmax(240px, 1fr);
   gap: 14px;
   align-items: stretch;
+  min-height: 0;
 }
 
 .game-source,
 .drop-zone {
   display: grid;
-  grid-template-rows: auto auto 1fr;
+  grid-template-rows: auto auto minmax(0, 1fr);
   gap: 8px;
   min-height: 430px;
   padding: 14px;
@@ -939,6 +940,7 @@ button:focus-visible {
   border-style: dashed;
 }
 
+.game-source.drag-over,
 .drop-zone.drag-over {
   border-color: var(--teal);
   background: #edf9f6;
@@ -968,6 +970,8 @@ button:focus-visible {
   grid-template-columns: repeat(auto-fill, minmax(112px, 1fr));
   gap: 8px;
   min-height: 190px;
+  overflow: auto;
+  padding-right: 2px;
 }
 
 .game-token {
@@ -1110,10 +1114,70 @@ button:focus-visible {
 
   .game-header {
     grid-template-columns: 1fr;
+    gap: 12px;
+    margin-bottom: 10px;
+    padding: 14px;
+  }
+
+  .game-description {
+    display: none;
+  }
+
+  .game-view {
+    padding: 12px;
+    overflow: hidden;
+  }
+
+  .game-view.active {
+    height: 100dvh;
+    min-height: 100dvh;
+  }
+
+  .game-controls {
+    margin-bottom: 10px;
   }
 
   .game-board {
-    grid-template-columns: 1fr;
+    flex: 1;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    grid-template-areas:
+      "pool pool"
+      "yes no";
+    gap: 10px;
+  }
+
+  .game-source,
+  .drop-zone {
+    min-height: 0;
+    padding: 10px;
+  }
+
+  .game-source {
+    grid-area: pool;
+  }
+
+  .drop-zone[data-answer="yes"] {
+    grid-area: yes;
+  }
+
+  .drop-zone[data-answer="no"] {
+    grid-area: no;
+  }
+
+  .token-zone {
+    min-height: 0;
+    grid-template-columns: repeat(auto-fill, minmax(90px, 1fr));
+  }
+
+  .game-token {
+    min-height: 94px;
+    gap: 4px;
+    padding: 6px;
+    font-size: 0.86rem;
+  }
+
+  .game-token img {
+    height: 52px;
   }
 }
 
@@ -1168,13 +1232,61 @@ button:focus-visible {
     text-align: left;
   }
 
+  .game-view {
+    padding: 10px;
+  }
+
+  .game-header {
+    padding: 12px;
+    gap: 8px;
+  }
+
+  .game-score {
+    min-height: 72px;
+    font-size: 1.35rem;
+  }
+
+  .game-controls {
+    gap: 8px;
+  }
+
+  .select-field {
+    min-width: 100%;
+  }
+
+  .game-board {
+    gap: 8px;
+  }
+
   .game-source,
   .drop-zone {
-    min-height: 260px;
+    padding: 8px;
+  }
+
+  .game-source p,
+  .drop-zone p {
+    font-size: 0.8rem;
   }
 
   .token-zone {
-    grid-template-columns: repeat(auto-fill, minmax(130px, 1fr));
+    grid-template-columns: repeat(auto-fill, minmax(78px, 1fr));
+    gap: 6px;
+  }
+
+  .game-token {
+    min-height: 84px;
+    font-size: 0.78rem;
+  }
+
+  .game-token img {
+    height: 44px;
+  }
+
+  .game-feedback {
+    min-height: 44px;
+    margin-top: 8px;
+    padding: 10px;
+    font-size: 0.9rem;
   }
 
   .detail-body {

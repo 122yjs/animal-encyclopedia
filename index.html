@@ -82,7 +82,7 @@
           <button id="backToCatalog" class="back-to-catalog" type="button">← 도감으로 돌아가기</button>
           <p class="section-kicker" style="margin-top:12px">분류 게임</p>
           <h2>카드를 기준에 따라 나누기</h2>
-          <p>분류 기준을 보고 동물 카드를 직접 옮겨 보세요. 채점하면 어떤 특징을 다시 살펴봐야 하는지 알려 줍니다.</p>
+          <p class="game-description">분류 기준을 보고 동물 카드를 직접 옮겨 보세요. 채점하면 어떤 특징을 다시 살펴봐야 하는지 알려 줍니다.</p>
         </div>
         <div class="game-score" id="gameScore">0 / 8</div>
       </div>
@@ -97,9 +97,9 @@
       </section>
 
       <section class="game-board" aria-label="분류 게임">
-        <div class="game-source">
+        <div class="game-source" data-answer="pool">
           <h3>카드 더미</h3>
-          <p>카드를 눌러 고른 뒤 알맞은 칸을 누르거나, 직접 끌어서 놓아 보세요.</p>
+          <p class="game-source-help">카드를 눌러 고른 뒤 알맞은 칸을 누르거나, 직접 끌어서 놓아 보세요. 다시 더미로 돌릴 때도 이 칸을 누르면 돼요.</p>
           <div id="gamePool" class="token-zone source-zone"></div>
         </div>
         <div class="drop-zone" data-answer="yes">

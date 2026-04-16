@@ -259,7 +259,7 @@ function init() {
   });
   els.newRound.addEventListener("click", startNewRound);
   els.checkGame.addEventListener("click", checkGame);
-  document.querySelectorAll(".drop-zone").forEach(zone => {
+  document.querySelectorAll("[data-answer]").forEach(zone => {
     zone.addEventListener("dragover", event => {
       event.preventDefault();
       zone.classList.add("drag-over");
@@ -917,7 +917,9 @@ function createGameToken(animal) {
   button.addEventListener("dragstart", event => {
     event.dataTransfer.setData("text/plain", animal.id);
   });
-  button.addEventListener("click", () => {
+  button.addEventListener("click", event => {
+    // 토큰 선택 후 같은 칸 클릭 이벤트로 바로 해제되는 문제를 막아요.
+    event.stopPropagation();
     state.game.selected = state.game.selected === animal.id ? null : animal.id;
     renderGameBoard();
   });
@@ -925,6 +927,7 @@ function createGameToken(animal) {
 }
 
 function moveGameToken(animalId, answer) {
+  if (!["pool", "yes", "no"].includes(answer)) return;
   if (!state.game.round.includes(animalId)) return;
   state.game.placements[animalId] = answer;
   state.game.selected = null;
