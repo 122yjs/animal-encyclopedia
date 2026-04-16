@@ -862,23 +862,113 @@ function nextQuestion() {
   finishQuiz();
 }
 
+function showCatchAnimation(animal, onComplete) {
+  const motionQuery = typeof window !== "undefined" && typeof window.matchMedia === "function"
+    ? window.matchMedia("(prefers-reduced-motion: reduce)")
+    : null;
+
+  if (motionQuery && motionQuery.matches) {
+    onComplete();
+    return;
+  }
+
+  const overlay = document.createElement("div");
+  overlay.className = "catch-overlay";
+  overlay.setAttribute("aria-hidden", "true");
+
+  const stage = document.createElement("div");
+  stage.className = "catch-stage";
+
+  const animalShell = document.createElement("div");
+  animalShell.className = "catch-animal-shell";
+
+  const animalImage = document.createElement("img");
+  animalImage.className = "catch-animal-image";
+  animalImage.alt = `${animal.name} 사진`;
+  animalImage.decoding = "async";
+
+  const detailImageSrc = els.detailImage ? (els.detailImage.currentSrc || els.detailImage.getAttribute("src") || "") : "";
+  animalImage.src = detailImageSrc || animal.image;
+  animalShell.append(animalImage);
+
+  const message = document.createElement("p");
+  message.className = "catch-message";
+  message.textContent = "포획 완료!";
+
+  const ballLayer = document.createElement("div");
+  ballLayer.className = "catch-ball-layer";
+
+  const orbit = document.createElement("div");
+  orbit.className = "catch-ball-orbit";
+
+  const flash = document.createElement("div");
+  flash.className = "catch-flash";
+
+  const ball = document.createElement("div");
+  ball.className = "catch-ball";
+
+  const ballButton = document.createElement("span");
+  ballButton.className = "catch-ball-button";
+  ball.append(ballButton);
+
+  const sparkles = document.createElement("div");
+  sparkles.className = "catch-sparkles";
+  for (let index = 0; index < 6; index += 1) {
+    sparkles.append(document.createElement("span"));
+  }
+
+  orbit.append(flash, ball, sparkles);
+  ballLayer.append(orbit);
+  stage.append(animalShell, ballLayer, message);
+  overlay.append(stage);
+  document.body.append(overlay);
+
+  const timeouts = [];
+  let finished = false;
+
+  const schedule = (delay, callback) => {
+    const timeoutId = window.setTimeout(callback, delay);
+    timeouts.push(timeoutId);
+  };
+
+  const cleanup = () => {
+    if (finished) return;
+    finished = true;
+    timeouts.forEach(timeoutId => window.clearTimeout(timeoutId));
+    overlay.remove();
+    onComplete();
+  };
+
+  requestAnimationFrame(() => {
+    overlay.classList.add("active");
+  });
+
+  schedule(600, () => overlay.classList.add("is-flashing"));
+  schedule(900, () => overlay.classList.add("is-absorbing"));
+  schedule(1300, () => overlay.classList.add("is-shaking"));
+  schedule(2200, () => overlay.classList.add("is-success"));
+  schedule(2700, cleanup);
+}
+
 function finishQuiz() {
   const quiz = state.quiz;
-  
-  state.collected.add(quiz.animal.id);
-  saveCollected();
-  updateProgress();
-  renderAnimals();
 
-  els.detailBody.innerHTML = `
-    <div class="modal-title-row">
-      <h2 id="modalTitle">도감 등록 성공</h2>
-      <span class="mini-badge">미션 완료!</span>
-    </div>
-    <p>${quiz.animal.name} 카드가 도감에 새롭게 등록되었어요. 모든 퀴즈를 정확히 맞혔습니다!</p>
-    <button class="primary-button" type="button" data-review>카드 내용 보기</button>
-  `;
-  els.detailBody.querySelector("[data-review]").addEventListener("click", () => renderAnimalInfo(quiz.animal));
+  showCatchAnimation(quiz.animal, () => {
+    state.collected.add(quiz.animal.id);
+    saveCollected();
+    updateProgress();
+    renderAnimals();
+
+    els.detailBody.innerHTML = `
+      <div class="modal-title-row">
+        <h2 id="modalTitle">도감 등록 성공</h2>
+        <span class="mini-badge">미션 완료!</span>
+      </div>
+      <p>${quiz.animal.name} 카드가 도감에 새롭게 등록되었어요. 모든 퀴즈를 정확히 맞혔습니다!</p>
+      <button class="primary-button" type="button" data-review>카드 내용 보기</button>
+    `;
+    els.detailBody.querySelector("[data-review]").addEventListener("click", () => renderAnimalInfo(quiz.animal));
+  });
 }
 
 function startNewRound() {
