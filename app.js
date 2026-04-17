@@ -1031,7 +1031,7 @@ function showCatchAnimation(animal, onComplete) {
   animalImage.decoding = "async";
 
   const detailImageSrc = els.detailImage ? (els.detailImage.currentSrc || els.detailImage.getAttribute("src") || "") : "";
-  animalImage.src = detailImageSrc || animal.image;
+  setStandaloneImage(animal, animalImage, detailImageSrc);
   animalShell.append(animalImage);
 
   const message = document.createElement("p");
@@ -1172,10 +1172,15 @@ function createGameToken(animal) {
     button.classList.add(correct ? "correct-token" : "wrong-token");
   }
 
-  button.innerHTML = `
-    <img alt="${animal.name} 사진" src="${animal.image}">
-    <span>${animal.name}</span>
-  `;
+  const image = document.createElement("img");
+  image.alt = `${animal.name} 사진`;
+  image.decoding = "async";
+  setStandaloneImage(animal, image);
+
+  const label = document.createElement("span");
+  label.textContent = animal.name;
+
+  button.append(image, label);
   button.addEventListener("dragstart", event => {
     event.dataTransfer.setData("text/plain", animal.id);
   });
@@ -1236,18 +1241,17 @@ function updateGameScore(score) {
 
 async function setImage(animal, image, frame) {
   frame.classList.add("loading");
+  setImagePlaceholder(image, animal, "사진 준비 중");
   try {
     const source = await getImageSource(animal);
     if (!source) throw new Error("no image");
-    image.onerror = () => {
-      image.removeAttribute("src");
+    applyResolvedImage(image, animal, source, () => {
       frame.textContent = `${animal.name} 사진`;
-    };
-    image.src = source;
+    });
     frame.textContent = "";
     frame.append(image);
   } catch {
-    image.removeAttribute("src");
+    setImagePlaceholder(image, animal, "사진 없음");
     image.alt = `${animal.name} 사진을 불러오지 못했어요.`;
     frame.textContent = `${animal.name} 사진`;
   } finally {
@@ -1255,7 +1259,56 @@ async function setImage(animal, image, frame) {
   }
 }
 
-async function getImageSource(animal) {
+async function setStandaloneImage(animal, image, preferredSource = "") {
+  setImagePlaceholder(image, animal, "사진 준비 중");
+  try {
+    const source = await getImageSource(animal, preferredSource);
+    if (!source) throw new Error("no image");
+    applyResolvedImage(image, animal, source, () => {
+      setImagePlaceholder(image, animal, "사진 없음");
+    });
+  } catch {
+    setImagePlaceholder(image, animal, "사진 없음");
+    image.alt = `${animal.name} 사진을 불러오지 못했어요.`;
+  }
+}
+
+function applyResolvedImage(image, animal, source, onError) {
+  image.onerror = () => {
+    image.onerror = null;
+    onError?.();
+  };
+  image.alt = `${animal.name} 사진`;
+  image.src = source;
+}
+
+function setImagePlaceholder(image, animal, label) {
+  image.onerror = null;
+  image.alt = `${animal.name} ${label}`;
+  image.src = createImagePlaceholder(animal.name, label);
+}
+
+function createImagePlaceholder(name, label) {
+  return `data:image/svg+xml;charset=UTF-8,${encodeURIComponent(`
+    <svg xmlns="http://www.w3.org/2000/svg" width="320" height="240" viewBox="0 0 320 240">
+      <rect width="320" height="240" fill="#f3f4f6" />
+      <text x="50%" y="48%" text-anchor="middle" font-size="24" font-family="sans-serif" fill="#6b7280">${escapeSvgText(name)}</text>
+      <text x="50%" y="62%" text-anchor="middle" font-size="16" font-family="sans-serif" fill="#9ca3af">${escapeSvgText(label)}</text>
+    </svg>
+  `)}`;
+}
+
+function escapeSvgText(value) {
+  return String(value)
+    .replace(/&/g, "&amp;")
+    .replace(/</g, "&lt;")
+    .replace(/>/g, "&gt;")
+    .replace(/"/g, "&quot;")
+    .replace(/'/g, "&#39;");
+}
+
+async function getImageSource(animal, preferredSource = "") {
+  if (preferredSource) return preferredSource;
   if (animal.image) return animal.image;
   const key = `${animal.wikiLang}:${animal.wikiTitle}`;
   if (imageCache.has(key)) return imageCache.get(key);
@@ -1265,6 +1318,7 @@ async function getImageSource(animal) {
   const source = data.thumbnail?.source || "";
   const page = data.content_urls?.desktop?.page;
   if (page) animal.source = page;
+  if (source) animal.image = source;
   imageCache.set(key, source);
   return source;
 }
