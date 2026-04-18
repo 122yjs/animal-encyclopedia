@@ -17,6 +17,7 @@
   --shadow-lg: 0 10px 24px rgba(15,139,141,0.16);
   --sidebar-w: 280px;
   --radius: 12px;
+  --min-touch: 44px;
 }
 
 * {
@@ -31,9 +32,9 @@ body {
   margin: 0;
   background: var(--mist);
   color: var(--ink);
-  font-family: "Noto Sans KR", "Apple SD Gothic Neo", "Malgun Gothic", system-ui, sans-serif;
-  font-size: 17px;
-  line-height: 1.55;
+  font-family: "NanumSquareRound", "Noto Sans KR", "Apple SD Gothic Neo", "Malgun Gothic", system-ui, sans-serif;
+  font-size: 18px;
+  line-height: 1.6;
 }
 
 button,
@@ -132,7 +133,7 @@ img {
 .sidebar-lede {
   margin: 0;
   color: var(--ink);
-  font-size: 0.92rem;
+  font-size: 0.96rem;
   font-weight: 800;
 }
 
@@ -147,7 +148,7 @@ img {
 
 .sidebar-section-title {
   margin: 0 0 10px;
-  font-size: 0.82rem;
+  font-size: 0.88rem;
   font-weight: 800;
   color: var(--muted);
   text-transform: uppercase;
@@ -164,8 +165,8 @@ img {
   display: block;
   width: 100%;
   text-align: left;
-  min-height: 40px;
-  padding: 8px 14px;
+  min-height: var(--min-touch);
+  padding: 10px 14px;
   color: var(--ink);
   background: transparent;
   border: none;
@@ -191,8 +192,8 @@ img {
 
 .mode-button {
   flex: 1;
-  min-height: 42px;
-  padding: 8px 10px;
+  min-height: var(--min-touch);
+  padding: 10px 10px;
   color: var(--ink);
   background: var(--paper);
   border: 2px solid var(--line);
@@ -276,14 +277,14 @@ img {
   justify-content: center;
   gap: 6px;
   width: 100%;
-  min-height: 42px;
+  min-height: var(--min-touch);
   padding: 10px 14px;
   color: var(--paper);
   background: var(--teal);
   border: 2px solid var(--teal);
   border-radius: 8px;
   font-weight: 900;
-  font-size: 0.92rem;
+  font-size: 0.95rem;
   transition: background 150ms ease, border-color 150ms ease;
 }
 
@@ -300,7 +301,7 @@ img {
 .sidebar-settings-hint {
   margin: 0;
   color: var(--muted);
-  font-size: 0.82rem;
+  font-size: 0.88rem;
   font-weight: 700;
   line-height: 1.3;
 }
@@ -385,7 +386,7 @@ img {
 
 .search-field input {
   width: 100%;
-  min-height: 48px;
+  min-height: var(--min-touch);
   padding: 0 14px 0 42px;
   color: var(--ink);
   background: var(--paper);
@@ -496,11 +497,11 @@ button:focus-visible {
 
 .mini-badge {
   flex: 0 0 auto;
-  padding: 4px 7px;
+  padding: 4px 8px;
   color: var(--teal-dark);
   background: #e2f5f0;
   border-radius: 8px;
-  font-size: 0.76rem;
+  font-size: 0.82rem;
   font-weight: 900;
 }
 
@@ -517,19 +518,19 @@ button:focus-visible {
 }
 
 .tag {
-  padding: 4px 7px;
+  padding: 5px 8px;
   color: #23333a;
   background: #eef6f8;
   border: 1px solid #d3e4e9;
   border-radius: 8px;
-  font-size: 0.78rem;
+  font-size: 0.84rem;
   font-weight: 800;
 }
 
 .card-point {
   margin: 0;
   color: var(--muted);
-  font-size: 0.92rem;
+  font-size: 0.96rem;
 }
 
 /* ── Animal detail modal ── */
@@ -565,14 +566,31 @@ button:focus-visible {
   z-index: 2;
   align-self: flex-end;
   margin: 10px 10px 0;
-  min-height: 36px;
-  padding: 6px 14px;
+  min-height: var(--min-touch);
+  padding: 8px 14px;
   color: var(--ink);
   background: var(--paper);
   border: 2px solid var(--line);
   border-radius: 8px;
   font-weight: 900;
   font-size: 0.9rem;
+}
+
+.close-button {
+  min-height: var(--min-touch);
+  padding: 8px 14px;
+  color: var(--ink);
+  background: var(--paper);
+  border: 2px solid var(--line);
+  border-radius: 8px;
+  font-weight: 900;
+  font-size: 0.9rem;
+  cursor: pointer;
+}
+
+.close-button:hover {
+  background: var(--mist);
+  border-color: var(--teal);
 }
 
 .detail-sheet .close-detail:hover {
@@ -604,8 +622,8 @@ button:focus-visible {
   display: inline-flex;
   align-items: center;
   gap: 6px;
-  min-height: 42px;
-  padding: 8px 16px;
+  min-height: var(--min-touch);
+  padding: 10px 16px;
   color: var(--paper);
   background: var(--teal);
   border: 2px solid var(--teal);
@@ -658,7 +676,7 @@ button:focus-visible {
 .primary-button,
 .answer-button,
 .next-button {
-  min-height: 50px;
+  min-height: var(--min-touch);
   padding: 10px 14px;
   color: var(--paper);
   background: var(--teal);
@@ -777,13 +795,14 @@ button:focus-visible {
 .question-link {
   display: inline-grid;
   place-items: center;
-  min-height: 48px;
-  padding: 10px 14px;
+  min-height: var(--min-touch);
+  padding: 12px 18px;
   color: var(--paper);
   background: var(--teal);
   border: 2px solid var(--teal);
   border-radius: 8px;
   font-weight: 900;
+  font-size: 1rem;
   text-decoration: none;
 }
 
@@ -904,7 +923,7 @@ button:focus-visible {
 .settings-form input,
 .share-link-panel input {
   width: 100%;
-  min-height: 48px;
+  min-height: var(--min-touch);
   padding: 10px 12px;
   color: var(--ink);
   background: #f8fdff;
@@ -1012,7 +1031,7 @@ button:focus-visible {
 }
 
 .select-field select {
-  min-height: 50px;
+  min-height: var(--min-touch);
   padding: 0 12px;
   color: var(--ink);
   background: var(--paper);
@@ -1159,7 +1178,8 @@ button:focus-visible {
 }
 
 .text-button {
-  min-height: 38px;
+  min-height: var(--min-touch);
+  padding: 6px 12px;
   color: var(--teal-dark);
   background: transparent;
 }
@@ -1848,4 +1868,339 @@ button:focus-visible {
 
 @media (prefers-reduced-motion: reduce) {
   .first-visit-highlight { animation: none; }
+}
+
+/* ── Teacher settings banner ── */
+.teacher-banner {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  padding: 10px 16px;
+  background: linear-gradient(135deg, var(--sun), #ffb627);
+  color: var(--ink);
+  font-weight: 900;
+  font-size: 0.92rem;
+  text-align: center;
+  position: sticky;
+  top: 0;
+  z-index: 10;
+  box-shadow: 0 2px 8px rgba(255, 195, 0, 0.3);
+}
+
+.teacher-banner[hidden] {
+  display: none;
+}
+
+/* ── QR Code expand modal ── */
+.qr-expand-modal {
+  position: fixed;
+  inset: 0;
+  z-index: 30;
+  display: grid;
+  place-items: center;
+  padding: 24px;
+  background: rgba(20, 31, 38, 0.85);
+}
+
+.qr-expand-modal[hidden] {
+  display: none;
+}
+
+.qr-expand-content {
+  background: var(--paper);
+  border-radius: var(--radius);
+  padding: 32px;
+  text-align: center;
+  max-width: 400px;
+  width: 100%;
+  box-shadow: var(--shadow-lg);
+}
+
+.qr-expand-content h3 {
+  color: var(--teal-dark);
+  margin: 0 0 16px;
+  font-size: 1.1rem;
+}
+
+.qr-expand-content .qr-expand-image {
+  width: min(280px, 100%);
+  margin: 0 auto 20px;
+}
+
+.qr-expand-content .qr-expand-image svg {
+  width: 100%;
+  height: auto;
+}
+
+.qr-expand-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  justify-content: center;
+}
+
+.qr-expand-actions .primary-button {
+  font-size: 0.92rem;
+}
+
+.qr-expand-close {
+  position: absolute;
+  top: 12px;
+  right: 12px;
+  min-height: var(--min-touch);
+  min-width: var(--min-touch);
+  padding: 8px 14px;
+  background: var(--paper);
+  border: 2px solid var(--line);
+  border-radius: 8px;
+  font-weight: 900;
+  font-size: 0.9rem;
+  cursor: pointer;
+}
+
+.qr-expand-close:hover {
+  background: var(--mist);
+  border-color: var(--teal);
+}
+
+/* ── Setup guide modal ── */
+.guide-toggle {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  background: var(--teal);
+  color: var(--paper);
+  font-weight: 900;
+  font-size: 0.85rem;
+  border: none;
+  cursor: pointer;
+  margin-left: 8px;
+  flex-shrink: 0;
+  transition: background 150ms ease;
+}
+
+.guide-toggle:hover {
+  background: var(--teal-dark);
+}
+
+.guide-modal {
+  position: fixed;
+  inset: 0;
+  z-index: 30;
+  display: grid;
+  place-items: center;
+  padding: 24px;
+  background: rgba(20, 31, 38, 0.74);
+}
+
+.guide-modal[hidden] {
+  display: none;
+}
+
+.guide-content {
+  background: var(--paper);
+  border-radius: var(--radius);
+  padding: 28px;
+  max-width: 520px;
+  width: 100%;
+  max-height: 85vh;
+  overflow-y: auto;
+  box-shadow: var(--shadow-lg);
+}
+
+.guide-content h3 {
+  color: var(--teal-dark);
+  margin: 0 0 16px;
+  font-size: 1.1rem;
+}
+
+.guide-content .guide-step {
+  display: grid;
+  grid-template-columns: 32px 1fr;
+  gap: 10px;
+  margin: 0 0 14px;
+  align-items: start;
+}
+
+.guide-content .guide-step-number {
+  display: grid;
+  place-items: center;
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  background: var(--teal);
+  color: var(--paper);
+  font-weight: 900;
+  font-size: 0.85rem;
+}
+
+.guide-content .guide-step-text {
+  font-weight: 700;
+  font-size: 0.92rem;
+  line-height: 1.5;
+}
+
+.guide-content .guide-step-text strong {
+  color: var(--teal-dark);
+}
+
+.guide-content .guide-img {
+  width: 100%;
+  border: 2px solid var(--line);
+  border-radius: var(--radius);
+  margin: 12px 0;
+}
+
+.guide-content .guide-close-row {
+  display: flex;
+  justify-content: center;
+  margin-top: 20px;
+}
+
+/* ── Question navigate confirmation ── */
+.confirm-popup {
+  position: fixed;
+  inset: 0;
+  z-index: 30;
+  display: grid;
+  place-items: center;
+  padding: 24px;
+  background: rgba(20, 31, 38, 0.74);
+}
+
+.confirm-popup[hidden] {
+  display: none;
+}
+
+.confirm-popup-content {
+  background: var(--paper);
+  border-radius: var(--radius);
+  padding: 28px;
+  max-width: 400px;
+  width: 100%;
+  text-align: center;
+  box-shadow: var(--shadow-lg);
+}
+
+.confirm-popup-content h3 {
+  color: var(--teal-dark);
+  margin: 0 0 12px;
+  font-size: 1.05rem;
+}
+
+.confirm-popup-content p {
+  margin: 0 0 20px;
+  font-weight: 700;
+  font-size: 0.95rem;
+  line-height: 1.5;
+}
+
+.confirm-popup-actions {
+  display: flex;
+  gap: 10px;
+  justify-content: center;
+}
+
+.confirm-popup-actions .primary-button {
+  font-size: 0.92rem;
+}
+
+.confirm-popup-actions .cancel-button {
+  min-height: var(--min-touch);
+  padding: 10px 14px;
+  color: var(--ink);
+  background: var(--paper);
+  border: 2px solid var(--line);
+  border-radius: 12px;
+  font-weight: 900;
+  font-size: 0.92rem;
+  cursor: pointer;
+}
+
+.confirm-popup-actions .cancel-button:hover {
+  background: var(--mist);
+  border-color: var(--muted);
+}
+
+/* ── Category filter icons ── */
+.filter-button[data-filter] .filter-icon {
+  margin-right: 4px;
+  font-size: 1.1em;
+}
+
+/* ── Paw print loading animation ── */
+@keyframes paw-walk {
+  0%, 100% { opacity: 0.25; transform: scale(0.85); }
+  50% { opacity: 1; transform: scale(1.05); }
+}
+
+.paw-loading {
+  display: grid;
+  place-items: center;
+  gap: 12px;
+  padding: 32px;
+  color: var(--muted);
+  font-weight: 800;
+  font-size: 0.95rem;
+}
+
+.paw-loading .paw-prints {
+  display: flex;
+  gap: 8px;
+  font-size: 1.4rem;
+}
+
+.paw-loading .paw-prints span {
+  display: inline-block;
+  animation: paw-walk 1.2s ease-in-out infinite;
+}
+
+.paw-loading .paw-prints span:nth-child(2) {
+  animation-delay: 0.2s;
+}
+
+.paw-loading .paw-prints span:nth-child(3) {
+  animation-delay: 0.4s;
+}
+
+/* ── Error message styling ── */
+.error-message {
+  display: grid;
+  place-items: center;
+  gap: 10px;
+  padding: 24px;
+  color: var(--coral);
+  font-weight: 800;
+  font-size: 0.95rem;
+  text-align: center;
+  background: #fff5f5;
+  border: 2px solid var(--coral);
+  border-radius: var(--radius);
+}
+
+.error-message .error-icon {
+  font-size: 2rem;
+}
+
+/* ── Input with guide button ── */
+.input-with-guide {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.input-with-guide input {
+  flex: 1;
+}
+
+.settings-form label,
+.share-link-panel label {
+  display: grid;
+  gap: 8px;
+  color: var(--muted);
+  font-weight: 900;
 }

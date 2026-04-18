@@ -1,9 +1,9 @@
 const filters = [
-  { id: "all", label: "전체" },
-  { id: "around", label: "우리 주변" },
-  { id: "land", label: "땅" },
-  { id: "water", label: "물" },
-  { id: "special", label: "특별한 환경" }
+  { id: "all", label: "전체", icon: "🔍" },
+  { id: "around", label: "우리 주변", icon: "🏠" },
+  { id: "land", label: "땅", icon: "🦎" },
+  { id: "water", label: "물", icon: "🐟" },
+  { id: "special", label: "특별한 환경", icon: "❄️" }
 ];
 
 const criteria = [
@@ -19,7 +19,7 @@ const defaultAppConfig = {
     featureEnabled: true,
     enabled: false,
     url: "",
-    label: "더 궁금한 점 물어보기",
+    label: "🐾 더 궁금한 점 물어볼까요?",
     note: "선생님이 준비한 질문 도구가 있으면 함께 이용해 보세요.",
     allowTeacherSettings: true,
     hideTeacherSettingsOnSharedPage: true,
@@ -198,7 +198,18 @@ const els = {
   downloadQr: document.querySelector("#downloadQr"),
   qrCode: document.querySelector("#qrCode"),
   settingsMessage: document.querySelector("#settingsMessage"),
-  roomTemplateLink: document.querySelector("#roomTemplateLink")
+  roomTemplateLink: document.querySelector("#roomTemplateLink"),
+  teacherBanner: document.querySelector("#teacherBanner"),
+  openGuide: document.querySelector("#openGuide"),
+  closeGuide: document.querySelector("#closeGuide"),
+  guideModal: document.querySelector("#guideModal"),
+  qrExpandModal: document.querySelector("#qrExpandModal"),
+  qrExpandImage: document.querySelector("#qrExpandImage"),
+  closeQrExpand: document.querySelector("#closeQrExpand"),
+  downloadQrExpand: document.querySelector("#downloadQrExpand"),
+  confirmPopup: document.querySelector("#confirmPopup"),
+  confirmYes: document.querySelector("#confirmYes"),
+  confirmNo: document.querySelector("#confirmNo")
 };
 
 function makeAnimal(name, wiki, categories, habitat, move, body, point, relation, flags, page) {
@@ -246,6 +257,14 @@ function init() {
   if (els.detailModal) {
     els.detailModal.addEventListener("click", event => {
       if (event.target === els.detailModal) closeDetail();
+      const questionBtn = event.target.closest("[data-question-url]");
+      if (questionBtn) {
+        const url = questionBtn.dataset.questionUrl;
+        if (url && els.confirmPopup) {
+          pendingQuestionUrl = url;
+          els.confirmPopup.hidden = false;
+        }
+      }
     });
   }
   if (els.backToCatalog) {
@@ -271,6 +290,34 @@ function init() {
   if (els.clearQuestionUrl) els.clearQuestionUrl.addEventListener("click", clearQuestionSettings);
   if (els.copyShareLink) els.copyShareLink.addEventListener("click", copyShareLink);
   if (els.downloadQr) els.downloadQr.addEventListener("click", downloadQrImage);
+  if (els.openGuide) els.openGuide.addEventListener("click", openGuideModal);
+  if (els.closeGuide) els.closeGuide.addEventListener("click", closeGuideModal);
+  if (els.guideModal) {
+    els.guideModal.addEventListener("click", event => {
+      if (event.target === els.guideModal) closeGuideModal();
+    });
+  }
+  if (els.qrCode) els.qrCode.addEventListener("click", openQrExpand);
+  if (els.qrCode) els.qrCode.addEventListener("keydown", event => {
+    if (event.key === "Enter" || event.key === " ") {
+      event.preventDefault();
+      openQrExpand();
+    }
+  });
+  if (els.closeQrExpand) els.closeQrExpand.addEventListener("click", closeQrExpand);
+  if (els.qrExpandModal) {
+    els.qrExpandModal.addEventListener("click", event => {
+      if (event.target === els.qrExpandModal) closeQrExpand();
+    });
+  }
+  if (els.downloadQrExpand) els.downloadQrExpand.addEventListener("click", downloadQrExpandImage);
+  if (els.confirmYes) els.confirmYes.addEventListener("click", confirmNavigateToQuestion);
+  if (els.confirmNo) els.confirmNo.addEventListener("click", closeConfirmPopup);
+  if (els.confirmPopup) {
+    els.confirmPopup.addEventListener("click", event => {
+      if (event.target === els.confirmPopup) closeConfirmPopup();
+    });
+  }
   els.resetProgress.addEventListener("click", resetProgress);
   els.gameCriterion.addEventListener("change", event => {
     state.game.criterion = event.target.value;
@@ -342,7 +389,8 @@ function renderFilters() {
     const button = document.createElement("button");
     button.type = "button";
     button.className = "filter-button";
-    button.textContent = filter.label;
+    button.setAttribute("data-filter", filter.id);
+    button.innerHTML = `<span class="filter-icon">${filter.icon}</span> ${filter.label}`;
     button.setAttribute("role", "tab");
     button.setAttribute("aria-selected", String(filter.id === state.filter));
     if (filter.id === state.filter) button.classList.add("active");
@@ -525,7 +573,7 @@ function renderQuestionTool() {
     return `
       <section class="question-tool question-tool-muted" aria-label="추가 질문 안내">
         <div>
-          <h3>더 궁금한 점이 있나요?</h3>
+          <h3>🐾 더 궁금한 점 물어볼까요?</h3>
           <p>${note}</p>
         </div>
       </section>
@@ -535,12 +583,12 @@ function renderQuestionTool() {
   return `
     <section class="question-tool" aria-label="추가 질문 도구">
       <div>
-        <h3>더 궁금한 점이 있나요?</h3>
+        <h3>🐾 더 궁금한 점 물어볼까요?</h3>
         <p>${note}</p>
       </div>
-      <a class="question-link" href="${escapeAttribute(tool.url)}" target="_blank" rel="noopener noreferrer">
+      <button class="question-link" type="button" data-question-url="${escapeAttribute(tool.url)}">
         ${label}
-      </a>
+      </button>
     </section>
   `;
 }
@@ -559,7 +607,7 @@ function hydrateQuestionToolConfig() {
       ...appConfig.questionTool,
       enabled: true,
       url: runtimeUrl,
-      note: "새 창에서 질문 도우미가 열려요."
+      note: "🐾 새 창에서 질문 도우미가 열려요."
     }
   });
 }
@@ -588,6 +636,7 @@ function openSettings() {
   state.settingsLastFocus = document.activeElement;
   els.questionUrlInput.value = appConfig.questionTool.url || "";
   els.settingsMessage.textContent = "";
+  if (els.teacherBanner) els.teacherBanner.hidden = false;
   renderShareLinkPanel();
   els.settingsModal.hidden = false;
   els.questionUrlInput.focus();
@@ -624,7 +673,7 @@ function saveQuestionSettings(event) {
   const url = normalizeHttpUrl(els.questionUrlInput.value.trim());
 
   if (!url) {
-    els.settingsMessage.textContent = "학생용 참여 링크를 확인해 주세요. https://로 시작하는 주소를 넣어야 해요.";
+    els.settingsMessage.textContent = "🤔 올바른 링크인지 확인해 주세요! https://로 시작하는 주소를 넣어야 해요.";
     return;
   }
 
@@ -634,7 +683,7 @@ function saveQuestionSettings(event) {
       ...appConfig.questionTool,
       enabled: true,
       url,
-      note: "새 창에서 질문 도우미가 열려요."
+      note: "🐾 새 창에서 질문 도우미가 열려요."
     }
   });
   els.questionUrlInput.value = url;
@@ -1307,18 +1356,19 @@ function updateGameScore(score) {
 async function setImage(animal, image, frame) {
   frame.classList.add("loading");
   setImagePlaceholder(image, animal, "사진 준비 중");
+  frame.innerHTML = `<div class="paw-loading"><div class="paw-prints"><span>🐾</span><span>🐾</span><span>🐾</span></div><span>사진을 불러오는 중…</span></div>`;
+  frame.append(image);
   try {
     const source = await getImageSource(animal);
     if (!source) throw new Error("no image");
     applyResolvedImage(image, animal, source, () => {
-      frame.textContent = `${animal.name} 사진`;
+      frame.innerHTML = `<div class="error-message"><span class="error-icon">😿</span>사진을 불러오지 못했어요</div>`;
     });
     frame.textContent = "";
     frame.append(image);
   } catch {
-    setImagePlaceholder(image, animal, "사진 없음");
-    image.alt = `${animal.name} 사진을 불러오지 못했어요.`;
-    frame.textContent = `${animal.name} 사진`;
+    frame.innerHTML = `<div class="error-message"><span class="error-icon">😿</span>사진을 불러오지 못했어요</div>`;
+    image.alt = `${animal.name} 사진을 불러올 수 없어요.`;
   } finally {
     frame.classList.remove("loading");
   }
@@ -1474,6 +1524,57 @@ function escapeHTML(value) {
 
 function escapeAttribute(value) {
   return String(value).replace(/&/g, "&amp;").replace(/"/g, "&quot;");
+}
+
+let pendingQuestionUrl = null;
+
+function openGuideModal() {
+  if (els.guideModal) els.guideModal.hidden = false;
+}
+
+function closeGuideModal() {
+  if (els.guideModal) els.guideModal.hidden = true;
+}
+
+function openQrExpand() {
+  if (!els.qrExpandModal || !els.qrExpandImage) return;
+  const qrSvg = els.qrCode ? els.qrCode.innerHTML : "";
+  if (!qrSvg) return;
+  els.qrExpandImage.innerHTML = qrSvg;
+  els.qrExpandModal.hidden = false;
+}
+
+function closeQrExpand() {
+  if (els.qrExpandModal) els.qrExpandModal.hidden = true;
+}
+
+function downloadQrExpandImage() {
+  if (!els.qrCode || !els.settingsMessage) return;
+  const shareLink = els.qrCode.dataset.url || "";
+  if (!shareLink || typeof qrcode !== "function") return;
+
+  const qr = qrcode(0, "M");
+  qr.addData(shareLink);
+  qr.make();
+
+  const link = document.createElement("a");
+  link.href = qr.createDataURL(8, 4);
+  link.download = "animal-encyclopedia-qr.gif";
+  link.click();
+  if (els.settingsMessage) els.settingsMessage.textContent = "QR 이미지를 저장했어요.";
+}
+
+function confirmNavigateToQuestion() {
+  if (els.confirmPopup) els.confirmPopup.hidden = true;
+  if (pendingQuestionUrl) {
+    window.open(pendingQuestionUrl, "_blank", "noopener,noreferrer");
+    pendingQuestionUrl = null;
+  }
+}
+
+function closeConfirmPopup() {
+  if (els.confirmPopup) els.confirmPopup.hidden = true;
+  pendingQuestionUrl = null;
 }
 
 init();
