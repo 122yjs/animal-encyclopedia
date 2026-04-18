@@ -50,7 +50,7 @@ const imageSources = {
   "개미": "https://upload.wikimedia.org/wikipedia/commons/thumb/a/a6/Meat_eater_ant_feeding_on_honey02.jpg/330px-Meat_eater_ant_feeding_on_honey02.jpg",
   "노루": "https://upload.wikimedia.org/wikipedia/commons/thumb/e/ed/Siberian_roe_deer.jpg/330px-Siberian_roe_deer.jpg",
   "너구리": "https://upload.wikimedia.org/wikipedia/commons/thumb/9/92/Nyctereutes_procyonoides_16072008.jpg/330px-Nyctereutes_procyonoides_16072008.jpg",
-  "오색딱따구리": "https://upload.wikimedia.org/wikipedia/commons/thumb/c/c5/Greater_Spotted_Woodpecker_%2841554059345%29.jpg/330px-Greater_Spotted_Woodpecker_%2841554059345%29.jpg",
+  "딱따구리": "https://upload.wikimedia.org/wikipedia/commons/thumb/c/c5/Greater_Spotted_Woodpecker_%2841554059345%29.jpg/330px-Greater_Spotted_Woodpecker_%2841554059345%29.jpg",
   "낙타": "https://upload.wikimedia.org/wikipedia/commons/thumb/4/43/07._Camel_Profile%2C_near_Silverton%2C_NSW%2C_07.07.2007.jpg/330px-07._Camel_Profile%2C_near_Silverton%2C_NSW%2C_07.07.2007.jpg",
   "도루묵도마뱀": "https://upload.wikimedia.org/wikipedia/commons/thumb/2/2d/Apothekerskink01.jpg/330px-Apothekerskink01.jpg",
   "북극곰": "https://upload.wikimedia.org/wikipedia/commons/thumb/9/9a/Polarb%C3%A4r_12_2004-11-17.jpg/330px-Polarb%C3%A4r_12_2004-11-17.jpg",
@@ -66,7 +66,6 @@ const imageSources = {
   "소라": "https://upload.wikimedia.org/wikipedia/commons/thumb/2/23/Turbo_cornutus_%28horned_turban_snail%29_2_%2825031884946%29.jpg/330px-Turbo_cornutus_%28horned_turban_snail%29_2_%2825031884946%29.jpg",
   "돌돔": "https://upload.wikimedia.org/wikipedia/commons/thumb/8/8f/K231003%EB%8F%8C%EB%8F%94.jpg/330px-K231003%EB%8F%8C%EB%8F%94.jpg",
   "해삼": "https://upload.wikimedia.org/wikipedia/commons/thumb/c/c0/Holothuria_cf_arguinensis.jpg/330px-Holothuria_cf_arguinensis.jpg",
-  "칠게": "https://upload.wikimedia.org/wikipedia/commons/thumb/3/36/Yamatoosagani_07h9903c.jpg/330px-Yamatoosagani_07h9903c.jpg",
   "돌고래": "https://upload.wikimedia.org/wikipedia/commons/thumb/1/10/Tursiops_truncatus_01.jpg/330px-Tursiops_truncatus_01.jpg",
   "오징어": "https://upload.wikimedia.org/wikipedia/commons/thumb/d/dd/Loligo_vulgaris.jpg/960px-Loligo_vulgaris.jpg",
   "바다거북": "https://upload.wikimedia.org/wikipedia/commons/thumb/b/bb/Hawaii_turtle_2.JPG/330px-Hawaii_turtle_2.JPG",
@@ -91,25 +90,39 @@ const animals = [
   makeAnimal("지렁이", "지렁이", ["around", "land"], "축축한 흙", "다리 없이 기어서 이동해요.", ["긴 몸", "다리 없음", "마디"], "지렁이는 다리가 없는 동물로 분류할 수 있어요.", "축축한 땅속에서 몸을 줄였다 늘이며 움직여요.", { hasLegs: false, hasWings: false, hasFins: false, inWater: false, crawls: true }, "39쪽, 45쪽"),
   makeAnimal("뱀", "뱀", ["land"], "풀숲, 숲, 산", "다리 없이 기어서 이동해요.", ["긴 몸", "비늘", "다리 없음"], "뱀은 다리가 없는 동물로 분류할 수 있어요.", "긴 몸과 비늘이 땅 위를 기어 이동하는 데 도움을 줘요.", { hasLegs: false, hasWings: false, hasFins: false, inWater: false, crawls: true }, "40쪽, 45쪽"),
   makeAnimal("개미", "개미", ["land"], "땅, 흙 속", "다리를 이용해 걸어요.", ["다리 6개", "더듬이", "작은 몸"], "개미의 생김새와 이동 방법을 관찰해요.", "작은 몸과 다리로 흙 위와 틈 사이를 잘 다녀요.", { hasLegs: true, hasWings: false, hasFins: false, inWater: false, crawls: false }, "44쪽"),
+  makeAnimal("다람쥐", "다람쥐", ["land"], "숲, 공원, 나무가 많은 곳", "네 다리로 뛰고 나무를 잘 타요.", ["긴 꼬리", "강한 발톱", "앞니"], "비상 AR 자료에 있는 땅에서 사는 동물 사례예요.", "긴 꼬리와 발톱은 나무 위에서 균형을 잡고 이동하는 데 도움을 줘요.", { hasLegs: true, hasWings: false, hasFins: false, inWater: false, crawls: false }, "비상 AR"),
+  makeAnimal("고라니", "고라니", ["land"], "수풀, 논과 물가 주변", "가늘고 긴 다리로 뛰어다녀요.", ["갈색 털", "긴 다리", "길쭉한 주둥이"], "비상 AR 자료에 있는 땅에서 사는 동물 사례예요.", "긴 다리는 수풀 사이를 빠르게 지나가며 생활하는 데 도움을 줘요.", { hasLegs: true, hasWings: false, hasFins: false, inWater: false, crawls: false }, "비상 AR"),
+  makeAnimal("두더지", { title: "Mole_(animal)", lang: "en" }, ["land"], "땅속", "넓은 앞발로 굴을 파며 움직여요.", ["넓은 앞발", "두꺼운 발톱", "털"], "비상 AR 자료에 있는 땅속 생활 동물 사례예요.", "삽처럼 넓은 앞발과 발톱은 땅속에 굴을 파는 데 도움을 줘요.", { hasLegs: true, hasWings: false, hasFins: false, inWater: false, crawls: false }, "비상 AR"),
+  makeAnimal("부엉이", { title: "Owl", lang: "en" }, ["land"], "숲, 나무가 많은 곳", "날개로 조용히 날아요.", ["큰 눈", "날개", "날카로운 발톱"], "비상 AR 자료에 있는 밤에 활동하는 새 사례예요.", "큰 눈과 날카로운 발톱은 밤에 먹이를 찾고 붙잡는 데 도움을 줘요.", { hasLegs: true, hasWings: true, hasFins: false, inWater: false, crawls: false }, "비상 AR"),
   makeAnimal("노루", "노루", ["land"], "숲, 산기슭", "다리로 걷거나 뛰어요.", ["다리", "털", "큰 귀"], "땅에서 사는 동물의 예예요.", "긴 다리로 숲과 산을 빠르게 이동해요.", { hasLegs: true, hasWings: false, hasFins: false, inWater: false, crawls: false }, "45쪽"),
   makeAnimal("너구리", "너구리", ["land"], "숲, 들, 물가 주변", "네 다리로 걸어요.", ["털", "다리", "긴 꼬리"], "땅에서 사는 동물의 예예요.", "다리와 발을 이용해 여러 장소를 돌아다니며 먹이를 찾아요.", { hasLegs: true, hasWings: false, hasFins: false, inWater: false, crawls: false }, "45쪽"),
-  makeAnimal("오색딱따구리", "오색딱따구리", ["land"], "숲의 나무", "날개로 날고 발으로 나무에 붙어요.", ["날개", "부리", "발톱"], "땅에서 사는 동물의 예로 제시돼요.", "단단한 부리와 발톱은 나무에서 생활하는 데 알맞아요.", { hasLegs: true, hasWings: true, hasFins: false, inWater: false, crawls: false }, "45쪽"),
+  makeAnimal("딱따구리", "딱따구리", ["land"], "숲의 나무", "날개로 날고 발톱으로 나무에 붙어요.", ["날개", "곧은 부리", "발톱"], "나무에서 사는 새의 생김새와 움직임을 관찰해요.", "단단한 부리와 발톱은 나무에서 먹이를 찾고 생활하는 데 알맞아요.", { hasLegs: true, hasWings: true, hasFins: false, inWater: false, crawls: false }, "45쪽, 비상 AR"),
   makeAnimal("낙타", "낙타", ["special", "land"], "사막", "다리로 걸어요.", ["혹", "긴 다리", "두꺼운 발바닥"], "사막에서 사는 동물의 예예요.", "혹 속 영양분과 넓은 발바닥이 건조한 사막 생활에 도움을 줘요.", { hasLegs: true, hasWings: false, hasFins: false, inWater: false, crawls: false }, "46쪽"),
   makeAnimal("도루묵도마뱀", "도루묵도마뱀", ["special", "land"], "사막", "모래 위와 속을 빠르게 움직여요.", ["비늘", "짧은 다리", "매끈한 몸"], "사막에서 사는 동물의 예예요.", "뜨거운 낮에는 모래 속에서 생활하며 더위를 피할 수 있어요.", { hasLegs: true, hasWings: false, hasFins: false, inWater: false, crawls: true }, "47쪽"),
+  makeAnimal("사막여우", { title: "Fennec_fox", lang: "en" }, ["special", "land"], "사막", "털로 덮인 발로 모래 위를 걸어요.", ["큰 귀", "작은 몸", "털 많은 발바닥"], "비상 AR 자료에 있는 사막 동물 사례예요.", "큰 귀는 더운 사막에서 열을 내보내고, 털 많은 발은 뜨거운 모래 위를 걷는 데 도움을 줘요.", { hasLegs: true, hasWings: false, hasFins: false, inWater: false, crawls: false }, "비상 AR"),
+  makeAnimal("사막 뱀", { title: "Crotalus_cerastes", lang: "en" }, ["special", "land"], "사막", "몸의 일부를 들고 옆으로 기어가요.", ["모래색 몸", "비늘", "다리 없음"], "비상 AR 자료에 있는 사막 동물 사례예요.", "모래와 비슷한 몸 색깔과 옆으로 기는 움직임은 사막 생활에 알맞아요.", { hasLegs: false, hasWings: false, hasFins: false, inWater: false, crawls: true }, "비상 AR"),
+  makeAnimal("사막 딱정벌레", { title: "Stenocara_gracilipes", lang: "en" }, ["special", "land"], "사막", "여섯 다리로 모래 위를 걸어요.", ["단단한 몸", "다리 6개", "등의 돌기"], "비상 AR 자료에 있는 사막 곤충 사례예요.", "단단한 몸과 등에 맺히는 물방울은 건조한 사막에서 살아가는 데 도움을 줘요.", { hasLegs: true, hasWings: false, hasFins: false, inWater: false, crawls: false }, "비상 AR"),
   makeAnimal("북극곰", "북극곰", ["special"], "극지방", "얼음 위를 걷고 물에서 헤엄쳐요.", ["두꺼운 털", "넓은 발", "두꺼운 피부"], "극지방에서 사는 동물의 예예요.", "털과 두꺼운 피부가 추위를 견디는 데 도움을 줘요.", { hasLegs: true, hasWings: false, hasFins: false, inWater: true, crawls: false }, "47쪽"),
-  makeAnimal("펭귄", "펭귄", ["special"], "극지방과 바다", "물속에서 헤엄치고 배로 미끄러지듯 이동해요.", ["깃털", "날개", "짧은 다리"], "극지방에서 사는 동물의 예예요.", "깃털은 추위를 견디게 하고, 배로 미끄러지면 얼음 위에서 빠르게 움직일 수 있어요.", { hasLegs: true, hasWings: true, hasFins: false, inWater: true, crawls: false }, "47쪽"),
+  makeAnimal("북극여우", "북극여우", ["special", "land"], "극지방", "네 다리로 눈과 얼음 위를 걸어요.", ["작은 귀", "두꺼운 털", "짧은 주둥이"], "비상 AR 자료에 있는 극지방 동물 사례예요.", "작은 귀와 두꺼운 털은 추운 곳에서 몸의 열을 지키는 데 도움을 줘요.", { hasLegs: true, hasWings: false, hasFins: false, inWater: false, crawls: false }, "비상 AR"),
+  makeAnimal("펭귄", "펭귄", ["special"], "극지방과 바다", "물속에서 헤엄치고 얼음 위를 걸어요.", ["빽빽한 깃털", "날개 모양 지느러미", "짧은 다리"], "극지방에서 사는 동물의 예예요.", "빽빽한 깃털은 추위를 견디게 하고, 날개 모양 지느러미는 물속에서 헤엄치는 데 도움을 줘요.", { hasLegs: true, hasWings: true, hasFins: false, inWater: true, crawls: false }, "47쪽, 비상 AR"),
   makeAnimal("산양", "산양", ["special", "land"], "높고 가파른 산악 지형", "다리와 발굽으로 바위를 올라요.", ["다리", "발굽", "털"], "산악 지형에서 사는 동물의 예예요.", "발굽과 다리는 높은 산의 바위에서 균형을 잡는 데 도움을 줘요.", { hasLegs: true, hasWings: false, hasFins: false, inWater: false, crawls: false }, "47쪽"),
   makeAnimal("수달", "수달", ["water"], "강가나 호숫가", "물갈퀴가 있는 발로 헤엄쳐요.", ["물갈퀴", "털", "긴 꼬리"], "물에서 사는 동물의 예예요.", "물갈퀴가 있는 발은 물속에서 헤엄치는 데 알맞아요.", { hasLegs: true, hasWings: false, hasFins: false, inWater: true, crawls: false }, "34쪽, 48쪽"),
   makeAnimal("다슬기", "다슬기", ["water"], "강이나 호수 바닥", "물속 바닥을 기어서 이동해요.", ["껍데기", "부드러운 몸", "발"], "강이나 호수에 사는 동물의 예예요.", "단단한 껍데기와 발이 물속 바닥 생활에 도움을 줘요.", { hasLegs: false, hasWings: false, hasFins: false, inWater: true, crawls: true }, "48쪽"),
   makeAnimal("송사리", "송사리", ["water"], "강이나 호수", "지느러미로 헤엄쳐요.", ["지느러미", "작은 몸", "아가미"], "강이나 호수에 사는 동물의 예예요.", "작은 몸과 지느러미가 얕은 물에서 움직이는 데 알맞아요.", { hasLegs: false, hasWings: false, hasFins: true, inWater: true, crawls: false }, "48쪽"),
+  makeAnimal("소금쟁이", "소금쟁이", ["water"], "연못이나 하천의 물 위", "긴 다리로 물 위를 미끄러지듯 다녀요.", ["긴 다리", "가느다란 몸", "짧은 더듬이"], "비상 AR 자료에 있는 물가 동물 사례예요.", "가늘고 긴 다리는 물 표면 위에서 몸을 지탱하고 이동하는 데 도움을 줘요.", { hasLegs: true, hasWings: false, hasFins: false, inWater: true, crawls: false }, "비상 AR"),
+  makeAnimal("피라미", "피라미", ["water"], "강이나 하천", "지느러미로 헤엄쳐요.", ["지느러미", "비늘", "날씬한 몸"], "비상 AR 자료에 있는 민물고기 사례예요.", "날씬한 몸과 지느러미는 흐르는 물에서 헤엄치는 데 알맞아요.", { hasLegs: false, hasWings: false, hasFins: true, inWater: true, crawls: false }, "비상 AR"),
+  makeAnimal("왜가리", "왜가리", ["water", "land"], "논, 하천, 물가", "긴 다리로 얕은 물을 걸어요.", ["긴 목", "긴 다리", "뾰족한 부리"], "비상 AR 자료에 있는 물가 새 사례예요.", "긴 다리와 뾰족한 부리는 얕은 물에서 먹이를 찾는 데 도움을 줘요.", { hasLegs: true, hasWings: true, hasFins: false, inWater: true, crawls: false }, "비상 AR"),
+  makeAnimal("물방개", "물방개", ["water"], "연못이나 논의 물속", "털이 난 뒷다리로 헤엄쳐요.", ["다리 6개", "단단한 몸", "털 난 뒷다리"], "비상 AR 자료에 있는 물속 곤충 사례예요.", "길고 털이 난 뒷다리는 물속에서 노처럼 움직이는 데 도움을 줘요.", { hasLegs: true, hasWings: false, hasFins: false, inWater: true, crawls: false }, "비상 AR"),
   makeAnimal("메기", "메기", ["water"], "강이나 호수", "지느러미로 헤엄쳐요.", ["지느러미", "수염", "아가미"], "강이나 호수에 사는 동물의 예예요.", "수염은 흐린 물속에서 주변을 느끼는 데 도움을 줘요.", { hasLegs: false, hasWings: false, hasFins: true, inWater: true, crawls: false }, "48쪽"),
   makeAnimal("개구리", "개구리", ["water", "land"], "연못, 논, 물가", "다리로 뛰고 물갈퀴로 헤엄쳐요.", ["다리", "물갈퀴", "축축한 피부"], "강이나 호수에 사는 동물의 예예요.", "물갈퀴가 있는 발은 물속 이동에 도움을 줘요.", { hasLegs: true, hasWings: false, hasFins: false, inWater: true, crawls: false }, "49쪽"),
   makeAnimal("청둥오리", "청둥오리", ["water"], "강이나 호수", "날개로 날고 물갈퀴 발로 헤엄쳐요.", ["날개", "물갈퀴", "부리"], "강이나 호수에 사는 동물의 예예요.", "물갈퀴가 있는 발은 물 위와 물속에서 움직이는 데 도움을 줘요.", { hasLegs: true, hasWings: true, hasFins: false, inWater: true, crawls: false }, "49쪽"),
+  makeAnimal("갈매기", "갈매기", ["water"], "바닷가와 항구", "날개로 바다 위를 날아다녀요.", ["날개", "부리", "물갈퀴 발"], "비상 AR 자료에 있는 바닷가 새 사례예요.", "날개와 물갈퀴 발은 바닷가에서 날고 물 위에 머무는 데 도움을 줘요.", { hasLegs: true, hasWings: true, hasFins: false, inWater: true, crawls: false }, "비상 AR"),
   makeAnimal("조개", "조개", ["water"], "바다, 갯벌", "물속 바닥에서 천천히 움직여요.", ["껍데기", "부드러운 몸", "발"], "바다와 갯벌에 사는 동물의 예예요.", "껍데기는 부드러운 몸을 보호하는 데 도움을 줘요.", { hasLegs: false, hasWings: false, hasFins: false, inWater: true, crawls: true }, "50쪽, 51쪽"),
+  makeAnimal("게", "게", ["water"], "갯벌과 바닷가", "다섯 쌍의 다리로 옆으로 걸어요.", ["집게", "다리 10개", "단단한 껍질"], "갯벌과 바닷가에서 사는 동물의 예예요.", "단단한 껍질과 집게는 갯벌에서 몸을 보호하고 먹이를 찾는 데 도움을 줘요.", { hasLegs: true, hasWings: false, hasFins: false, inWater: true, crawls: false }, "50쪽, 57쪽, 비상 AR"),
+  makeAnimal("전복", "전복", ["water"], "바다 바위", "넓은 발로 바위에 붙어 천천히 기어가요.", ["구멍 있는 껍데기", "넓은 발", "부드러운 몸"], "비상 AR 자료에 있는 바다 동물 사례예요.", "넓은 발과 단단한 껍데기는 바위에 붙어 생활하는 데 도움을 줘요.", { hasLegs: false, hasWings: false, hasFins: false, inWater: true, crawls: true }, "비상 AR"),
   makeAnimal("소라", "소라", ["water"], "바다 바닥", "물속 바닥을 기어서 이동해요.", ["껍데기", "부드러운 몸", "발"], "바다에 사는 동물의 예예요.", "나선 모양 껍데기는 몸을 보호해요.", { hasLegs: false, hasWings: false, hasFins: false, inWater: true, crawls: true }, "50쪽"),
   makeAnimal("돌돔", "돌돔", ["water"], "바다", "지느러미로 헤엄쳐요.", ["지느러미", "비늘", "줄무늬"], "바다에 사는 동물의 예예요.", "지느러미와 비늘은 바다에서 헤엄치는 데 알맞아요.", { hasLegs: false, hasWings: false, hasFins: true, inWater: true, crawls: false }, "50쪽"),
   makeAnimal("해삼", "해삼", ["water"], "바다 바닥", "물속 바닥을 천천히 기어가요.", ["길쭉한 몸", "다리 없음", "부드러운 몸"], "바다에 사는 동물의 예예요.", "바닥에 붙어 천천히 움직이며 생활해요.", { hasLegs: false, hasWings: false, hasFins: false, inWater: true, crawls: true }, "50쪽"),
-  makeAnimal("칠게", { title: "Macrophthalmus_japonicus", lang: "en" }, ["water"], "갯벌", "다리로 걸어요.", ["집게", "다리", "단단한 껍질"], "갯벌에 사는 동물의 예예요.", "다리와 집게가 갯벌에서 움직이고 먹이를 찾는 데 도움을 줘요.", { hasLegs: true, hasWings: false, hasFins: false, inWater: true, crawls: false }, "50쪽, 57쪽"),
   makeAnimal("돌고래", "돌고래", ["water"], "바다", "지느러미와 꼬리로 헤엄쳐요.", ["지느러미", "매끈한 몸", "꼬리"], "바다에 사는 동물의 예예요.", "매끈한 몸과 지느러미가 빠르게 헤엄치는 데 도움을 줘요.", { hasLegs: false, hasWings: false, hasFins: true, inWater: true, crawls: false }, "51쪽"),
   makeAnimal("오징어", "오징어", ["water"], "바다", "몸에서 물을 뿜어 빠르게 움직여요.", ["긴 팔", "빨판", "부드러운 몸"], "바다에 사는 동물의 예예요.", "팔의 빨판은 먹이를 붙잡는 데 도움을 줘요.", { hasLegs: false, hasWings: false, hasFins: false, inWater: true, crawls: false }, "51쪽"),
   makeAnimal("바다거북", "바다거북", ["water"], "바다", "넓은 앞다리로 헤엄쳐요.", ["넓은 앞다리", "등딱지", "부리 모양 입"], "바다에 사는 동물의 예예요.", "넓은 앞다리는 물속에서 노처럼 움직여요.", { hasLegs: true, hasWings: false, hasFins: false, inWater: true, crawls: false }, "51쪽"),
@@ -117,6 +130,12 @@ const animals = [
   makeAnimal("해마", { title: "Seahorse", lang: "en" }, ["water"], "바다", "작은 지느러미를 움직여 천천히 헤엄쳐요.", ["작은 지느러미", "말처럼 생긴 머리", "말린 꼬리"], "바다에서 이동하는 방법을 생김새와 연결해 생각해요.", "작은 지느러미와 꼬리가 바닷속에서 몸을 조절하는 데 도움을 줘요.", { hasLegs: false, hasWings: false, hasFins: true, inWater: true, crawls: false }, "51쪽")
 ];
 
+const collectedIdAliases = {
+  "오색딱따구리": "딱따구리",
+  "황제펭귄": "펭귄",
+  "칠게": "게"
+};
+const animalIds = new Set(animals.map(animal => animal.id));
 const storageKey = "animal-encyclopedia-collected-v1";
 const settingsSeenKey = "animal-encyclopedia-settings-seen-v1";
 const imageCache = new Map();
@@ -696,11 +715,11 @@ function buildObservationDetails(animal) {
   const visibleParts = animal.body.join(", ");
 
   return {
-    intro: `${animal.name}은/는 ${animal.habitat}에서 볼 수 있는 동물입니다. ${lifeBrief(animal)}`,
-    appearance: `${animal.name}의 몸에서는 ${visibleParts}이/가 잘 보입니다. 이 부분들은 몸을 보호하거나 움직이고 먹이를 찾는 데 쓰입니다.`,
+    intro: `${animal.name}${topicParticle(animal.name)} ${animal.habitat}에서 볼 수 있는 동물입니다. ${lifeBrief(animal)}`,
+    appearance: `${animal.name}의 몸에서는 ${visibleParts} 같은 부분이 잘 보입니다. 이 부분들은 몸을 보호하거나 움직이고 먹이를 찾는 데 쓰입니다.`,
     lifestyle: `${animal.move} ${lifestyleExplanation(animal)}`,
     habitatLife: `${animal.habitat}에서 먹이나 쉴 곳을 찾으며 살아갑니다. ${animal.move}`,
-    habitatLink: `${animal.relation} 이런 특징 때문에 ${animal.name}은/는 ${animal.habitat}에서 생활하기에 알맞습니다.`
+    habitatLink: `${animal.relation} 이런 특징 때문에 ${animal.name}${topicParticle(animal.name)} ${animal.habitat}에서 생활하기에 알맞습니다.`
   };
 }
 
@@ -747,23 +766,124 @@ function startQuiz(animal) {
 }
 
 function buildQuestions(animal) {
+  const moveKey = getMovementKey(animal);
+  const featureKey = getFeatureKey(animal);
   return [
     {
-      text: `${animal.name}이/가 주로 사는 곳은 어디일까요?`,
+      text: `${animal.name}${subjectParticle(animal.name)} 주로 사는 곳으로 가장 알맞은 곳은 어디일까요?`,
       correct: animal.habitat,
-      options: makeOptions(animal.habitat, "habitat", animal.id)
+      options: makeHabitatOptions(animal)
     },
     {
-      text: `${animal.name}은/는 어떻게 이동할까요?`,
-      correct: animal.move,
-      options: makeOptions(animal.move, "move", animal.id)
+      text: `${animal.name}${topicParticle(animal.name)} 어떻게 이동할까요?`,
+      correct: movementOptionLabels[moveKey],
+      options: makeMovementOptions(moveKey)
     },
     {
-      text: `${animal.name}의 특징으로 알맞은 것은 무엇일까요?`,
-      correct: animal.relation,
-      options: makeOptions(animal.relation, "relation", animal.id)
+      text: `${animal.name}의 특징으로 가장 알맞은 것은 무엇일까요?`,
+      correct: featureOptionLabels[featureKey],
+      options: makeFeatureOptions(featureKey)
     }
   ];
+}
+
+function makeHabitatOptions(animal) {
+  const correct = animal.habitat;
+  return shuffle([correct, ...getHabitatDistractors(animal, correct).slice(0, 2)]);
+}
+
+function getHabitatDistractors(animal, correct) {
+  const normalized = correct.replace(/\s/g, "");
+  let candidates;
+
+  if (correct.includes("사막")) {
+    candidates = ["강이나 호수", "극지방", "숲의 나무", "집 주변, 마을"];
+  } else if (correct.includes("극지방") || correct.includes("남극")) {
+    candidates = ["사막", "갯벌과 바닷가", "풀밭, 꽃밭", "땅속"];
+  } else if (correct.includes("바다") || correct.includes("갯벌")) {
+    candidates = ["사막", "숲의 나무", "집 주변, 마을", "땅속"];
+  } else if (animal.inWater) {
+    candidates = ["사막", "숲의 나무", "집 주변, 마을", "극지방"];
+  } else if (correct.includes("땅속")) {
+    candidates = ["바다", "꽃이 핀 곳", "극지방", "갯벌과 바닷가"];
+  } else {
+    candidates = ["바다", "사막", "극지방", "갯벌과 바닷가", "강이나 호수"];
+  }
+
+  return candidates.filter(option => option.replace(/\s/g, "") !== normalized);
+}
+
+const movementOptionLabels = {
+  crawlNoLegs: "다리 없이 몸을 굽혀 기어 이동해요.",
+  crawlWithLegs: "다리를 써서 바닥을 기어 이동해요.",
+  walkRun: "다리로 걷거나 뛰어 이동해요.",
+  fly: "날개로 날아 이동해요.",
+  swimFins: "지느러미를 써서 물속을 헤엄쳐요.",
+  swimLegs: "물갈퀴나 다리를 써서 물속을 헤엄쳐요.",
+  flyAndSwim: "날개로 날고 물에서도 헤엄쳐요."
+};
+
+const movementDistractors = {
+  crawlNoLegs: ["fly", "swimFins", "walkRun", "swimLegs"],
+  crawlWithLegs: ["fly", "swimFins", "walkRun", "crawlNoLegs"],
+  walkRun: ["fly", "swimFins", "crawlNoLegs", "flyAndSwim"],
+  fly: ["walkRun", "swimFins", "crawlNoLegs", "swimLegs"],
+  swimFins: ["walkRun", "fly", "crawlNoLegs", "swimLegs"],
+  swimLegs: ["walkRun", "fly", "crawlNoLegs", "swimFins"],
+  flyAndSwim: ["fly", "swimFins", "walkRun", "crawlNoLegs"]
+};
+
+function getMovementKey(animal) {
+  const move = animal.move || "";
+  if (move.includes("날") && move.includes("헤엄")) return "flyAndSwim";
+  if (move.includes("헤엄")) return animal.hasFins ? "swimFins" : "swimLegs";
+  if (move.includes("날")) return "fly";
+  if (move.includes("기어")) return animal.hasLegs ? "crawlWithLegs" : "crawlNoLegs";
+  if (move.includes("걷") || move.includes("걸") || move.includes("뛰")) return "walkRun";
+  if (animal.hasFins) return "swimFins";
+  if (animal.hasWings && animal.inWater) return "flyAndSwim";
+  if (animal.hasWings) return "fly";
+  if (animal.crawls) return animal.hasLegs ? "crawlWithLegs" : "crawlNoLegs";
+  if (animal.inWater) return "swimLegs";
+  return "walkRun";
+}
+
+function makeMovementOptions(correctKey) {
+  return shuffle([
+    movementOptionLabels[correctKey],
+    ...movementDistractors[correctKey].slice(0, 2).map(key => movementOptionLabels[key])
+  ]);
+}
+
+const featureOptionLabels = {
+  fins: "지느러미가 있는 동물이에요.",
+  wings: "날개가 있는 동물이에요.",
+  noLegsCrawl: "다리가 없어 몸을 굽혀 기어 이동해요.",
+  waterLife: "물가나 물속에서 주로 살아요.",
+  legsLife: "다리로 걷거나 뛰며 생활해요."
+};
+
+const featureDistractors = {
+  fins: ["wings", "noLegsCrawl", "legsLife", "waterLife"],
+  wings: ["fins", "noLegsCrawl", "waterLife", "legsLife"],
+  noLegsCrawl: ["wings", "fins", "legsLife", "waterLife"],
+  waterLife: ["wings", "fins", "legsLife", "noLegsCrawl"],
+  legsLife: ["wings", "fins", "noLegsCrawl", "waterLife"]
+};
+
+function getFeatureKey(animal) {
+  if (animal.hasFins) return "fins";
+  if (animal.hasWings) return "wings";
+  if (animal.crawls && !animal.hasLegs) return "noLegsCrawl";
+  if (animal.inWater) return "waterLife";
+  return "legsLife";
+}
+
+function makeFeatureOptions(correctKey) {
+  return shuffle([
+    featureOptionLabels[correctKey],
+    ...featureDistractors[correctKey].slice(0, 2).map(key => featureOptionLabels[key])
+  ]);
 }
 
 function makeOptions(correct, key, currentId) {
@@ -774,6 +894,20 @@ function makeOptions(correct, key, currentId) {
       .filter((value, index, array) => value && value !== correct && array.indexOf(value) === index)
   ).slice(0, 2);
   return shuffle([correct, ...wrongs]);
+}
+
+function subjectParticle(value) {
+  return hasFinalConsonant(value) ? "이" : "가";
+}
+
+function topicParticle(value) {
+  return hasFinalConsonant(value) ? "은" : "는";
+}
+
+function hasFinalConsonant(value) {
+  const last = String(value).trim().charCodeAt(String(value).trim().length - 1);
+  if (last < 0xac00 || last > 0xd7a3) return false;
+  return (last - 0xac00) % 28 !== 0;
 }
 
 function renderQuiz() {
@@ -897,7 +1031,7 @@ function showCatchAnimation(animal, onComplete) {
   animalImage.decoding = "async";
 
   const detailImageSrc = els.detailImage ? (els.detailImage.currentSrc || els.detailImage.getAttribute("src") || "") : "";
-  animalImage.src = detailImageSrc || animal.image;
+  setStandaloneImage(animal, animalImage, detailImageSrc);
   animalShell.append(animalImage);
 
   const message = document.createElement("p");
@@ -1038,10 +1172,15 @@ function createGameToken(animal) {
     button.classList.add(correct ? "correct-token" : "wrong-token");
   }
 
-  button.innerHTML = `
-    <img alt="${animal.name} 사진" src="${animal.image}">
-    <span>${animal.name}</span>
-  `;
+  const image = document.createElement("img");
+  image.alt = `${animal.name} 사진`;
+  image.decoding = "async";
+  setStandaloneImage(animal, image);
+
+  const label = document.createElement("span");
+  label.textContent = animal.name;
+
+  button.append(image, label);
   button.addEventListener("dragstart", event => {
     event.dataTransfer.setData("text/plain", animal.id);
   });
@@ -1102,18 +1241,17 @@ function updateGameScore(score) {
 
 async function setImage(animal, image, frame) {
   frame.classList.add("loading");
+  setImagePlaceholder(image, animal, "사진 준비 중");
   try {
     const source = await getImageSource(animal);
     if (!source) throw new Error("no image");
-    image.onerror = () => {
-      image.removeAttribute("src");
+    applyResolvedImage(image, animal, source, () => {
       frame.textContent = `${animal.name} 사진`;
-    };
-    image.src = source;
+    });
     frame.textContent = "";
     frame.append(image);
   } catch {
-    image.removeAttribute("src");
+    setImagePlaceholder(image, animal, "사진 없음");
     image.alt = `${animal.name} 사진을 불러오지 못했어요.`;
     frame.textContent = `${animal.name} 사진`;
   } finally {
@@ -1121,7 +1259,56 @@ async function setImage(animal, image, frame) {
   }
 }
 
-async function getImageSource(animal) {
+async function setStandaloneImage(animal, image, preferredSource = "") {
+  setImagePlaceholder(image, animal, "사진 준비 중");
+  try {
+    const source = await getImageSource(animal, preferredSource);
+    if (!source) throw new Error("no image");
+    applyResolvedImage(image, animal, source, () => {
+      setImagePlaceholder(image, animal, "사진 없음");
+    });
+  } catch {
+    setImagePlaceholder(image, animal, "사진 없음");
+    image.alt = `${animal.name} 사진을 불러오지 못했어요.`;
+  }
+}
+
+function applyResolvedImage(image, animal, source, onError) {
+  image.onerror = () => {
+    image.onerror = null;
+    onError?.();
+  };
+  image.alt = `${animal.name} 사진`;
+  image.src = source;
+}
+
+function setImagePlaceholder(image, animal, label) {
+  image.onerror = null;
+  image.alt = `${animal.name} ${label}`;
+  image.src = createImagePlaceholder(animal.name, label);
+}
+
+function createImagePlaceholder(name, label) {
+  return `data:image/svg+xml;charset=UTF-8,${encodeURIComponent(`
+    <svg xmlns="http://www.w3.org/2000/svg" width="320" height="240" viewBox="0 0 320 240">
+      <rect width="320" height="240" fill="#f3f4f6" />
+      <text x="50%" y="48%" text-anchor="middle" font-size="24" font-family="sans-serif" fill="#6b7280">${escapeSvgText(name)}</text>
+      <text x="50%" y="62%" text-anchor="middle" font-size="16" font-family="sans-serif" fill="#9ca3af">${escapeSvgText(label)}</text>
+    </svg>
+  `)}`;
+}
+
+function escapeSvgText(value) {
+  return String(value)
+    .replace(/&/g, "&amp;")
+    .replace(/</g, "&lt;")
+    .replace(/>/g, "&gt;")
+    .replace(/"/g, "&quot;")
+    .replace(/'/g, "&#39;");
+}
+
+async function getImageSource(animal, preferredSource = "") {
+  if (preferredSource) return preferredSource;
   if (animal.image) return animal.image;
   const key = `${animal.wikiLang}:${animal.wikiTitle}`;
   if (imageCache.has(key)) return imageCache.get(key);
@@ -1131,6 +1318,7 @@ async function getImageSource(animal) {
   const source = data.thumbnail?.source || "";
   const page = data.content_urls?.desktop?.page;
   if (page) animal.source = page;
+  if (source) animal.image = source;
   imageCache.set(key, source);
   return source;
 }
@@ -1152,7 +1340,10 @@ function resetProgress() {
 
 function readCollected() {
   try {
-    return JSON.parse(localStorage.getItem(storageKey) || "[]");
+    const savedIds = JSON.parse(localStorage.getItem(storageKey) || "[]");
+    return savedIds
+      .map(id => collectedIdAliases[id] || id)
+      .filter(id => animalIds.has(id));
   } catch {
     return [];
   }
