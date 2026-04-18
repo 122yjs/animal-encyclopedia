@@ -444,6 +444,8 @@ function openAnimal(animal) {
 
 function closeDetail() {
   state.selectedAnimal = null;
+  state.quiz = null;
+  clearHintHighlight();
   els.detailModal.hidden = true;
   renderAnimals();
 }
@@ -451,21 +453,24 @@ function closeDetail() {
 function renderAnimalInfo(animal) {
   const isCollected = state.collected.has(animal.id);
   const observation = buildObservationDetails(animal);
+  const retryState = state.quiz && state.quiz.animal.id === animal.id ? state.quiz.retryState : null;
+  const retryDelay = retryState ? Math.max(0, retryState.unlockAt - Date.now()) : 0;
+  const retryLocked = retryDelay > 0;
   els.detailBody.innerHTML = `
     <div class="modal-title-row">
       <h2 id="modalTitle">${animal.name}</h2>
       <span class="mini-badge ${isCollected ? "collected-badge" : ""}">${isCollected ? "⭐ 도감 등록 완료" : "퀴즈 대기"}</span>
     </div>
     <p class="encyclopedia-lede">${observation.intro}</p>
-    <div class="encyclopedia-article">
+    <div class="encyclopedia-article" id="animalArticle">
       <section class="encyclopedia-section">
         <h3>생김새와 움직임</h3>
-        <p>${observation.appearance}</p>
-        <p>${observation.lifestyle}</p>
+        <p data-hint="appearance">${observation.appearance}</p>
+        <p data-hint="lifestyle">${observation.lifestyle}</p>
       </section>
       <section class="encyclopedia-section">
         <h3>사는 곳과 생활</h3>
-        <p>${observation.habitatLife}</p>
+        <p data-hint="habitat">${observation.habitatLife}</p>
       </section>
       <section class="encyclopedia-section">
         <h3>환경에 알맞은 점</h3>
@@ -474,11 +479,38 @@ function renderAnimalInfo(animal) {
     </div>
     ${renderQuestionTool()}
     <a class="source-link" href="${animal.source}" target="_blank" rel="noreferrer">사진 출처 보기</a>
-    <button class="primary-button" type="button" data-start-quiz="${animal.id}">
-      🎯 퀴즈 풀고 도감에 등록하기
-    </button>
+    ${retryState ? renderQuizRetryPanel(state.quiz, retryLocked, retryDelay) : `
+      <button class="primary-button" type="button" data-start-quiz="${animal.id}">
+        🎯 퀴즈 풀고 도감에 등록하기
+      </button>
+    `}
   `;
-  els.detailBody.querySelector("[data-start-quiz]").addEventListener("click", () => startQuiz(animal));
+
+  const startButton = els.detailBody.querySelector("[data-start-quiz]");
+  if (startButton) {
+    startButton.addEventListener("click", () => startQuiz(animal));
+  }
+
+  const retryButton = els.detailBody.querySelector("[data-resume-quiz]");
+  if (retryButton) {
+    retryButton.addEventListener("click", resumeQuiz);
+    if (retryLocked) {
+      scheduleRetryButtonUnlock(retryButton, retryDelay);
+    }
+    window.requestAnimationFrame(() => showHintAndScroll(retryState.hintKey));
+  }
+}
+
+function renderQuizRetryPanel(quiz, retryLocked, retryDelay) {
+  const progressText = `문제 ${quiz.index + 1} / ${quiz.questions.length}`;
+  const buttonLabel = retryLocked ? `⏳ ${Math.ceil(retryDelay / 1000)}초 뒤 다시 도전` : "🎯 다시 문제 풀기";
+  return `
+    <section class="quiz-retry-panel" aria-live="polite">
+      <p class="feedback retry">앗, 틀렸어요! 노란 문장을 다시 읽고 같은 문제에 다시 도전해 보세요.</p>
+      <p class="card-point">${progressText}</p>
+      <button class="primary-button" type="button" data-resume-quiz ${retryLocked ? "disabled" : ""}>${buttonLabel}</button>
+    </section>
+  `;
 }
 
 function renderQuestionTool() {
@@ -760,8 +792,10 @@ function startQuiz(animal) {
     index: 0,
     score: 0,
     answered: null,
+    retryState: null,
     questions: buildQuestions(animal)
   };
+  clearHintHighlight();
   renderQuiz();
 }
 
@@ -772,16 +806,19 @@ function buildQuestions(animal) {
     {
       text: `${animal.name}${subjectParticle(animal.name)} 주로 사는 곳으로 가장 알맞은 곳은 어디일까요?`,
       correct: animal.habitat,
+      hintKey: "habitat",
       options: makeHabitatOptions(animal)
     },
     {
       text: `${animal.name}${topicParticle(animal.name)} 어떻게 이동할까요?`,
       correct: movementOptionLabels[moveKey],
+      hintKey: "lifestyle",
       options: makeMovementOptions(moveKey)
     },
     {
       text: `${animal.name}의 특징으로 가장 알맞은 것은 무엇일까요?`,
       correct: featureOptionLabels[featureKey],
+      hintKey: "appearance",
       options: makeFeatureOptions(featureKey)
     }
   ];
@@ -912,8 +949,10 @@ function hasFinalConsonant(value) {
 
 function renderQuiz() {
   const quiz = state.quiz;
+  if (!quiz) return;
   const question = quiz.questions[quiz.index];
-  
+  clearHintHighlight();
+
   els.detailBody.innerHTML = `
     <div class="modal-title-row">
       <h2 id="modalTitle">${quiz.animal.name} 퀴즈</h2>
@@ -924,28 +963,20 @@ function renderQuiz() {
       <div class="quiz-options">
         ${question.options.map(option => {
           const isCorrect = option === question.correct;
-          const isChosenWrong = quiz.wrongAnswers && quiz.wrongAnswers.has(option);
-          
           let className = "answer-button";
           let disabled = false;
-          
+
           if (quiz.answered) {
             disabled = true;
             if (isCorrect) className += " correct";
-          } else {
-            if (isChosenWrong) {
-               className += " wrong";
-               disabled = true;
-            }
           }
+
           return `<button type="button" class="${className}" data-answer="${escapeAttribute(option)}" ${disabled ? "disabled" : ""}>${option}</button>`;
         }).join("")}
       </div>
-      ${quiz.answered 
-         ? renderFeedback(true, quiz.index === quiz.questions.length - 1) 
-         : (quiz.wrongAnswers && quiz.wrongAnswers.size > 0 
-            ? renderFeedback(false, false)
-            : `<p class="card-point">도감 내용을 떠올리며 골라 봐요.</p>`)}
+      ${quiz.answered
+         ? renderFeedback(true, quiz.index === quiz.questions.length - 1)
+         : `<p class="card-point">도감 내용을 떠올리며 골라 봐요.</p>`}
     </div>
   `;
 
@@ -955,14 +986,6 @@ function renderQuiz() {
 
   const next = els.detailBody.querySelector("[data-next]");
   if (next) next.addEventListener("click", nextQuestion);
-
-  // 자동 스크롤 UX 개선
-  if (quiz.answered || (quiz.wrongAnswers && quiz.wrongAnswers.size > 0)) {
-    setTimeout(() => {
-      const box = els.detailBody.querySelector(".quiz-box");
-      if (box) box.scrollIntoView({ behavior: 'smooth', block: 'end' });
-    }, 50);
-  }
 }
 
 function renderFeedback(correct, isLast) {
@@ -981,16 +1004,58 @@ function renderFeedback(correct, isLast) {
 function answerQuestion(answer) {
   const quiz = state.quiz;
   const question = quiz.questions[quiz.index];
-  
+
   if (answer === question.correct) {
     quiz.answered = answer;
     quiz.score += 1;
+    quiz.retryState = null;
+    clearHintHighlight();
+    renderQuiz();
   } else {
-    quiz.wrongAnswers = quiz.wrongAnswers || new Set();
-    quiz.wrongAnswers.add(answer);
+    quiz.retryState = {
+      hintKey: question.hintKey,
+      unlockAt: Date.now() + 4000
+    };
+    renderAnimalInfo(quiz.animal);
   }
-  
+}
+
+function resumeQuiz() {
+  const quiz = state.quiz;
+  if (!quiz) return;
+
+  quiz.retryState = null;
+  quiz.answered = null;
+  clearHintHighlight();
   renderQuiz();
+}
+
+function scheduleRetryButtonUnlock(button, delay) {
+  window.setTimeout(() => {
+    if (!button.isConnected) return;
+    button.disabled = false;
+    button.textContent = "🎯 다시 문제 풀기";
+  }, delay);
+}
+
+function showHintAndScroll(hintKey) {
+  if (!hintKey) return;
+
+  clearHintHighlight();
+  const hintParagraph = document.querySelector(`[data-hint="${hintKey}"]`);
+  if (!hintParagraph) return;
+
+  hintParagraph.classList.add("hint-highlight");
+  window.setTimeout(() => {
+    if (!hintParagraph.isConnected) return;
+    hintParagraph.scrollIntoView({ behavior: "smooth", block: "center" });
+  }, 100);
+}
+
+function clearHintHighlight() {
+  document.querySelectorAll(".hint-highlight").forEach(el => {
+    el.classList.remove("hint-highlight");
+  });
 }
 
 function nextQuestion() {
@@ -998,7 +1063,7 @@ function nextQuestion() {
   if (quiz.index < quiz.questions.length - 1) {
     quiz.index += 1;
     quiz.answered = null;
-    quiz.wrongAnswers = new Set();
+    quiz.retryState = null;
     renderQuiz();
     return;
   }

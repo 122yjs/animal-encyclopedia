@@ -704,6 +704,16 @@ button:focus-visible {
   gap: 8px;
 }
 
+.quiz-retry-panel {
+  display: grid;
+  gap: 10px;
+  margin-top: 16px;
+  padding: 16px;
+  background: #fff7e8;
+  border: 2px solid #ffd27f;
+  border-radius: 16px;
+}
+
 .feedback {
   margin: 0;
   font-weight: 900;
@@ -715,6 +725,22 @@ button:focus-visible {
 
 .feedback.retry {
   color: var(--coral);
+}
+
+.hint-highlight {
+  background-color: rgba(255, 235, 59, 0.6);
+  border-radius: 3px;
+  padding: 2px 4px;
+  animation: hint-glow 0.5s ease-in-out 2;
+}
+
+@keyframes hint-glow {
+  0%, 100% {
+    background-color: rgba(255, 235, 59, 0.6);
+  }
+  50% {
+    background-color: rgba(255, 235, 59, 0.9);
+  }
 }
 
 .source-link {
