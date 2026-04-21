@@ -987,19 +987,73 @@ function buildDistinctiveFeatureQuestion(animal) {
 }
 
 function makeDistinctiveFeatureOptions(animal, correct) {
+  const distractors = animals
+    .filter(candidate => candidate.id !== animal.id)
+    .map(candidate => ({
+      option: makeDistinctiveFeatureOption(candidate),
+      score: getFeatureDistractorScore(animal, candidate, correct)
+    }))
+    .filter((item, index, array) => (
+      item.option !== correct &&
+      array.findIndex(candidate => candidate.option === item.option) === index
+    ))
+    .sort((first, second) => second.score - first.score)
+    .slice(0, 2)
+    .map(item => item.option);
+
   return shuffle([
     correct,
-    ...shuffle(
-      animals
-        .filter(candidate => candidate.id !== animal.id)
-        .map(makeDistinctiveFeatureOption)
-        .filter((option, index, array) => option !== correct && array.indexOf(option) === index)
-    ).slice(0, 2)
+    ...distractors
   ]);
 }
 
 function makeDistinctiveFeatureOption(animal) {
   return animal.relation;
+}
+
+function getFeatureDistractorScore(target, candidate, correct) {
+  let score = 0;
+  const option = makeDistinctiveFeatureOption(candidate);
+  const sharedTokens = getMeaningfulTokenOverlap(
+    getFeatureComparisonText(target, correct),
+    getFeatureComparisonText(candidate, option)
+  );
+
+  if (!target.categories.some(category => candidate.categories.includes(category))) score += 5;
+  if (target.hasFins !== candidate.hasFins) score += 4;
+  if (target.hasWings !== candidate.hasWings) score += 4;
+  if (target.inWater !== candidate.inWater) score += 3;
+  if (target.crawls !== candidate.crawls) score += 3;
+  if (target.hasLegs !== candidate.hasLegs) score += 2;
+  if (target.habitat === candidate.habitat) score -= 5;
+  if (target.move === candidate.move) score -= 5;
+
+  return score - (sharedTokens.length * 3);
+}
+
+function getFeatureComparisonText(animal, option) {
+  return `${animal.body.join(" ")} ${animal.habitat} ${animal.move} ${option}`;
+}
+
+function getMeaningfulTokenOverlap(first, second) {
+  const firstTokens = getMeaningfulTokens(first);
+  const secondTokens = getMeaningfulTokens(second);
+  return firstTokens.filter(token => secondTokens.includes(token));
+}
+
+const featureDistractorStopWords = new Set([
+  "같은", "것은", "무엇", "도움을", "줘요", "생활", "생활에", "알맞아요",
+  "에서", "으로", "하며", "있는", "없는", "몸을", "몸과", "먹이를",
+  "움직여요", "이동해요", "다녀요", "찾고", "찾으며"
+]);
+
+function getMeaningfulTokens(text) {
+  return [...new Set(
+    String(text)
+      .replace(/[.,]/g, " ")
+      .split(/\s+/)
+      .filter(token => token.length > 1 && !featureDistractorStopWords.has(token))
+  )];
 }
 
 function makeOptions(correct, key, currentId) {
