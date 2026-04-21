@@ -850,15 +850,9 @@ function startQuiz(animal) {
 
 function buildQuestions(animal) {
   const moveKey = getMovementKey(animal);
-  const featureKey = getFeatureKey(animal);
   const finalQuestion = animal.categories.includes("special")
     ? buildSpecialEnvironmentQuestion(animal)
-    : {
-      text: `${animal.name}의 특징으로 가장 알맞은 것은 무엇일까요?`,
-      correct: featureOptionLabels[featureKey],
-      hintKey: "appearance",
-      options: makeFeatureOptions(featureKey)
-    };
+    : buildDistinctiveFeatureQuestion(animal);
 
   return [
     {
@@ -945,22 +939,6 @@ function makeMovementOptions(correctKey) {
   ]);
 }
 
-const featureOptionLabels = {
-  fins: "지느러미가 있는 동물이에요.",
-  wings: "날개가 있는 동물이에요.",
-  noLegsCrawl: "다리가 없어 몸을 굽혀 기어 이동해요.",
-  waterLife: "물가나 물속에서 주로 살아요.",
-  legsLife: "다리로 걷거나 뛰며 생활해요."
-};
-
-const featureDistractors = {
-  fins: ["wings", "noLegsCrawl", "legsLife", "waterLife"],
-  wings: ["fins", "noLegsCrawl", "waterLife", "legsLife"],
-  noLegsCrawl: ["wings", "fins", "legsLife", "waterLife"],
-  waterLife: ["wings", "fins", "legsLife", "noLegsCrawl"],
-  legsLife: ["wings", "fins", "noLegsCrawl", "waterLife"]
-};
-
 const specialEnvironmentQuiz = {
   "낙타": "혹과 두꺼운 발바닥이 건조한 사막 생활에 도움을 줘요.",
   "도루묵도마뱀": "뜨거운 낮에는 모래 속에서 지내며 더위를 피할 수 있어요.",
@@ -998,19 +976,30 @@ function makeSpecialEnvironmentOptions(correct) {
   ]);
 }
 
-function getFeatureKey(animal) {
-  if (animal.hasFins) return "fins";
-  if (animal.hasWings) return "wings";
-  if (animal.crawls && !animal.hasLegs) return "noLegsCrawl";
-  if (animal.inWater) return "waterLife";
-  return "legsLife";
+function buildDistinctiveFeatureQuestion(animal) {
+  const correct = makeDistinctiveFeatureOption(animal);
+  return {
+    text: `${animal.name}의 생김새와 특징으로 가장 알맞은 것은 무엇일까요?`,
+    correct,
+    hintKey: "appearance",
+    options: makeDistinctiveFeatureOptions(animal, correct)
+  };
 }
 
-function makeFeatureOptions(correctKey) {
+function makeDistinctiveFeatureOptions(animal, correct) {
   return shuffle([
-    featureOptionLabels[correctKey],
-    ...featureDistractors[correctKey].slice(0, 2).map(key => featureOptionLabels[key])
+    correct,
+    ...shuffle(
+      animals
+        .filter(candidate => candidate.id !== animal.id)
+        .map(makeDistinctiveFeatureOption)
+        .filter((option, index, array) => option !== correct && array.indexOf(option) === index)
+    ).slice(0, 2)
   ]);
+}
+
+function makeDistinctiveFeatureOption(animal) {
+  return animal.relation;
 }
 
 function makeOptions(correct, key, currentId) {
