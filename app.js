@@ -890,6 +890,8 @@ function getHabitatDistractors(animal, correct) {
     candidates = ["사막", "숲의 나무", "집 주변, 마을", "극지방"];
   } else if (correct.includes("땅속")) {
     candidates = ["바다", "꽃이 핀 곳", "극지방", "갯벌과 바닷가"];
+  } else if (correct.includes("물가")) {
+    candidates = ["사막", "극지방", "숲의 나무", "집 주변, 마을"];
   } else {
     candidates = ["바다", "사막", "극지방", "갯벌과 바닷가", "강이나 호수"];
   }
@@ -935,7 +937,7 @@ function getMovementKey(animal) {
 function makeMovementOptions(correctKey) {
   return shuffle([
     movementOptionLabels[correctKey],
-    ...movementDistractors[correctKey].slice(0, 2).map(key => movementOptionLabels[key])
+    ...shuffle(movementDistractors[correctKey]).slice(0, 2).map(key => movementOptionLabels[key])
   ]);
 }
 
