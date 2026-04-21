@@ -522,7 +522,7 @@ function renderAnimalInfo(animal) {
       </section>
       <section class="encyclopedia-section">
         <h3>환경에 알맞은 점</h3>
-        <p>${observation.habitatLink}</p>
+        <p data-hint="adaptation">${observation.habitatLink}</p>
       </section>
     </div>
     ${renderQuestionTool()}
@@ -851,6 +851,15 @@ function startQuiz(animal) {
 function buildQuestions(animal) {
   const moveKey = getMovementKey(animal);
   const featureKey = getFeatureKey(animal);
+  const finalQuestion = animal.categories.includes("special")
+    ? buildSpecialEnvironmentQuestion(animal)
+    : {
+      text: `${animal.name}의 특징으로 가장 알맞은 것은 무엇일까요?`,
+      correct: featureOptionLabels[featureKey],
+      hintKey: "appearance",
+      options: makeFeatureOptions(featureKey)
+    };
+
   return [
     {
       text: `${animal.name}${subjectParticle(animal.name)} 주로 사는 곳으로 가장 알맞은 곳은 어디일까요?`,
@@ -864,12 +873,7 @@ function buildQuestions(animal) {
       hintKey: "lifestyle",
       options: makeMovementOptions(moveKey)
     },
-    {
-      text: `${animal.name}의 특징으로 가장 알맞은 것은 무엇일까요?`,
-      correct: featureOptionLabels[featureKey],
-      hintKey: "appearance",
-      options: makeFeatureOptions(featureKey)
-    }
+    finalQuestion
   ];
 }
 
@@ -956,6 +960,43 @@ const featureDistractors = {
   waterLife: ["wings", "fins", "legsLife", "noLegsCrawl"],
   legsLife: ["wings", "fins", "noLegsCrawl", "waterLife"]
 };
+
+const specialEnvironmentQuiz = {
+  "낙타": "혹과 두꺼운 발바닥이 건조한 사막 생활에 도움을 줘요.",
+  "도루묵도마뱀": "뜨거운 낮에는 모래 속에서 지내며 더위를 피할 수 있어요.",
+  "사막여우": "큰 귀와 털 많은 발바닥이 더운 사막 생활에 도움을 줘요.",
+  "사막 뱀": "모래색 몸과 옆으로 기는 움직임이 사막 생활에 알맞아요.",
+  "사막 딱정벌레": "단단한 몸과 등의 돌기가 건조한 사막 생활에 도움을 줘요.",
+  "북극곰": "두꺼운 털과 피부가 극지방의 추위를 견디는 데 도움을 줘요.",
+  "북극여우": "작은 귀와 두꺼운 털이 몸의 열을 지키는 데 도움을 줘요.",
+  "펭귄": "빽빽한 깃털과 날개 모양 지느러미가 추위와 물속 생활에 도움을 줘요.",
+  "산양": "발굽과 다리가 가파른 바위에서 균형을 잡는 데 도움을 줘요."
+};
+
+const specialEnvironmentDistractors = [
+  "얇은 날개로 꽃 사이를 날아다니는 데 알맞아요.",
+  "아가미와 지느러미가 물속에서 헤엄치는 데 알맞아요.",
+  "끈끈한 발로 축축한 그늘을 천천히 기어 다니는 데 알맞아요.",
+  "거미줄을 쳐서 작은 먹이를 잡는 데 알맞아요.",
+  "긴 더듬이로 땅 위의 길을 찾는 데 알맞아요."
+];
+
+function buildSpecialEnvironmentQuestion(animal) {
+  const correct = specialEnvironmentQuiz[animal.id] || animal.relation;
+  return {
+    text: `${animal.name}${topicParticle(animal.name)} ${animal.habitat}에서 살아가기에 알맞은 특징은 무엇일까요?`,
+    correct,
+    hintKey: "adaptation",
+    options: makeSpecialEnvironmentOptions(correct)
+  };
+}
+
+function makeSpecialEnvironmentOptions(correct) {
+  return shuffle([
+    correct,
+    ...shuffle(specialEnvironmentDistractors.filter(option => option !== correct)).slice(0, 2)
+  ]);
+}
 
 function getFeatureKey(animal) {
   if (animal.hasFins) return "fins";
