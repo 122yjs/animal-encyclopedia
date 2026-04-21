@@ -155,7 +155,8 @@ const state = {
   },
   quiz: null,
   lastFocus: null,
-  settingsLastFocus: null
+  settingsLastFocus: null,
+  modalFocusStack: []
 };
 
 const els = {
@@ -211,6 +212,64 @@ const els = {
   confirmYes: document.querySelector("#confirmYes"),
   confirmNo: document.querySelector("#confirmNo")
 };
+
+const FOCUSABLE_SELECTOR = 'a[href], button:not([disabled]), input:not([disabled]), select:not([disabled]), textarea:not([disabled]), [tabindex]:not([tabindex="-1"])';
+
+function getFocusableElements(container) {
+  return Array.from(container.querySelectorAll(FOCUSABLE_SELECTOR))
+    .filter(el => el.offsetParent !== null && !el.closest("[hidden]"));
+}
+
+function handleModalKeydown(event) {
+  if (event.key !== "Tab" || state.modalFocusStack.length === 0) return;
+  const topModal = state.modalFocusStack[state.modalFocusStack.length - 1];
+  const focusables = getFocusableElements(topModal);
+  if (focusables.length === 0) return;
+  const first = focusables[0];
+  const last = focusables[focusables.length - 1];
+  if (event.shiftKey && document.activeElement === first) {
+    event.preventDefault();
+    last.focus();
+  } else if (!event.shiftKey && document.activeElement === last) {
+    event.preventDefault();
+    first.focus();
+  }
+}
+
+function enterModalFocus(modalElement) {
+  const appLayout = document.querySelector(".app-layout");
+  if (state.modalFocusStack.length === 0 && appLayout) {
+    appLayout.inert = true;
+  }
+  if (state.modalFocusStack.length > 0) {
+    const prevModal = state.modalFocusStack[state.modalFocusStack.length - 1];
+    prevModal.inert = true;
+  }
+  state.modalFocusStack.push(modalElement);
+  modalElement.inert = false;
+  modalElement.hidden = false;
+  requestAnimationFrame(() => {
+    const focusables = getFocusableElements(modalElement);
+    if (focusables.length > 0) focusables[0].focus();
+  });
+}
+
+function exitModalFocus(modalElement) {
+  const idx = state.modalFocusStack.lastIndexOf(modalElement);
+  if (idx !== -1) state.modalFocusStack.splice(idx, 1);
+  modalElement.hidden = true;
+  const appLayout = document.querySelector(".app-layout");
+  if (state.modalFocusStack.length === 0) {
+    if (appLayout) appLayout.inert = false;
+  } else {
+    const topModal = state.modalFocusStack[state.modalFocusStack.length - 1];
+    topModal.inert = false;
+    requestAnimationFrame(() => {
+      const focusables = getFocusableElements(topModal);
+      if (focusables.length > 0) focusables[0].focus();
+    });
+  }
+}
 
 function makeAnimal(name, wiki, categories, habitat, move, body, point, relation, flags, page) {
   const wikiInfo = typeof wiki === "string" ? { title: wiki, lang: "ko" } : wiki;
@@ -272,12 +331,15 @@ function init() {
   }
   document.addEventListener("keydown", event => {
     if (event.key === "Escape") {
-      if (!els.settingsModal.hidden) {
-        closeSettings();
-      } else if (els.detailModal && !els.detailModal.hidden) {
-        closeDetail();
+      if (state.modalFocusStack.length > 0) {
+        const topModal = state.modalFocusStack[state.modalFocusStack.length - 1];
+        if (topModal === els.settingsModal) closeSettings();
+        else if (topModal === els.detailModal) closeDetail();
+        else if (topModal === els.guideModal) closeGuideModal();
+        else if (topModal === els.qrExpandModal) closeQrExpand();
       }
     }
+    handleModalKeydown(event);
   });
   if (els.openSettings) els.openSettings.addEventListener("click", openSettings);
   if (els.closeSettings) els.closeSettings.addEventListener("click", closeSettings);
@@ -486,7 +548,7 @@ function openAnimal(animal) {
   els.detailPhoto.append(els.detailImage);
   setImage(animal, els.detailImage, els.detailPhoto);
   renderAnimalInfo(animal);
-  els.detailModal.hidden = false;
+  enterModalFocus(els.detailModal);
   renderAnimals();
 }
 
@@ -494,7 +556,7 @@ function closeDetail() {
   state.selectedAnimal = null;
   state.quiz = null;
   clearHintHighlight();
-  els.detailModal.hidden = true;
+  exitModalFocus(els.detailModal);
   renderAnimals();
 }
 
@@ -638,13 +700,12 @@ function openSettings() {
   els.settingsMessage.textContent = "";
   if (els.teacherBanner) els.teacherBanner.hidden = false;
   renderShareLinkPanel();
-  els.settingsModal.hidden = false;
-  els.questionUrlInput.focus();
+  enterModalFocus(els.settingsModal);
 }
 
 function closeSettings() {
   if (!els.settingsModal) return;
-  els.settingsModal.hidden = true;
+  exitModalFocus(els.settingsModal);
   markSettingsModalSeen();
   if (state.settingsLastFocus && typeof state.settingsLastFocus.focus === "function") {
     state.settingsLastFocus.focus();
@@ -1615,11 +1676,11 @@ function escapeAttribute(value) {
 let pendingQuestionUrl = null;
 
 function openGuideModal() {
-  if (els.guideModal) els.guideModal.hidden = false;
+  if (els.guideModal) enterModalFocus(els.guideModal);
 }
 
 function closeGuideModal() {
-  if (els.guideModal) els.guideModal.hidden = true;
+  if (els.guideModal) exitModalFocus(els.guideModal);
 }
 
 function openQrExpand() {
@@ -1627,11 +1688,11 @@ function openQrExpand() {
   const qrSvg = els.qrCode ? els.qrCode.innerHTML : "";
   if (!qrSvg) return;
   els.qrExpandImage.innerHTML = qrSvg;
-  els.qrExpandModal.hidden = false;
+  enterModalFocus(els.qrExpandModal);
 }
 
 function closeQrExpand() {
-  if (els.qrExpandModal) els.qrExpandModal.hidden = true;
+  if (els.qrExpandModal) exitModalFocus(els.qrExpandModal);
 }
 
 function downloadQrExpandImage() {
