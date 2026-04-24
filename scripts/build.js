@@ -4,7 +4,7 @@ const path = require("path");
 const root = path.resolve(__dirname, "..");
 const dist = path.join(root, "dist");
 const filesToCopy = ["index.html", "no-question.html", "styles.css", "app.js"];
-const directoriesToCopy = ["vendor"];
+const directoriesToCopy = ["vendor", "images", "sounds"];
 
 const defaultQuestionTool = {
   featureEnabled: true,
@@ -19,6 +19,13 @@ const defaultQuestionTool = {
 const linkedQuestionToolNote = "새 창에서 질문 도우미가 열려요.";
 
 const internalConfigPath = path.join(root, "config", "internal.local.json");
+
+function hasLocalImageAssets() {
+  return ["thumbs", "details"].some(directory => {
+    const assetDir = path.join(root, "images", directory);
+    return fs.existsSync(assetDir) && fs.readdirSync(assetDir).some(file => /\.(jpe?g|png|webp|avif)$/i.test(file));
+  });
+}
 
 function parseArgs(argv) {
   const args = {};
@@ -97,6 +104,10 @@ function buildConfig(args) {
 
   config.questionTool.url = assertHttpUrl(config.questionTool.url, "questionTool.url");
   config.questionTool.enabled = Boolean(config.questionTool.enabled && config.questionTool.url);
+  config.localImages = {
+    ...(config.localImages || {}),
+    enabled: Boolean(config.localImages?.enabled || hasLocalImageAssets())
+  };
 
   return config;
 }
@@ -115,7 +126,10 @@ function copyStaticFiles() {
   }
 
   for (const directory of directoriesToCopy) {
-    fs.cpSync(path.join(root, directory), path.join(dist, directory), { recursive: true });
+    const source = path.join(root, directory);
+    if (fs.existsSync(source)) {
+      fs.cpSync(source, path.join(dist, directory), { recursive: true });
+    }
   }
 
   fs.writeFileSync(
