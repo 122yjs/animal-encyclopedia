@@ -2,7 +2,8 @@ const filters = [
   { id: "all", label: "전체", icon: "🔍" },
   { id: "around", label: "우리 주변", icon: "🏠" },
   { id: "land", label: "땅", icon: "🦎" },
-  { id: "water", label: "물", icon: "🐟" },
+  { id: "freshwater", label: "강·호수", icon: "💧" },
+  { id: "sea", label: "바다", icon: "🌊" },
   { id: "special", label: "특별한 환경", icon: "❄️" }
 ];
 
@@ -15,6 +16,9 @@ const criteria = [
 ];
 
 const defaultAppConfig = {
+  localImages: {
+    enabled: false
+  },
   questionTool: {
     featureEnabled: true,
     enabled: false,
@@ -43,7 +47,7 @@ const imageSources = {
   "참새": "https://upload.wikimedia.org/wikipedia/commons/thumb/9/98/Tree_Sparrow_August_2007_Osaka_Japan.jpg/330px-Tree_Sparrow_August_2007_Osaka_Japan.jpg",
   "토끼": "https://upload.wikimedia.org/wikipedia/commons/thumb/d/d5/Arctic_Hare.jpg/330px-Arctic_Hare.jpg",
   "호랑이": "https://upload.wikimedia.org/wikipedia/commons/thumb/d/d4/Siberian_Tiger_by_Malene_Th.jpg/330px-Siberian_Tiger_by_Malene_Th.jpg",
-  "참돔": "https://upload.wikimedia.org/wikipedia/commons/thumb/b/b9/Pagrus_major_Red_seabream_ja01.jpg/330px-Pagrus_major_Red_seabream_ja01.jpg",
+  "개": "https://upload.wikimedia.org/wikipedia/commons/thumb/6/6e/Golde33443.jpg/330px-Golde33443.jpg",
   "붕어": "https://upload.wikimedia.org/wikipedia/commons/thumb/1/1b/CarassiusCarassius8.JPG/330px-CarassiusCarassius8.JPG",
   "지렁이": "https://upload.wikimedia.org/wikipedia/commons/thumb/3/30/Regenwurm1.jpg/330px-Regenwurm1.jpg",
   "뱀": "https://upload.wikimedia.org/wikipedia/commons/thumb/0/0c/Grass_snake_%28Natrix_natrix%29_Pieniny.jpg/960px-Grass_snake_%28Natrix_natrix%29_Pieniny.jpg",
@@ -54,6 +58,7 @@ const imageSources = {
   "낙타": "https://upload.wikimedia.org/wikipedia/commons/thumb/4/43/07._Camel_Profile%2C_near_Silverton%2C_NSW%2C_07.07.2007.jpg/330px-07._Camel_Profile%2C_near_Silverton%2C_NSW%2C_07.07.2007.jpg",
   "도루묵도마뱀": "https://upload.wikimedia.org/wikipedia/commons/thumb/2/2d/Apothekerskink01.jpg/330px-Apothekerskink01.jpg",
   "북극곰": "https://upload.wikimedia.org/wikipedia/commons/thumb/9/9a/Polarb%C3%A4r_12_2004-11-17.jpg/330px-Polarb%C3%A4r_12_2004-11-17.jpg",
+  "북극여우": "https://upload.wikimedia.org/wikipedia/commons/c/c7/Arctic_fox_in_snow_%28Unsplash%29.jpg",
   "펭귄": "https://upload.wikimedia.org/wikipedia/commons/thumb/a/a3/Aptenodytes_forsteri_-Snow_Hill_Island%2C_Antarctica_-adults_and_juvenile-8.jpg/330px-Aptenodytes_forsteri_-Snow_Hill_Island%2C_Antarctica_-adults_and_juvenile-8.jpg",
   "산양": "https://upload.wikimedia.org/wikipedia/commons/thumb/0/03/Adult_male_amur_goral_standing_on_rock_at_National_Institute_of_Ecology%2C_Korea.jpg/330px-Adult_male_amur_goral_standing_on_rock_at_National_Institute_of_Ecology%2C_Korea.jpg",
   "수달": "https://upload.wikimedia.org/wikipedia/commons/thumb/b/b5/Fischotter_Lutra_lutra1.jpg/330px-Fischotter_Lutra_lutra1.jpg",
@@ -81,12 +86,12 @@ const animals = [
   makeAnimal("박새", { title: "Great_tit", lang: "en" }, ["around"], "나무와 숲", "날개로 날고 다리로 앉아요.", ["날개", "부리", "깃털"], "나무가 있는 곳에서 관찰할 수 있는 새예요.", "깃털과 날개가 있어 나뭇가지 사이를 날아다녀요.", { hasLegs: true, hasWings: true, hasFins: false, inWater: false, crawls: false }, "39쪽"),
   makeAnimal("꿀벌", "꿀벌", ["around"], "꽃이 핀 곳", "날개로 날아다녀요.", ["날개", "다리", "몸의 털"], "우리 주변 꽃밭에서 볼 수 있는 동물이에요.", "꽃가루를 옮기며 꽃 사이를 날아다녀요.", { hasLegs: true, hasWings: true, hasFins: false, inWater: false, crawls: false }, "39쪽"),
   makeAnimal("공벌레", "공벌레", ["around"], "돌 밑, 축축한 흙", "여러 다리로 기어가요.", ["여러 개의 다리", "단단한 몸", "동그랗게 말리는 몸"], "주변의 흙이나 돌 아래에서 볼 수 있어요.", "위험하면 몸을 둥글게 말아 자신을 지켜요.", { hasLegs: true, hasWings: false, hasFins: false, inWater: false, crawls: true }, "39쪽"),
+  makeAnimal("개", "개", ["around"], "집 주변, 마을", "네 다리로 걷거나 뛰어요.", ["털", "귀", "코", "발"], "우리 주변에서 자주 볼 수 있는 동물이에요.", "잘 발달한 코와 네 다리는 냄새를 맡고 빠르게 움직이는 데 도움을 줘요.", { hasLegs: true, hasWings: false, hasFins: false, inWater: false, crawls: false }, "우리 주변"),
   makeAnimal("나비", "나비", ["land"], "풀밭, 꽃밭", "날개로 날아요.", ["큰 날개", "더듬이", "가느다란 다리"], "동물 카드로 생김새를 관찰해요.", "날개가 있어 꽃 사이를 날며 생활해요.", { hasLegs: true, hasWings: true, hasFins: false, inWater: false, crawls: false }, "40쪽"),
   makeAnimal("참새", "참새", ["land"], "나무, 들판, 마을", "날개로 날고 다리로 걸어요.", ["날개", "부리", "다리"], "참새는 다리와 날개가 있는 동물이에요.", "날개가 있어 빠르게 이동하고 부리로 먹이를 먹어요.", { hasLegs: true, hasWings: true, hasFins: false, inWater: false, crawls: false }, "41쪽"),
   makeAnimal("토끼", "토끼", ["land"], "풀밭, 숲 가장자리", "다리로 뛰어 이동해요.", ["털", "긴 귀", "튼튼한 뒷다리"], "토끼는 털로 덮여 있고 다리가 있어요.", "긴 귀와 튼튼한 다리가 주변을 살피고 빠르게 도망치는 데 도움을 줘요.", { hasLegs: true, hasWings: false, hasFins: false, inWater: false, crawls: false }, "41쪽"),
   makeAnimal("호랑이", "호랑이", ["land"], "숲, 산", "네 다리로 걷고 뛰어요.", ["털", "발톱", "날카로운 이"], "동물 카드에서 생김새를 비교할 수 있어요.", "강한 다리와 발톱으로 땅에서 먹이를 찾아요.", { hasLegs: true, hasWings: false, hasFins: false, inWater: false, crawls: false }, "40쪽"),
-  makeAnimal("참돔", "참돔", ["water"], "바다", "지느러미로 헤엄쳐요.", ["지느러미", "비늘", "아가미"], "물에서 사는 동물 카드로 관찰해요.", "비늘과 지느러미는 물속 생활에 알맞아요.", { hasLegs: false, hasWings: false, hasFins: true, inWater: true, crawls: false }, "40쪽"),
-  makeAnimal("붕어", "붕어", ["water"], "강이나 호수", "지느러미로 헤엄쳐요.", ["지느러미", "비늘", "아가미"], "붕어는 지느러미와 비늘이 있어요.", "지느러미를 이용해 물속에서 헤엄쳐 이동해요.", { hasLegs: false, hasWings: false, hasFins: true, inWater: true, crawls: false }, "41쪽, 49쪽"),
+  makeAnimal("붕어", "붕어", ["freshwater"], "강이나 호수", "지느러미로 헤엄쳐요.", ["지느러미", "비늘", "아가미"], "붕어는 지느러미와 비늘이 있어요.", "지느러미를 이용해 물속에서 헤엄쳐 이동해요.", { hasLegs: false, hasWings: false, hasFins: true, inWater: true, crawls: false }, "41쪽, 49쪽"),
   makeAnimal("지렁이", "지렁이", ["around", "land"], "축축한 흙", "다리 없이 기어서 이동해요.", ["긴 몸", "다리 없음", "마디"], "지렁이는 다리가 없는 동물로 분류할 수 있어요.", "축축한 땅속에서 몸을 줄였다 늘이며 움직여요.", { hasLegs: false, hasWings: false, hasFins: false, inWater: false, crawls: true }, "39쪽, 45쪽"),
   makeAnimal("뱀", "뱀", ["land"], "풀숲, 숲, 산", "다리 없이 기어서 이동해요.", ["긴 몸", "비늘", "다리 없음"], "뱀은 다리가 없는 동물로 분류할 수 있어요.", "긴 몸과 비늘이 땅 위를 기어 이동하는 데 도움을 줘요.", { hasLegs: false, hasWings: false, hasFins: false, inWater: false, crawls: true }, "40쪽, 45쪽"),
   makeAnimal("개미", "개미", ["land"], "땅, 흙 속", "다리를 이용해 걸어요.", ["다리 6개", "더듬이", "작은 몸"], "개미의 생김새와 이동 방법을 관찰해요.", "작은 몸과 다리로 흙 위와 틈 사이를 잘 다녀요.", { hasLegs: true, hasWings: false, hasFins: false, inWater: false, crawls: false }, "44쪽"),
@@ -106,28 +111,28 @@ const animals = [
   makeAnimal("북극여우", "북극여우", ["special", "land"], "극지방", "네 다리로 눈과 얼음 위를 걸어요.", ["작은 귀", "두꺼운 털", "짧은 주둥이"], "비상 AR 자료에 있는 극지방 동물 사례예요.", "작은 귀와 두꺼운 털은 추운 곳에서 몸의 열을 지키는 데 도움을 줘요.", { hasLegs: true, hasWings: false, hasFins: false, inWater: false, crawls: false }, "비상 AR"),
   makeAnimal("펭귄", "펭귄", ["special"], "극지방과 바다", "물속에서 헤엄치고 얼음 위를 걸어요.", ["빽빽한 깃털", "날개 모양 지느러미", "짧은 다리"], "극지방에서 사는 동물의 예예요.", "빽빽한 깃털은 추위를 견디게 하고, 날개 모양 지느러미는 물속에서 헤엄치는 데 도움을 줘요.", { hasLegs: true, hasWings: true, hasFins: false, inWater: true, crawls: false }, "47쪽, 비상 AR"),
   makeAnimal("산양", "산양", ["special", "land"], "높고 가파른 산악 지형", "다리와 발굽으로 바위를 올라요.", ["다리", "발굽", "털"], "산악 지형에서 사는 동물의 예예요.", "발굽과 다리는 높은 산의 바위에서 균형을 잡는 데 도움을 줘요.", { hasLegs: true, hasWings: false, hasFins: false, inWater: false, crawls: false }, "47쪽"),
-  makeAnimal("수달", "수달", ["water"], "강가나 호숫가", "물갈퀴가 있는 발로 헤엄쳐요.", ["물갈퀴", "털", "긴 꼬리"], "물에서 사는 동물의 예예요.", "물갈퀴가 있는 발은 물속에서 헤엄치는 데 알맞아요.", { hasLegs: true, hasWings: false, hasFins: false, inWater: true, crawls: false }, "34쪽, 48쪽"),
-  makeAnimal("다슬기", "다슬기", ["water"], "강이나 호수 바닥", "물속 바닥을 기어서 이동해요.", ["껍데기", "부드러운 몸", "발"], "강이나 호수에 사는 동물의 예예요.", "단단한 껍데기와 발이 물속 바닥 생활에 도움을 줘요.", { hasLegs: false, hasWings: false, hasFins: false, inWater: true, crawls: true }, "48쪽"),
-  makeAnimal("송사리", "송사리", ["water"], "강이나 호수", "지느러미로 헤엄쳐요.", ["지느러미", "작은 몸", "아가미"], "강이나 호수에 사는 동물의 예예요.", "작은 몸과 지느러미가 얕은 물에서 움직이는 데 알맞아요.", { hasLegs: false, hasWings: false, hasFins: true, inWater: true, crawls: false }, "48쪽"),
-  makeAnimal("소금쟁이", "소금쟁이", ["water"], "연못이나 하천의 물 위", "긴 다리로 물 위를 미끄러지듯 다녀요.", ["긴 다리", "가느다란 몸", "짧은 더듬이"], "비상 AR 자료에 있는 물가 동물 사례예요.", "가늘고 긴 다리는 물 표면 위에서 몸을 지탱하고 이동하는 데 도움을 줘요.", { hasLegs: true, hasWings: false, hasFins: false, inWater: true, crawls: false }, "비상 AR"),
-  makeAnimal("피라미", "피라미", ["water"], "강이나 하천", "지느러미로 헤엄쳐요.", ["지느러미", "비늘", "날씬한 몸"], "비상 AR 자료에 있는 민물고기 사례예요.", "날씬한 몸과 지느러미는 흐르는 물에서 헤엄치는 데 알맞아요.", { hasLegs: false, hasWings: false, hasFins: true, inWater: true, crawls: false }, "비상 AR"),
-  makeAnimal("왜가리", "왜가리", ["water", "land"], "논, 하천, 물가", "긴 다리로 얕은 물을 걸어요.", ["긴 목", "긴 다리", "뾰족한 부리"], "비상 AR 자료에 있는 물가 새 사례예요.", "긴 다리와 뾰족한 부리는 얕은 물에서 먹이를 찾는 데 도움을 줘요.", { hasLegs: true, hasWings: true, hasFins: false, inWater: true, crawls: false }, "비상 AR"),
-  makeAnimal("물방개", "물방개", ["water"], "연못이나 논의 물속", "털이 난 뒷다리로 헤엄쳐요.", ["다리 6개", "단단한 몸", "털 난 뒷다리"], "비상 AR 자료에 있는 물속 곤충 사례예요.", "길고 털이 난 뒷다리는 물속에서 노처럼 움직이는 데 도움을 줘요.", { hasLegs: true, hasWings: false, hasFins: false, inWater: true, crawls: false }, "비상 AR"),
-  makeAnimal("메기", "메기", ["water"], "강이나 호수", "지느러미로 헤엄쳐요.", ["지느러미", "수염", "아가미"], "강이나 호수에 사는 동물의 예예요.", "수염은 흐린 물속에서 주변을 느끼는 데 도움을 줘요.", { hasLegs: false, hasWings: false, hasFins: true, inWater: true, crawls: false }, "48쪽"),
-  makeAnimal("개구리", "개구리", ["water", "land"], "연못, 논, 물가", "다리로 뛰고 물갈퀴로 헤엄쳐요.", ["다리", "물갈퀴", "축축한 피부"], "강이나 호수에 사는 동물의 예예요.", "물갈퀴가 있는 발은 물속 이동에 도움을 줘요.", { hasLegs: true, hasWings: false, hasFins: false, inWater: true, crawls: false }, "49쪽"),
-  makeAnimal("청둥오리", "청둥오리", ["water"], "강이나 호수", "날개로 날고 물갈퀴 발로 헤엄쳐요.", ["날개", "물갈퀴", "부리"], "강이나 호수에 사는 동물의 예예요.", "물갈퀴가 있는 발은 물 위와 물속에서 움직이는 데 도움을 줘요.", { hasLegs: true, hasWings: true, hasFins: false, inWater: true, crawls: false }, "49쪽"),
-  makeAnimal("갈매기", "갈매기", ["water"], "바닷가와 항구", "날개로 바다 위를 날아다녀요.", ["날개", "부리", "물갈퀴 발"], "비상 AR 자료에 있는 바닷가 새 사례예요.", "날개와 물갈퀴 발은 바닷가에서 날고 물 위에 머무는 데 도움을 줘요.", { hasLegs: true, hasWings: true, hasFins: false, inWater: true, crawls: false }, "비상 AR"),
-  makeAnimal("조개", "조개", ["water"], "바다, 갯벌", "물속 바닥에서 천천히 움직여요.", ["껍데기", "부드러운 몸", "발"], "바다와 갯벌에 사는 동물의 예예요.", "껍데기는 부드러운 몸을 보호하는 데 도움을 줘요.", { hasLegs: false, hasWings: false, hasFins: false, inWater: true, crawls: true }, "50쪽, 51쪽"),
-  makeAnimal("게", "게", ["water"], "갯벌과 바닷가", "다섯 쌍의 다리로 옆으로 걸어요.", ["집게", "다리 10개", "단단한 껍질"], "갯벌과 바닷가에서 사는 동물의 예예요.", "단단한 껍질과 집게는 갯벌에서 몸을 보호하고 먹이를 찾는 데 도움을 줘요.", { hasLegs: true, hasWings: false, hasFins: false, inWater: true, crawls: false }, "50쪽, 57쪽, 비상 AR"),
-  makeAnimal("전복", "전복", ["water"], "바다 바위", "넓은 발로 바위에 붙어 천천히 기어가요.", ["구멍 있는 껍데기", "넓은 발", "부드러운 몸"], "비상 AR 자료에 있는 바다 동물 사례예요.", "넓은 발과 단단한 껍데기는 바위에 붙어 생활하는 데 도움을 줘요.", { hasLegs: false, hasWings: false, hasFins: false, inWater: true, crawls: true }, "비상 AR"),
-  makeAnimal("소라", "소라", ["water"], "바다 바닥", "물속 바닥을 기어서 이동해요.", ["껍데기", "부드러운 몸", "발"], "바다에 사는 동물의 예예요.", "나선 모양 껍데기는 몸을 보호해요.", { hasLegs: false, hasWings: false, hasFins: false, inWater: true, crawls: true }, "50쪽"),
-  makeAnimal("돌돔", "돌돔", ["water"], "바다", "지느러미로 헤엄쳐요.", ["지느러미", "비늘", "줄무늬"], "바다에 사는 동물의 예예요.", "지느러미와 비늘은 바다에서 헤엄치는 데 알맞아요.", { hasLegs: false, hasWings: false, hasFins: true, inWater: true, crawls: false }, "50쪽"),
-  makeAnimal("해삼", "해삼", ["water"], "바다 바닥", "물속 바닥을 천천히 기어가요.", ["길쭉한 몸", "다리 없음", "부드러운 몸"], "바다에 사는 동물의 예예요.", "바닥에 붙어 천천히 움직이며 생활해요.", { hasLegs: false, hasWings: false, hasFins: false, inWater: true, crawls: true }, "50쪽"),
-  makeAnimal("돌고래", "돌고래", ["water"], "바다", "지느러미와 꼬리로 헤엄쳐요.", ["지느러미", "매끈한 몸", "꼬리"], "바다에 사는 동물의 예예요.", "매끈한 몸과 지느러미가 빠르게 헤엄치는 데 도움을 줘요.", { hasLegs: false, hasWings: false, hasFins: true, inWater: true, crawls: false }, "51쪽"),
-  makeAnimal("오징어", "오징어", ["water"], "바다", "몸에서 물을 뿜어 빠르게 움직여요.", ["긴 팔", "빨판", "부드러운 몸"], "바다에 사는 동물의 예예요.", "팔의 빨판은 먹이를 붙잡는 데 도움을 줘요.", { hasLegs: false, hasWings: false, hasFins: false, inWater: true, crawls: false }, "51쪽"),
-  makeAnimal("바다거북", "바다거북", ["water"], "바다", "넓은 앞다리로 헤엄쳐요.", ["넓은 앞다리", "등딱지", "부리 모양 입"], "바다에 사는 동물의 예예요.", "넓은 앞다리는 물속에서 노처럼 움직여요.", { hasLegs: true, hasWings: false, hasFins: false, inWater: true, crawls: false }, "51쪽"),
-  makeAnimal("고등어", "고등어", ["water"], "바다", "지느러미로 헤엄쳐요.", ["지느러미", "비늘", "매끈한 몸"], "바다에 사는 동물의 예예요.", "지느러미와 매끈한 몸은 물속 이동에 알맞아요.", { hasLegs: false, hasWings: false, hasFins: true, inWater: true, crawls: false }, "51쪽"),
-  makeAnimal("해마", { title: "Seahorse", lang: "en" }, ["water"], "바다", "작은 지느러미를 움직여 천천히 헤엄쳐요.", ["작은 지느러미", "말처럼 생긴 머리", "말린 꼬리"], "바다에서 이동하는 방법을 생김새와 연결해 생각해요.", "작은 지느러미와 꼬리가 바닷속에서 몸을 조절하는 데 도움을 줘요.", { hasLegs: false, hasWings: false, hasFins: true, inWater: true, crawls: false }, "51쪽")
+  makeAnimal("수달", "수달", ["freshwater"], "강가나 호숫가", "물갈퀴가 있는 발로 헤엄쳐요.", ["물갈퀴", "털", "긴 꼬리"], "물에서 사는 동물의 예예요.", "물갈퀴가 있는 발은 물속에서 헤엄치는 데 알맞아요.", { hasLegs: true, hasWings: false, hasFins: false, inWater: true, crawls: false }, "34쪽, 48쪽"),
+  makeAnimal("다슬기", "다슬기", ["freshwater"], "강이나 호수 바닥", "물속 바닥을 기어서 이동해요.", ["껍데기", "부드러운 몸", "발"], "강이나 호수에 사는 동물의 예예요.", "단단한 껍데기와 발이 물속 바닥 생활에 도움을 줘요.", { hasLegs: false, hasWings: false, hasFins: false, inWater: true, crawls: true }, "48쪽"),
+  makeAnimal("송사리", "송사리", ["freshwater"], "강이나 호수", "지느러미로 헤엄쳐요.", ["지느러미", "작은 몸", "아가미"], "강이나 호수에 사는 동물의 예예요.", "작은 몸과 지느러미가 얕은 물에서 움직이는 데 알맞아요.", { hasLegs: false, hasWings: false, hasFins: true, inWater: true, crawls: false }, "48쪽"),
+  makeAnimal("소금쟁이", "소금쟁이", ["freshwater"], "연못이나 하천의 물 위", "긴 다리로 물 위를 미끄러지듯 다녀요.", ["긴 다리", "가느다란 몸", "짧은 더듬이"], "비상 AR 자료에 있는 물가 동물 사례예요.", "가늘고 긴 다리는 물 표면 위에서 몸을 지탱하고 이동하는 데 도움을 줘요.", { hasLegs: true, hasWings: false, hasFins: false, inWater: true, crawls: false }, "비상 AR"),
+  makeAnimal("피라미", "피라미", ["freshwater"], "강이나 하천", "지느러미로 헤엄쳐요.", ["지느러미", "비늘", "날씬한 몸"], "비상 AR 자료에 있는 민물고기 사례예요.", "날씬한 몸과 지느러미는 흐르는 물에서 헤엄치는 데 알맞아요.", { hasLegs: false, hasWings: false, hasFins: true, inWater: true, crawls: false }, "비상 AR"),
+  makeAnimal("왜가리", "왜가리", ["freshwater", "land"], "논, 하천, 물가", "긴 다리로 얕은 물을 걸어요.", ["긴 목", "긴 다리", "뾰족한 부리"], "비상 AR 자료에 있는 물가 새 사례예요.", "긴 다리와 뾰족한 부리는 얕은 물에서 먹이를 찾는 데 도움을 줘요.", { hasLegs: true, hasWings: true, hasFins: false, inWater: true, crawls: false }, "비상 AR"),
+  makeAnimal("물방개", "물방개", ["freshwater"], "연못이나 논의 물속", "털이 난 뒷다리로 헤엄쳐요.", ["다리 6개", "단단한 몸", "털 난 뒷다리"], "비상 AR 자료에 있는 물속 곤충 사례예요.", "길고 털이 난 뒷다리는 물속에서 노처럼 움직이는 데 도움을 줘요.", { hasLegs: true, hasWings: false, hasFins: false, inWater: true, crawls: false }, "비상 AR"),
+  makeAnimal("메기", "메기", ["freshwater"], "강이나 호수", "지느러미로 헤엄쳐요.", ["지느러미", "수염", "아가미"], "강이나 호수에 사는 동물의 예예요.", "수염은 흐린 물속에서 주변을 느끼는 데 도움을 줘요.", { hasLegs: false, hasWings: false, hasFins: true, inWater: true, crawls: false }, "48쪽"),
+  makeAnimal("개구리", "개구리", ["freshwater", "land"], "연못, 논, 물가", "다리로 뛰고 물갈퀴로 헤엄쳐요.", ["다리", "물갈퀴", "축축한 피부"], "강이나 호수에 사는 동물의 예예요.", "물갈퀴가 있는 발은 물속 이동에 도움을 줘요.", { hasLegs: true, hasWings: false, hasFins: false, inWater: true, crawls: false }, "49쪽"),
+  makeAnimal("청둥오리", "청둥오리", ["freshwater"], "강이나 호수", "날개로 날고 물갈퀴 발로 헤엄쳐요.", ["날개", "물갈퀴", "부리"], "강이나 호수에 사는 동물의 예예요.", "물갈퀴가 있는 발은 물 위와 물속에서 움직이는 데 도움을 줘요.", { hasLegs: true, hasWings: true, hasFins: false, inWater: true, crawls: false }, "49쪽"),
+  makeAnimal("갈매기", "갈매기", ["sea"], "바닷가와 항구", "날개로 바다 위를 날아다녀요.", ["날개", "부리", "물갈퀴 발"], "비상 AR 자료에 있는 바닷가 새 사례예요.", "날개와 물갈퀴 발은 바닷가에서 날고 물 위에 머무는 데 도움을 줘요.", { hasLegs: true, hasWings: true, hasFins: false, inWater: true, crawls: false }, "비상 AR"),
+  makeAnimal("조개", "조개", ["sea"], "바다, 갯벌", "물속 바닥에서 천천히 움직여요.", ["껍데기", "부드러운 몸", "발"], "바다와 갯벌에 사는 동물의 예예요.", "껍데기는 부드러운 몸을 보호하는 데 도움을 줘요.", { hasLegs: false, hasWings: false, hasFins: false, inWater: true, crawls: true }, "50쪽, 51쪽"),
+  makeAnimal("게", "게", ["sea"], "갯벌과 바닷가", "다섯 쌍의 다리로 옆으로 걸어요.", ["집게", "다리 10개", "단단한 껍질"], "갯벌과 바닷가에서 사는 동물의 예예요.", "단단한 껍질과 집게는 갯벌에서 몸을 보호하고 먹이를 찾는 데 도움을 줘요.", { hasLegs: true, hasWings: false, hasFins: false, inWater: true, crawls: false }, "50쪽, 57쪽, 비상 AR"),
+  makeAnimal("전복", "전복", ["sea"], "바다 바위", "넓은 발로 바위에 붙어 천천히 기어가요.", ["구멍 있는 껍데기", "넓은 발", "부드러운 몸"], "비상 AR 자료에 있는 바다 동물 사례예요.", "넓은 발과 단단한 껍데기는 바위에 붙어 생활하는 데 도움을 줘요.", { hasLegs: false, hasWings: false, hasFins: false, inWater: true, crawls: true }, "비상 AR"),
+  makeAnimal("소라", "소라", ["sea"], "바다 바닥", "물속 바닥을 기어서 이동해요.", ["껍데기", "부드러운 몸", "발"], "바다에 사는 동물의 예예요.", "나선 모양 껍데기는 몸을 보호해요.", { hasLegs: false, hasWings: false, hasFins: false, inWater: true, crawls: true }, "50쪽"),
+  makeAnimal("돌돔", "돌돔", ["sea"], "바다", "지느러미로 헤엄쳐요.", ["지느러미", "비늘", "줄무늬"], "바다에 사는 동물의 예예요.", "지느러미와 비늘은 바다에서 헤엄치는 데 알맞아요.", { hasLegs: false, hasWings: false, hasFins: true, inWater: true, crawls: false }, "50쪽"),
+  makeAnimal("해삼", "해삼", ["sea"], "바다 바닥", "물속 바닥을 천천히 기어가요.", ["길쭉한 몸", "다리 없음", "부드러운 몸"], "바다에 사는 동물의 예예요.", "바닥에 붙어 천천히 움직이며 생활해요.", { hasLegs: false, hasWings: false, hasFins: false, inWater: true, crawls: true }, "50쪽"),
+  makeAnimal("돌고래", "돌고래", ["sea"], "바다", "지느러미와 꼬리로 헤엄쳐요.", ["지느러미", "매끈한 몸", "꼬리"], "바다에 사는 동물의 예예요.", "매끈한 몸과 지느러미가 빠르게 헤엄치는 데 도움을 줘요.", { hasLegs: false, hasWings: false, hasFins: true, inWater: true, crawls: false }, "51쪽"),
+  makeAnimal("오징어", "오징어", ["sea"], "바다", "몸에서 물을 뿜어 빠르게 움직여요.", ["긴 팔", "빨판", "부드러운 몸"], "바다에 사는 동물의 예예요.", "팔의 빨판은 먹이를 붙잡는 데 도움을 줘요.", { hasLegs: false, hasWings: false, hasFins: false, inWater: true, crawls: false }, "51쪽"),
+  makeAnimal("바다거북", "바다거북", ["sea"], "바다", "넓은 앞다리로 헤엄쳐요.", ["넓은 앞다리", "등딱지", "부리 모양 입"], "바다에 사는 동물의 예예요.", "넓은 앞다리는 물속에서 노처럼 움직여요.", { hasLegs: true, hasWings: false, hasFins: false, inWater: true, crawls: false }, "51쪽"),
+  makeAnimal("고등어", "고등어", ["sea"], "바다", "지느러미로 헤엄쳐요.", ["지느러미", "비늘", "매끈한 몸"], "바다에 사는 동물의 예예요.", "지느러미와 매끈한 몸은 물속 이동에 알맞아요.", { hasLegs: false, hasWings: false, hasFins: true, inWater: true, crawls: false }, "51쪽"),
+  makeAnimal("해마", { title: "Seahorse", lang: "en" }, ["sea"], "바다", "작은 지느러미를 움직여 천천히 헤엄쳐요.", ["작은 지느러미", "말처럼 생긴 머리", "말린 꼬리"], "바다에서 이동하는 방법을 생김새와 연결해 생각해요.", "작은 지느러미와 꼬리가 바닷속에서 몸을 조절하는 데 도움을 줘요.", { hasLegs: false, hasWings: false, hasFins: true, inWater: true, crawls: false }, "51쪽")
 ];
 
 const collectedIdAliases = {
@@ -138,13 +143,20 @@ const collectedIdAliases = {
 const animalIds = new Set(animals.map(animal => animal.id));
 const storageKey = "animal-encyclopedia-collected-v1";
 const settingsSeenKey = "animal-encyclopedia-settings-seen-v1";
+const onboardingSeenKey = "animal-encyclopedia-onboarding-seen-v1";
+const completedMilestonesKey = "animal-encyclopedia-completed-milestones-v1";
+const soundMutedKey = "animal-encyclopedia-sound-muted-v1";
 const imageCache = new Map();
+const milestoneFilters = filters.filter(filter => filter.id !== "all");
 const state = {
   view: "catalog",
   filter: "all",
+  catalogMode: "mission",
   query: "",
   criterion: "hasLegs",
   collected: new Set(readCollected()),
+  completedMilestones: new Set(readStoredIds(completedMilestonesKey, new Set(filters.map(filter => filter.id)))),
+  soundMuted: readBoolean(soundMutedKey, false),
   selectedAnimal: null,
   game: {
     criterion: "hasLegs",
@@ -154,21 +166,29 @@ const state = {
     checked: false
   },
   quiz: null,
+  onboardingIndex: 0,
   lastFocus: null,
   settingsLastFocus: null,
   modalFocusStack: []
 };
+
+let audioContext = null;
+let toastTimer = 0;
 
 const els = {
   modeButtons: document.querySelectorAll("[data-view]"),
   catalogView: document.querySelector("#catalogView"),
   gameView: document.querySelector("#gameView"),
   filterTabs: document.querySelector("#filterTabs"),
+  missionPanel: document.querySelector("#missionPanel"),
   animalGrid: document.querySelector("#animalGrid"),
   resultCount: document.querySelector("#resultCount"),
   collectedCount: document.querySelector("#collectedCount"),
   totalCount: document.querySelector("#totalCount"),
   progressFill: document.querySelector("#progressFill"),
+  stickyProgress: document.querySelector("#stickyProgress"),
+  stickyProgressLabel: document.querySelector("#stickyProgressLabel"),
+  stickyProgressFill: document.querySelector("#stickyProgressFill"),
   searchInput: document.querySelector("#searchInput"),
   gameCriterion: document.querySelector("#gameCriterion"),
   gamePool: document.querySelector("#gamePool"),
@@ -210,7 +230,22 @@ const els = {
   downloadQrExpand: document.querySelector("#downloadQrExpand"),
   confirmPopup: document.querySelector("#confirmPopup"),
   confirmYes: document.querySelector("#confirmYes"),
-  confirmNo: document.querySelector("#confirmNo")
+  confirmNo: document.querySelector("#confirmNo"),
+  sourceConfirmModal: document.querySelector("#sourceConfirmModal"),
+  sourceContinue: document.querySelector("#sourceContinue"),
+  sourceCancel: document.querySelector("#sourceCancel"),
+  onboardingModal: document.querySelector("#onboardingModal"),
+  onboardingContent: document.querySelector("#onboardingContent"),
+  onboardingStepLabel: document.querySelector("#onboardingStepLabel"),
+  nextOnboarding: document.querySelector("#nextOnboarding"),
+  skipOnboarding: document.querySelector("#skipOnboarding"),
+  rewardModal: document.querySelector("#rewardModal"),
+  rewardContent: document.querySelector("#rewardContent"),
+  rewardNextRegion: document.querySelector("#rewardNextRegion"),
+  rewardClose: document.querySelector("#rewardClose"),
+  rewardReset: document.querySelector("#rewardReset"),
+  soundToggle: document.querySelector("#soundToggle"),
+  appToast: document.querySelector("#appToast")
 };
 
 const FOCUSABLE_SELECTOR = 'a[href], button:not([disabled]), input:not([disabled]), select:not([disabled]), textarea:not([disabled]), [tabindex]:not([tabindex="-1"])';
@@ -294,20 +329,25 @@ function makeAnimal(name, wiki, categories, habitat, move, body, point, relation
 function init() {
   hydrateQuestionToolConfig();
   applyQuestionToolMode();
+  returnToCurrentMission(false);
   els.totalCount.textContent = animals.length;
   if (els.roomTemplateLink) {
     els.roomTemplateLink.href = magicRoomTemplateUrl;
   }
   bindViewTabs();
+  bindMissionPanel();
+  renderMissionPanel();
   renderFilters();
   renderAnimals();
   renderGameCriterionOptions();
   startNewRound();
   updateProgress();
+  updateSoundToggle();
 
+  const debouncedRenderAnimals = debounce(renderAnimals, 150);
   els.searchInput.addEventListener("input", event => {
     state.query = event.target.value.trim();
-    renderAnimals();
+    debouncedRenderAnimals();
   });
 
   if (els.closeDetail) {
@@ -324,6 +364,11 @@ function init() {
           els.confirmPopup.hidden = false;
         }
       }
+      const sourceBtn = event.target.closest("[data-source-url]");
+      if (sourceBtn) {
+        const url = sourceBtn.dataset.sourceUrl;
+        if (url) openSourceConfirm(url);
+      }
     });
   }
   if (els.backToCatalog) {
@@ -337,7 +382,11 @@ function init() {
         else if (topModal === els.detailModal) closeDetail();
         else if (topModal === els.guideModal) closeGuideModal();
         else if (topModal === els.qrExpandModal) closeQrExpand();
+        else if (topModal === els.onboardingModal) completeOnboarding();
+        else if (topModal === els.rewardModal) closeReward();
       }
+      if (els.sourceConfirmModal && !els.sourceConfirmModal.hidden) closeSourceConfirm();
+      if (els.confirmPopup && !els.confirmPopup.hidden) closeConfirmPopup();
     }
     handleModalKeydown(event);
   });
@@ -380,6 +429,29 @@ function init() {
       if (event.target === els.confirmPopup) closeConfirmPopup();
     });
   }
+  if (els.sourceContinue) els.sourceContinue.addEventListener("click", confirmNavigateToSource);
+  if (els.sourceCancel) els.sourceCancel.addEventListener("click", closeSourceConfirm);
+  if (els.sourceConfirmModal) {
+    els.sourceConfirmModal.addEventListener("click", event => {
+      if (event.target === els.sourceConfirmModal) closeSourceConfirm();
+    });
+  }
+  if (els.nextOnboarding) els.nextOnboarding.addEventListener("click", nextOnboardingStep);
+  if (els.skipOnboarding) els.skipOnboarding.addEventListener("click", completeOnboarding);
+  if (els.onboardingModal) {
+    els.onboardingModal.addEventListener("click", event => {
+      if (event.target === els.onboardingModal) completeOnboarding();
+    });
+  }
+  if (els.rewardClose) els.rewardClose.addEventListener("click", closeReward);
+  if (els.rewardNextRegion) els.rewardNextRegion.addEventListener("click", goToNextRewardRegion);
+  if (els.rewardReset) els.rewardReset.addEventListener("click", resetProgressFromReward);
+  if (els.rewardModal) {
+    els.rewardModal.addEventListener("click", event => {
+      if (event.target === els.rewardModal) closeReward();
+    });
+  }
+  if (els.soundToggle) els.soundToggle.addEventListener("click", toggleSound);
   els.resetProgress.addEventListener("click", resetProgress);
   els.gameCriterion.addEventListener("change", event => {
     state.game.criterion = event.target.value;
@@ -417,6 +489,10 @@ function init() {
       }
     }
   }
+
+  if (!readBoolean(onboardingSeenKey, false)) {
+    window.setTimeout(openOnboarding, 700);
+  }
 }
 
 function bindViewTabs() {
@@ -425,8 +501,27 @@ function bindViewTabs() {
   });
 }
 
+function bindMissionPanel() {
+  if (!els.missionPanel) return;
+  els.missionPanel.addEventListener("click", event => {
+    const action = event.target.closest("[data-catalog-mode]");
+    if (!action) return;
+    playSound("select");
+    if (action.dataset.catalogMode === "all") {
+      state.catalogMode = "all";
+      state.filter = "all";
+    } else {
+      returnToCurrentMission(false);
+    }
+    renderMissionPanel();
+    renderFilters();
+    renderAnimals();
+  });
+}
+
 function setView(view) {
   state.view = view;
+  document.body.dataset.view = view;
   const sidebar = document.querySelector(".sidebar");
 
   if (view === "catalog") {
@@ -439,30 +534,167 @@ function setView(view) {
     els.gameView.classList.add("active");
     els.gameView.style.display = "";
     if (sidebar) sidebar.style.display = "none";
+    updateProgress();
   }
   els.modeButtons.forEach(button => {
     button.classList.toggle("active", button.dataset.view === view);
   });
 }
 
+const onboardingSteps = [
+  {
+    title: "동물 카드를 눌러 사진과 설명을 봐요",
+    body: "먼저 카드 한 장을 골라 생김새, 사는 곳, 움직임을 천천히 살펴봅니다.",
+    target: () => document.querySelector(".animal-card")
+  },
+  {
+    title: "퀴즈를 풀어 도감에 등록해요",
+    body: "설명을 읽은 뒤 짧은 퀴즈를 맞히면 카드가 내 도감에 등록됩니다.",
+    demo: true
+  },
+  {
+    title: "지역별로 완성해요",
+    body: "54마리를 한 번에 끝내지 않아도 괜찮아요. 우리 주변, 땅, 물, 특별한 환경을 하나씩 완성해 봅니다.",
+    target: () => els.missionPanel || els.progressFill
+  }
+];
+
+function openOnboarding() {
+  if (!els.onboardingModal || !els.onboardingContent) return;
+  if (state.view !== "catalog") setView("catalog");
+  state.onboardingIndex = 0;
+  renderOnboarding();
+  enterModalFocus(els.onboardingModal);
+}
+
+function renderOnboarding() {
+  clearOnboardingHighlights();
+  const step = onboardingSteps[state.onboardingIndex];
+  if (!step || !els.onboardingContent) return;
+
+  const target = step.target?.();
+  if (target) target.classList.add("onboarding-highlight");
+  if (els.onboardingStepLabel) {
+    els.onboardingStepLabel.textContent = `첫 방문 안내 ${state.onboardingIndex + 1} / ${onboardingSteps.length}`;
+  }
+
+  els.onboardingContent.innerHTML = `
+    <h2 id="onboardingTitle">${step.title}</h2>
+    <p>${step.body}</p>
+    ${step.demo ? `
+      <div class="onboarding-demo" aria-label="데모 퀴즈">
+        <span class="demo-badge">데모 퀴즈</span>
+        <strong>토끼는 어떻게 이동할까요?</strong>
+        <span>다리로 뛰어 이동해요.</span>
+      </div>
+    ` : ""}
+  `;
+
+  if (els.nextOnboarding) {
+    els.nextOnboarding.textContent = state.onboardingIndex === onboardingSteps.length - 1 ? "시작하기" : "다음";
+  }
+}
+
+function nextOnboardingStep() {
+  playSound("select");
+  if (state.onboardingIndex < onboardingSteps.length - 1) {
+    state.onboardingIndex += 1;
+    renderOnboarding();
+    return;
+  }
+  completeOnboarding();
+}
+
+function completeOnboarding() {
+  clearOnboardingHighlights();
+  safeSetStorage(onboardingSeenKey, "true");
+  if (els.onboardingModal && !els.onboardingModal.hidden) {
+    exitModalFocus(els.onboardingModal);
+  }
+}
+
+function clearOnboardingHighlights() {
+  document.querySelectorAll(".onboarding-highlight").forEach(element => {
+    element.classList.remove("onboarding-highlight");
+  });
+}
+
 function renderFilters() {
   els.filterTabs.innerHTML = "";
-  filters.forEach(filter => {
+  const nextMission = getNextMissionFilter();
+  const orderedFilters = [...milestoneFilters, filters.find(filter => filter.id === "all")].filter(Boolean);
+
+  orderedFilters.forEach(filter => {
     const button = document.createElement("button");
+    const stage = getStageStatus(filter, nextMission);
     button.type = "button";
-    button.className = "filter-button";
+    button.className = `filter-button stage-${stage.status}`;
     button.setAttribute("data-filter", filter.id);
-    button.innerHTML = `<span class="filter-icon">${filter.icon}</span> ${filter.label}`;
+    const progress = getFilterProgress(filter.id);
+    const displayLabel = filter.id === "all" ? "전체 도감" : filter.label;
+    button.innerHTML = `
+      <span class="filter-main">
+        <span class="filter-icon">${filter.icon}</span>
+        <span>${displayLabel}</span>
+        <span class="stage-status">${stage.label}</span>
+      </span>
+      <span class="filter-progress-badge">${progress.collected} / ${progress.total}</span>
+    `;
     button.setAttribute("role", "tab");
     button.setAttribute("aria-selected", String(filter.id === state.filter));
     if (filter.id === state.filter) button.classList.add("active");
     button.addEventListener("click", () => {
+      playSound("select");
       state.filter = filter.id;
+      state.catalogMode = filter.id === "all" ? "all" : "mission";
+      renderMissionPanel();
       renderFilters();
       renderAnimals();
     });
     els.filterTabs.append(button);
   });
+}
+
+function renderMissionPanel() {
+  if (!els.missionPanel) return;
+  const nextMissionId = getNextMissionFilter();
+  const isAllMode = state.catalogMode === "all";
+  const selectedFilter = filters.find(filter => filter.id === state.filter) || filters[0];
+  const currentMission = filters.find(filter => filter.id === nextMissionId) || filters[0];
+  const panelFilter = isAllMode ? filters[0] : selectedFilter;
+  const progress = getFilterProgress(panelFilter.id);
+  const percent = progress.total ? Math.round((progress.collected / progress.total) * 100) : 0;
+  const isCurrentMission = !isAllMode && state.filter === nextMissionId;
+  const isFinished = nextMissionId === "all" && state.collected.size === animals.length;
+  const modeLabel = isAllMode ? "전체 도감 보기" : isCurrentMission ? "현재 미션" : "지역 미리보기";
+  const title = isAllMode
+    ? "전체 54마리 도감"
+    : isFinished
+      ? "도감 마스터 미션 완료"
+      : `${panelFilter.icon} ${panelFilter.label} 도감 미션`;
+  const body = isAllMode
+    ? "모든 동물을 한눈에 둘러볼 수 있어요. 수업 흐름은 현재 미션으로 언제든 돌아갈 수 있습니다."
+    : isCurrentMission
+      ? `${panelFilter.label} 동물을 관찰하고 퀴즈를 맞혀 이 지역 도감을 완성해 보세요.`
+      : `${currentMission.icon} ${currentMission.label} 미션이 현재 순서예요. 이 지역은 미리 둘러보는 중입니다.`;
+  const buttonMode = isAllMode || !isCurrentMission ? "mission" : "all";
+  const buttonText = isAllMode || !isCurrentMission ? "현재 미션으로 돌아가기" : "전체 도감 보기";
+
+  els.missionPanel.innerHTML = `
+    <div class="mission-board">
+      <div class="mission-orb" aria-hidden="true">${isAllMode ? "🏆" : panelFilter.icon}</div>
+      <div class="mission-copy">
+        <p class="section-kicker">${modeLabel}</p>
+        <h2>${title}</h2>
+        <p>${body}</p>
+      </div>
+      <div class="mission-meter" aria-label="${panelFilter.label} 진행도 ${progress.collected} / ${progress.total}">
+        <span class="mission-meter-count">${progress.collected} / ${progress.total}</span>
+        <span class="mission-meter-track" aria-hidden="true"><span style="width:${percent}%"></span></span>
+      </div>
+      <button class="mission-toggle" type="button" data-catalog-mode="${buttonMode}">${buttonText}</button>
+    </div>
+  `;
 }
 
 function renderGameCriterionOptions() {
@@ -477,8 +709,13 @@ function renderGameCriterionOptions() {
 
 function renderAnimals() {
   const visible = getVisibleAnimals();
+  const isSearching = Boolean(state.query);
   els.animalGrid.innerHTML = "";
-  els.resultCount.textContent = `${visible.length}마리`;
+  els.resultCount.textContent = isSearching
+    ? `전체 도감 검색 결과 ${visible.length}마리`
+    : state.catalogMode === "all"
+    ? `전체 ${visible.length}마리`
+    : `미션 카드 ${visible.length}마리`;
 
   if (!visible.length) {
     const empty = document.createElement("div");
@@ -503,7 +740,7 @@ function renderAnimals() {
     image.alt = `${animal.name} 사진`;
     image.loading = "lazy";
     imageFrame.append(image);
-    setImage(animal, image, imageFrame);
+    setImage(animal, image, imageFrame, "thumb");
 
     const cardBody = document.createElement("div");
     cardBody.className = "animal-card-body";
@@ -511,6 +748,9 @@ function renderAnimals() {
       <div class="animal-name-row">
         <h3>${animal.name}</h3>
         ${state.collected.has(animal.id) ? '<span class="mini-badge collected-badge">등록</span>' : ""}
+      </div>
+      <div class="animal-region-badges" aria-label="${animal.name} 지역">
+        ${renderAnimalRegionBadges(animal)}
       </div>
       <div class="card-meta">
         ${animal.body.slice(0, 3).map(item => `<span class="tag">${item}</span>`).join("")}
@@ -526,27 +766,73 @@ function renderAnimals() {
 function getVisibleAnimals() {
   const query = state.query.toLowerCase();
   return animals.filter(animal => {
-    const inFilter = state.filter === "all" || animal.categories.includes(state.filter);
+    const inFilter = query || state.filter === "all" || getRepresentativeCategory(animal) === state.filter;
     const searchText = [
       animal.name,
       animal.habitat,
       animal.move,
       animal.point,
       animal.relation,
-      animal.body.join(" ")
+      animal.body.join(" "),
+      animal.categories
+        .map(categoryId => filters.find(filter => filter.id === categoryId)?.label || "")
+        .join(" ")
     ].join(" ").toLowerCase();
     return inFilter && (!query || searchText.includes(query));
   });
 }
 
+function getRepresentativeCategory(animal) {
+  return animal.categories[0];
+}
+
+function getAnimalsForFilter(filterId) {
+  return filterId === "all"
+    ? animals
+    : animals.filter(animal => getRepresentativeCategory(animal) === filterId);
+}
+
+function renderAnimalRegionBadges(animal) {
+  return animal.categories
+    .map((categoryId, index) => ({
+      filter: filters.find(filter => filter.id === categoryId),
+      isPrimary: index === 0
+    }))
+    .filter(item => item.filter)
+    .map(item => {
+      const label = item.isPrimary ? "대표 환경" : "함께 볼 환경";
+      const className = item.isPrimary ? "region-badge primary" : "region-badge secondary";
+      return `<span class="${className}">${label}: ${item.filter.icon} ${item.filter.label}</span>`;
+    })
+    .join("");
+}
+
+function renderAnimalEnvironmentNote(animal) {
+  if (animal.categories.length < 2) return "";
+  const secondaryLabels = animal.categories
+    .slice(1)
+    .map(categoryId => filters.find(filter => filter.id === categoryId))
+    .filter(Boolean)
+    .map(filter => `${filter.icon} ${filter.label}`)
+    .join("");
+
+  return `
+    <aside class="environment-note" aria-label="${animal.name} 보조 환경 안내">
+      <strong>대표 환경으로 카운트하지만, 한 곳에만 사는 뜻은 아니에요.</strong>
+      <span>함께 살펴볼 환경: ${secondaryLabels}</span>
+    </aside>
+  `;
+}
+
 function openAnimal(animal) {
+  playSound("select");
   state.selectedAnimal = animal.id;
   state.quiz = null;
   els.detailImage.removeAttribute("src");
   els.detailImage.alt = `${animal.name} 사진`;
   els.detailPhoto.textContent = "사진 준비 중";
   els.detailPhoto.append(els.detailImage);
-  setImage(animal, els.detailImage, els.detailPhoto);
+  setImage(animal, els.detailImage, els.detailPhoto, "detail");
   renderAnimalInfo(animal);
   enterModalFocus(els.detailModal);
   renderAnimals();
@@ -566,12 +852,28 @@ function renderAnimalInfo(animal) {
   const retryState = state.quiz && state.quiz.animal.id === animal.id ? state.quiz.retryState : null;
   const retryDelay = retryState ? Math.max(0, retryState.unlockAt - Date.now()) : 0;
   const retryLocked = retryDelay > 0;
+  const quizAction = retryState
+    ? renderQuizRetryPanel(state.quiz, retryLocked, retryDelay)
+    : isCollected
+      ? renderCollectedAction(animal)
+      : `
+        <button class="primary-button quiz-anchor-button" type="button" data-start-quiz="${animal.id}">
+          🎯 퀴즈 풀고 도감에 등록하기
+        </button>
+      `;
   els.detailBody.innerHTML = `
     <div class="modal-title-row">
       <h2 id="modalTitle">${animal.name}</h2>
       <span class="mini-badge ${isCollected ? "collected-badge" : ""}">${isCollected ? "⭐ 도감 등록 완료" : "퀴즈 대기"}</span>
     </div>
+    <div class="animal-region-badges detail-region-badges" aria-label="${animal.name} 환경 분류">
+      ${renderAnimalRegionBadges(animal)}
+    </div>
+    ${renderAnimalEnvironmentNote(animal)}
     <p class="encyclopedia-lede">${observation.intro}</p>
+    <div class="detail-quiz-anchor">
+      ${quizAction}
+    </div>
     <div class="encyclopedia-article" id="animalArticle">
       <section class="encyclopedia-section">
         <h3>생김새와 움직임</h3>
@@ -588,12 +890,8 @@ function renderAnimalInfo(animal) {
       </section>
     </div>
     ${renderQuestionTool()}
-    <a class="source-link" href="${animal.source}" target="_blank" rel="noreferrer">사진 출처 보기</a>
-    ${retryState ? renderQuizRetryPanel(state.quiz, retryLocked, retryDelay) : `
-      <button class="primary-button" type="button" data-start-quiz="${animal.id}">
-        🎯 퀴즈 풀고 도감에 등록하기
-      </button>
-    `}
+    <button class="source-link source-link-button" type="button" data-source-url="${escapeAttribute(animal.source)}">🌐 사진 출처 보기 · 새 창에서 열어요</button>
+    <p class="modal-scroll-hint" aria-hidden="true">아래로 내려보면 관찰 단서가 더 있어요.</p>
   `;
 
   const startButton = els.detailBody.querySelector("[data-start-quiz]");
@@ -609,6 +907,21 @@ function renderAnimalInfo(animal) {
     }
     window.requestAnimationFrame(() => showHintAndScroll(retryState.hintKey));
   }
+}
+
+function renderCollectedAction(animal) {
+  return `
+    <section class="collected-action-card" aria-label="${animal.name} 도감 등록 완료">
+      <div>
+        <p class="section-kicker">도감등록 완료</p>
+        <strong>이 카드는 이미 내 도감에 들어왔어요.</strong>
+        <span>내용을 다시 살펴보거나, 연습용으로 퀴즈를 다시 풀 수 있어요.</span>
+      </div>
+      <button class="text-button quiz-replay-button" type="button" data-start-quiz="${animal.id}">
+        퀴즈 다시 풀기
+      </button>
+    </section>
+  `;
 }
 
 function renderQuizRetryPanel(quiz, retryLocked, retryDelay) {
@@ -721,11 +1034,7 @@ function hasSeenSettingsModal() {
 }
 
 function markSettingsModalSeen() {
-  try {
-    localStorage.setItem(settingsSeenKey, "true");
-  } catch {
-    // ignore
-  }
+  safeSetStorage(settingsSeenKey, "true");
 }
 
 function saveQuestionSettings(event) {
@@ -754,7 +1063,7 @@ function saveQuestionSettings(event) {
 
 function clearQuestionSettings() {
   if (!els.questionUrlInput || !els.settingsMessage) return;
-  localStorage.removeItem(questionToolStorageKey);
+  safeRemoveStorage(questionToolStorageKey);
   appConfig = normalizeAppConfig({
     questionTool: {
       ...defaultAppConfig.questionTool,
@@ -850,7 +1159,7 @@ function readQuestionToolUrl() {
 }
 
 function saveQuestionToolUrl(url) {
-  localStorage.setItem(questionToolStorageKey, url);
+  safeSetStorage(questionToolStorageKey, url);
 }
 
 function buildObservationDetails(animal) {
@@ -911,9 +1220,11 @@ function startQuiz(animal) {
 
 function buildQuestions(animal) {
   const moveKey = getMovementKey(animal);
-  const finalQuestion = animal.categories.includes("special")
-    ? buildSpecialEnvironmentQuestion(animal)
-    : buildDistinctiveFeatureQuestion(animal);
+  const finalQuestion = customQuizByAnimal[animal.id] || (
+    animal.categories.includes("special")
+      ? buildSpecialEnvironmentQuestion(animal)
+      : buildDistinctiveFeatureQuestion(animal)
+  );
 
   return [
     {
@@ -931,6 +1242,59 @@ function buildQuestions(animal) {
     finalQuestion
   ];
 }
+
+const customQuizByAnimal = {
+  "거미": {
+    text: "거미를 다른 주변 동물과 구별하기 쉬운 특징은 무엇일까요?",
+    correct: "여덟 개의 다리와 거미줄이 있어요.",
+    hintKey: "appearance",
+    options: shuffle([
+      "여덟 개의 다리와 거미줄이 있어요.",
+      "지느러미와 아가미로 물속을 헤엄쳐요.",
+      "큰 날개로 꽃 사이를 날아다녀요."
+    ])
+  },
+  "개": {
+    text: "개가 우리 주변에서 걷고 뛰며 생활하는 데 알맞은 특징은 무엇일까요?",
+    correct: "네 다리와 발, 냄새를 잘 맡는 코가 있어요.",
+    hintKey: "appearance",
+    options: shuffle([
+      "네 다리와 발, 냄새를 잘 맡는 코가 있어요.",
+      "껍데기와 넓은 발로 바위에 붙어 있어요.",
+      "작은 지느러미로 바다를 천천히 헤엄쳐요."
+    ])
+  },
+  "게": {
+    text: "게가 갯벌과 바닷가에서 생활하기에 알맞은 특징은 무엇일까요?",
+    correct: "집게와 단단한 껍질이 있고 옆으로 걸어요.",
+    hintKey: "adaptation",
+    options: shuffle([
+      "집게와 단단한 껍질이 있고 옆으로 걸어요.",
+      "긴 귀와 뒷다리로 풀밭에서 뛰어요.",
+      "날개와 깃털로 숲 사이를 날아요."
+    ])
+  },
+  "소금쟁이": {
+    text: "소금쟁이가 물 위를 다니는 데 도움을 주는 특징은 무엇일까요?",
+    correct: "가늘고 긴 다리로 물 표면 위에서 몸을 지탱해요.",
+    hintKey: "adaptation",
+    options: shuffle([
+      "가늘고 긴 다리로 물 표면 위에서 몸을 지탱해요.",
+      "혹 속 영양분으로 사막에서 오래 지내요.",
+      "두꺼운 털과 피부로 추위를 견뎌요."
+    ])
+  },
+  "펭귄": {
+    text: "펭귄이 추운 곳과 물속 생활에 알맞은 까닭은 무엇일까요?",
+    correct: "빽빽한 깃털과 날개 모양 지느러미가 도움을 줘요.",
+    hintKey: "adaptation",
+    options: shuffle([
+      "빽빽한 깃털과 날개 모양 지느러미가 도움을 줘요.",
+      "거미줄을 쳐서 벽과 풀숲에서 먹이를 잡아요.",
+      "넓은 앞발로 땅속에 굴을 파요."
+    ])
+  }
+};
 
 function makeHabitatOptions(animal) {
   const correct = animal.habitat;
@@ -1202,12 +1566,14 @@ function answerQuestion(answer) {
   const question = quiz.questions[quiz.index];
 
   if (answer === question.correct) {
+    playSound("correct");
     quiz.answered = answer;
     quiz.score += 1;
     quiz.retryState = null;
     clearHintHighlight();
     renderQuiz();
   } else {
+    playSound("wrong");
     quiz.retryState = {
       hintKey: question.hintKey,
       unlockAt: Date.now() + 4000
@@ -1272,6 +1638,7 @@ function showCatchAnimation(animal, onComplete) {
     : null;
 
   if (motionQuery && motionQuery.matches) {
+    playSound("catchSuccess");
     onComplete();
     return;
   }
@@ -1347,15 +1714,20 @@ function showCatchAnimation(animal, onComplete) {
     overlay.classList.add("active");
   });
 
+  playSound("catchStart");
   schedule(600, () => overlay.classList.add("is-flashing"));
   schedule(900, () => overlay.classList.add("is-absorbing"));
   schedule(1300, () => overlay.classList.add("is-shaking"));
-  schedule(2200, () => overlay.classList.add("is-success"));
+  schedule(2200, () => {
+    overlay.classList.add("is-success");
+    playSound("catchSuccess");
+  });
   schedule(2700, cleanup);
 }
 
 function finishQuiz() {
   const quiz = state.quiz;
+  const wasCollected = state.collected.has(quiz.animal.id);
 
   showCatchAnimation(quiz.animal, () => {
     state.collected.add(quiz.animal.id);
@@ -1364,14 +1736,22 @@ function finishQuiz() {
     renderAnimals();
 
     els.detailBody.innerHTML = `
-      <div class="modal-title-row">
-        <h2 id="modalTitle">도감 등록 성공</h2>
-        <span class="mini-badge">미션 완료!</span>
-      </div>
-      <p>${quiz.animal.name} 카드가 도감에 새롭게 등록되었어요. 모든 퀴즈를 정확히 맞혔습니다!</p>
+      <section class="quiz-complete-card">
+        <div class="quiz-complete-photo">
+          <img src="${escapeAttribute(els.detailImage.currentSrc || els.detailImage.getAttribute("src") || quiz.animal.image)}" alt="${quiz.animal.name} 사진">
+        </div>
+        <div>
+          <p class="section-kicker">도감등록 완료</p>
+          <h2 id="modalTitle">${quiz.animal.name} 카드 등록!</h2>
+          <p>${wasCollected ? "이미 등록한 카드예요. 다시 퀴즈를 풀며 특징을 확인했습니다." : "새 카드가 내 도감에 들어왔어요. 모든 퀴즈를 정확히 맞혔습니다!"}</p>
+        </div>
+      </section>
       <button class="primary-button" type="button" data-review>카드 내용 보기</button>
     `;
     els.detailBody.querySelector("[data-review]").addEventListener("click", () => renderAnimalInfo(quiz.animal));
+    if (!wasCollected) {
+      window.setTimeout(showNewMilestoneRewards, 650);
+    }
   });
 }
 
@@ -1476,12 +1856,14 @@ function checkGame() {
   document.querySelector('[data-answer="no"]').classList.add(noWrong ? "needs-work" : "correct-zone");
 
   if (placed.length < state.game.round.length) {
+    playSound("wrong");
     els.gameFeedback.textContent = `아직 ${state.game.round.length - placed.length}장을 옮겨야 해요. 모든 카드를 두 무리 중 하나에 넣어 봐요.`;
     updateGameScore(correct.length);
     return;
   }
 
   const criterion = criteria.find(item => item.id === state.game.criterion);
+  playSound(correct.length === state.game.round.length ? "correct" : "wrong");
   els.gameFeedback.textContent = correct.length === state.game.round.length
     ? `모두 맞았어요. "${criterion.label}" 기준으로 겹치거나 빠진 동물 없이 분류했어요.`
     : `${correct.length}장을 맞혔어요. 빨간 테두리 카드는 몸의 단서와 이동 방법을 다시 보고 옮겨 보세요.`;
@@ -1500,15 +1882,15 @@ function updateGameScore(score) {
   els.gameScore.textContent = `${value} / ${state.game.round.length}`;
 }
 
-async function setImage(animal, image, frame) {
+async function setImage(animal, image, frame, size = "detail") {
   frame.classList.add("loading");
   setImagePlaceholder(image, animal, "사진 준비 중");
   frame.innerHTML = `<div class="paw-loading"><div class="paw-prints"><span>🐾</span><span>🐾</span><span>🐾</span></div><span>사진을 불러오는 중…</span></div>`;
   frame.append(image);
   try {
-    const source = await getImageSource(animal);
-    if (!source) throw new Error("no image");
-    applyResolvedImage(image, animal, source, () => {
+    const sources = await getImageSources(animal, "", size);
+    if (!sources.length) throw new Error("no image");
+    applyImageFallback(image, animal, sources, () => {
       frame.innerHTML = `<div class="error-message"><span class="error-icon">😿</span>사진을 불러오지 못했어요</div>`;
     });
     frame.textContent = "";
@@ -1524,15 +1906,29 @@ async function setImage(animal, image, frame) {
 async function setStandaloneImage(animal, image, preferredSource = "") {
   setImagePlaceholder(image, animal, "사진 준비 중");
   try {
-    const source = await getImageSource(animal, preferredSource);
-    if (!source) throw new Error("no image");
-    applyResolvedImage(image, animal, source, () => {
+    const sources = await getImageSources(animal, preferredSource, "thumb");
+    if (!sources.length) throw new Error("no image");
+    applyImageFallback(image, animal, sources, () => {
       setImagePlaceholder(image, animal, "사진 없음");
     });
   } catch {
     setImagePlaceholder(image, animal, "사진 없음");
     image.alt = `${animal.name} 사진을 불러오지 못했어요.`;
   }
+}
+
+function applyImageFallback(image, animal, sources, onError) {
+  let index = 0;
+  const tryNext = () => {
+    const source = sources[index];
+    index += 1;
+    if (!source) {
+      onError?.();
+      return;
+    }
+    applyResolvedImage(image, animal, source, tryNext);
+  };
+  tryNext();
 }
 
 function applyResolvedImage(image, animal, source, onError) {
@@ -1569,50 +1965,330 @@ function escapeSvgText(value) {
     .replace(/'/g, "&#39;");
 }
 
-async function getImageSource(animal, preferredSource = "") {
-  if (preferredSource) return preferredSource;
-  if (animal.image) return animal.image;
+async function getImageSources(animal, preferredSource = "", size = "thumb") {
+  const local = getLocalImagePath(animal, size);
+  const sources = [preferredSource, local, animal.image].filter(Boolean);
+  if (animal.image) return dedupeSources(sources);
+
   const key = `${animal.wikiLang}:${animal.wikiTitle}`;
-  if (imageCache.has(key)) return imageCache.get(key);
-  const response = await fetch(`https://${animal.wikiLang}.wikipedia.org/api/rest_v1/page/summary/${encodeURIComponent(animal.wikiTitle)}`);
-  if (!response.ok) throw new Error("image lookup failed");
-  const data = await response.json();
-  const source = data.thumbnail?.source || "";
-  const page = data.content_urls?.desktop?.page;
-  if (page) animal.source = page;
-  if (source) animal.image = source;
-  imageCache.set(key, source);
-  return source;
+  if (imageCache.has(key)) return dedupeSources([...sources, imageCache.get(key)]);
+  try {
+    const response = await fetch(`https://${animal.wikiLang}.wikipedia.org/api/rest_v1/page/summary/${encodeURIComponent(animal.wikiTitle)}`);
+    if (!response.ok) throw new Error("image lookup failed");
+    const data = await response.json();
+    const source = data.thumbnail?.source || "";
+    const page = data.content_urls?.desktop?.page;
+    if (page) animal.source = page;
+    if (source) animal.image = source;
+    imageCache.set(key, source);
+    return dedupeSources([...sources, source]);
+  } catch {
+    imageCache.set(key, "");
+    return dedupeSources(sources);
+  }
+}
+
+function getLocalImagePath(animal, size) {
+  if (!appConfig.localImages?.enabled) return "";
+  const directory = size === "detail" ? "details" : "thumbs";
+  return `./images/${directory}/${encodeURIComponent(animal.id)}.jpg`;
+}
+
+function dedupeSources(sources) {
+  return [...new Set(sources.filter(Boolean))];
 }
 
 function updateProgress() {
   const count = state.collected.size;
   els.collectedCount.textContent = count;
   els.progressFill.style.width = `${Math.round((count / animals.length) * 100)}%`;
+  if (els.stickyProgressLabel) {
+    els.stickyProgressLabel.textContent = `🐾 ${count} / ${animals.length}`;
+  }
+  if (els.stickyProgressFill) {
+    els.stickyProgressFill.style.width = `${Math.round((count / animals.length) * 100)}%`;
+  }
+  renderMissionPanel();
+  renderFilters();
 }
 
-function resetProgress() {
-  const ok = confirm("등록한 카드 기록을 모두 지울까요?");
+function returnToCurrentMission(shouldRender = true) {
+  state.catalogMode = "mission";
+  state.filter = getNextMissionFilter();
+  if (shouldRender) {
+    renderMissionPanel();
+    renderFilters();
+    renderAnimals();
+  }
+}
+
+function getNextMissionFilter() {
+  const next = milestoneFilters.find(filter => {
+    const progress = getFilterProgress(filter.id);
+    return progress.collected < progress.total;
+  });
+  return next ? next.id : "all";
+}
+
+function getStageStatus(filter, nextMissionId) {
+  if (filter.id === "all") {
+    const isComplete = state.collected.size === animals.length;
+    return { status: isComplete ? "complete" : "master", label: isComplete ? "완료" : "마스터" };
+  }
+
+  const progress = getFilterProgress(filter.id);
+  if (progress.total > 0 && progress.collected === progress.total) {
+    return { status: "complete", label: "완료" };
+  }
+
+  const currentIndex = milestoneFilters.findIndex(item => item.id === nextMissionId);
+  const filterIndex = milestoneFilters.findIndex(item => item.id === filter.id);
+  if (filter.id === nextMissionId) return { status: "current", label: "진행 중" };
+  if (currentIndex >= 0 && filterIndex === currentIndex + 1) return { status: "next", label: "다음" };
+  if (currentIndex >= 0 && filterIndex > currentIndex + 1) return { status: "locked", label: "예고" };
+  return { status: "next", label: "미리보기" };
+}
+
+function getFilterProgress(filterId) {
+  const list = getAnimalsForFilter(filterId);
+  const collected = list.filter(animal => state.collected.has(animal.id)).length;
+  return { collected, total: list.length };
+}
+
+function getCompletedMilestones() {
+  const completed = milestoneFilters
+    .filter(filter => {
+      const progress = getFilterProgress(filter.id);
+      return progress.total > 0 && progress.collected === progress.total;
+    })
+    .map(filter => filter.id);
+
+  if (state.collected.size === animals.length) {
+    completed.push("all");
+  }
+
+  return completed;
+}
+
+function showNewMilestoneRewards() {
+  const completed = getCompletedMilestones();
+  const next = completed.find(id => !state.completedMilestones.has(id));
+  if (!next) return;
+
+  state.completedMilestones.add(next);
+  saveCompletedMilestones();
+  showReward(next);
+}
+
+function showReward(filterId) {
+  if (!els.rewardModal || !els.rewardContent) return;
+  const filter = filters.find(item => item.id === filterId) || filters[0];
+  const progress = getFilterProgress(filterId);
+  const isAll = filterId === "all";
+  const rewardCard = els.rewardContent.closest(".reward-card");
+  if (rewardCard) rewardCard.classList.toggle("master-reward-card", isAll);
+  const thumbnails = getAnimalsForFilter(filterId)
+    .filter(animal => state.collected.has(animal.id))
+    .slice(0, 12);
+
+  els.rewardContent.innerHTML = isAll
+    ? renderMasterReward(thumbnails)
+    : renderRegionReward(filter, progress, thumbnails);
+  if (els.rewardNextRegion) els.rewardNextRegion.hidden = isAll;
+  if (els.rewardReset) els.rewardReset.hidden = !isAll;
+  playSound(isAll ? "master" : "region");
+  enterModalFocus(els.rewardModal);
+}
+
+function renderRegionReward(filter, progress, thumbnails) {
+  return `
+    <div class="reward-burst reward-burst-soft" aria-hidden="true">${Array.from({ length: 8 }, () => "<span></span>").join("")}</div>
+    <p class="section-kicker">지역 완성 보상</p>
+    <h2 id="rewardTitle">🎉 ${filter.label} 도감 완성!</h2>
+    <p>${progress.total}마리를 모두 등록했어요. 다음 지역으로 넘어가 볼까요?</p>
+    <div class="reward-collage" aria-label="등록한 동물 미리보기">
+      ${thumbnails.map(animal => `<span>${animal.name}</span>`).join("")}
+    </div>
+  `;
+}
+
+function renderMasterReward(thumbnails) {
+  return `
+    <div class="reward-burst reward-burst-master" aria-hidden="true">${Array.from({ length: 16 }, () => "<span></span>").join("")}</div>
+    <div class="master-reward-emblem" aria-hidden="true">🏆</div>
+    <p class="section-kicker">최종 보상</p>
+    <h2 id="rewardTitle">도감 마스터 달성!</h2>
+    <p class="master-reward-count">54 / 54</p>
+    <p>모든 동물 카드를 등록했어요. 이제 전체 도감을 다시 둘러보며 특징을 비교해 볼 수 있습니다.</p>
+    <div class="reward-collage master-collage" aria-label="등록한 동물 미리보기">
+      ${thumbnails.map(animal => `<span>${animal.name}</span>`).join("")}
+    </div>
+  `;
+}
+
+function closeReward() {
+  if (els.rewardModal && !els.rewardModal.hidden) {
+    exitModalFocus(els.rewardModal);
+  }
+}
+
+function goToNextRewardRegion() {
+  closeReward();
+  returnToCurrentMission(false);
+  setView("catalog");
+  renderMissionPanel();
+  renderFilters();
+  renderAnimals();
+}
+
+function resetProgressFromReward() {
+  closeReward();
+  resetProgress(true);
+}
+
+function saveCompletedMilestones() {
+  safeSetStorage(completedMilestonesKey, JSON.stringify([...state.completedMilestones]));
+}
+
+function resetProgress(skipConfirm = false) {
+  const ok = skipConfirm || confirm("등록한 카드 기록을 모두 지울까요?");
   if (!ok) return;
   state.collected.clear();
+  state.completedMilestones.clear();
   saveCollected();
+  saveCompletedMilestones();
   updateProgress();
+  returnToCurrentMission(false);
+  renderMissionPanel();
+  renderFilters();
   renderAnimals();
 }
 
 function readCollected() {
+  return readStoredIds(storageKey)
+    .map(id => collectedIdAliases[id] || id)
+    .filter(id => animalIds.has(id));
+}
+
+function saveCollected() {
+  safeSetStorage(storageKey, JSON.stringify([...state.collected]));
+}
+
+function readStoredIds(key, validIds) {
   try {
-    const savedIds = JSON.parse(localStorage.getItem(storageKey) || "[]");
-    return savedIds
-      .map(id => collectedIdAliases[id] || id)
-      .filter(id => animalIds.has(id));
+    const savedIds = JSON.parse(localStorage.getItem(key) || "[]");
+    if (!Array.isArray(savedIds)) return [];
+    return savedIds.filter(id => !validIds || validIds.has(id));
   } catch {
     return [];
   }
 }
 
-function saveCollected() {
-  localStorage.setItem(storageKey, JSON.stringify([...state.collected]));
+function readBoolean(key, fallback) {
+  try {
+    const value = localStorage.getItem(key);
+    if (value === null) return fallback;
+    return value === "true";
+  } catch {
+    return fallback;
+  }
+}
+
+function safeSetStorage(key, value) {
+  try {
+    localStorage.setItem(key, value);
+    return true;
+  } catch {
+    showToast("진행 기록을 저장할 수 없어요. 사생활 보호 모드나 저장 공간을 확인해 주세요.");
+    return false;
+  }
+}
+
+function safeRemoveStorage(key) {
+  try {
+    localStorage.removeItem(key);
+    return true;
+  } catch {
+    showToast("저장된 설정을 지울 수 없어요. 브라우저 저장 권한을 확인해 주세요.");
+    return false;
+  }
+}
+
+function showToast(message) {
+  if (!els.appToast) {
+    window.alert(message);
+    return;
+  }
+  window.clearTimeout(toastTimer);
+  els.appToast.textContent = message;
+  els.appToast.hidden = false;
+  toastTimer = window.setTimeout(() => {
+    els.appToast.hidden = true;
+  }, 4200);
+}
+
+function debounce(callback, delay) {
+  let timer = 0;
+  return (...args) => {
+    window.clearTimeout(timer);
+    timer = window.setTimeout(() => callback(...args), delay);
+  };
+}
+
+function toggleSound() {
+  state.soundMuted = !state.soundMuted;
+  safeSetStorage(soundMutedKey, String(state.soundMuted));
+  updateSoundToggle();
+  if (!state.soundMuted) playSound("select");
+}
+
+function updateSoundToggle() {
+  if (!els.soundToggle) return;
+  els.soundToggle.setAttribute("aria-pressed", String(!state.soundMuted));
+  els.soundToggle.setAttribute("aria-label", state.soundMuted ? "효과음 꺼짐" : "효과음 켜짐");
+  els.soundToggle.setAttribute("title", state.soundMuted ? "효과음 꺼짐" : "효과음 켜짐");
+  els.soundToggle.textContent = state.soundMuted ? "🔇" : "🔊";
+}
+
+function ensureAudioContext() {
+  if (state.soundMuted) return null;
+  const AudioContext = window.AudioContext || window.webkitAudioContext;
+  if (!AudioContext) return null;
+  if (!audioContext) audioContext = new AudioContext();
+  if (audioContext.state === "suspended") {
+    audioContext.resume().catch(() => {});
+  }
+  return audioContext;
+}
+
+function playSound(type) {
+  const context = ensureAudioContext();
+  if (!context) return;
+
+  const patterns = {
+    select: [[520, 0, 0.05]],
+    correct: [[660, 0, 0.08], [880, 0.08, 0.1]],
+    wrong: [[240, 0, 0.11], [190, 0.11, 0.12]],
+    catchStart: [[420, 0, 0.08], [620, 0.08, 0.12]],
+    catchSuccess: [[720, 0, 0.08], [960, 0.08, 0.1], [1200, 0.18, 0.12]],
+    region: [[620, 0, 0.08], [820, 0.08, 0.08], [1040, 0.16, 0.16]],
+    master: [[520, 0, 0.08], [780, 0.08, 0.08], [1040, 0.16, 0.08], [1320, 0.24, 0.18]]
+  };
+
+  (patterns[type] || patterns.select).forEach(([frequency, delay, duration]) => {
+    const oscillator = context.createOscillator();
+    const gain = context.createGain();
+    const start = context.currentTime + delay;
+    oscillator.type = "sine";
+    oscillator.frequency.setValueAtTime(frequency, start);
+    gain.gain.setValueAtTime(0.0001, start);
+    gain.gain.exponentialRampToValueAtTime(0.08, start + 0.015);
+    gain.gain.exponentialRampToValueAtTime(0.0001, start + duration);
+    oscillator.connect(gain);
+    gain.connect(context.destination);
+    oscillator.start(start);
+    oscillator.stop(start + duration + 0.02);
+  });
 }
 
 function shuffle(items) {
@@ -1636,6 +2312,9 @@ function normalizeAppConfig(config) {
   const url = normalizeHttpUrl(questionTool.url);
 
   return {
+    localImages: {
+      enabled: Boolean(config.localImages?.enabled)
+    },
     questionTool: {
       ...questionTool,
       url,
@@ -1674,6 +2353,7 @@ function escapeAttribute(value) {
 }
 
 let pendingQuestionUrl = null;
+let pendingSourceUrl = null;
 
 function openGuideModal() {
   if (els.guideModal) enterModalFocus(els.guideModal);
@@ -1722,6 +2402,30 @@ function confirmNavigateToQuestion() {
 function closeConfirmPopup() {
   if (els.confirmPopup) els.confirmPopup.hidden = true;
   pendingQuestionUrl = null;
+}
+
+function openSourceConfirm(url) {
+  pendingSourceUrl = normalizeHttpUrl(url);
+  if (!pendingSourceUrl) return;
+  if (els.sourceConfirmModal) {
+    els.sourceConfirmModal.hidden = false;
+    return;
+  }
+  window.open(pendingSourceUrl, "_blank", "noopener,noreferrer");
+  pendingSourceUrl = null;
+}
+
+function confirmNavigateToSource() {
+  if (els.sourceConfirmModal) els.sourceConfirmModal.hidden = true;
+  if (pendingSourceUrl) {
+    window.open(pendingSourceUrl, "_blank", "noopener,noreferrer");
+    pendingSourceUrl = null;
+  }
+}
+
+function closeSourceConfirm() {
+  if (els.sourceConfirmModal) els.sourceConfirmModal.hidden = true;
+  pendingSourceUrl = null;
 }
 
 init();

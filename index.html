@@ -12,6 +12,12 @@
 </head>
 
 <body>
+  <div class="sticky-progress" id="stickyProgress" aria-live="polite">
+    <span id="stickyProgressLabel">🐾 0 / 54</span>
+    <span class="sticky-progress-track" aria-hidden="true"><span id="stickyProgressFill"></span></span>
+    <button id="soundToggle" class="sound-toggle" type="button" aria-pressed="false" aria-label="효과음 켜짐">🔊</button>
+  </div>
+
   <div class="app-layout">
     <aside class="sidebar">
       <div class="sidebar-header">
@@ -36,22 +42,24 @@
       </div>
 
       <div class="sidebar-section">
-        <h2 class="sidebar-section-title">묶음</h2>
-        <nav class="sidebar-nav" id="filterTabs" role="tablist" aria-label="동물 묶음"></nav>
+        <h2 class="sidebar-section-title">지역 미션</h2>
+        <nav class="sidebar-nav" id="filterTabs" role="tablist" aria-label="지역 미션"></nav>
       </div>
 
     </aside>
 
     <section class="center-area" id="catalogView">
       <div class="center-header">
-        <section class="safety-strip" aria-label="도감 보기 약속">
-          <h2>도감 보기 약속</h2>
+        <details class="safety-strip" aria-label="도감 보기 약속">
+          <summary>도감 보기 약속</summary>
           <ul>
             <li>화면 속 동물의 생김새와 사는 모습을 차분히 살펴봐요.</li>
             <li>동물의 특징에 먼저 집중해요.</li>
             <li>태블릿이나 컴퓨터는 손으로 살살 다루고, 화면은 깨끗하게 써요.</li>
           </ul>
-        </section>
+        </details>
+
+        <section id="missionPanel" class="mission-panel" aria-live="polite"></section>
 
         <div class="progress-panel" aria-live="polite">
           <span class="progress-label">🏆 내 도감 완성도</span>
@@ -65,7 +73,7 @@
           <p id="resultCount" class="result-count"></p>
           <label class="search-field">
             <span class="search-icon" aria-hidden="true">&#128269;</span>
-            <input id="searchInput" type="search" placeholder="예: 토끼, 숲, 다리" autocomplete="off">
+            <input id="searchInput" type="search" placeholder="전체 도감 검색: 개, 거미, 바다, 다리" autocomplete="off">
           </label>
         </div>
       </div>
@@ -118,7 +126,7 @@
   </div>
 
   <div id="detailModal" class="detail-modal" hidden>
-    <div class="detail-sheet">
+    <div class="detail-sheet" role="dialog" aria-modal="true" aria-labelledby="modalTitle">
       <button id="closeDetail" class="close-detail" type="button" aria-label="닫기">닫기</button>
       <div class="detail-photo" id="detailPhoto">
         <img id="detailImage" alt="">
@@ -230,6 +238,41 @@
       </div>
     </div>
   </div>
+
+  <div id="sourceConfirmModal" class="confirm-popup" hidden>
+    <div class="confirm-popup-content">
+      <h3>🌐 사진 출처를 볼까요?</h3>
+      <p>위키백과가 새 창에서 열려요. 도감으로 돌아오려면 새 창을 닫으면 됩니다.</p>
+      <div class="confirm-popup-actions">
+        <button class="primary-button" type="button" id="sourceContinue">계속 보기</button>
+        <button class="cancel-button" type="button" id="sourceCancel">도감에 있을래요</button>
+      </div>
+    </div>
+  </div>
+
+  <div id="onboardingModal" class="onboarding-modal" hidden>
+    <div class="onboarding-card" role="dialog" aria-modal="true" aria-labelledby="onboardingTitle">
+      <p class="section-kicker" id="onboardingStepLabel">첫 방문 안내</p>
+      <div id="onboardingContent"></div>
+      <div class="onboarding-actions">
+        <button id="skipOnboarding" class="text-button" type="button">다시 보지 않기</button>
+        <button id="nextOnboarding" class="primary-button" type="button">다음</button>
+      </div>
+    </div>
+  </div>
+
+  <div id="rewardModal" class="reward-modal" hidden>
+    <div class="reward-card" role="dialog" aria-modal="true" aria-labelledby="rewardTitle">
+      <div id="rewardContent"></div>
+      <div class="reward-actions">
+        <button id="rewardNextRegion" class="primary-button" type="button">다음 미션 시작</button>
+        <button id="rewardClose" class="primary-button secondary" type="button">계속 둘러보기</button>
+        <button id="rewardReset" class="text-button" type="button" hidden>처음부터 다시 시작</button>
+      </div>
+    </div>
+  </div>
+
+  <div id="appToast" class="app-toast" role="status" aria-live="polite" hidden></div>
 
   <footer class="footer-note">
     <p>자료: 미래엔 초등 과학 3-1, 2단원 동물의 생활 34-51쪽과 비상교육 실감형 과학관 동물 AR 자료를 바탕으로 구성했어요.</p>
