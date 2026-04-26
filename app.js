@@ -189,6 +189,8 @@ const els = {
   stickyProgress: document.querySelector("#stickyProgress"),
   stickyProgressLabel: document.querySelector("#stickyProgressLabel"),
   stickyProgressFill: document.querySelector("#stickyProgressFill"),
+  topbarProgressLabel: document.querySelector("#topbarProgressLabel"),
+  topbarProgressFill: document.querySelector("#topbarProgressFill"),
   searchInput: document.querySelector("#searchInput"),
   gameCriterion: document.querySelector("#gameCriterion"),
   gamePool: document.querySelector("#gamePool"),
@@ -208,6 +210,7 @@ const els = {
   closeDetail: document.querySelector("#closeDetail"),
   backToCatalog: document.querySelector("#backToCatalog"),
   openSettings: document.querySelector("#openSettings"),
+  openSettingsTop: document.querySelector("#openSettingsTop"),
   settingsModal: document.querySelector("#settingsModal"),
   closeSettings: document.querySelector("#closeSettings"),
   questionSettingsForm: document.querySelector("#questionSettingsForm"),
@@ -391,6 +394,7 @@ function init() {
     handleModalKeydown(event);
   });
   if (els.openSettings) els.openSettings.addEventListener("click", openSettings);
+  if (els.openSettingsTop) els.openSettingsTop.addEventListener("click", openSettings);
   if (els.closeSettings) els.closeSettings.addEventListener("click", closeSettings);
   if (els.settingsModal) {
     els.settingsModal.addEventListener("click", event => {
@@ -579,8 +583,13 @@ function renderOnboarding() {
   }
 
   els.onboardingContent.innerHTML = `
-    <h2 id="onboardingTitle">${step.title}</h2>
-    <p>${step.body}</p>
+    <div class="onboarding-guide">
+      <span class="sprite-mascot sprite-mascot-owl onboarding-owl" aria-hidden="true"></span>
+      <div class="onboarding-speech">
+        <h2 id="onboardingTitle">${step.title}</h2>
+        <p>${step.body}</p>
+      </div>
+    </div>
     ${step.demo ? `
       <div class="onboarding-demo" aria-label="데모 퀴즈">
         <span class="demo-badge">데모 퀴즈</span>
@@ -682,7 +691,10 @@ function renderMissionPanel() {
 
   els.missionPanel.innerHTML = `
     <div class="mission-board">
-      <div class="mission-orb" aria-hidden="true">${isAllMode ? "🏆" : panelFilter.icon}</div>
+      <div class="mission-orb" aria-hidden="true">
+        <span class="sprite-icon ${isAllMode || isFinished ? "sprite-trophy" : "sprite-shield"}"></span>
+        <span class="mission-orb-fallback">${isAllMode ? "🏆" : panelFilter.icon}</span>
+      </div>
       <div class="mission-copy">
         <p class="section-kicker">${modeLabel}</p>
         <h2>${title}</h2>
@@ -747,7 +759,7 @@ function renderAnimals() {
     cardBody.innerHTML = `
       <div class="animal-name-row">
         <h3>${animal.name}</h3>
-        ${state.collected.has(animal.id) ? '<span class="mini-badge collected-badge">등록</span>' : ""}
+        ${state.collected.has(animal.id) ? '<span class="mini-badge collected-badge"><span class="sprite-icon sprite-check" aria-hidden="true"></span>등록</span>' : ""}
       </div>
       <div class="animal-region-badges" aria-label="${animal.name} 지역">
         ${renderAnimalRegionBadges(animal)}
@@ -864,7 +876,7 @@ function renderAnimalInfo(animal) {
   els.detailBody.innerHTML = `
     <div class="modal-title-row">
       <h2 id="modalTitle">${animal.name}</h2>
-      <span class="mini-badge ${isCollected ? "collected-badge" : ""}">${isCollected ? "⭐ 도감 등록 완료" : "퀴즈 대기"}</span>
+      <span class="mini-badge ${isCollected ? "collected-badge" : ""}">${isCollected ? '<span class="sprite-icon sprite-star" aria-hidden="true"></span>도감 등록 완료' : "퀴즈 대기"}</span>
     </div>
     <div class="animal-region-badges detail-region-badges" aria-label="${animal.name} 환경 분류">
       ${renderAnimalRegionBadges(animal)}
@@ -912,6 +924,7 @@ function renderAnimalInfo(animal) {
 function renderCollectedAction(animal) {
   return `
     <section class="collected-action-card" aria-label="${animal.name} 도감 등록 완료">
+      <span class="sprite-icon sprite-check collected-action-icon" aria-hidden="true"></span>
       <div>
         <p class="section-kicker">도감등록 완료</p>
         <strong>이 카드는 이미 내 도감에 들어왔어요.</strong>
@@ -989,9 +1002,10 @@ function hydrateQuestionToolConfig() {
 
 function applyQuestionToolMode() {
   const canOpenSettings = canOpenQuestionSettings();
-  if (!els.openSettings) return;
-  els.openSettings.hidden = !canOpenSettings;
-  els.openSettings.setAttribute("aria-hidden", canOpenSettings ? "false" : "true");
+  [els.openSettings, els.openSettingsTop].filter(Boolean).forEach(button => {
+    button.hidden = !canOpenSettings;
+    button.setAttribute("aria-hidden", canOpenSettings ? "false" : "true");
+  });
 }
 
 function canOpenQuestionSettings() {
@@ -2008,6 +2022,12 @@ function updateProgress() {
   if (els.stickyProgressFill) {
     els.stickyProgressFill.style.width = `${Math.round((count / animals.length) * 100)}%`;
   }
+  if (els.topbarProgressLabel) {
+    els.topbarProgressLabel.textContent = `진행도 ${count} / ${animals.length}`;
+  }
+  if (els.topbarProgressFill) {
+    els.topbarProgressFill.style.width = `${Math.round((count / animals.length) * 100)}%`;
+  }
   renderMissionPanel();
   renderFilters();
 }
@@ -2115,7 +2135,7 @@ function renderRegionReward(filter, progress, thumbnails) {
 function renderMasterReward(thumbnails) {
   return `
     <div class="reward-burst reward-burst-master" aria-hidden="true">${Array.from({ length: 16 }, () => "<span></span>").join("")}</div>
-    <div class="master-reward-emblem" aria-hidden="true">🏆</div>
+    <div class="master-reward-emblem" aria-hidden="true"><span class="sprite-icon sprite-trophy"></span></div>
     <p class="section-kicker">최종 보상</p>
     <h2 id="rewardTitle">도감 마스터 달성!</h2>
     <p class="master-reward-count">54 / 54</p>

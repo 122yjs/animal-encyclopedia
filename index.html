@@ -19,10 +19,32 @@
   </div>
 
   <div class="app-layout">
+    <header class="game-topbar" aria-label="동물도감 진행 상태">
+      <div class="game-title-badge" aria-label="동물도감 54">
+        <span class="sprite-icon sprite-shield" aria-hidden="true"></span>
+        <span>동물도감</span>
+        <strong>54</strong>
+      </div>
+      <div class="game-topbar-progress" aria-live="polite">
+        <span id="topbarProgressLabel">진행도 0 / 54</span>
+        <span class="topbar-progress-track" aria-hidden="true"><span id="topbarProgressFill"></span></span>
+      </div>
+      <div class="game-topbar-rewards" aria-label="지역 보상 예시">
+        <span><span class="sprite-icon sprite-star" aria-hidden="true"></span>x50</span>
+        <span><span class="sprite-icon sprite-leaf" aria-hidden="true"></span>x1</span>
+      </div>
+      <button id="openSettingsTop" class="topbar-gear" type="button" aria-label="질문방 설정">⚙</button>
+    </header>
+
     <aside class="sidebar">
       <div class="sidebar-header">
         <p class="eyebrow">초등 3학년 과학 2. 동물의 생활</p>
         <h1>🐾 동물 도감 마스터<br><small>포켓 콜렉션 게임</small></h1>
+        <div class="sprite-hero" aria-hidden="true">
+          <span class="sprite-mascot sprite-mascot-owl"></span>
+          <span class="sprite-icon sprite-star"></span>
+          <span class="sprite-icon sprite-leaf"></span>
+        </div>
         <div class="quest-board">
           <p class="sidebar-lede">동물을 관찰하고 퀴즈 몬스터볼을 던져 54마리의 카드를 모아보세요! 과연 누가 가장 먼저 도감 마스터가 될까요?</p>
         </div>
