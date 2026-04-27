@@ -4,7 +4,7 @@ const path = require("path");
 const root = path.resolve(__dirname, "..");
 const dist = path.join(root, "dist");
 const filesToCopy = ["index.html", "no-question.html", "styles.css", "app.js"];
-const directoriesToCopy = ["vendor", "images", "sounds"];
+const directoriesToCopy = ["vendor", "images", "sounds", "assets"];
 
 const defaultQuestionTool = {
   featureEnabled: true,
