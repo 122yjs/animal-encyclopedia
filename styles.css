@@ -93,7 +93,7 @@ img {
   position: fixed;
   top: 10px;
   right: 12px;
-  z-index: 15;
+  z-index: 50;
   display: none;
   align-items: center;
   gap: 8px;
@@ -1019,10 +1019,16 @@ button:focus-visible {
 }
 
 .modal-title-row {
+  position: sticky;
+  top: -16px;
+  z-index: 10;
   display: flex;
   flex-wrap: wrap;
   gap: 10px;
   align-items: center;
+  background: var(--card-bg);
+  padding: 16px 0;
+  margin-top: -16px;
 }
 
 .encyclopedia-lede {
