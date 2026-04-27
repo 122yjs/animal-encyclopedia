@@ -225,13 +225,13 @@ img {
   text-align: left;
   min-height: var(--min-touch);
   padding: 10px 12px;
-  color: var(--ink);
-  background: #fffaf0;
-  border: 2px solid #dfc370;
-  border-bottom-width: 4px;
-  border-radius: 8px;
+  color: rgba(255, 241, 214, 0.9);
+  background: rgba(255, 241, 214, 0.06);
+  border: 1.5px solid rgba(180, 137, 52, 0.25);
+  border-bottom-width: 3px;
+  border-radius: 10px;
   font-weight: 800;
-  box-shadow: var(--shadow-sm);
+  box-shadow: none;
   transition: background 150ms ease, color 150ms ease, border-color 150ms ease, transform 120ms ease;
 }
 
@@ -241,7 +241,7 @@ img {
   left: -11px;
   top: 50%;
   width: 9px;
-  border-top: 3px dotted #dfc370;
+  border-top: 2px dotted rgba(180, 137, 52, 0.3);
   transform: translateY(-50%);
 }
 
@@ -263,16 +263,16 @@ img {
   place-items: center;
   width: 28px;
   height: 28px;
-  background: #fff1ba;
-  border: 1px solid rgba(95, 64, 17, 0.22);
+  background: rgba(245, 188, 68, 0.15);
+  border: 1px solid rgba(245, 188, 68, 0.25);
   border-radius: 7px;
 }
 
 .stage-status {
   justify-self: start;
   padding: 2px 7px;
-  color: #65420f;
-  background: rgba(255, 195, 0, 0.28);
+  color: var(--sun);
+  background: rgba(245, 188, 68, 0.12);
   border-radius: 999px;
   font-size: 0.68rem;
   font-weight: 900;
@@ -282,67 +282,67 @@ img {
 .filter-progress-badge {
   flex: 0 0 auto;
   padding: 3px 7px;
-  color: var(--teal-dark);
-  background: var(--paper);
-  border: 1px solid rgba(2, 128, 144, 0.24);
+  color: rgba(255, 241, 214, 0.7);
+  background: rgba(255, 241, 214, 0.08);
+  border: 1px solid rgba(180, 137, 52, 0.2);
   border-radius: 999px;
   font-size: 0.76rem;
   font-weight: 900;
 }
 
 .filter-button:hover {
-  background: #fff4c7;
-  border-color: var(--sun);
+  background: rgba(245, 188, 68, 0.12);
+  border-color: rgba(245, 188, 68, 0.5);
 }
 
 .filter-button:active {
   transform: translateY(2px);
-  border-bottom-width: 2px;
+  border-bottom-width: 1px;
 }
 
 .filter-button.active {
-  color: var(--paper);
-  background: linear-gradient(180deg, #08b89e, var(--teal-dark));
+  color: #3f2a0e;
+  background: linear-gradient(180deg, var(--sun), #d4940a);
   font-weight: 900;
-  border-color: var(--teal-dark);
-  box-shadow: 0 0 0 3px rgba(255, 195, 0, 0.32), var(--shadow-md);
+  border-color: #8b6914;
+  box-shadow: 0 0 12px rgba(245, 188, 68, 0.3), 0 4px 8px rgba(0,0,0,0.2);
 }
 
 .filter-button.active .filter-progress-badge {
-  color: var(--ink);
-  background: var(--sun);
-  border-color: rgba(255, 195, 0, 0.64);
+  color: #3f2a0e;
+  background: rgba(255, 255, 255, 0.3);
+  border-color: rgba(255, 255, 255, 0.2);
 }
 
 .filter-button.active .stage-status {
-  color: var(--ink);
-  background: var(--sun);
+  color: #3f2a0e;
+  background: rgba(255, 255, 255, 0.25);
 }
 
 .filter-button.stage-complete {
-  background: #f0fff7;
-  border-color: #7ccfa6;
+  background: rgba(92, 184, 92, 0.12);
+  border-color: rgba(92, 184, 92, 0.4);
 }
 
 .filter-button.stage-current {
-  border-color: var(--sun);
+  border-color: rgba(245, 188, 68, 0.5);
 }
 
 .filter-button.stage-locked {
-  color: #66727a;
-  background: #edf1f3;
-  border-color: #c8d2d8;
+  color: rgba(255, 241, 214, 0.35);
+  background: rgba(255, 241, 214, 0.03);
+  border-color: rgba(180, 137, 52, 0.12);
 }
 
 .filter-button.stage-locked .filter-icon,
 .filter-button.stage-locked .filter-progress-badge {
   filter: grayscale(1);
-  opacity: 0.76;
+  opacity: 0.5;
 }
 
 .filter-button.stage-master {
-  background: #fff8df;
-  border-color: var(--sun);
+  background: rgba(245, 188, 68, 0.1);
+  border-color: rgba(245, 188, 68, 0.4);
 }
 
 .mode-buttons {
@@ -822,18 +822,18 @@ button:focus-visible {
 
 .region-badge {
   padding: 3px 7px;
-  color: #0b5d63;
-  background: #e8f8f7;
-  border: 1px solid #b9dfdc;
+  color: #5d4700;
+  background: rgba(245, 188, 68, 0.12);
+  border: 1px solid rgba(245, 188, 68, 0.3);
   border-radius: 999px;
   font-size: 0.74rem;
   font-weight: 900;
 }
 
 .region-badge.primary {
-  color: #064b50;
-  background: #d8f4ed;
-  border-color: #83cac0;
+  color: #3f5a0e;
+  background: rgba(92, 184, 92, 0.12);
+  border-color: rgba(92, 184, 92, 0.35);
 }
 
 .region-badge.secondary {
@@ -870,9 +870,9 @@ button:focus-visible {
 
 .tag {
   padding: 5px 8px;
-  color: #23333a;
-  background: #eef6f8;
-  border: 1px solid #d3e4e9;
+  color: #5d4700;
+  background: rgba(245, 188, 68, 0.08);
+  border: 1px solid rgba(245, 188, 68, 0.2);
   border-radius: 8px;
   font-size: 0.84rem;
   font-weight: 800;
@@ -892,7 +892,8 @@ button:focus-visible {
   display: grid;
   place-items: center;
   padding: 24px;
-  background: rgba(20,31,38,0.74);
+  background: rgba(45, 27, 14, 0.82);
+  backdrop-filter: blur(4px);
 }
 
 .detail-modal[hidden] {
@@ -906,9 +907,10 @@ button:focus-visible {
   display: flex;
   flex-direction: column;
   overflow-y: auto;
-  background: var(--paper);
-  border-radius: var(--radius);
-  box-shadow: var(--shadow-lg);
+  background: var(--card-bg);
+  border: 1px solid var(--card-border);
+  border-radius: 20px;
+  box-shadow: var(--gold-glow);
 }
 
 .detail-sheet .close-detail {
@@ -953,7 +955,7 @@ button:focus-visible {
   display: grid;
   place-items: center;
   min-height: 280px;
-  background: #e7f4f6;
+  background: linear-gradient(135deg, #e8dcc8, #d4c5a9);
   overflow: hidden;
 }
 
@@ -1125,13 +1127,14 @@ button:focus-visible {
 .next-button {
   min-height: var(--min-touch);
   padding: 10px 14px;
-  color: var(--paper);
-  background: var(--teal);
-  border: 2px solid var(--teal-dark);
+  color: #3f2a0e;
+  background: linear-gradient(180deg, var(--sun), #d4940a);
+  border: 2px solid #8b6914;
   border-bottom-width: 5px;
   border-radius: 12px;
   font-weight: 900;
-  transition: transform 100ms ease, border-bottom-width 100ms ease;
+  box-shadow: 0 4px 8px rgba(212, 148, 10, 0.25);
+  transition: transform 100ms ease, border-bottom-width 100ms ease, box-shadow 150ms ease;
 }
 
 .primary-button:active,
@@ -1439,7 +1442,7 @@ button:focus-visible {
   display: grid;
   place-items: center;
   padding: 20px;
-  background: rgba(20,31,38,0.74);
+  background: rgba(45, 27, 14, 0.82);
 }
 
 .modal[hidden] {
@@ -1517,8 +1520,10 @@ button:focus-visible {
 }
 
 .primary-button.secondary {
-  color: var(--teal-dark);
-  background: var(--paper);
+  color: var(--ink);
+  background: linear-gradient(180deg, #fff8e1, #f5ecd3);
+  border-color: rgba(180, 137, 52, 0.3);
+  box-shadow: var(--shadow-sm);
 }
 
 .game-board {
@@ -1536,8 +1541,8 @@ button:focus-visible {
   gap: 8px;
   min-height: 430px;
   padding: 14px;
-  background: var(--paper);
-  border: 2px solid var(--line);
+  background: rgba(255, 251, 242, 0.85);
+  border: 2px solid rgba(180, 137, 52, 0.25);
   border-radius: var(--radius);
   box-shadow: var(--shadow-sm);
 }
@@ -1548,8 +1553,8 @@ button:focus-visible {
 
 .game-source.drag-over,
 .drop-zone.drag-over {
-  border-color: var(--teal);
-  background: #edf9f6;
+  border-color: var(--sun);
+  background: rgba(245, 188, 68, 0.08);
 }
 
 .drop-zone.correct-zone {
@@ -1586,17 +1591,18 @@ button:focus-visible {
   min-height: 106px;
   padding: 8px;
   text-align: left;
-  background: #f8fdff;
-  border: 2px solid var(--line);
-  border-radius: 8px;
+  background: var(--card-bg);
+  border: 1.5px solid var(--card-border);
+  border-radius: 10px;
   font-weight: 900;
-  transition: transform 160ms ease, border-color 160ms ease;
+  transition: transform 160ms ease, border-color 160ms ease, box-shadow 160ms ease;
 }
 
 .game-token:hover,
 .game-token.selected {
   transform: translateY(-2px);
-  border-color: var(--teal);
+  border-color: var(--sun);
+  box-shadow: 0 4px 12px rgba(245, 188, 68, 0.2);
 }
 
 .game-token img {
@@ -1645,7 +1651,8 @@ button:focus-visible {
   display: grid;
   place-items: center;
   padding: 24px;
-  background: rgba(20,31,38,0.72);
+  background: rgba(45, 27, 14, 0.82);
+  backdrop-filter: blur(4px);
 }
 
 .onboarding-modal[hidden],
@@ -1659,10 +1666,10 @@ button:focus-visible {
   width: min(520px, 100%);
   overflow: hidden;
   padding: 26px;
-  background: var(--paper);
-  border: 3px solid var(--sun);
-  border-radius: var(--radius);
-  box-shadow: var(--shadow-lg);
+  background: var(--card-bg);
+  border: 2px solid var(--sun);
+  border-radius: 20px;
+  box-shadow: var(--gold-glow);
 }
 
 .onboarding-card h2,
@@ -1703,8 +1710,8 @@ button:focus-visible {
 .demo-badge {
   justify-self: start;
   padding: 3px 8px;
-  color: var(--paper);
-  background: var(--teal);
+  color: #3f2a0e;
+  background: var(--sun);
   border-radius: 999px;
   font-size: 0.78rem;
   font-weight: 900;
@@ -1843,10 +1850,11 @@ button:focus-visible {
   z-index: 40;
   width: min(520px, calc(100% - 32px));
   padding: 12px 14px;
-  color: var(--paper);
-  background: var(--ink);
-  border-radius: 8px;
-  box-shadow: var(--shadow-lg);
+  color: #fff5d6;
+  background: linear-gradient(135deg, #3a2415, #2d1b0e);
+  border: 1px solid rgba(245, 188, 68, 0.3);
+  border-radius: 12px;
+  box-shadow: var(--gold-glow);
   font-weight: 900;
   text-align: center;
   transform: translateX(-50%);
@@ -1900,18 +1908,16 @@ button:focus-visible {
   .sidebar-header {
     text-align: center;
     padding: 32px 20px 24px;
-    border-bottom: 4px solid var(--teal-dark);
+    border-bottom: 3px solid rgba(180, 137, 52, 0.35);
   }
 
   .sidebar-header h1 {
-    font-size: 1.85rem;
-    text-shadow: 2px 2px 0 var(--teal-dark), -2px -2px 0 var(--teal-dark), 2px -2px 0 var(--teal-dark), -2px 2px 0 var(--teal-dark), 0 4px 8px rgba(0,0,0,0.3);
-    transform: rotate(-2deg);
+    font-size: 1.8rem;
+    text-shadow: 0 3px 6px rgba(0,0,0,0.4);
   }
 
   .sidebar-header h1 small {
-    font-size: 1.25rem;
-    transform: rotate(2deg);
+    font-size: 1.15rem;
   }
 
   .quest-board {
@@ -2289,7 +2295,7 @@ body[data-view="game"] .sticky-progress {
   display: grid;
   place-items: center;
   padding: 24px;
-  background: rgba(20, 31, 38, 0.78);
+  background: rgba(45, 27, 14, 0.85);
   opacity: 0;
   transition: opacity 180ms ease;
 }
@@ -2705,7 +2711,7 @@ body[data-view="game"] .sticky-progress {
   display: grid;
   place-items: center;
   padding: 24px;
-  background: rgba(20, 31, 38, 0.85);
+  background: rgba(45, 27, 14, 0.85);
 }
 
 .qr-expand-modal[hidden] {
@@ -2799,7 +2805,7 @@ body[data-view="game"] .sticky-progress {
   display: grid;
   place-items: center;
   padding: 24px;
-  background: rgba(20, 31, 38, 0.74);
+  background: rgba(45, 27, 14, 0.82);
 }
 
 .guide-modal[hidden] {
@@ -2874,7 +2880,7 @@ body[data-view="game"] .sticky-progress {
   display: grid;
   place-items: center;
   padding: 24px;
-  background: rgba(20, 31, 38, 0.74);
+  background: rgba(45, 27, 14, 0.82);
 }
 
 .confirm-popup[hidden] {
