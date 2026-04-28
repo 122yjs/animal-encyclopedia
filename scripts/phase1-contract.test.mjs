@@ -74,3 +74,8 @@ test("detail modal stays above mobile progress controls", () => {
   assert.match(files.styles, /\.detail-sheet \.close-detail\s*\{[\s\S]*?align-self:\s*flex-start;/, "detail close button should sit on the left away from mobile progress controls");
   assert.doesNotMatch(files.styles, /\.detail-sheet \.close-detail\s*\{[\s\S]*?align-self:\s*flex-end;/, "detail close button should not compete with the right-side progress controls");
 });
+
+test("catch and reward overlays stay above the quiz modal", () => {
+  assert.match(files.styles, /\.catch-overlay\s*\{[\s\S]*?z-index:\s*90;/, "catch animation should appear above the quiz modal");
+  assert.match(files.styles, /\.reward-modal\s*\{[\s\S]*?z-index:\s*90;/, "reward modal should appear above the quiz modal after capture");
+});
