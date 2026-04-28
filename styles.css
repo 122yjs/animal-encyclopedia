@@ -1015,7 +1015,7 @@ button:focus-visible {
 .detail-modal {
   position: fixed;
   inset: 0;
-  z-index: 20;
+  z-index: 70;
   display: grid;
   place-items: center;
   padding: 24px;
@@ -1043,9 +1043,9 @@ button:focus-visible {
 .detail-sheet .close-detail {
   position: sticky;
   top: 0;
-  z-index: 2;
-  align-self: flex-end;
-  margin: 10px 10px 0;
+  z-index: 80;
+  align-self: flex-start;
+  margin: 10px 0 0 10px;
   min-height: var(--min-touch);
   padding: 8px 14px;
   color: var(--ink);
@@ -1174,6 +1174,28 @@ button:focus-visible {
   margin: 0;
   color: var(--ink);
   font-weight: 800;
+}
+
+.observation-summary {
+  margin: 12px 0 14px;
+  border: 2px solid rgba(245, 188, 68, 0.45);
+  border-radius: 12px;
+  background: #fffdf2;
+  overflow: hidden;
+}
+
+.observation-summary summary {
+  min-height: 44px;
+  padding: 12px 14px;
+  color: var(--teal-dark);
+  font-weight: 900;
+  cursor: pointer;
+}
+
+.observation-summary .quick-facts {
+  margin: 0;
+  border-width: 2px 0 0;
+  border-radius: 0;
 }
 
 .observation-checklist {
@@ -1382,6 +1404,12 @@ button:focus-visible {
   background: #fff7e8;
   border: 2px solid #ffd27f;
   border-radius: 16px;
+}
+
+.quiz-retry-hint-guide {
+  margin: 0;
+  color: var(--muted);
+  font-weight: 900;
 }
 
 .feedback {
@@ -2336,7 +2364,7 @@ body[data-view="game"] .sticky-progress {
 
   .detail-sheet .close-detail {
     grid-column: 1 / -1;
-    margin: 8px 10px;
+    margin: 8px 0 8px 10px;
   }
 
   .detail-photo {

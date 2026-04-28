@@ -33,20 +33,44 @@ test("overall progress and waiting states follow configured regional missions", 
   assert.doesNotMatch(files.app, /label: "예고"/, "future mission copy should not use preview wording");
 });
 
-test("animal details show quick facts before long article", () => {
+test("animal details keep quick facts in a collapsed observation summary", () => {
   assert.match(files.app, /quickFacts:/, "animals should expose quickFacts");
-  assert.match(files.app, /renderQuickFacts/, "detail modal should render quick facts");
-  assert.match(files.app, /class="quick-facts"/, "quick facts should have a stable class");
+  assert.doesNotMatch(files.app, /renderHintPanel/, "detail modal should avoid a separate hint panel");
+  assert.match(files.app, /quiz-retry-hint-guide/, "wrong-answer hints should be integrated into retry flow");
+  assert.match(files.app, /renderObservationSummary/, "detail modal should keep quick facts in a collapsed summary");
+  assert.match(files.app, /<details class="observation-summary"/, "quick facts should be collapsed by default");
+  assert.match(files.app, /관찰 요약/, "collapsed quick facts should avoid the overloaded hint label");
+  assert.doesNotMatch(files.app, /open class="observation-summary"/, "observation summary should not start expanded");
+  assert.match(files.app, /showHintAndScroll/, "wrong-answer hints should be delivered via article highlight scroll");
 });
 
-test("quiz starts only after observation checks", () => {
+test("quiz registration button follows the explanation and observation summary", () => {
+  assert.match(
+    files.app,
+    /<div class="encyclopedia-article"[\s\S]*\$\{renderObservationSummary\(animal\)\}[\s\S]*<div class="detail-quiz-anchor">[\s\S]*\$\{quizAction\}/,
+    "quiz action should appear after the explanation and collapsed observation summary"
+  );
+});
+
+test("quiz observation checks disappear after first completion per animal", () => {
   assert.match(files.app, /renderObservationChecklist/, "detail modal should render observation checklist");
   assert.match(files.app, /data-observation-check/, "checklist should have checkboxes");
   assert.match(files.app, /updateQuizStartGate/, "quiz button should be gated by checks");
+  assert.match(files.app, /observationReadyKey/, "completed observation checks should persist");
+  assert.match(files.app, /saveObservationReady/, "app should remember completed observation checks");
+  assert.match(files.app, /readObservationReady/, "app should skip checks already completed once");
 });
 
-test("styles cover teacher mission settings, quick facts, and observation checklist", () => {
-  for (const className of [".mission-setting-panel", ".mission-animal-options", ".quick-facts", ".observation-checklist"]) {
+test("styles cover teacher mission settings, hints, and observation checklist", () => {
+  for (const className of [".mission-setting-panel", ".mission-animal-options", ".quick-facts", ".observation-summary", ".quiz-retry-hint-guide", ".observation-checklist"]) {
     assert.match(files.styles, new RegExp(className.replace(".", "\\.")), `${className} should be styled`);
   }
+});
+
+test("detail modal stays above mobile progress controls", () => {
+  assert.match(files.styles, /\.sticky-progress\s*\{[\s\S]*?z-index:\s*50;/, "sticky progress should keep its mobile layer");
+  assert.match(files.styles, /\.detail-modal\s*\{[\s\S]*?z-index:\s*70;/, "detail modal should sit above sticky progress controls");
+  assert.match(files.styles, /\.detail-sheet \.close-detail\s*\{[\s\S]*?z-index:\s*80;/, "detail close button should remain visible above modal content");
+  assert.match(files.styles, /\.detail-sheet \.close-detail\s*\{[\s\S]*?align-self:\s*flex-start;/, "detail close button should sit on the left away from mobile progress controls");
+  assert.doesNotMatch(files.styles, /\.detail-sheet \.close-detail\s*\{[\s\S]*?align-self:\s*flex-end;/, "detail close button should not compete with the right-side progress controls");
 });

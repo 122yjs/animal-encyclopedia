@@ -184,6 +184,7 @@ const settingsSeenKey = "animal-encyclopedia-settings-seen-v1";
 const onboardingSeenKey = "animal-encyclopedia-onboarding-seen-v1";
 const completedMilestonesKey = "animal-encyclopedia-completed-milestones-v1";
 const soundMutedKey = "animal-encyclopedia-sound-muted-v1";
+const observationReadyKey = "animal-encyclopedia-observation-ready-v1";
 const imageCache = new Map();
 const milestoneFilters = filters.filter(filter => filter.id !== "all");
 const state = {
@@ -196,6 +197,7 @@ const state = {
   missionAnimalIds: [],
   criterion: "hasLegs",
   collected: new Set(readCollected()),
+  observationReady: new Set(readStoredIds(observationReadyKey, animalIds)),
   completedMilestones: new Set(readStoredIds(completedMilestonesKey, new Set(filters.map(filter => filter.id)))),
   soundMuted: readBoolean(soundMutedKey, false),
   selectedAnimal: null,
@@ -1142,11 +1144,7 @@ function renderAnimalInfo(animal) {
     </div>
     ${renderAnimalEnvironmentNote(animal)}
     <p class="encyclopedia-lede">${observation.intro}</p>
-    ${renderQuickFacts(animal)}
     ${renderObservationChecklist(animal, isCollected)}
-    <div class="detail-quiz-anchor">
-      ${quizAction}
-    </div>
     <div class="encyclopedia-article" id="animalArticle">
       <section class="encyclopedia-section">
         <h3>생김새와 움직임</h3>
@@ -1162,9 +1160,13 @@ function renderAnimalInfo(animal) {
         <p data-hint="adaptation">${observation.habitatLink}</p>
       </section>
     </div>
+    ${renderObservationSummary(animal)}
+    <div class="detail-quiz-anchor">
+      ${quizAction}
+    </div>
     ${renderQuestionTool()}
     <button class="source-link source-link-button" type="button" data-source-url="${escapeAttribute(animal.source)}">🌐 사진 출처 보기 · 새 창에서 열어요</button>
-    <p class="modal-scroll-hint" aria-hidden="true">아래로 내려보면 관찰 단서가 더 있어요.</p>
+    <p class="modal-scroll-hint" aria-hidden="true">아래로 내려보면 자세한 설명이 더 있어요.</p>
   `;
 
   const startButton = els.detailBody.querySelector("[data-start-quiz]");
@@ -1202,10 +1204,10 @@ function renderCollectedAction(animal) {
   `;
 }
 
-function renderQuickFacts(animal) {
+function renderQuickFacts(animal, title = "관찰 단서") {
   return `
-    <section class="quick-facts" aria-label="${animal.name} 관찰 단서">
-      <h3>관찰 단서</h3>
+    <section class="quick-facts" aria-label="${animal.name} ${title}">
+      <h3>${title}</h3>
       <dl>
         <div><dt>사는 곳</dt><dd>${escapeHTML(animal.quickFacts.habitat)}</dd></div>
         <div><dt>움직임</dt><dd>${escapeHTML(animal.quickFacts.movement)}</dd></div>
@@ -1215,8 +1217,17 @@ function renderQuickFacts(animal) {
   `;
 }
 
+function renderObservationSummary(animal) {
+  return `
+    <details class="observation-summary">
+      <summary>관찰 요약 열기</summary>
+      ${renderQuickFacts(animal, "관찰 요약")}
+    </details>
+  `;
+}
+
 function renderObservationChecklist(animal, isCollected) {
-  if (isCollected) return "";
+  if (isCollected || readObservationReady(animal.id)) return "";
   return `
     <section class="observation-checklist" aria-label="${animal.name} 관찰 체크">
       <h3>퀴즈 전 관찰 체크</h3>
@@ -1239,6 +1250,12 @@ function updateQuizStartGate() {
   const ready = checks.every(check => check.checked);
   startButton.disabled = !ready;
   startButton.textContent = ready ? "🎯 퀴즈 풀고 도감에 등록하기" : "관찰 체크 3개를 먼저 해요";
+  if (ready) {
+    const animalId = startButton.dataset.startQuiz;
+    saveObservationReady(animalId);
+    const checklist = els.detailBody.querySelector(".observation-checklist");
+    if (checklist) checklist.remove();
+  }
 }
 
 function renderQuizRetryPanel(quiz, retryLocked, retryDelay) {
@@ -1247,6 +1264,7 @@ function renderQuizRetryPanel(quiz, retryLocked, retryDelay) {
   return `
     <section class="quiz-retry-panel" aria-live="polite">
       <p class="feedback retry">앗, 틀렸어요! 노란 문장을 다시 읽고 같은 문제에 다시 도전해 보세요.</p>
+      <p class="quiz-retry-hint-guide">노란색으로 표시된 문장을 다시 읽고 같은 문제에 도전해요.</p>
       <p class="card-point">${progressText}</p>
       <button class="primary-button" type="button" data-resume-quiz ${retryLocked ? "disabled" : ""}>${buttonLabel}</button>
     </section>
@@ -2487,8 +2505,10 @@ function resetProgress(skipConfirm = false) {
   if (!ok) return;
   state.collected.clear();
   state.completedMilestones.clear();
+  state.observationReady.clear();
   saveCollected();
   saveCompletedMilestones();
+  safeRemoveStorage(observationReadyKey);
   updateProgress();
   returnToCurrentMission(false);
   renderMissionPanel();
@@ -2498,6 +2518,16 @@ function resetProgress(skipConfirm = false) {
 
 function resetClassProgress() {
   resetProgress(false);
+}
+
+function readObservationReady(animalId) {
+  return state.observationReady.has(animalId);
+}
+
+function saveObservationReady(animalId) {
+  if (!animalIds.has(animalId)) return;
+  state.observationReady.add(animalId);
+  safeSetStorage(observationReadyKey, JSON.stringify([...state.observationReady]));
 }
 
 function readCollected() {
