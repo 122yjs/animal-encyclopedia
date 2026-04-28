@@ -31,7 +31,7 @@
           </div>
         </div>
         <div class="quest-board">
-          <p class="sidebar-lede">동물을 관찰하고 퀴즈 몬스터볼을 던져 54마리의 카드를 모아보세요! 과연 누가 가장 먼저 도감 마스터가 될까요?</p>
+          <p class="sidebar-lede">동물을 관찰하고 퀴즈 몬스터볼을 던져 오늘의 카드를 모아보세요! 과연 누가 가장 먼저 도감 마스터가 될까요?</p>
         </div>
       </div>
 
@@ -47,9 +47,6 @@
         <h2 class="sidebar-section-title">지역 미션</h2>
         <nav class="sidebar-nav" id="filterTabs" role="tablist" aria-label="지역 미션"></nav>
       </div>
-
-      <button id="openSettings" class="settings-button" type="button" hidden aria-hidden="true" style="display:none">질문방
-        설정</button>
     </aside>
 
     <section class="center-area" id="catalogView">
@@ -77,8 +74,18 @@
           <p id="resultCount" class="result-count"></p>
           <label class="search-field">
             <span class="search-icon" aria-hidden="true">&#128269;</span>
-            <input id="searchInput" type="search" placeholder="전체 도감 검색: 개, 거미, 바다, 다리" autocomplete="off">
+            <input id="searchInput" type="search" placeholder="동물 이름이나 특징 찾기: 날개, 지느러미, 사막" autocomplete="off">
           </label>
+        </div>
+        <div id="searchChips" class="search-chips" aria-label="추천 검색어">
+          <button type="button" class="search-chip" data-search-chip="날개">날개</button>
+          <button type="button" class="search-chip" data-search-chip="다리">다리</button>
+          <button type="button" class="search-chip" data-search-chip="지느러미">지느러미</button>
+          <button type="button" class="search-chip" data-search-chip="물속">물속</button>
+          <button type="button" class="search-chip" data-search-chip="땅속">땅속</button>
+          <button type="button" class="search-chip" data-search-chip="사막">사막</button>
+          <button type="button" class="search-chip" data-search-chip="알">알</button>
+          <button type="button" class="search-chip" data-search-chip="털">털</button>
         </div>
       </div>
 
@@ -136,18 +143,6 @@
         <img id="detailImage" alt="">
       </div>
       <div id="detailBody" class="detail-body"></div>
-    </div>
-  </div>
-
-  <div id="settingsModal" class="modal" hidden>
-    <div class="settings-sheet" role="dialog" aria-modal="true" aria-labelledby="settingsTitle">
-      <button id="closeSettings" class="close-button" type="button" aria-label="닫기">닫기</button>
-      <div class="settings-body">
-        <p class="section-kicker">교사용 설정</p>
-        <h2 id="settingsTitle">질문방 기능 없음</h2>
-        <p class="settings-intro">이 버전은 질문방 기능을 사용하지 않도록 만든 도감입니다.</p>
-        <p id="settingsMessage" class="settings-message" aria-live="polite"></p>
-      </div>
     </div>
   </div>
 

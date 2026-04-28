@@ -15,6 +15,44 @@ const criteria = [
   { id: "crawls", label: "기어서 이동하는가?" }
 ];
 
+const defaultMissionSelections = [
+  {
+    id: "around",
+    label: "우리 주변",
+    title: "우리 주변 지역 미션",
+    description: "학교와 마을에서 만날 수 있는 동물을 먼저 살펴봅니다.",
+    animalIds: ["무당벌레", "달팽이", "고양이", "거미", "박새", "꿀벌", "개", "지렁이"]
+  },
+  {
+    id: "freshwater",
+    label: "강·호수",
+    title: "강·호수 지역 미션",
+    description: "물가, 강, 호수, 바다 동물의 몸과 움직임을 비교합니다.",
+    animalIds: ["붕어", "수달", "다슬기", "송사리", "메기", "개구리", "청둥오리", "물방개"]
+  },
+  {
+    id: "land",
+    label: "땅",
+    title: "땅 지역 미션",
+    description: "땅에서 사는 동물의 다리, 몸, 움직임을 비교합니다.",
+    animalIds: ["나비", "참새", "토끼", "호랑이", "뱀", "개미", "노루", "딱따구리"]
+  },
+  {
+    id: "sea",
+    label: "바다",
+    title: "바다 지역 미션",
+    description: "바다와 갯벌 동물의 몸 구조와 이동 방법을 살펴봅니다.",
+    animalIds: ["갈매기", "조개", "게", "소라", "돌돔", "해삼", "돌고래", "해마"]
+  },
+  {
+    id: "special",
+    label: "특별한 환경",
+    title: "특별한 환경 지역 미션",
+    description: "사막, 극지방, 높은 산처럼 특별한 환경에 알맞은 특징을 찾습니다.",
+    animalIds: ["낙타", "도루묵도마뱀", "사막여우", "사막 뱀", "사막 딱정벌레", "북극곰", "북극여우", "펭귄"]
+  }
+];
+
 const defaultAppConfig = {
   localImages: {
     enabled: false
@@ -153,6 +191,9 @@ const state = {
   filter: "all",
   catalogMode: "mission",
   query: "",
+  missionRegion: "around",
+  missionSelections: {},
+  missionAnimalIds: [],
   criterion: "hasLegs",
   collected: new Set(readCollected()),
   completedMilestones: new Set(readStoredIds(completedMilestonesKey, new Set(filters.map(filter => filter.id)))),
@@ -181,6 +222,9 @@ const els = {
   gameView: document.querySelector("#gameView"),
   filterTabs: document.querySelector("#filterTabs"),
   missionPanel: document.querySelector("#missionPanel"),
+  missionRegionSelect: document.querySelector("#missionRegionSelect"),
+  missionAnimalOptions: document.querySelector("#missionAnimalOptions"),
+  missionAnimalCount: document.querySelector("#missionAnimalCount"),
   animalGrid: document.querySelector("#animalGrid"),
   resultCount: document.querySelector("#resultCount"),
   collectedCount: document.querySelector("#collectedCount"),
@@ -190,6 +234,7 @@ const els = {
   stickyProgressLabel: document.querySelector("#stickyProgressLabel"),
   stickyProgressFill: document.querySelector("#stickyProgressFill"),
   searchInput: document.querySelector("#searchInput"),
+  searchChips: document.querySelector("#searchChips"),
   gameCriterion: document.querySelector("#gameCriterion"),
   gamePool: document.querySelector("#gamePool"),
   gameYes: document.querySelector("#gameYes"),
@@ -201,6 +246,7 @@ const els = {
   newRound: document.querySelector("#newRound"),
   checkGame: document.querySelector("#checkGame"),
   resetProgress: document.querySelector("#resetProgress"),
+  classReset: document.querySelector("#classReset"),
   detailModal: document.querySelector("#detailModal"),
   detailPhoto: document.querySelector("#detailPhoto"),
   detailImage: document.querySelector("#detailImage"),
@@ -317,6 +363,11 @@ function makeAnimal(name, wiki, categories, habitat, move, body, point, relation
     habitat,
     move,
     body,
+    quickFacts: {
+      habitat,
+      movement: move,
+      feature: body.slice(0, 2).join(", ")
+    },
     point,
     relation,
     page,
@@ -327,15 +378,18 @@ function makeAnimal(name, wiki, categories, habitat, move, body, point, relation
 }
 
 function init() {
+  applyInitialMissionSettings();
   hydrateQuestionToolConfig();
   applyQuestionToolMode();
   returnToCurrentMission(false);
-  els.totalCount.textContent = animals.length;
+  els.totalCount.textContent = getProgramTotal();
   if (els.roomTemplateLink) {
     els.roomTemplateLink.href = magicRoomTemplateUrl;
   }
   bindViewTabs();
   bindMissionPanel();
+  renderTeacherMissionPanel();
+  bindTeacherMissionControls();
   renderMissionPanel();
   renderFilters();
   renderAnimals();
@@ -348,7 +402,20 @@ function init() {
   els.searchInput.addEventListener("input", event => {
     state.query = event.target.value.trim();
     debouncedRenderAnimals();
+    updateSearchChipState();
   });
+  if (els.searchChips) {
+    els.searchChips.addEventListener("click", event => {
+      const chip = event.target.closest("[data-search-chip]");
+      if (!chip) return;
+      const query = chip.dataset.searchChip.trim();
+      els.searchInput.value = query;
+      state.query = query;
+      debouncedRenderAnimals();
+      updateSearchChipState();
+      els.searchInput.focus();
+    });
+  }
 
   if (els.closeDetail) {
     els.closeDetail.addEventListener("click", closeDetail);
@@ -453,6 +520,7 @@ function init() {
   }
   if (els.soundToggle) els.soundToggle.addEventListener("click", toggleSound);
   els.resetProgress.addEventListener("click", resetProgress);
+  if (els.classReset) els.classReset.addEventListener("click", resetClassProgress);
   els.gameCriterion.addEventListener("change", event => {
     state.game.criterion = event.target.value;
     startNewRound();
@@ -501,6 +569,43 @@ function bindViewTabs() {
   });
 }
 
+function applyInitialMissionSettings() {
+  const requestedRegion = getMissionRegionFromPageUrl();
+  const mission = getMissionPreset(requestedRegion) || defaultMissionSelections[0];
+  state.missionSelections = getMissionSelectionsFromPageUrl();
+  state.missionRegion = mission.id;
+  state.missionAnimalIds = getSelectedMissionAnimalIds(mission.id);
+  state.filter = mission.id;
+}
+
+function getMissionRegionFromPageUrl() {
+  const params = new URLSearchParams(window.location.search);
+  return normalizeMissionRegionId(params.get("region") || params.get("set") || "");
+}
+
+function getMissionAnimalIdsFromPageUrl(mission = getCurrentMissionPreset()) {
+  const params = new URLSearchParams(window.location.search);
+  const raw = getMissionAnimalsParam(params, mission.id);
+  const validIds = new Set(getMissionCandidateAnimals(mission.id).map(animal => animal.id));
+  const requested = raw
+    .split(",")
+    .map(id => id.trim())
+    .filter(id => validIds.has(id));
+  return requested.length ? requested : getDefaultMissionAnimalIds(mission);
+}
+
+function getMissionSelectionsFromPageUrl() {
+  const selections = {};
+  defaultMissionSelections.forEach(mission => {
+    selections[mission.id] = getMissionAnimalIdsFromPageUrl(mission);
+  });
+  return selections;
+}
+
+function getMissionAnimalsParam(params, regionId) {
+  return params.get(`${regionId}Animals`) || (regionId === getMissionRegionFromPageUrl() ? params.get("animals") || "" : "");
+}
+
 function bindMissionPanel() {
   if (!els.missionPanel) return;
   els.missionPanel.addEventListener("click", event => {
@@ -516,6 +621,141 @@ function bindMissionPanel() {
     renderMissionPanel();
     renderFilters();
     renderAnimals();
+  });
+}
+
+function renderTeacherMissionPanel() {
+  if (!els.missionRegionSelect || !els.missionAnimalOptions) return;
+  els.missionRegionSelect.innerHTML = "";
+  defaultMissionSelections.forEach(set => {
+    const option = document.createElement("option");
+    option.value = set.id;
+    option.textContent = set.label;
+    els.missionRegionSelect.append(option);
+  });
+  els.missionRegionSelect.value = state.missionRegion;
+  renderTeacherMissionAnimals();
+}
+
+function bindTeacherMissionControls() {
+  if (!els.missionRegionSelect || !els.missionAnimalOptions) return;
+  els.missionRegionSelect.addEventListener("change", event => {
+    state.missionRegion = event.target.value;
+    state.missionAnimalIds = getSelectedMissionAnimalIds(state.missionRegion);
+    state.query = "";
+    if (els.searchInput) els.searchInput.value = "";
+    state.catalogMode = "mission";
+    state.filter = state.missionRegion;
+    updateMissionUrl();
+    renderTeacherMissionAnimals();
+    renderMissionPanel();
+    renderFilters();
+    renderAnimals();
+    updateProgress();
+    renderShareLinkPanel();
+  });
+  els.missionAnimalOptions.addEventListener("change", event => {
+    const checkbox = event.target.closest("[data-mission-animal]");
+    if (!checkbox) return;
+    const selected = [...els.missionAnimalOptions.querySelectorAll("[data-mission-animal]:checked")]
+      .map(input => input.value);
+    state.missionAnimalIds = selected.length ? selected : getDefaultMissionAnimalIds(getCurrentMissionPreset());
+    state.missionSelections[state.missionRegion] = state.missionAnimalIds;
+    updateMissionUrl();
+    renderTeacherMissionCount();
+    renderMissionPanel();
+    renderFilters();
+    renderAnimals();
+    updateProgress();
+    renderShareLinkPanel();
+  });
+}
+
+function renderTeacherMissionAnimals() {
+  if (!els.missionAnimalOptions) return;
+  const selected = new Set(state.missionAnimalIds);
+  els.missionAnimalOptions.innerHTML = getMissionCandidateAnimals(state.missionRegion).map(animal => `
+    <label>
+      <input type="checkbox" value="${escapeAttribute(animal.id)}" data-mission-animal ${selected.has(animal.id) ? "checked" : ""}>
+      <span>${escapeHTML(animal.name)}</span>
+    </label>
+  `).join("");
+  renderTeacherMissionCount();
+}
+
+function renderTeacherMissionCount() {
+  if (!els.missionAnimalCount) return;
+  const total = getMissionCandidateAnimals(state.missionRegion).length;
+  els.missionAnimalCount.textContent = `${state.missionAnimalIds.length} / ${total}마리 선택됨`;
+}
+
+function updateMissionUrl() {
+  const current = new URL(window.location.href);
+  current.searchParams.set("set", state.missionRegion);
+  current.searchParams.set("animals", state.missionAnimalIds.join(","));
+  writeMissionSelectionParams(current.searchParams);
+  window.history.replaceState({}, "", current.toString());
+}
+
+function getCurrentMissionPreset() {
+  return getMissionPreset(state.missionRegion) || defaultMissionSelections[0];
+}
+
+function getMissionPreset(regionId) {
+  return defaultMissionSelections.find(set => set.id === normalizeMissionRegionId(regionId));
+}
+
+function normalizeMissionRegionId(regionId) {
+  const aliases = {
+    water: "freshwater",
+    wings: "land"
+  };
+  return aliases[regionId] || regionId;
+}
+
+function getDefaultMissionAnimalIds(mission = getCurrentMissionPreset()) {
+  const candidateIds = new Set(getMissionCandidateAnimals(mission.id).map(animal => animal.id));
+  const defaults = mission.animalIds.filter(id => candidateIds.has(id));
+  return defaults.length ? defaults : [...candidateIds].slice(0, 8);
+}
+
+function getSelectedMissionAnimalIds(regionId) {
+  const mission = getMissionPreset(regionId);
+  if (!mission) return [];
+  const validIds = new Set(getMissionCandidateAnimals(mission.id).map(animal => animal.id));
+  const selected = (state.missionSelections[mission.id] || [])
+    .filter(id => validIds.has(id));
+  if (selected.length) return selected;
+  const defaults = getDefaultMissionAnimalIds(mission);
+  state.missionSelections[mission.id] = defaults;
+  return defaults;
+}
+
+function getMissionAnimals() {
+  const ids = new Set(getSelectedMissionAnimalIds(state.missionRegion));
+  return getMissionCandidateAnimals(state.missionRegion).filter(animal => ids.has(animal.id));
+}
+
+function getMissionCandidateAnimals(regionId) {
+  return animals.filter(animal => animal.categories.includes(regionId));
+}
+
+function getProgramAnimals() {
+  const ids = new Set();
+  defaultMissionSelections.forEach(mission => {
+    getSelectedMissionAnimalIds(mission.id).forEach(id => ids.add(id));
+  });
+  return animals.filter(animal => ids.has(animal.id));
+}
+
+function getProgramTotal() {
+  return getProgramAnimals().length;
+}
+
+function writeMissionSelectionParams(searchParams) {
+  defaultMissionSelections.forEach(mission => {
+    const ids = getSelectedMissionAnimalIds(mission.id);
+    searchParams.set(`${mission.id}Animals`, ids.join(","));
   });
 }
 
@@ -554,7 +794,7 @@ const onboardingSteps = [
   },
   {
     title: "지역별로 완성해요",
-    body: "54마리를 한 번에 끝내지 않아도 괜찮아요. 우리 주변, 땅, 물, 특별한 환경을 하나씩 완성해 봅니다.",
+    body: "전체를 한 번에 끝내지 않아도 괜찮아요. 우리 주변, 땅, 물, 특별한 환경을 하나씩 완성해 봅니다.",
     target: () => els.missionPanel || els.progressFill
   }
 ];
@@ -647,6 +887,13 @@ function renderFilters() {
       playSound("select");
       state.filter = filter.id;
       state.catalogMode = filter.id === "all" ? "all" : "mission";
+      if (filter.id !== "all") {
+        state.missionRegion = filter.id;
+        state.missionAnimalIds = getSelectedMissionAnimalIds(filter.id);
+        updateMissionUrl();
+        renderTeacherMissionPanel();
+        renderShareLinkPanel();
+      }
       renderMissionPanel();
       renderFilters();
       renderAnimals();
@@ -661,24 +908,27 @@ function renderMissionPanel() {
   const isAllMode = state.catalogMode === "all";
   const selectedFilter = filters.find(filter => filter.id === state.filter) || filters[0];
   const currentMission = filters.find(filter => filter.id === nextMissionId) || filters[0];
+  const mission = getCurrentMissionPreset();
   const panelFilter = isAllMode ? filters[0] : selectedFilter;
-  const progress = getFilterProgress(panelFilter.id);
+  const progress = isAllMode ? getFilterProgress(panelFilter.id) : getMissionProgress();
   const percent = progress.total ? Math.round((progress.collected / progress.total) * 100) : 0;
   const isCurrentMission = !isAllMode && state.filter === nextMissionId;
-  const isFinished = nextMissionId === "all" && state.collected.size === animals.length;
-  const modeLabel = isAllMode ? "전체 도감 보기" : isCurrentMission ? "현재 미션" : "지역 미리보기";
+  const programTotal = getProgramTotal();
+  const isFinished = nextMissionId === "all" && getCollectedProgramCount() === programTotal;
+  const modeLabel = isAllMode ? "전체 도감 보기" : "오늘의 지역 미션";
   const title = isAllMode
-    ? "전체 54마리 도감"
+    ? `전체 ${programTotal}마리 도감`
     : isFinished
       ? "도감 마스터 미션 완료"
-      : `${panelFilter.icon} ${panelFilter.label} 도감 미션`;
+      : `${panelFilter.icon} ${mission.title}`;
   const body = isAllMode
-    ? "모든 동물을 한눈에 둘러볼 수 있어요. 수업 흐름은 현재 미션으로 언제든 돌아갈 수 있습니다."
+    ? "모든 동물을 한눈에 둘러볼 수 있어요. 지역별 미션을 완성하면 마지막 전체 보상에 도전할 수 있습니다."
     : isCurrentMission
       ? `${panelFilter.label} 동물을 관찰하고 퀴즈를 맞혀 이 지역 도감을 완성해 보세요.`
       : `${currentMission.icon} ${currentMission.label} 미션이 현재 순서예요. 이 지역은 미리 둘러보는 중입니다.`;
   const buttonMode = isAllMode || !isCurrentMission ? "mission" : "all";
   const buttonText = isAllMode || !isCurrentMission ? "현재 미션으로 돌아가기" : "전체 도감 보기";
+  const meterLabel = isAllMode ? panelFilter.label : mission.label;
 
   els.missionPanel.innerHTML = `
     <div class="mission-board">
@@ -688,13 +938,19 @@ function renderMissionPanel() {
         <h2>${title}</h2>
         <p>${body}</p>
       </div>
-      <div class="mission-meter" aria-label="${panelFilter.label} 진행도 ${progress.collected} / ${progress.total}">
+      <div class="mission-meter" aria-label="${meterLabel} 진행도 ${progress.collected} / ${progress.total}">
         <span class="mission-meter-count">${progress.collected} / ${progress.total}</span>
         <span class="mission-meter-track" aria-hidden="true"><span style="width:${percent}%"></span></span>
       </div>
       <button class="mission-toggle" type="button" data-catalog-mode="${buttonMode}">${buttonText}</button>
     </div>
   `;
+}
+
+function getMissionProgress() {
+  const list = getMissionAnimals();
+  const collected = list.filter(animal => state.collected.has(animal.id)).length;
+  return { collected, total: list.length };
 }
 
 function renderGameCriterionOptions() {
@@ -710,6 +966,7 @@ function renderGameCriterionOptions() {
 function renderAnimals() {
   const visible = getVisibleAnimals();
   const isSearching = Boolean(state.query);
+  updateSearchChipState();
   els.animalGrid.innerHTML = "";
   els.resultCount.textContent = isSearching
     ? `전체 도감 검색 결과 ${visible.length}마리`
@@ -763,10 +1020,23 @@ function renderAnimals() {
   });
 }
 
+function updateSearchChipState() {
+  if (!els.searchChips) return;
+  els.searchChips.querySelectorAll("[data-search-chip]").forEach(chip => {
+    const active = chip.dataset.searchChip === state.query;
+    chip.classList.toggle("active", active);
+    chip.setAttribute("aria-pressed", active ? "true" : "false");
+  });
+}
+
 function getVisibleAnimals() {
   const query = state.query.toLowerCase();
+  const missionIds = state.catalogMode === "mission" ? new Set(getSelectedMissionAnimalIds(state.missionRegion)) : null;
+  const programIds = state.catalogMode === "all" ? new Set(getProgramAnimals().map(animal => animal.id)) : null;
   return animals.filter(animal => {
-    const inFilter = query || state.filter === "all" || getRepresentativeCategory(animal) === state.filter;
+    const inMission = !missionIds || missionIds.has(animal.id);
+    const inProgram = !programIds || programIds.has(animal.id);
+    const inFilter = query || state.filter === "all" || getRepresentativeCategory(animal) === state.filter || animal.categories.includes(state.filter);
     const searchText = [
       animal.name,
       animal.habitat,
@@ -778,7 +1048,7 @@ function getVisibleAnimals() {
         .map(categoryId => filters.find(filter => filter.id === categoryId)?.label || "")
         .join(" ")
     ].join(" ").toLowerCase();
-    return inFilter && (!query || searchText.includes(query));
+    return inMission && inProgram && inFilter && (!query || searchText.includes(query));
   });
 }
 
@@ -787,9 +1057,10 @@ function getRepresentativeCategory(animal) {
 }
 
 function getAnimalsForFilter(filterId) {
-  return filterId === "all"
-    ? animals
-    : animals.filter(animal => getRepresentativeCategory(animal) === filterId);
+  if (filterId === "all") return getProgramAnimals();
+  const ids = new Set(getSelectedMissionAnimalIds(filterId));
+  if (ids.size) return getMissionCandidateAnimals(filterId).filter(animal => ids.has(animal.id));
+  return animals.filter(animal => getRepresentativeCategory(animal) === filterId);
 }
 
 function renderAnimalRegionBadges(animal) {
@@ -871,6 +1142,8 @@ function renderAnimalInfo(animal) {
     </div>
     ${renderAnimalEnvironmentNote(animal)}
     <p class="encyclopedia-lede">${observation.intro}</p>
+    ${renderQuickFacts(animal)}
+    ${renderObservationChecklist(animal, isCollected)}
     <div class="detail-quiz-anchor">
       ${quizAction}
     </div>
@@ -897,7 +1170,12 @@ function renderAnimalInfo(animal) {
   const startButton = els.detailBody.querySelector("[data-start-quiz]");
   if (startButton) {
     startButton.addEventListener("click", () => startQuiz(animal));
+    updateQuizStartGate();
   }
+
+  els.detailBody.querySelectorAll("[data-observation-check]").forEach(checkbox => {
+    checkbox.addEventListener("change", updateQuizStartGate);
+  });
 
   const retryButton = els.detailBody.querySelector("[data-resume-quiz]");
   if (retryButton) {
@@ -922,6 +1200,45 @@ function renderCollectedAction(animal) {
       </button>
     </section>
   `;
+}
+
+function renderQuickFacts(animal) {
+  return `
+    <section class="quick-facts" aria-label="${animal.name} 관찰 단서">
+      <h3>관찰 단서</h3>
+      <dl>
+        <div><dt>사는 곳</dt><dd>${escapeHTML(animal.quickFacts.habitat)}</dd></div>
+        <div><dt>움직임</dt><dd>${escapeHTML(animal.quickFacts.movement)}</dd></div>
+        <div><dt>특징</dt><dd>${escapeHTML(animal.quickFacts.feature)}</dd></div>
+      </dl>
+    </section>
+  `;
+}
+
+function renderObservationChecklist(animal, isCollected) {
+  if (isCollected) return "";
+  return `
+    <section class="observation-checklist" aria-label="${animal.name} 관찰 체크">
+      <h3>퀴즈 전 관찰 체크</h3>
+      <label><input type="checkbox" data-observation-check> 사는 곳을 봤어요</label>
+      <label><input type="checkbox" data-observation-check> 움직이는 방법을 봤어요</label>
+      <label><input type="checkbox" data-observation-check> 몸의 특징을 봤어요</label>
+      <p>세 가지를 확인하면 퀴즈를 시작할 수 있어요.</p>
+    </section>
+  `;
+}
+
+function updateQuizStartGate() {
+  const startButton = els.detailBody.querySelector("[data-start-quiz]");
+  if (!startButton) return;
+  const checks = [...els.detailBody.querySelectorAll("[data-observation-check]")];
+  if (!checks.length) {
+    startButton.disabled = false;
+    return;
+  }
+  const ready = checks.every(check => check.checked);
+  startButton.disabled = !ready;
+  startButton.textContent = ready ? "🎯 퀴즈 풀고 도감에 등록하기" : "관찰 체크 3개를 먼저 해요";
 }
 
 function renderQuizRetryPanel(quiz, retryLocked, retryDelay) {
@@ -1002,7 +1319,8 @@ function canOpenQuestionSettings() {
 }
 
 function isSharedStudentView() {
-  return Boolean(getQuestionUrlFromPageUrl());
+  const params = new URLSearchParams(window.location.search);
+  return Boolean(getQuestionUrlFromPageUrl() || params.get("set") || params.get("region") || params.get("animals"));
 }
 
 function openSettings() {
@@ -1012,6 +1330,7 @@ function openSettings() {
   els.questionUrlInput.value = appConfig.questionTool.url || "";
   els.settingsMessage.textContent = "";
   if (els.teacherBanner) els.teacherBanner.hidden = false;
+  renderTeacherMissionPanel();
   renderShareLinkPanel();
   enterModalFocus(els.settingsModal);
 }
@@ -1081,7 +1400,7 @@ function clearQuestionSettings() {
 function renderShareLinkPanel() {
   if (!els.shareLinkPanel || !els.shareLinkOutput) return;
   const shareLink = buildShareLink(appConfig.questionTool.url);
-  els.shareLinkPanel.hidden = !shareLink;
+  els.shareLinkPanel.hidden = false;
   els.shareLinkOutput.value = shareLink;
   renderQrCode(shareLink);
 }
@@ -1138,10 +1457,14 @@ function downloadQrImage() {
 
 function buildShareLink(questionUrl) {
   const safeUrl = normalizeHttpUrl(questionUrl);
-  if (!safeUrl) return "";
 
   const current = new URL(window.location.href);
-  current.searchParams.set("questionUrl", safeUrl);
+  current.pathname = current.pathname.replace(/[^/]*$/, "no-question.html");
+  current.search = "";
+  current.searchParams.set("set", state.missionRegion);
+  current.searchParams.set("animals", state.missionAnimalIds.join(","));
+  writeMissionSelectionParams(current.searchParams);
+  if (safeUrl) current.searchParams.set("questionUrl", safeUrl);
   return current.toString();
 }
 
@@ -1999,22 +2322,29 @@ function dedupeSources(sources) {
 }
 
 function updateProgress() {
-  const count = state.collected.size;
+  const count = getCollectedProgramCount();
+  const total = getProgramTotal();
   els.collectedCount.textContent = count;
-  els.progressFill.style.width = `${Math.round((count / animals.length) * 100)}%`;
+  if (els.totalCount) els.totalCount.textContent = total;
+  els.progressFill.style.width = `${total ? Math.round((count / total) * 100) : 0}%`;
   if (els.stickyProgressLabel) {
-    els.stickyProgressLabel.textContent = `🐾 ${count} / ${animals.length}`;
+    els.stickyProgressLabel.textContent = `🐾 ${count} / ${total}`;
   }
   if (els.stickyProgressFill) {
-    els.stickyProgressFill.style.width = `${Math.round((count / animals.length) * 100)}%`;
+    els.stickyProgressFill.style.width = `${total ? Math.round((count / total) * 100) : 0}%`;
   }
   renderMissionPanel();
+  renderTeacherMissionCount();
   renderFilters();
+}
+
+function getCollectedProgramCount() {
+  return getProgramAnimals().filter(animal => state.collected.has(animal.id)).length;
 }
 
 function returnToCurrentMission(shouldRender = true) {
   state.catalogMode = "mission";
-  state.filter = getNextMissionFilter();
+  state.filter = state.missionRegion;
   if (shouldRender) {
     renderMissionPanel();
     renderFilters();
@@ -2032,7 +2362,7 @@ function getNextMissionFilter() {
 
 function getStageStatus(filter, nextMissionId) {
   if (filter.id === "all") {
-    const isComplete = state.collected.size === animals.length;
+    const isComplete = getCollectedProgramCount() === getProgramTotal();
     return { status: isComplete ? "complete" : "master", label: isComplete ? "완료" : "마스터" };
   }
 
@@ -2043,9 +2373,10 @@ function getStageStatus(filter, nextMissionId) {
 
   const currentIndex = milestoneFilters.findIndex(item => item.id === nextMissionId);
   const filterIndex = milestoneFilters.findIndex(item => item.id === filter.id);
+  if (filter.id === state.missionRegion) return { status: "current", label: "진행 중" };
   if (filter.id === nextMissionId) return { status: "current", label: "진행 중" };
   if (currentIndex >= 0 && filterIndex === currentIndex + 1) return { status: "next", label: "다음" };
-  if (currentIndex >= 0 && filterIndex > currentIndex + 1) return { status: "locked", label: "예고" };
+  if (currentIndex >= 0 && filterIndex > currentIndex + 1) return { status: "locked", label: "대기중" };
   return { status: "next", label: "미리보기" };
 }
 
@@ -2063,7 +2394,7 @@ function getCompletedMilestones() {
     })
     .map(filter => filter.id);
 
-  if (state.collected.size === animals.length) {
+  if (getCollectedProgramCount() === getProgramTotal()) {
     completed.push("all");
   }
 
@@ -2113,12 +2444,13 @@ function renderRegionReward(filter, progress, thumbnails) {
 }
 
 function renderMasterReward(thumbnails) {
+  const total = getProgramTotal();
   return `
     <div class="reward-burst reward-burst-master" aria-hidden="true">${Array.from({ length: 16 }, () => "<span></span>").join("")}</div>
     <div class="master-reward-emblem" aria-hidden="true">🏆</div>
     <p class="section-kicker">최종 보상</p>
     <h2 id="rewardTitle">도감 마스터 달성!</h2>
-    <p class="master-reward-count">54 / 54</p>
+    <p class="master-reward-count">${total} / ${total}</p>
     <p>모든 동물 카드를 등록했어요. 이제 전체 도감을 다시 둘러보며 특징을 비교해 볼 수 있습니다.</p>
     <div class="reward-collage master-collage" aria-label="등록한 동물 미리보기">
       ${thumbnails.map(animal => `<span>${animal.name}</span>`).join("")}
@@ -2162,6 +2494,10 @@ function resetProgress(skipConfirm = false) {
   renderMissionPanel();
   renderFilters();
   renderAnimals();
+}
+
+function resetClassProgress() {
+  resetProgress(false);
 }
 
 function readCollected() {
