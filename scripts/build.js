@@ -1,9 +1,11 @@
 const fs = require("fs");
 const path = require("path");
+const { generateCredits } = require("./generate-credits");
+const { generateNoQuestion } = require("./generate-no-question");
 
 const root = path.resolve(__dirname, "..");
 const dist = path.join(root, "dist");
-const filesToCopy = ["index.html", "no-question.html", "styles.css", "app.js"];
+const filesToCopy = ["index.html", "no-question.html", "credits.html", "styles.css", "app.js"];
 const directoriesToCopy = ["vendor", "images", "sounds", "assets"];
 
 const defaultQuestionTool = {
@@ -19,6 +21,7 @@ const defaultQuestionTool = {
 const linkedQuestionToolNote = "새 창에서 질문 도우미가 열려요.";
 
 const internalConfigPath = path.join(root, "config", "internal.local.json");
+const localImageManifestPath = path.join(root, "images", "manifest.json");
 
 function hasLocalImageAssets() {
   return ["thumbs", "details"].some(directory => {
@@ -52,6 +55,11 @@ function parseArgs(argv) {
 
 function readJson(filePath) {
   return JSON.parse(fs.readFileSync(filePath, "utf8"));
+}
+
+function readLocalImageManifest() {
+  if (!fs.existsSync(localImageManifestPath)) return {};
+  return readJson(localImageManifestPath);
 }
 
 function assertHttpUrl(url, label) {
@@ -102,10 +110,12 @@ function buildConfig(args) {
   if (args.label) config.questionTool.label = args.label;
   if (args.note) config.questionTool.note = args.note;
 
+  const localImageManifest = readLocalImageManifest();
   config.questionTool.url = assertHttpUrl(config.questionTool.url, "questionTool.url");
   config.questionTool.enabled = Boolean(config.questionTool.enabled && config.questionTool.url);
   config.localImages = {
     ...(config.localImages || {}),
+    paths: localImageManifest,
     enabled: Boolean(config.localImages?.enabled || hasLocalImageAssets())
   };
 
@@ -142,6 +152,8 @@ function copyStaticFiles() {
 function main() {
   const args = parseArgs(process.argv.slice(2));
   const config = buildConfig(args);
+  generateCredits();
+  generateNoQuestion();
   copyStaticFiles();
   writeAppConfig(config);
 

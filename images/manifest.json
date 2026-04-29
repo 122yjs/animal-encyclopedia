@@ -1,0 +1,218 @@
+{
+  "갈매기": {
+    "thumb": "./images/thumbs/%EA%B0%88%EB%A7%A4%EA%B8%B0.jpg",
+    "detail": "./images/details/%EA%B0%88%EB%A7%A4%EA%B8%B0.jpg"
+  },
+  "개": {
+    "thumb": "./images/thumbs/%EA%B0%9C.jpg",
+    "detail": "./images/details/%EA%B0%9C.jpg"
+  },
+  "개구리": {
+    "thumb": "./images/thumbs/%EA%B0%9C%EA%B5%AC%EB%A6%AC.jpg",
+    "detail": "./images/details/%EA%B0%9C%EA%B5%AC%EB%A6%AC.jpg"
+  },
+  "개미": {
+    "thumb": "./images/thumbs/%EA%B0%9C%EB%AF%B8.jpg",
+    "detail": "./images/details/%EA%B0%9C%EB%AF%B8.jpg"
+  },
+  "거미": {
+    "thumb": "./images/thumbs/%EA%B1%B0%EB%AF%B8.jpg",
+    "detail": "./images/details/%EA%B1%B0%EB%AF%B8.jpg"
+  },
+  "게": {
+    "thumb": "./images/thumbs/%EA%B2%8C.jpg",
+    "detail": "./images/details/%EA%B2%8C.jpg"
+  },
+  "고등어": {
+    "thumb": "./images/thumbs/%EA%B3%A0%EB%93%B1%EC%96%B4.png",
+    "detail": "./images/details/%EA%B3%A0%EB%93%B1%EC%96%B4.png"
+  },
+  "고라니": {
+    "thumb": "./images/thumbs/%EA%B3%A0%EB%9D%BC%EB%8B%88.jpg",
+    "detail": "./images/details/%EA%B3%A0%EB%9D%BC%EB%8B%88.jpg"
+  },
+  "고양이": {
+    "thumb": "./images/thumbs/%EA%B3%A0%EC%96%91%EC%9D%B4.jpg",
+    "detail": "./images/details/%EA%B3%A0%EC%96%91%EC%9D%B4.jpg"
+  },
+  "공벌레": {
+    "thumb": "./images/thumbs/%EA%B3%B5%EB%B2%8C%EB%A0%88.jpg",
+    "detail": "./images/details/%EA%B3%B5%EB%B2%8C%EB%A0%88.jpg"
+  },
+  "꿀벌": {
+    "thumb": "./images/thumbs/%EA%BF%80%EB%B2%8C.jpg",
+    "detail": "./images/details/%EA%BF%80%EB%B2%8C.jpg"
+  },
+  "나비": {
+    "thumb": "./images/thumbs/%EB%82%98%EB%B9%84.jpg",
+    "detail": "./images/details/%EB%82%98%EB%B9%84.jpg"
+  },
+  "낙타": {
+    "thumb": "./images/thumbs/%EB%82%99%ED%83%80.jpg",
+    "detail": "./images/details/%EB%82%99%ED%83%80.jpg"
+  },
+  "너구리": {
+    "thumb": "./images/thumbs/%EB%84%88%EA%B5%AC%EB%A6%AC.jpg",
+    "detail": "./images/details/%EB%84%88%EA%B5%AC%EB%A6%AC.jpg"
+  },
+  "노루": {
+    "thumb": "./images/thumbs/%EB%85%B8%EB%A3%A8.jpg",
+    "detail": "./images/details/%EB%85%B8%EB%A3%A8.jpg"
+  },
+  "다람쥐": {
+    "thumb": "./images/thumbs/%EB%8B%A4%EB%9E%8C%EC%A5%90.jpg",
+    "detail": "./images/details/%EB%8B%A4%EB%9E%8C%EC%A5%90.jpg"
+  },
+  "다슬기": {
+    "thumb": "./images/thumbs/%EB%8B%A4%EC%8A%AC%EA%B8%B0.jpg",
+    "detail": "./images/details/%EB%8B%A4%EC%8A%AC%EA%B8%B0.jpg"
+  },
+  "달팽이": {
+    "thumb": "./images/thumbs/%EB%8B%AC%ED%8C%BD%EC%9D%B4.jpg",
+    "detail": "./images/details/%EB%8B%AC%ED%8C%BD%EC%9D%B4.jpg"
+  },
+  "도루묵도마뱀": {
+    "thumb": "./images/thumbs/%EB%8F%84%EB%A3%A8%EB%AC%B5%EB%8F%84%EB%A7%88%EB%B1%80.jpg",
+    "detail": "./images/details/%EB%8F%84%EB%A3%A8%EB%AC%B5%EB%8F%84%EB%A7%88%EB%B1%80.jpg"
+  },
+  "돌고래": {
+    "thumb": "./images/thumbs/%EB%8F%8C%EA%B3%A0%EB%9E%98.jpg",
+    "detail": "./images/details/%EB%8F%8C%EA%B3%A0%EB%9E%98.jpg"
+  },
+  "돌돔": {
+    "thumb": "./images/thumbs/%EB%8F%8C%EB%8F%94.jpg",
+    "detail": "./images/details/%EB%8F%8C%EB%8F%94.jpg"
+  },
+  "두더지": {
+    "thumb": "./images/thumbs/%EB%91%90%EB%8D%94%EC%A7%80.jpg",
+    "detail": "./images/details/%EB%91%90%EB%8D%94%EC%A7%80.jpg"
+  },
+  "딱따구리": {
+    "thumb": "./images/thumbs/%EB%94%B1%EB%94%B0%EA%B5%AC%EB%A6%AC.jpg",
+    "detail": "./images/details/%EB%94%B1%EB%94%B0%EA%B5%AC%EB%A6%AC.jpg"
+  },
+  "메기": {
+    "thumb": "./images/thumbs/%EB%A9%94%EA%B8%B0.jpg",
+    "detail": "./images/details/%EB%A9%94%EA%B8%B0.jpg"
+  },
+  "무당벌레": {
+    "thumb": "./images/thumbs/%EB%AC%B4%EB%8B%B9%EB%B2%8C%EB%A0%88.jpg",
+    "detail": "./images/details/%EB%AC%B4%EB%8B%B9%EB%B2%8C%EB%A0%88.jpg"
+  },
+  "물방개": {
+    "thumb": "./images/thumbs/%EB%AC%BC%EB%B0%A9%EA%B0%9C.jpg",
+    "detail": "./images/details/%EB%AC%BC%EB%B0%A9%EA%B0%9C.jpg"
+  },
+  "바다거북": {
+    "thumb": "./images/thumbs/%EB%B0%94%EB%8B%A4%EA%B1%B0%EB%B6%81.jpg",
+    "detail": "./images/details/%EB%B0%94%EB%8B%A4%EA%B1%B0%EB%B6%81.jpg"
+  },
+  "박새": {
+    "thumb": "./images/thumbs/%EB%B0%95%EC%83%88.jpg",
+    "detail": "./images/details/%EB%B0%95%EC%83%88.jpg"
+  },
+  "뱀": {
+    "thumb": "./images/thumbs/%EB%B1%80.jpg",
+    "detail": "./images/details/%EB%B1%80.jpg"
+  },
+  "부엉이": {
+    "thumb": "./images/thumbs/%EB%B6%80%EC%97%89%EC%9D%B4.jpg",
+    "detail": "./images/details/%EB%B6%80%EC%97%89%EC%9D%B4.jpg"
+  },
+  "북극곰": {
+    "thumb": "./images/thumbs/%EB%B6%81%EA%B7%B9%EA%B3%B0.jpg",
+    "detail": "./images/details/%EB%B6%81%EA%B7%B9%EA%B3%B0.jpg"
+  },
+  "북극여우": {
+    "thumb": "./images/thumbs/%EB%B6%81%EA%B7%B9%EC%97%AC%EC%9A%B0.jpg",
+    "detail": "./images/thumbs/%EB%B6%81%EA%B7%B9%EC%97%AC%EC%9A%B0.jpg"
+  },
+  "붕어": {
+    "thumb": "./images/thumbs/%EB%B6%95%EC%96%B4.jpg",
+    "detail": "./images/details/%EB%B6%95%EC%96%B4.jpg"
+  },
+  "사막 딱정벌레": {
+    "thumb": "./images/thumbs/%EC%82%AC%EB%A7%89%20%EB%94%B1%EC%A0%95%EB%B2%8C%EB%A0%88.jpg",
+    "detail": "./images/details/%EC%82%AC%EB%A7%89%20%EB%94%B1%EC%A0%95%EB%B2%8C%EB%A0%88.jpg"
+  },
+  "사막 뱀": {
+    "thumb": "./images/thumbs/%EC%82%AC%EB%A7%89%20%EB%B1%80.jpg",
+    "detail": "./images/details/%EC%82%AC%EB%A7%89%20%EB%B1%80.jpg"
+  },
+  "사막여우": {
+    "thumb": "./images/thumbs/%EC%82%AC%EB%A7%89%EC%97%AC%EC%9A%B0.jpg",
+    "detail": "./images/details/%EC%82%AC%EB%A7%89%EC%97%AC%EC%9A%B0.jpg"
+  },
+  "산양": {
+    "thumb": "./images/thumbs/%EC%82%B0%EC%96%91.jpg",
+    "detail": "./images/details/%EC%82%B0%EC%96%91.jpg"
+  },
+  "소금쟁이": {
+    "thumb": "./images/thumbs/%EC%86%8C%EA%B8%88%EC%9F%81%EC%9D%B4.jpg",
+    "detail": "./images/details/%EC%86%8C%EA%B8%88%EC%9F%81%EC%9D%B4.jpg"
+  },
+  "소라": {
+    "thumb": "./images/thumbs/%EC%86%8C%EB%9D%BC.jpg",
+    "detail": "./images/details/%EC%86%8C%EB%9D%BC.jpg"
+  },
+  "송사리": {
+    "thumb": "./images/thumbs/%EC%86%A1%EC%82%AC%EB%A6%AC.jpg",
+    "detail": "./images/details/%EC%86%A1%EC%82%AC%EB%A6%AC.jpg"
+  },
+  "수달": {
+    "thumb": "./images/thumbs/%EC%88%98%EB%8B%AC.jpg",
+    "detail": "./images/details/%EC%88%98%EB%8B%AC.jpg"
+  },
+  "오징어": {
+    "thumb": "./images/thumbs/%EC%98%A4%EC%A7%95%EC%96%B4.jpg",
+    "detail": "./images/details/%EC%98%A4%EC%A7%95%EC%96%B4.jpg"
+  },
+  "왜가리": {
+    "thumb": "./images/thumbs/%EC%99%9C%EA%B0%80%EB%A6%AC.jpg",
+    "detail": "./images/details/%EC%99%9C%EA%B0%80%EB%A6%AC.jpg"
+  },
+  "전복": {
+    "thumb": "./images/thumbs/%EC%A0%84%EB%B3%B5.jpg",
+    "detail": "./images/details/%EC%A0%84%EB%B3%B5.jpg"
+  },
+  "조개": {
+    "thumb": "./images/thumbs/%EC%A1%B0%EA%B0%9C.jpg",
+    "detail": "./images/details/%EC%A1%B0%EA%B0%9C.jpg"
+  },
+  "지렁이": {
+    "thumb": "./images/thumbs/%EC%A7%80%EB%A0%81%EC%9D%B4.jpg",
+    "detail": "./images/details/%EC%A7%80%EB%A0%81%EC%9D%B4.jpg"
+  },
+  "참새": {
+    "thumb": "./images/thumbs/%EC%B0%B8%EC%83%88.jpg",
+    "detail": "./images/details/%EC%B0%B8%EC%83%88.jpg"
+  },
+  "청둥오리": {
+    "thumb": "./images/thumbs/%EC%B2%AD%EB%91%A5%EC%98%A4%EB%A6%AC.jpg",
+    "detail": "./images/details/%EC%B2%AD%EB%91%A5%EC%98%A4%EB%A6%AC.jpg"
+  },
+  "토끼": {
+    "thumb": "./images/thumbs/%ED%86%A0%EB%81%BC.jpg",
+    "detail": "./images/details/%ED%86%A0%EB%81%BC.jpg"
+  },
+  "펭귄": {
+    "thumb": "./images/thumbs/%ED%8E%AD%EA%B7%84.jpg",
+    "detail": "./images/details/%ED%8E%AD%EA%B7%84.jpg"
+  },
+  "피라미": {
+    "thumb": "./images/thumbs/%ED%94%BC%EB%9D%BC%EB%AF%B8.jpg",
+    "detail": "./images/details/%ED%94%BC%EB%9D%BC%EB%AF%B8.jpg"
+  },
+  "해마": {
+    "thumb": "./images/thumbs/%ED%95%B4%EB%A7%88.jpg",
+    "detail": "./images/details/%ED%95%B4%EB%A7%88.jpg"
+  },
+  "해삼": {
+    "thumb": "./images/thumbs/%ED%95%B4%EC%82%BC.jpg",
+    "detail": "./images/details/%ED%95%B4%EC%82%BC.jpg"
+  },
+  "호랑이": {
+    "thumb": "./images/thumbs/%ED%98%B8%EB%9E%91%EC%9D%B4.jpg",
+    "detail": "./images/details/%ED%98%B8%EB%9E%91%EC%9D%B4.jpg"
+  }
+}

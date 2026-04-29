@@ -1263,6 +1263,11 @@ button:focus-visible {
   border-color: var(--teal);
 }
 
+.footer-link {
+  color: var(--teal-dark);
+  font-weight: 900;
+}
+
 .modal-scroll-hint {
   margin: -4px 0 0;
   color: var(--muted);

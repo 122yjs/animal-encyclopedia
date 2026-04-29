@@ -1990,8 +1990,9 @@ async function getImageSources(animal, preferredSource = "", size = "thumb") {
 
 function getLocalImagePath(animal, size) {
   if (!appConfig.localImages?.enabled) return "";
+  const configuredPath = appConfig.localImages?.paths?.[animal.id]?.[size];
   const directory = size === "detail" ? "details" : "thumbs";
-  return `./images/${directory}/${encodeURIComponent(animal.id)}.jpg`;
+  return configuredPath || `./images/${directory}/${encodeURIComponent(animal.id)}.jpg`;
 }
 
 function dedupeSources(sources) {
@@ -2151,7 +2152,7 @@ function saveCompletedMilestones() {
 }
 
 function resetProgress(skipConfirm = false) {
-  const ok = skipConfirm || confirm("등록한 카드 기록을 모두 지울까요?");
+  const ok = skipConfirm || confirm("공용 태블릿의 등록 기록을 모두 지울까요? 다음 반 수업을 위해 도감 진행도와 지역 보상을 초기화합니다.");
   if (!ok) return;
   state.collected.clear();
   state.completedMilestones.clear();
@@ -2313,7 +2314,8 @@ function normalizeAppConfig(config) {
 
   return {
     localImages: {
-      enabled: Boolean(config.localImages?.enabled)
+      enabled: Boolean(config.localImages?.enabled),
+      paths: config.localImages?.paths || {}
     },
     questionTool: {
       ...questionTool,
