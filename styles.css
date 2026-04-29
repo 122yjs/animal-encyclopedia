@@ -1038,6 +1038,89 @@ button:focus-visible {
   font-weight: 800;
 }
 
+.quick-facts h3,
+.observation-checklist h3 {
+  margin: 0 0 10px;
+  color: var(--teal-dark);
+  font-size: 1rem;
+}
+
+.quick-facts dl {
+  display: grid;
+  gap: 8px;
+  margin: 0;
+}
+
+.quick-facts dl div {
+  display: grid;
+  grid-template-columns: 72px minmax(0, 1fr);
+  gap: 8px;
+}
+
+.quick-facts dt {
+  color: var(--teal-dark);
+  font-weight: 900;
+}
+
+.quick-facts dd {
+  margin: 0;
+  color: var(--ink);
+  font-weight: 800;
+}
+
+.observation-summary {
+  margin: 12px 0 14px;
+  border: 2px solid rgba(245, 188, 68, 0.45);
+  border-radius: 12px;
+  background: #fffdf2;
+  overflow: hidden;
+}
+
+.observation-summary summary {
+  min-height: 44px;
+  padding: 12px 14px;
+  color: var(--teal-dark);
+  font-weight: 900;
+  cursor: pointer;
+}
+
+.observation-summary .quick-facts {
+  margin: 0;
+  border-width: 2px 0 0;
+  border-radius: 0;
+}
+
+.observation-checklist {
+  display: grid;
+  gap: 8px;
+  margin: 0 0 14px;
+  padding: 14px;
+  background: #effaf3;
+  border: 2px solid rgba(92, 184, 92, 0.32);
+  border-radius: 12px;
+}
+
+.observation-checklist label {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  min-height: 32px;
+  font-weight: 900;
+}
+
+.observation-checklist input {
+  width: 20px;
+  height: 20px;
+  accent-color: var(--leaf);
+}
+
+.observation-checklist p {
+  margin: 0;
+  color: var(--muted);
+  font-size: 0.86rem;
+  font-weight: 800;
+}
+
 .detail-quiz-anchor {
   position: sticky;
   top: 0;
@@ -1383,11 +1466,54 @@ button:focus-visible {
 }
 
 .settings-form,
+.mission-setting-panel,
 .share-link-panel {
   display: grid;
   gap: 12px;
   padding-top: 16px;
   border-top: 2px solid var(--line);
+}
+
+.mission-setting-panel h3 {
+  margin: 0 0 4px;
+  color: var(--teal-dark);
+  font-size: 1.12rem;
+}
+
+.mission-setting-panel p {
+  margin: 0;
+  color: var(--muted);
+  font-weight: 800;
+}
+
+.mission-animal-options {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(132px, 1fr));
+  gap: 8px;
+  max-height: 220px;
+  overflow: auto;
+  padding: 10px;
+  background: rgba(255, 251, 242, 0.72);
+  border: 1px solid var(--line);
+  border-radius: 8px;
+}
+
+.mission-animal-options label {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  min-height: 36px;
+  padding: 6px 8px;
+  background: #fff;
+  border: 1px solid rgba(180, 137, 52, 0.18);
+  border-radius: 8px;
+  font-weight: 900;
+}
+
+.mission-animal-options input {
+  width: 18px;
+  height: 18px;
+  accent-color: var(--teal);
 }
 
 .share-link-panel[hidden] {

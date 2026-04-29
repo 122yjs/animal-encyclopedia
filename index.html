@@ -182,6 +182,20 @@
           </div>
         </form>
 
+        <section class="mission-setting-panel" aria-label="오늘의 지역 미션 설정">
+          <div>
+            <p class="section-kicker">지역 미션 설정</p>
+            <h3>오늘 학생들이 볼 동물을 고르세요</h3>
+            <p>학생 화면에는 별도 수업 모드가 아니라 선택한 지역 미션 하나로 보입니다.</p>
+          </div>
+          <label class="select-field" for="missionRegionSelect">
+            <span>오늘의 지역</span>
+            <select id="missionRegionSelect"></select>
+          </label>
+          <div id="missionAnimalOptions" class="mission-animal-options" aria-live="polite"></div>
+          <p id="missionAnimalCount" class="field-hint">0마리 선택됨</p>
+        </section>
+
         <div id="shareLinkPanel" class="share-link-panel" hidden>
           <div class="qr-share-box">
             <div id="qrCode" class="qr-code" role="button" tabindex="0" aria-label="QR 코드 크게 보기 (클릭하면 확대됩니다)" style="cursor:pointer"></div>
