@@ -68,6 +68,7 @@ test("detail modal keeps collapsed observation summary before quiz actions", () 
 
   assert.ok(styles.includes(".observation-summary"));
   assert.ok(styles.includes(".observation-summary summary"));
+  assert.ok(appJs.includes("quickFacts: {"));
 });
 
 test("quiz start is gated by observation checklist before first collection", () => {

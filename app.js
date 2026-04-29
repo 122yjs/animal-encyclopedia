@@ -363,6 +363,11 @@ function makeAnimal(name, wiki, categories, habitat, move, body, point, relation
     habitat,
     move,
     body,
+    quickFacts: {
+      habitat,
+      movement: move,
+      feature: body.slice(0, 2).join(", ")
+    },
     point,
     relation,
     page,
