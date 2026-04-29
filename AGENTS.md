@@ -16,10 +16,8 @@ The build script (`scripts/build.js`) copies `index.html`, `no-question.html`, `
 
 ## Two HTML entry points
 
-- `index.html` — full version with question-tool settings UI
-- `no-question.html` — stripped version where question tool is completely disabled; maintained as a separate hand-written file, not derived from `index.html`
-
-Both must be kept in sync when changing layout or UI structure.
+- `index.html` — full version with question-tool settings UI (source of truth)
+- `no-question.html` — stripped version where question tool is completely disabled; auto-generated from `index.html` via `scripts/generate-no-question.js`
 
 ## Build-time config
 
