@@ -15,6 +15,44 @@ const criteria = [
   { id: "crawls", label: "기어서 이동하는가?" }
 ];
 
+const defaultMissionSelections = [
+  {
+    id: "around",
+    label: "우리 주변",
+    title: "우리 주변 지역 미션",
+    description: "학교와 마을에서 만날 수 있는 동물을 먼저 살펴봅니다.",
+    animalIds: ["무당벌레", "달팽이", "고양이", "거미", "박새", "꿀벌", "개", "지렁이"]
+  },
+  {
+    id: "freshwater",
+    label: "강·호수",
+    title: "강·호수 지역 미션",
+    description: "물가, 강, 호수, 바다 동물의 몸과 움직임을 비교합니다.",
+    animalIds: ["붕어", "수달", "다슬기", "송사리", "메기", "개구리", "청둥오리", "물방개"]
+  },
+  {
+    id: "land",
+    label: "땅",
+    title: "땅 지역 미션",
+    description: "땅에서 사는 동물의 다리, 몸, 움직임을 비교합니다.",
+    animalIds: ["나비", "참새", "토끼", "호랑이", "뱀", "개미", "노루", "딱따구리"]
+  },
+  {
+    id: "sea",
+    label: "바다",
+    title: "바다 지역 미션",
+    description: "바다와 갯벌 동물의 몸 구조와 이동 방법을 살펴봅니다.",
+    animalIds: ["갈매기", "조개", "게", "소라", "돌돔", "해삼", "돌고래", "해마"]
+  },
+  {
+    id: "special",
+    label: "특별한 환경",
+    title: "특별한 환경 지역 미션",
+    description: "사막, 극지방, 높은 산처럼 특별한 환경에 알맞은 특징을 찾습니다.",
+    animalIds: ["낙타", "도루묵도마뱀", "사막여우", "사막 뱀", "사막 딱정벌레", "북극곰", "북극여우", "펭귄"]
+  }
+];
+
 const defaultAppConfig = {
   localImages: {
     enabled: false
@@ -146,6 +184,7 @@ const settingsSeenKey = "animal-encyclopedia-settings-seen-v1";
 const onboardingSeenKey = "animal-encyclopedia-onboarding-seen-v1";
 const completedMilestonesKey = "animal-encyclopedia-completed-milestones-v1";
 const soundMutedKey = "animal-encyclopedia-sound-muted-v1";
+const observationReadyKey = "animal-encyclopedia-observation-ready-v1";
 const imageCache = new Map();
 const milestoneFilters = filters.filter(filter => filter.id !== "all");
 const state = {
@@ -153,8 +192,12 @@ const state = {
   filter: "all",
   catalogMode: "mission",
   query: "",
+  missionRegion: "around",
+  missionSelections: {},
+  missionAnimalIds: [],
   criterion: "hasLegs",
   collected: new Set(readCollected()),
+  observationReady: new Set(readStoredIds(observationReadyKey, animalIds)),
   completedMilestones: new Set(readStoredIds(completedMilestonesKey, new Set(filters.map(filter => filter.id)))),
   soundMuted: readBoolean(soundMutedKey, false),
   selectedAnimal: null,
@@ -181,6 +224,9 @@ const els = {
   gameView: document.querySelector("#gameView"),
   filterTabs: document.querySelector("#filterTabs"),
   missionPanel: document.querySelector("#missionPanel"),
+  missionRegionSelect: document.querySelector("#missionRegionSelect"),
+  missionAnimalOptions: document.querySelector("#missionAnimalOptions"),
+  missionAnimalCount: document.querySelector("#missionAnimalCount"),
   animalGrid: document.querySelector("#animalGrid"),
   resultCount: document.querySelector("#resultCount"),
   collectedCount: document.querySelector("#collectedCount"),
@@ -327,15 +373,18 @@ function makeAnimal(name, wiki, categories, habitat, move, body, point, relation
 }
 
 function init() {
+  applyInitialMissionSettings();
   hydrateQuestionToolConfig();
   applyQuestionToolMode();
   returnToCurrentMission(false);
-  els.totalCount.textContent = animals.length;
+  els.totalCount.textContent = getProgramTotal();
   if (els.roomTemplateLink) {
     els.roomTemplateLink.href = magicRoomTemplateUrl;
   }
   bindViewTabs();
   bindMissionPanel();
+  renderTeacherMissionPanel();
+  bindTeacherMissionControls();
   renderMissionPanel();
   renderFilters();
   renderAnimals();
@@ -516,6 +565,173 @@ function bindMissionPanel() {
     renderMissionPanel();
     renderFilters();
     renderAnimals();
+  });
+}
+
+function applyInitialMissionSettings() {
+  const requestedRegion = getMissionRegionFromPageUrl();
+  const mission = getMissionPreset(requestedRegion) || defaultMissionSelections[0];
+  state.missionSelections = getMissionSelectionsFromPageUrl();
+  state.missionRegion = mission.id;
+  state.missionAnimalIds = getSelectedMissionAnimalIds(mission.id);
+  state.filter = mission.id;
+}
+
+function getMissionRegionFromPageUrl() {
+  const params = new URLSearchParams(window.location.search);
+  return normalizeMissionRegionId(params.get("region") || params.get("set") || "");
+}
+
+function getMissionAnimalIdsFromPageUrl(mission = getCurrentMissionPreset()) {
+  const params = new URLSearchParams(window.location.search);
+  const raw = getMissionAnimalsParam(params, mission.id);
+  const validIds = new Set(getMissionCandidateAnimals(mission.id).map(animal => animal.id));
+  const requested = raw
+    .split(",")
+    .map(id => id.trim())
+    .filter(id => validIds.has(id));
+  return requested.length ? requested : getDefaultMissionAnimalIds(mission);
+}
+
+function getMissionSelectionsFromPageUrl() {
+  const selections = {};
+  defaultMissionSelections.forEach(mission => {
+    selections[mission.id] = getMissionAnimalIdsFromPageUrl(mission);
+  });
+  return selections;
+}
+
+function getMissionAnimalsParam(params, regionId) {
+  return params.get(`${regionId}Animals`) || (regionId === getMissionRegionFromPageUrl() ? params.get("animals") || "" : "");
+}
+
+function renderTeacherMissionPanel() {
+  if (!els.missionRegionSelect || !els.missionAnimalOptions) return;
+  els.missionRegionSelect.innerHTML = "";
+  defaultMissionSelections.forEach(set => {
+    const option = document.createElement("option");
+    option.value = set.id;
+    option.textContent = set.label;
+    els.missionRegionSelect.append(option);
+  });
+  els.missionRegionSelect.value = state.missionRegion;
+  renderTeacherMissionAnimals();
+}
+
+function bindTeacherMissionControls() {
+  if (!els.missionRegionSelect || !els.missionAnimalOptions) return;
+  els.missionRegionSelect.addEventListener("change", event => {
+    state.missionRegion = event.target.value;
+    state.missionAnimalIds = getSelectedMissionAnimalIds(state.missionRegion);
+    state.query = "";
+    if (els.searchInput) els.searchInput.value = "";
+    state.catalogMode = "mission";
+    state.filter = state.missionRegion;
+    updateMissionUrl();
+    renderTeacherMissionAnimals();
+    renderMissionPanel();
+    renderFilters();
+    renderAnimals();
+    updateProgress();
+    renderShareLinkPanel();
+  });
+  els.missionAnimalOptions.addEventListener("change", event => {
+    const checkbox = event.target.closest("[data-mission-animal]");
+    if (!checkbox) return;
+    const selected = [...els.missionAnimalOptions.querySelectorAll("[data-mission-animal]:checked")]
+      .map(input => input.value);
+    state.missionAnimalIds = selected.length ? selected : getDefaultMissionAnimalIds(getCurrentMissionPreset());
+    state.missionSelections[state.missionRegion] = state.missionAnimalIds;
+    updateMissionUrl();
+    renderTeacherMissionCount();
+    renderMissionPanel();
+    renderFilters();
+    renderAnimals();
+    updateProgress();
+    renderShareLinkPanel();
+  });
+}
+
+function renderTeacherMissionAnimals() {
+  if (!els.missionAnimalOptions) return;
+  const selected = new Set(state.missionAnimalIds);
+  els.missionAnimalOptions.innerHTML = getMissionCandidateAnimals(state.missionRegion).map(animal => `
+    <label>
+      <input type="checkbox" value="${escapeAttribute(animal.id)}" data-mission-animal ${selected.has(animal.id) ? "checked" : ""}>
+      <span>${escapeHTML(animal.name)}</span>
+    </label>
+  `).join("");
+  renderTeacherMissionCount();
+}
+
+function renderTeacherMissionCount() {
+  if (!els.missionAnimalCount) return;
+  const total = getMissionCandidateAnimals(state.missionRegion).length;
+  els.missionAnimalCount.textContent = `${state.missionAnimalIds.length} / ${total}마리 선택됨`;
+}
+
+function updateMissionUrl() {
+  const current = new URL(window.location.href);
+  current.searchParams.set("set", state.missionRegion);
+  current.searchParams.set("animals", state.missionAnimalIds.join(","));
+  writeMissionSelectionParams(current.searchParams);
+  window.history.replaceState({}, "", current.toString());
+}
+
+function getCurrentMissionPreset() {
+  return getMissionPreset(state.missionRegion) || defaultMissionSelections[0];
+}
+
+function getMissionPreset(regionId) {
+  return defaultMissionSelections.find(set => set.id === normalizeMissionRegionId(regionId));
+}
+
+function normalizeMissionRegionId(regionId) {
+  const aliases = {
+    water: "freshwater",
+    wings: "land"
+  };
+  return aliases[regionId] || regionId;
+}
+
+function getDefaultMissionAnimalIds(mission = getCurrentMissionPreset()) {
+  const candidateIds = new Set(getMissionCandidateAnimals(mission.id).map(animal => animal.id));
+  const defaults = mission.animalIds.filter(id => candidateIds.has(id));
+  return defaults.length ? defaults : [...candidateIds].slice(0, 8);
+}
+
+function getSelectedMissionAnimalIds(regionId) {
+  const mission = getMissionPreset(regionId);
+  if (!mission) return [];
+  const validIds = new Set(getMissionCandidateAnimals(mission.id).map(animal => animal.id));
+  const selected = (state.missionSelections[mission.id] || [])
+    .filter(id => validIds.has(id));
+  if (selected.length) return selected;
+  const defaults = getDefaultMissionAnimalIds(mission);
+  state.missionSelections[mission.id] = defaults;
+  return defaults;
+}
+
+function getMissionCandidateAnimals(regionId) {
+  return animals.filter(animal => animal.categories.includes(regionId));
+}
+
+function getProgramAnimals() {
+  const ids = new Set();
+  defaultMissionSelections.forEach(mission => {
+    getSelectedMissionAnimalIds(mission.id).forEach(id => ids.add(id));
+  });
+  return animals.filter(animal => ids.has(animal.id));
+}
+
+function getProgramTotal() {
+  return getProgramAnimals().length;
+}
+
+function writeMissionSelectionParams(searchParams) {
+  defaultMissionSelections.forEach(mission => {
+    const ids = getSelectedMissionAnimalIds(mission.id);
+    searchParams.set(`${mission.id}Animals`, ids.join(","));
   });
 }
 
@@ -765,8 +981,12 @@ function renderAnimals() {
 
 function getVisibleAnimals() {
   const query = state.query.toLowerCase();
+  const missionIds = state.catalogMode === "mission" ? new Set(getSelectedMissionAnimalIds(state.missionRegion)) : null;
+  const programIds = state.catalogMode === "all" ? new Set(getProgramAnimals().map(animal => animal.id)) : null;
   return animals.filter(animal => {
-    const inFilter = query || state.filter === "all" || getRepresentativeCategory(animal) === state.filter;
+    const inMission = !missionIds || missionIds.has(animal.id);
+    const inProgram = !programIds || programIds.has(animal.id);
+    const inFilter = query || state.filter === "all" || getRepresentativeCategory(animal) === state.filter || animal.categories.includes(state.filter);
     const searchText = [
       animal.name,
       animal.habitat,
@@ -778,7 +998,7 @@ function getVisibleAnimals() {
         .map(categoryId => filters.find(filter => filter.id === categoryId)?.label || "")
         .join(" ")
     ].join(" ").toLowerCase();
-    return inFilter && (!query || searchText.includes(query));
+    return inMission && inProgram && inFilter && (!query || searchText.includes(query));
   });
 }
 
@@ -787,9 +1007,10 @@ function getRepresentativeCategory(animal) {
 }
 
 function getAnimalsForFilter(filterId) {
-  return filterId === "all"
-    ? animals
-    : animals.filter(animal => getRepresentativeCategory(animal) === filterId);
+  if (filterId === "all") return getProgramAnimals();
+  const ids = new Set(getSelectedMissionAnimalIds(filterId));
+  if (ids.size) return getMissionCandidateAnimals(filterId).filter(animal => ids.has(animal.id));
+  return animals.filter(animal => getRepresentativeCategory(animal) === filterId);
 }
 
 function renderAnimalRegionBadges(animal) {
@@ -871,6 +1092,7 @@ function renderAnimalInfo(animal) {
     </div>
     ${renderAnimalEnvironmentNote(animal)}
     <p class="encyclopedia-lede">${observation.intro}</p>
+    ${renderObservationChecklist(animal, isCollected)}
     <div class="detail-quiz-anchor">
       ${quizAction}
     </div>
@@ -889,6 +1111,7 @@ function renderAnimalInfo(animal) {
         <p data-hint="adaptation">${observation.habitatLink}</p>
       </section>
     </div>
+    ${renderObservationSummary(animal)}
     ${renderQuestionTool()}
     <button class="source-link source-link-button" type="button" data-source-url="${escapeAttribute(animal.source)}">🌐 사진 출처 보기 · 새 창에서 열어요</button>
     <p class="modal-scroll-hint" aria-hidden="true">아래로 내려보면 관찰 단서가 더 있어요.</p>
@@ -897,7 +1120,12 @@ function renderAnimalInfo(animal) {
   const startButton = els.detailBody.querySelector("[data-start-quiz]");
   if (startButton) {
     startButton.addEventListener("click", () => startQuiz(animal));
+    updateQuizStartGate();
   }
+
+  els.detailBody.querySelectorAll("[data-observation-check]").forEach(checkbox => {
+    checkbox.addEventListener("change", updateQuizStartGate);
+  });
 
   const retryButton = els.detailBody.querySelector("[data-resume-quiz]");
   if (retryButton) {
@@ -922,6 +1150,60 @@ function renderCollectedAction(animal) {
       </button>
     </section>
   `;
+}
+
+function renderQuickFacts(animal, title = "관찰 단서") {
+  return `
+    <section class="quick-facts" aria-label="${animal.name} ${title}">
+      <h3>${title}</h3>
+      <dl>
+        <div><dt>사는 곳</dt><dd>${escapeHTML(animal.quickFacts.habitat)}</dd></div>
+        <div><dt>움직임</dt><dd>${escapeHTML(animal.quickFacts.movement)}</dd></div>
+        <div><dt>특징</dt><dd>${escapeHTML(animal.quickFacts.feature)}</dd></div>
+      </dl>
+    </section>
+  `;
+}
+
+function renderObservationSummary(animal) {
+  return `
+    <details class="observation-summary">
+      <summary>관찰 요약 열기</summary>
+      ${renderQuickFacts(animal, "관찰 요약")}
+    </details>
+  `;
+}
+
+function renderObservationChecklist(animal, isCollected) {
+  if (isCollected || readObservationReady(animal.id)) return "";
+  return `
+    <section class="observation-checklist" aria-label="${animal.name} 관찰 체크">
+      <h3>퀴즈 전 관찰 체크</h3>
+      <label><input type="checkbox" data-observation-check> 사는 곳을 봤어요</label>
+      <label><input type="checkbox" data-observation-check> 움직이는 방법을 봤어요</label>
+      <label><input type="checkbox" data-observation-check> 몸의 특징을 봤어요</label>
+      <p>세 가지를 확인하면 퀴즈를 시작할 수 있어요.</p>
+    </section>
+  `;
+}
+
+function updateQuizStartGate() {
+  const startButton = els.detailBody.querySelector("[data-start-quiz]");
+  if (!startButton) return;
+  const checks = [...els.detailBody.querySelectorAll("[data-observation-check]")];
+  if (!checks.length) {
+    startButton.disabled = false;
+    return;
+  }
+  const ready = checks.every(check => check.checked);
+  startButton.disabled = !ready;
+  startButton.textContent = ready ? "🎯 퀴즈 풀고 도감에 등록하기" : "관찰 체크 3개를 먼저 해요";
+  if (ready) {
+    const animalId = startButton.dataset.startQuiz;
+    saveObservationReady(animalId);
+    const checklist = els.detailBody.querySelector(".observation-checklist");
+    if (checklist) checklist.remove();
+  }
 }
 
 function renderQuizRetryPanel(quiz, retryLocked, retryDelay) {
@@ -1002,7 +1284,8 @@ function canOpenQuestionSettings() {
 }
 
 function isSharedStudentView() {
-  return Boolean(getQuestionUrlFromPageUrl());
+  const params = new URLSearchParams(window.location.search);
+  return Boolean(getQuestionUrlFromPageUrl() || params.get("set") || params.get("region") || params.get("animals"));
 }
 
 function openSettings() {
@@ -1012,6 +1295,7 @@ function openSettings() {
   els.questionUrlInput.value = appConfig.questionTool.url || "";
   els.settingsMessage.textContent = "";
   if (els.teacherBanner) els.teacherBanner.hidden = false;
+  renderTeacherMissionPanel();
   renderShareLinkPanel();
   enterModalFocus(els.settingsModal);
 }
@@ -1081,7 +1365,7 @@ function clearQuestionSettings() {
 function renderShareLinkPanel() {
   if (!els.shareLinkPanel || !els.shareLinkOutput) return;
   const shareLink = buildShareLink(appConfig.questionTool.url);
-  els.shareLinkPanel.hidden = !shareLink;
+  els.shareLinkPanel.hidden = false;
   els.shareLinkOutput.value = shareLink;
   renderQrCode(shareLink);
 }
@@ -1138,10 +1422,13 @@ function downloadQrImage() {
 
 function buildShareLink(questionUrl) {
   const safeUrl = normalizeHttpUrl(questionUrl);
-  if (!safeUrl) return "";
-
   const current = new URL(window.location.href);
-  current.searchParams.set("questionUrl", safeUrl);
+  current.pathname = current.pathname.replace(/[^/]*$/, "no-question.html");
+  current.search = "";
+  current.searchParams.set("set", state.missionRegion);
+  current.searchParams.set("animals", state.missionAnimalIds.join(","));
+  writeMissionSelectionParams(current.searchParams);
+  if (safeUrl) current.searchParams.set("questionUrl", safeUrl);
   return current.toString();
 }
 
@@ -1990,8 +2277,9 @@ async function getImageSources(animal, preferredSource = "", size = "thumb") {
 
 function getLocalImagePath(animal, size) {
   if (!appConfig.localImages?.enabled) return "";
+  const configuredPath = appConfig.localImages?.paths?.[animal.id]?.[size];
   const directory = size === "detail" ? "details" : "thumbs";
-  return `./images/${directory}/${encodeURIComponent(animal.id)}.jpg`;
+  return configuredPath || `./images/${directory}/${encodeURIComponent(animal.id)}.jpg`;
 }
 
 function dedupeSources(sources) {
@@ -1999,14 +2287,16 @@ function dedupeSources(sources) {
 }
 
 function updateProgress() {
-  const count = state.collected.size;
+  const count = getCollectedProgramCount();
+  const total = getProgramTotal();
   els.collectedCount.textContent = count;
-  els.progressFill.style.width = `${Math.round((count / animals.length) * 100)}%`;
+  if (els.totalCount) els.totalCount.textContent = total;
+  els.progressFill.style.width = `${Math.round((count / total) * 100)}%`;
   if (els.stickyProgressLabel) {
-    els.stickyProgressLabel.textContent = `🐾 ${count} / ${animals.length}`;
+    els.stickyProgressLabel.textContent = `🐾 ${count} / ${total}`;
   }
   if (els.stickyProgressFill) {
-    els.stickyProgressFill.style.width = `${Math.round((count / animals.length) * 100)}%`;
+    els.stickyProgressFill.style.width = `${Math.round((count / total) * 100)}%`;
   }
   renderMissionPanel();
   renderFilters();
@@ -2014,7 +2304,7 @@ function updateProgress() {
 
 function returnToCurrentMission(shouldRender = true) {
   state.catalogMode = "mission";
-  state.filter = getNextMissionFilter();
+  state.filter = state.missionRegion;
   if (shouldRender) {
     renderMissionPanel();
     renderFilters();
@@ -2032,7 +2322,7 @@ function getNextMissionFilter() {
 
 function getStageStatus(filter, nextMissionId) {
   if (filter.id === "all") {
-    const isComplete = state.collected.size === animals.length;
+    const isComplete = getCollectedProgramCount() === getProgramTotal();
     return { status: isComplete ? "complete" : "master", label: isComplete ? "완료" : "마스터" };
   }
 
@@ -2043,6 +2333,7 @@ function getStageStatus(filter, nextMissionId) {
 
   const currentIndex = milestoneFilters.findIndex(item => item.id === nextMissionId);
   const filterIndex = milestoneFilters.findIndex(item => item.id === filter.id);
+  if (filter.id === state.missionRegion) return { status: "current", label: "진행 중" };
   if (filter.id === nextMissionId) return { status: "current", label: "진행 중" };
   if (currentIndex >= 0 && filterIndex === currentIndex + 1) return { status: "next", label: "다음" };
   if (currentIndex >= 0 && filterIndex > currentIndex + 1) return { status: "locked", label: "예고" };
@@ -2063,11 +2354,15 @@ function getCompletedMilestones() {
     })
     .map(filter => filter.id);
 
-  if (state.collected.size === animals.length) {
+  if (getCollectedProgramCount() === getProgramTotal()) {
     completed.push("all");
   }
 
   return completed;
+}
+
+function getCollectedProgramCount() {
+  return getProgramAnimals().filter(animal => state.collected.has(animal.id)).length;
 }
 
 function showNewMilestoneRewards() {
@@ -2151,17 +2446,29 @@ function saveCompletedMilestones() {
 }
 
 function resetProgress(skipConfirm = false) {
-  const ok = skipConfirm || confirm("등록한 카드 기록을 모두 지울까요?");
+  const ok = skipConfirm || confirm("공용 태블릿의 등록 기록을 모두 지울까요? 다음 반 수업을 위해 도감 진행도와 지역 보상을 초기화합니다.");
   if (!ok) return;
   state.collected.clear();
   state.completedMilestones.clear();
+  state.observationReady.clear();
   saveCollected();
   saveCompletedMilestones();
+  safeRemoveStorage(observationReadyKey);
   updateProgress();
   returnToCurrentMission(false);
   renderMissionPanel();
   renderFilters();
   renderAnimals();
+}
+
+function readObservationReady(animalId) {
+  return state.observationReady.has(animalId);
+}
+
+function saveObservationReady(animalId) {
+  if (!animalIds.has(animalId)) return;
+  state.observationReady.add(animalId);
+  safeSetStorage(observationReadyKey, JSON.stringify([...state.observationReady]));
 }
 
 function readCollected() {
@@ -2313,7 +2620,8 @@ function normalizeAppConfig(config) {
 
   return {
     localImages: {
-      enabled: Boolean(config.localImages?.enabled)
+      enabled: Boolean(config.localImages?.enabled),
+      paths: config.localImages?.paths || {}
     },
     questionTool: {
       ...questionTool,
