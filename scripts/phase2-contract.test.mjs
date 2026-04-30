@@ -72,6 +72,14 @@ test("build config includes local image manifest paths when present", () => {
   assert.ok(buildJs.includes("paths: localImageManifest"));
 });
 
+test("build copies static directories file-by-file for stable local image builds", () => {
+  const buildJs = read(path.join(rootDir, "scripts/build.js"));
+
+  assert.ok(buildJs.includes("function copyStaticDirectory(source, destination)"));
+  assert.ok(buildJs.includes("fs.copyFileSync(sourcePath, destinationPath)"));
+  assert.equal(buildJs.includes("fs.cpSync(source"), false);
+});
+
 test("local image download script writes thumbs, details, and manifest", () => {
   const script = read(path.join(rootDir, "scripts/download-local-images.js"));
 

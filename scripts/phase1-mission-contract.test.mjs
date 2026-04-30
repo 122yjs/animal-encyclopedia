@@ -14,12 +14,25 @@ test("teacher settings include regional mission animal selection controls", () =
 
   for (const needle of [
     "지역 미션 설정",
-    "오늘 학생들이 볼 동물을 고르세요",
+    "첫 실행: 지역별 동물 범위 설정",
+    "지역별로 학생들이 볼 동물을 먼저 고르세요",
     'id="missionRegionSelect"',
     'id="missionAnimalOptions"',
     'id="missionAnimalCount"'
   ]) {
     assert.ok(html.includes(needle), `index.html should include ${needle}`);
+  }
+});
+
+test("first teacher launch opens the regional range setup workflow", () => {
+  const appJs = read("app.js");
+
+  for (const needle of [
+    "function openFirstRunTeacherWorkflow()",
+    "openFirstRunTeacherWorkflow();",
+    "window.setTimeout(openSettings, 500)"
+  ]) {
+    assert.ok(appJs.includes(needle), `app.js should include ${needle}`);
   }
 });
 
@@ -110,6 +123,18 @@ test("regional mission completion advances to the next mission and resets stale 
   }
 });
 
+test("manual sidebar mission navigation shows each teacher-selected regional set", () => {
+  const appJs = read("app.js");
+
+  for (const needle of [
+    "activateMissionRegion(filter.id, { shouldRender: true, updateUrl: true })",
+    "state.missionAnimalIds = getSelectedMissionAnimalIds(mission.id)",
+    "const missionIds = state.catalogMode === \"mission\" ? new Set(getSelectedMissionAnimalIds(state.missionRegion)) : null"
+  ]) {
+    assert.ok(appJs.includes(needle), `app.js should include ${needle}`);
+  }
+});
+
 test("mission panel exposes readable state classes for current, completed, and next missions", () => {
   const appJs = read("app.js");
   const styles = read("styles.css");
@@ -128,6 +153,18 @@ test("mission panel exposes readable state classes for current, completed, and n
     ".mission-board.status-complete",
     ".mission-board.status-next",
     ".mission-secondary-action"
+  ]) {
+    assert.ok(styles.includes(needle), `styles.css should include ${needle}`);
+  }
+});
+
+test("sidebar active and completed mission labels keep readable contrast", () => {
+  const styles = read("styles.css");
+
+  for (const needle of [
+    ".filter-button.stage-complete.active",
+    ".filter-button.stage-complete.active .filter-progress-badge",
+    ".filter-button.stage-complete.active .stage-status"
   ]) {
     assert.ok(styles.includes(needle), `styles.css should include ${needle}`);
   }

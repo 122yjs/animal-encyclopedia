@@ -351,6 +351,19 @@ img {
   border-color: rgba(92, 184, 92, 0.4);
 }
 
+.filter-button.stage-complete.active {
+  color: #12351d;
+  background: linear-gradient(180deg, #8fd66d, #4fa847);
+  border-color: #2f7f3b;
+}
+
+.filter-button.stage-complete.active .filter-progress-badge,
+.filter-button.stage-complete.active .stage-status {
+  color: #12351d;
+  background: rgba(255, 255, 255, 0.34);
+  border-color: rgba(255, 255, 255, 0.24);
+}
+
 .filter-button.stage-current {
   border-color: rgba(245, 188, 68, 0.5);
 }

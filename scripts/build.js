@@ -127,6 +127,21 @@ function writeAppConfig(config) {
   fs.writeFileSync(path.join(dist, "app-config.js"), output, "utf8");
 }
 
+function copyStaticDirectory(source, destination) {
+  fs.mkdirSync(destination, { recursive: true });
+
+  for (const entry of fs.readdirSync(source, { withFileTypes: true })) {
+    const sourcePath = path.join(source, entry.name);
+    const destinationPath = path.join(destination, entry.name);
+
+    if (entry.isDirectory()) {
+      copyStaticDirectory(sourcePath, destinationPath);
+    } else if (entry.isFile()) {
+      fs.copyFileSync(sourcePath, destinationPath);
+    }
+  }
+}
+
 function copyStaticFiles() {
   fs.rmSync(dist, { recursive: true, force: true });
   fs.mkdirSync(dist, { recursive: true });
@@ -138,7 +153,7 @@ function copyStaticFiles() {
   for (const directory of directoriesToCopy) {
     const source = path.join(root, directory);
     if (fs.existsSync(source)) {
-      fs.cpSync(source, path.join(dist, directory), { recursive: true });
+      copyStaticDirectory(source, path.join(dist, directory));
     }
   }
 

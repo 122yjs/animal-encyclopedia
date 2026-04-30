@@ -530,22 +530,16 @@ function init() {
     });
   });
 
-  // 첫 방문 시 안내 — URL이 없으면 설정 버튼만 강조, 모달 자동 오픈은 URL 있을 때만
-  if (!hasSeenSettingsModal() && canOpenQuestionSettings()) {
-    const hasUrl = appConfig.questionTool.url;
-    if (hasUrl) {
-      setTimeout(() => openSettings(), 500);
-    } else {
-      const btn = els.openSettings;
-      if (btn) {
-        btn.classList.add("first-visit-highlight");
-        setTimeout(() => btn.classList.remove("first-visit-highlight"), 4000);
-      }
-    }
-  }
+  openFirstRunTeacherWorkflow();
 
   if (!readBoolean(onboardingSeenKey, false)) {
     window.setTimeout(openOnboarding, 700);
+  }
+}
+
+function openFirstRunTeacherWorkflow() {
+  if (!hasSeenSettingsModal() && canOpenQuestionSettings()) {
+    window.setTimeout(openSettings, 500);
   }
 }
 
@@ -893,11 +887,15 @@ function renderFilters() {
     if (filter.id === state.filter) button.classList.add("active");
     button.addEventListener("click", () => {
       playSound("select");
-      state.filter = filter.id;
-      state.catalogMode = filter.id === "all" ? "all" : "mission";
-      renderMissionPanel();
-      renderFilters();
-      renderAnimals();
+      if (filter.id === "all") {
+        state.filter = "all";
+        state.catalogMode = "all";
+        renderMissionPanel();
+        renderFilters();
+        renderAnimals();
+        return;
+      }
+      activateMissionRegion(filter.id, { shouldRender: true, updateUrl: true });
     });
     els.filterTabs.append(button);
   });
