@@ -18,8 +18,7 @@ const removeBlocks = [
 
 const replacements = {
   "open-settings-compat": [
-    '      <button id="openSettings" class="settings-button" type="button" hidden aria-hidden="true" style="display:none">질문방',
-    "        설정</button>"
+    '      <button id="openSettings" class="settings-button" type="button" hidden aria-hidden="true" style="display:none">교사용 설정</button>'
   ].join("\n"),
   "disabled-question-config": [
     "  <script>",

@@ -180,7 +180,7 @@ const collectedIdAliases = {
 };
 const animalIds = new Set(animals.map(animal => animal.id));
 const storageKey = "animal-encyclopedia-collected-v1";
-const settingsSeenKey = "animal-encyclopedia-settings-seen-v1";
+const settingsSeenKey = "animal-encyclopedia-settings-seen-v2";
 const onboardingSeenKey = "animal-encyclopedia-onboarding-seen-v1";
 const completedMilestonesKey = "animal-encyclopedia-completed-milestones-v1";
 const soundMutedKey = "animal-encyclopedia-sound-muted-v1";
@@ -1478,14 +1478,36 @@ function downloadQrImage() {
 
 function buildShareLink(questionUrl) {
   const safeUrl = normalizeHttpUrl(questionUrl);
+  const includeMissionSelections = shouldIncludeMissionSelectionsInShareLink();
   const current = new URL(window.location.href);
-  current.pathname = current.pathname.replace(/[^/]*$/, "no-question.html");
+  current.pathname = current.pathname.replace(/[^/]*$/, getShareLinkTargetPath(safeUrl));
   current.search = "";
-  current.searchParams.set("set", state.missionRegion);
-  current.searchParams.set("animals", state.missionAnimalIds.join(","));
-  writeMissionSelectionParams(current.searchParams);
+
+  if (includeMissionSelections) {
+    current.searchParams.set("set", state.missionRegion);
+    current.searchParams.set("animals", state.missionAnimalIds.join(","));
+    writeMissionSelectionParams(current.searchParams);
+  }
+
   if (safeUrl) current.searchParams.set("questionUrl", safeUrl);
   return current.toString();
+}
+
+function getShareLinkTargetPath(questionUrl) {
+  const hasQuestionRoom = Boolean(normalizeHttpUrl(questionUrl));
+  return hasQuestionRoom ? "index.html" : "no-question.html";
+}
+
+function shouldIncludeMissionSelectionsInShareLink() {
+  return hasCustomMissionSelections();
+}
+
+function hasCustomMissionSelections() {
+  return defaultMissionSelections.some(mission => {
+    const selected = getSelectedMissionAnimalIds(mission.id);
+    const defaults = getDefaultMissionAnimalIds(mission);
+    return selected.length !== defaults.length || selected.some((id, index) => id !== defaults[index]);
+  });
 }
 
 function getQuestionUrlFromPageUrl() {

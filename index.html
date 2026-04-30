@@ -45,8 +45,8 @@
 
       <!-- no-question:remove:start sidebar-settings -->
       <div class="sidebar-section sidebar-settings-section">
-        <button id="openSettings" class="settings-button" type="button">⚙️ 질문방 설정</button>
-        <p class="sidebar-settings-hint">AI 교사 질문방을 연결하려면 여기를 누르세요.</p>
+        <button id="openSettings" class="settings-button" type="button">⚙️ 교사용 설정</button>
+        <p class="sidebar-settings-hint">AI 질문방과 지역별 동물 범위를 조정하려면 여기를 누르세요.</p>
       </div>
       <!-- no-question:remove:end sidebar-settings -->
       <!-- no-question:replace open-settings-compat -->
@@ -154,32 +154,13 @@
         <p class="section-kicker">교사용 설정</p>
         <h2 id="settingsTitle">첫 실행: 지역별 동물 범위 설정</h2>
         <p class="settings-intro">지역별로 학생들이 볼 동물을 먼저 고르세요. 선택한 범위가 사이드메뉴의 각 지역 미션과 학생용 링크에 반영됩니다.</p>
-        <p class="settings-warning">수업 준비가 끝나면 아래 수업용 도감 링크나 QR을 학생에게 보내세요. MagicSchool 질문방은 선택 사항입니다.</p>
+        <p class="settings-warning">두 설정은 각각 따로 할 수 있어요. 지역별 동물 범위만 정해도 되고, AI 질문방만 연결해도 됩니다.</p>
 
         <ol class="settings-steps">
           <li>지역을 하나씩 선택하며 학생에게 보여줄 동물을 고르세요.</li>
           <li>필요하면 아래 템플릿으로 AI교사를 만들고 학생용 참여 링크를 붙여 넣으세요.</li>
           <li>아래 QR이나 수업용 도감 링크를 학생에게 보내세요.</li>
         </ol>
-
-        <a id="roomTemplateLink" class="template-link"
-          href="https://app.magicschool.ai/magic-student/rooms?room-sharing-id=1a3dc4fb-2391-4d7b-9e77-dfaacddf7a35"
-          target="_blank" rel="noopener noreferrer">
-          AI교사 템플릿 열기
-        </a>
-
-        <form id="questionSettingsForm" class="settings-form">
-          <label for="questionUrlInput">
-            <span>학생용 MagicSchool 참여 링크 <button type="button" class="guide-toggle" id="openGuide" aria-label="안내 보기">?</button></span>
-            <input id="questionUrlInput" type="url" placeholder="https://student.magicschool.ai/s/join?joinCode=..."
-              autocomplete="off">
-          </label>
-          <p class="field-hint">MagicSchool에서 생성한 학생용 참여 링크를 붙여 넣으세요.</p>
-          <div class="settings-actions">
-            <button class="primary-button" type="submit">설정 저장</button>
-            <button id="clearQuestionUrl" class="primary-button secondary" type="button">질문방 지우기</button>
-          </div>
-        </form>
 
         <section class="mission-setting-panel" aria-label="오늘의 지역 미션 설정">
           <div>
@@ -195,12 +176,32 @@
           <p id="missionAnimalCount" class="field-hint">0마리 선택됨</p>
         </section>
 
+        <form id="questionSettingsForm" class="settings-form">
+          <p class="section-kicker">AI 질문방 설정</p>
+          <p class="field-hint">AI 질문방은 선택 사항이며, 지역별 동물 범위만 설정해도 학생용 링크를 만들 수 있어요.</p>
+          <a id="roomTemplateLink" class="template-link"
+            href="https://app.magicschool.ai/magic-student/rooms?room-sharing-id=1a3dc4fb-2391-4d7b-9e77-dfaacddf7a35"
+            target="_blank" rel="noopener noreferrer">
+            AI교사 템플릿 열기
+          </a>
+          <label for="questionUrlInput">
+            <span>학생용 MagicSchool 참여 링크 <button type="button" class="guide-toggle" id="openGuide" aria-label="안내 보기">?</button></span>
+            <input id="questionUrlInput" type="url" placeholder="https://student.magicschool.ai/s/join?joinCode=..."
+              autocomplete="off">
+          </label>
+          <p class="field-hint">MagicSchool에서 생성한 학생용 참여 링크를 붙여 넣으세요.</p>
+          <div class="settings-actions">
+            <button class="primary-button" type="submit">설정 저장</button>
+            <button id="clearQuestionUrl" class="primary-button secondary" type="button">질문방 지우기</button>
+          </div>
+        </form>
+
         <div id="shareLinkPanel" class="share-link-panel" hidden>
           <div class="qr-share-box">
             <div id="qrCode" class="qr-code" role="button" tabindex="0" aria-label="QR 코드 크게 보기 (클릭하면 확대됩니다)" style="cursor:pointer"></div>
             <div>
               <h3>학생용 QR</h3>
-              <p>이 QR에는 교사별 질문방이 연결된 수업용 도감 링크가 들어 있어요.</p>
+              <p>이 QR에는 교사용 설정에 맞춘 수업용 도감 링크가 들어 있어요.</p>
             </div>
           </div>
           <label for="shareLinkOutput">

@@ -24,13 +24,54 @@ test("teacher settings include regional mission animal selection controls", () =
   }
 });
 
+test("teacher-facing settings copy uses teacher settings wording", () => {
+  const html = read("index.html");
+  const generator = read("scripts/generate-no-question.js");
+
+  assert.ok(html.includes("⚙️ 교사용 설정"));
+  assert.ok(html.includes("AI 질문방 설정"));
+  assert.equal(html.includes("⚙️ 질문방 설정"), false);
+  assert.ok(generator.includes("교사용 설정"));
+  assert.equal(generator.includes("질문방 설정"), false);
+});
+
+test("regional animal settings appear before optional AI question settings", () => {
+  const html = read("index.html");
+  const missionIndex = html.indexOf("지역 미션 설정");
+  const aiIndex = html.indexOf("AI 질문방 설정");
+
+  assert.ok(missionIndex > -1, "index.html should include regional mission settings");
+  assert.ok(aiIndex > -1, "index.html should include AI question settings");
+  assert.ok(missionIndex < aiIndex, "regional mission settings should appear before AI question settings");
+  assert.ok(html.includes("두 설정은 각각 따로 할 수 있어요"));
+  assert.ok(html.includes("AI 질문방은 선택 사항이며, 지역별 동물 범위만 설정해도 학생용 링크를 만들 수 있어요."));
+});
+
 test("first teacher launch opens the regional range setup workflow", () => {
   const appJs = read("app.js");
 
   for (const needle of [
     "function openFirstRunTeacherWorkflow()",
     "openFirstRunTeacherWorkflow();",
+    'const settingsSeenKey = "animal-encyclopedia-settings-seen-v2"',
     "window.setTimeout(openSettings, 500)"
+  ]) {
+    assert.ok(appJs.includes(needle), `app.js should include ${needle}`);
+  }
+});
+
+test("student share links branch by question room and regional animal settings", () => {
+  const appJs = read("app.js");
+
+  for (const needle of [
+    "function getShareLinkTargetPath(questionUrl)",
+    'return hasQuestionRoom ? "index.html" : "no-question.html"',
+    "function hasCustomMissionSelections()",
+    "function shouldIncludeMissionSelectionsInShareLink()",
+    "const includeMissionSelections = shouldIncludeMissionSelectionsInShareLink()",
+    "if (includeMissionSelections)",
+    "if (safeUrl) current.searchParams.set(\"questionUrl\", safeUrl)",
+    "const hasQuestionRoom = Boolean(normalizeHttpUrl(questionUrl))"
   ]) {
     assert.ok(appJs.includes(needle), `app.js should include ${needle}`);
   }
