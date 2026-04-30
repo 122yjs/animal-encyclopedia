@@ -25,7 +25,7 @@ const replacements = {
     "    window.APP_CONFIG = {",
     "      ...(window.APP_CONFIG || {}),",
     "      questionTool: {",
-    "        featureEnabled: false,",
+        "        featureEnabled: true,",
     "        enabled: false,",
     '        url: "",',
     '        label: "🐾 더 궁금한 점 물어볼까요?",',

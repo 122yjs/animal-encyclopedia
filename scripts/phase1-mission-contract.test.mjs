@@ -71,7 +71,7 @@ test("student share links branch by question room and regional animal settings",
     "function getShareLinkTargetPath(questionUrl)",
     "function getShareLinkCopy(questionUrl)",
     "function updateQuestionChoiceButtons(hasQuestionRoom)",
-    'return hasQuestionRoom ? "index.html" : "no-question.html"',
+    'return "no-question.html"',
     "function hasCustomMissionSelections()",
     "function shouldIncludeMissionSelectionsInShareLink()",
     "const includeMissionSelections = shouldIncludeMissionSelectionsInShareLink()",
@@ -113,6 +113,10 @@ test("all-mission title uses teacher-selected total instead of fixed 54", () => 
 
 test("student entry remains generated without teacher mission controls", () => {
   const html = read("no-question.html");
+
+  assert.ok(html.includes("featureEnabled: true"), "no-question.html should allow questionUrl links");
+  assert.ok(html.includes("allowTeacherSettings: false"), "no-question.html should hide teacher settings");
+  assert.ok(html.includes("showWhenDisabled: false"), "no-question.html should stay quiet without questionUrl");
 
   for (const needle of [
     "지역 미션 설정",

@@ -1582,8 +1582,8 @@ function buildShareLink(questionUrl) {
 }
 
 function getShareLinkTargetPath(questionUrl) {
-  const hasQuestionRoom = Boolean(normalizeHttpUrl(questionUrl));
-  return hasQuestionRoom ? "index.html" : "no-question.html";
+  normalizeHttpUrl(questionUrl);
+  return "no-question.html";
 }
 
 function shouldIncludeMissionSelectionsInShareLink() {

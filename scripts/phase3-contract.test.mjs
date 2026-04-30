@@ -78,12 +78,12 @@ test("generated no-question.html removes question-room UI and QR wiring", async 
   }
 });
 
-test("generated no-question.html keeps disabled question config and shared anchors", async () => {
+test("generated no-question.html keeps student-only question config and shared anchors", async () => {
   const generatedHtml = await generateToTemp();
   const requiredNeedles = [
     "window.APP_CONFIG = {",
     "questionTool: {",
-    "featureEnabled: false",
+    "featureEnabled: true",
     "enabled: false",
     "allowTeacherSettings: false",
     "hideTeacherSettingsOnSharedPage: true",
