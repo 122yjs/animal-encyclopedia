@@ -224,6 +224,8 @@ const els = {
   gameView: document.querySelector("#gameView"),
   filterTabs: document.querySelector("#filterTabs"),
   missionPanel: document.querySelector("#missionPanel"),
+  sidebarLede: document.querySelector(".sidebar-lede"),
+  sidebarTotalCount: document.querySelector(".sidebar-total-count"),
   missionRegionSelect: document.querySelector("#missionRegionSelect"),
   missionAnimalOptions: document.querySelector("#missionAnimalOptions"),
   missionAnimalCount: document.querySelector("#missionAnimalCount"),
@@ -531,6 +533,7 @@ function init() {
   });
 
   openFirstRunTeacherWorkflow();
+  updateSidebarLede();
 
   if (!readBoolean(onboardingSeenKey, false)) {
     window.setTimeout(openOnboarding, 700);
@@ -540,6 +543,14 @@ function init() {
 function openFirstRunTeacherWorkflow() {
   if (!hasSeenSettingsModal() && canOpenQuestionSettings()) {
     window.setTimeout(openSettings, 500);
+  }
+}
+
+function updateSidebarLede() {
+  if (els.sidebarTotalCount) {
+    els.sidebarTotalCount.textContent = String(getProgramTotal());
+  } else if (els.sidebarLede) {
+    els.sidebarLede.textContent = `동물을 관찰하고 퀴즈 몬스터볼을 던져 ${getProgramTotal()}마리의 카드를 모아보세요! 과연 누가 가장 먼저 도감 마스터가 될까요?`;
   }
 }
 
@@ -903,6 +914,7 @@ function renderFilters() {
 
 function renderMissionPanel() {
   if (!els.missionPanel) return;
+  updateSidebarLede();
   const nextMissionId = getNextMissionFilter();
   const isAllMode = state.catalogMode === "all";
   const selectedFilter = filters.find(filter => filter.id === state.filter) || filters[0];

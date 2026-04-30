@@ -29,3 +29,15 @@ test("reset control is worded for shared classroom tablets", () => {
   assert.ok(appJs.includes("공용 태블릿"));
   assert.ok(appJs.includes("다음 반 수업을 위해"));
 });
+
+test("sidebar lede is ready for dynamic total count text", () => {
+  for (const fileName of ["index.html", "no-question.html"]) {
+    const html = read(fileName);
+    assert.ok(html.includes('class="sidebar-lede"'), `${fileName} should keep the sidebar lede anchor`);
+    assert.equal(html.includes("54마리의 카드를 모아보세요"), false, `${fileName} should not hardcode 54 cards`);
+  }
+
+  const appJs = read("app.js");
+  assert.ok(appJs.includes("function updateSidebarLede()"));
+  assert.ok(appJs.includes("els.sidebarLede.textContent = `동물을 관찰하고 퀴즈 몬스터볼을 던져 ${getProgramTotal()}마리의 카드를 모아보세요!"));
+});
