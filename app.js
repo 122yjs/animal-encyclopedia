@@ -260,6 +260,7 @@ const els = {
   closeSettings: document.querySelector("#closeSettings"),
   questionSettingsForm: document.querySelector("#questionSettingsForm"),
   questionUrlInput: document.querySelector("#questionUrlInput"),
+  connectQuestionUrl: document.querySelector("#connectQuestionUrl"),
   clearQuestionUrl: document.querySelector("#clearQuestionUrl"),
   shareLinkPanel: document.querySelector("#shareLinkPanel"),
   shareLinkOutput: document.querySelector("#shareLinkOutput"),
@@ -1456,12 +1457,26 @@ function renderShareLinkPanel() {
   if (!els.shareLinkPanel || !els.shareLinkOutput) return;
   const shareLink = buildShareLink(appConfig.questionTool.url);
   const shareLinkCopy = getShareLinkCopy(appConfig.questionTool.url);
+  const hasQuestionRoom = Boolean(normalizeHttpUrl(appConfig.questionTool.url));
   els.shareLinkPanel.hidden = false;
   els.shareLinkOutput.value = shareLink;
   if (els.shareLinkMode) els.shareLinkMode.textContent = shareLinkCopy.mode;
   if (els.shareLinkTitle) els.shareLinkTitle.textContent = shareLinkCopy.title;
   if (els.shareLinkDescription) els.shareLinkDescription.textContent = shareLinkCopy.description;
+  updateQuestionChoiceButtons(hasQuestionRoom);
   renderQrCode(shareLink);
+}
+
+function updateQuestionChoiceButtons(hasQuestionRoom) {
+  if (els.connectQuestionUrl) {
+    els.connectQuestionUrl.classList.toggle("selected", hasQuestionRoom);
+    els.connectQuestionUrl.setAttribute("aria-pressed", String(hasQuestionRoom));
+  }
+
+  if (els.clearQuestionUrl) {
+    els.clearQuestionUrl.classList.toggle("selected", !hasQuestionRoom);
+    els.clearQuestionUrl.setAttribute("aria-pressed", String(!hasQuestionRoom));
+  }
 }
 
 function getShareLinkCopy(questionUrl) {
@@ -1494,8 +1509,8 @@ function getShareLinkCopy(questionUrl) {
 
   return {
     mode: "기본 학생용 링크/QR",
-    title: "기본 도감 학생용 QR",
-    description: "아무 설정 없이 바로 쓰는 40마리 기본 도감 링크입니다. 교사용 설정창은 학생 화면에 나오지 않습니다."
+    title: "바로 배포용 기본 QR",
+    description: "아무 설정 없이 바로 쓰는 no-question 기본 링크입니다. 학생 화면에는 교사용 설정창과 AI 질문방이 나오지 않습니다."
   };
 }
 

@@ -1668,6 +1668,47 @@ button:focus-visible {
   gap: 10px;
 }
 
+.question-choice-button {
+  min-height: var(--min-touch);
+  padding: 10px 14px;
+  color: var(--ink);
+  background: #fff8e8;
+  border: 3px solid #e7d8b8;
+  border-bottom-width: 5px;
+  border-radius: 12px;
+  font-weight: 900;
+  box-shadow: 0 4px 8px rgba(45, 27, 14, 0.08);
+  transition: transform 100ms ease, border-color 150ms ease, background 150ms ease, box-shadow 150ms ease;
+}
+
+.question-choice-button:active {
+  transform: translateY(3px);
+  border-bottom-width: 2px;
+}
+
+.question-choice-button.is-on.selected {
+  color: #3f2a0e;
+  background: linear-gradient(180deg, var(--sun), #d4940a);
+  border-color: #8b6914;
+  box-shadow: 0 8px 16px rgba(212, 148, 10, 0.28);
+}
+
+.question-choice-button.is-off.selected {
+  color: #143f3b;
+  background: linear-gradient(180deg, #e7f7f2, #b9dfdc);
+  border-color: var(--teal);
+  box-shadow: 0 8px 16px rgba(15, 111, 104, 0.18);
+}
+
+.question-choice-button:not(.selected) {
+  opacity: 0.78;
+}
+
+.question-choice-button:not(.selected):hover {
+  opacity: 1;
+  border-color: var(--teal);
+}
+
 .share-actions {
   display: flex;
   flex-wrap: wrap;

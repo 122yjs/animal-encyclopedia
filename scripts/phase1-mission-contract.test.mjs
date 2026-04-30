@@ -47,6 +47,8 @@ test("regional animal settings appear before optional AI question settings", () 
   assert.ok(html.includes("AI 질문방은 선택 사항입니다."));
   assert.ok(html.includes("AI 질문방 사용 안 함"));
   assert.ok(html.includes("AI 질문방 연결하기"));
+  assert.ok(html.includes('id="connectQuestionUrl"'));
+  assert.ok(html.includes('aria-pressed="true"'));
 });
 
 test("first teacher launch opens the regional range setup workflow", () => {
@@ -68,6 +70,7 @@ test("student share links branch by question room and regional animal settings",
   for (const needle of [
     "function getShareLinkTargetPath(questionUrl)",
     "function getShareLinkCopy(questionUrl)",
+    "function updateQuestionChoiceButtons(hasQuestionRoom)",
     'return hasQuestionRoom ? "index.html" : "no-question.html"',
     "function hasCustomMissionSelections()",
     "function shouldIncludeMissionSelectionsInShareLink()",
@@ -76,7 +79,9 @@ test("student share links branch by question room and regional animal settings",
     "if (safeUrl) current.searchParams.set(\"questionUrl\", safeUrl)",
     "const hasQuestionRoom = Boolean(normalizeHttpUrl(questionUrl))",
     "기본 학생용 링크/QR",
-    "설정 반영 링크/QR"
+    "설정 반영 링크/QR",
+    "바로 배포용 기본 QR",
+    "no-question 기본 링크"
   ]) {
     assert.ok(appJs.includes(needle), `app.js should include ${needle}`);
   }
