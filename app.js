@@ -564,6 +564,9 @@ function bindMissionPanel() {
     if (action.dataset.catalogMode === "all") {
       state.catalogMode = "all";
       state.filter = "all";
+    } else if (action.dataset.catalogMode === "next-mission") {
+      const nextMissionId = getNextMissionFilter();
+      activateMissionRegion(nextMissionId, { shouldRender: false, updateUrl: true });
     } else {
       returnToCurrentMission(false);
     }
@@ -681,6 +684,30 @@ function updateMissionUrl() {
   current.searchParams.set("animals", state.missionAnimalIds.join(","));
   writeMissionSelectionParams(current.searchParams);
   window.history.replaceState({}, "", current.toString());
+}
+
+function activateMissionRegion(regionId, options = {}) {
+  const { shouldRender = true, updateUrl = false } = options;
+  const mission = getMissionPreset(regionId);
+  if (!mission) return;
+
+  state.missionRegion = mission.id;
+  state.missionAnimalIds = getSelectedMissionAnimalIds(mission.id);
+  state.catalogMode = "mission";
+  state.filter = mission.id;
+  state.query = "";
+  state.selectedAnimal = null;
+  if (els.searchInput) els.searchInput.value = "";
+  if (updateUrl) updateMissionUrl();
+
+  if (shouldRender) {
+    renderTeacherMissionPanel();
+    renderMissionPanel();
+    renderFilters();
+    renderAnimals();
+    updateProgress();
+    renderShareLinkPanel();
+  }
 }
 
 function getCurrentMissionPreset() {
@@ -887,6 +914,21 @@ function renderMissionPanel() {
   const percent = progress.total ? Math.round((progress.collected / progress.total) * 100) : 0;
   const isCurrentMission = !isAllMode && state.filter === nextMissionId;
   const isFinished = nextMissionId === "all" && state.collected.size === animals.length;
+  const isCompletedMission = !isAllMode && panelFilter.id !== "all" && progress.total > 0 && progress.collected === progress.total;
+  const hasNextMission = isCompletedMission && nextMissionId !== "all";
+  const boardStatus = isAllMode
+    ? "all"
+    : isFinished || isCompletedMission
+      ? "complete"
+      : isCurrentMission
+        ? "current"
+        : "next";
+  const boardClass = {
+    all: "mission-board status-all",
+    current: "mission-board status-current",
+    complete: "mission-board status-complete",
+    next: "mission-board status-next"
+  }[boardStatus];
   const modeLabel = isAllMode ? "전체 도감 보기" : isCurrentMission ? "현재 미션" : "지역 미리보기";
   const title = isAllMode
     ? "전체 54마리 도감"
@@ -895,14 +937,22 @@ function renderMissionPanel() {
       : `${panelFilter.icon} ${panelFilter.label} 도감 미션`;
   const body = isAllMode
     ? "모든 동물을 한눈에 둘러볼 수 있어요. 수업 흐름은 현재 미션으로 언제든 돌아갈 수 있습니다."
-    : isCurrentMission
-      ? `${panelFilter.label} 동물을 관찰하고 퀴즈를 맞혀 이 지역 도감을 완성해 보세요.`
-      : `${currentMission.icon} ${currentMission.label} 미션이 현재 순서예요. 이 지역은 미리 둘러보는 중입니다.`;
-  const buttonMode = isAllMode || !isCurrentMission ? "mission" : "all";
-  const buttonText = isAllMode || !isCurrentMission ? "현재 미션으로 돌아가기" : "전체 도감 보기";
+    : hasNextMission
+      ? `${panelFilter.label} 미션이 완료되었어요. 다음 미션 ${currentMission.icon} ${currentMission.label} 카드로 이동할 수 있어요.`
+      : isCurrentMission
+        ? `${panelFilter.label} 동물을 관찰하고 퀴즈를 맞혀 이 지역 도감을 완성해 보세요.`
+        : `${currentMission.icon} ${currentMission.label} 미션이 현재 순서예요. 이 지역은 미리 둘러보는 중입니다.`;
+  const buttonMode = hasNextMission ? "next-mission" : isAllMode || !isCurrentMission ? "mission" : "all";
+  const buttonText = hasNextMission ? "다음 미션 시작" : isAllMode || !isCurrentMission ? "현재 미션으로 돌아가기" : "전체 도감 보기";
+  const primaryAction = hasNextMission
+    ? `<button class="mission-toggle" type="button" data-catalog-mode="next-mission">${buttonText}</button>`
+    : `<button class="mission-toggle" type="button" data-catalog-mode="${buttonMode}">${buttonText}</button>`;
+  const secondaryAction = hasNextMission
+    ? `<button class="mission-secondary-action" type="button" data-catalog-mode="mission">완료한 미션 다시 보기</button>`
+    : "";
 
   els.missionPanel.innerHTML = `
-    <div class="mission-board">
+    <div class="${boardClass}">
       <div class="mission-orb" aria-hidden="true">${isAllMode ? "🏆" : panelFilter.icon}</div>
       <div class="mission-copy">
         <p class="section-kicker">${modeLabel}</p>
@@ -913,7 +963,10 @@ function renderMissionPanel() {
         <span class="mission-meter-count">${progress.collected} / ${progress.total}</span>
         <span class="mission-meter-track" aria-hidden="true"><span style="width:${percent}%"></span></span>
       </div>
-      <button class="mission-toggle" type="button" data-catalog-mode="${buttonMode}">${buttonText}</button>
+      <div class="mission-actions">
+        ${primaryAction}
+        ${secondaryAction}
+      </div>
     </div>
   `;
 }
@@ -2308,13 +2361,7 @@ function updateProgress() {
 }
 
 function returnToCurrentMission(shouldRender = true) {
-  state.catalogMode = "mission";
-  state.filter = state.missionRegion;
-  if (shouldRender) {
-    renderMissionPanel();
-    renderFilters();
-    renderAnimals();
-  }
+  activateMissionRegion(state.missionRegion, { shouldRender });
 }
 
 function getNextMissionFilter() {
@@ -2433,8 +2480,14 @@ function closeReward() {
 }
 
 function goToNextRewardRegion() {
+  const nextMissionId = getNextMissionFilter();
   closeReward();
-  returnToCurrentMission(false);
+  if (nextMissionId === "all") {
+    state.catalogMode = "all";
+    state.filter = "all";
+  } else {
+    activateMissionRegion(nextMissionId, { shouldRender: false, updateUrl: true });
+  }
   setView("catalog");
   renderMissionPanel();
   renderFilters();

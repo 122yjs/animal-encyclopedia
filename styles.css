@@ -592,6 +592,39 @@ img {
   box-shadow: 0 8px 18px rgba(31, 41, 51, 0.18);
 }
 
+.mission-board.status-current {
+  background:
+    linear-gradient(135deg, rgba(0, 0, 0, 0.14), rgba(0, 0, 0, 0)),
+    linear-gradient(120deg, #245136, #0c6a60 54%, #4d4318);
+}
+
+.mission-board.status-complete {
+  color: #123323;
+  background:
+    linear-gradient(135deg, rgba(255, 255, 255, 0.32), rgba(255, 255, 255, 0)),
+    linear-gradient(120deg, #dff8c9, #f7e997 52%, #ffffff);
+}
+
+.mission-board.status-complete .section-kicker,
+.mission-board.status-complete h2,
+.mission-board.status-complete p,
+.mission-board.status-complete .mission-meter-count {
+  color: #123323;
+  text-shadow: none;
+}
+
+.mission-board.status-next {
+  background:
+    linear-gradient(135deg, rgba(255, 255, 255, 0.18), rgba(255, 255, 255, 0)),
+    linear-gradient(120deg, #2f5d80, #246265 54%, #5b4f1a);
+}
+
+.mission-actions {
+  display: grid;
+  gap: 8px;
+  justify-items: stretch;
+}
+
 .mission-orb {
   display: grid;
   place-items: center;
@@ -668,6 +701,18 @@ img {
   border-radius: 9px;
   box-shadow: 0 4px 0 rgba(43, 31, 18, 0.35);
   font-size: 0.88rem;
+  font-weight: 900;
+  white-space: nowrap;
+}
+
+.mission-secondary-action {
+  min-height: 36px;
+  padding: 7px 10px;
+  color: #244b2e;
+  background: #fff8df;
+  border: 2px solid rgba(36, 75, 46, 0.35);
+  border-radius: 8px;
+  font-size: 0.78rem;
   font-weight: 900;
   white-space: nowrap;
 }

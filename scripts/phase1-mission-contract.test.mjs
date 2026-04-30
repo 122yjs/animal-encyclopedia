@@ -91,3 +91,44 @@ test("quiz start is gated by observation checklist before first collection", () 
   assert.ok(styles.includes(".observation-checklist"));
   assert.ok(styles.includes(".observation-checklist input"));
 });
+
+test("regional mission completion advances to the next mission and resets stale filters", () => {
+  const appJs = read("app.js");
+
+  for (const needle of [
+    "function activateMissionRegion(regionId, options = {})",
+    "state.missionRegion = mission.id",
+    "state.missionAnimalIds = getSelectedMissionAnimalIds(mission.id)",
+    "state.query = \"\"",
+    "state.selectedAnimal = null",
+    "if (els.searchInput) els.searchInput.value = \"\"",
+    "const nextMissionId = getNextMissionFilter()",
+    "activateMissionRegion(nextMissionId, { shouldRender: false, updateUrl: true })",
+    "data-catalog-mode=\"next-mission\""
+  ]) {
+    assert.ok(appJs.includes(needle), `app.js should include ${needle}`);
+  }
+});
+
+test("mission panel exposes readable state classes for current, completed, and next missions", () => {
+  const appJs = read("app.js");
+  const styles = read("styles.css");
+
+  for (const needle of [
+    "mission-board status-current",
+    "mission-board status-complete",
+    "mission-board status-next",
+    "mission-secondary-action"
+  ]) {
+    assert.ok(appJs.includes(needle), `app.js should include ${needle}`);
+  }
+
+  for (const needle of [
+    ".mission-board.status-current",
+    ".mission-board.status-complete",
+    ".mission-board.status-next",
+    ".mission-secondary-action"
+  ]) {
+    assert.ok(styles.includes(needle), `styles.css should include ${needle}`);
+  }
+});
