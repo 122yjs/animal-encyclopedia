@@ -43,7 +43,7 @@ test("regional animal settings appear before optional AI question settings", () 
   assert.ok(missionIndex > -1, "index.html should include regional mission settings");
   assert.ok(aiIndex > -1, "index.html should include AI question settings");
   assert.ok(missionIndex < aiIndex, "regional mission settings should appear before AI question settings");
-  assert.ok(html.includes("두 설정은 각각 따로 할 수 있어요"));
+  assert.ok(html.includes("수업에 쓸 지역별 동물 범위와 AI 질문방 연결 여부를 정하세요."));
   assert.ok(html.includes("AI 질문방은 선택 사항입니다."));
   assert.ok(html.includes("AI 질문방 사용 안 함"));
   assert.ok(html.includes("AI 질문방 연결하기"));
@@ -243,11 +243,11 @@ test("teacher settings emphasizes share link and five-minute class checklist", (
   const html = read("index.html");
 
   for (const needle of [
-    "교사용 기본 배포 주소와 학생용 링크/QR은 달라요",
+    "학생에게는 맨 아래의 학생용 링크나 QR만 보내면 됩니다.",
     "수업 전 5분 확인",
-    "아무 설정 없이 진행하면 기본 학생용 링크/QR을 그대로 쓰세요.",
-    "설정하지 않으면 기본 학생용 링크/QR을, 설정하면 설정이 반영된 새 링크/QR을 학생에게 보내세요.",
-    "지역 미션은 사이드메뉴에서 언제든 다시 들어갈 수 있어요."
+    "동물 범위를 바꿀 지역이 있는지 확인",
+    "AI 질문방을 쓸지 안 쓸지 선택",
+    "학생용 링크/QR을 복사하거나 저장"
   ]) {
     assert.ok(html.includes(needle), `index.html should include ${needle}`);
   }
