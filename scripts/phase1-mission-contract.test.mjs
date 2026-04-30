@@ -97,6 +97,8 @@ test("all-mission title uses teacher-selected total instead of fixed 54", () => 
   const appJs = read("app.js");
   assert.ok(appJs.includes("`전체 ${getProgramTotal()}마리 도감`"));
   assert.equal(appJs.includes("전체 54마리 도감"), false);
+  assert.ok(appJs.includes("${getCollectedProgramCount()} / ${getProgramTotal()}"));
+  assert.equal(appJs.includes("54 / 54"), false);
 });
 
 test("student entry remains generated without teacher mission controls", () => {
@@ -113,12 +115,12 @@ test("student entry remains generated without teacher mission controls", () => {
   }
 });
 
-test("detail modal keeps collapsed observation summary before quiz actions", () => {
+test("quiz modal keeps collapsed observation summary directly under the question", () => {
   const appJs = read("app.js");
   const styles = read("styles.css");
 
   for (const needle of [
-    "renderObservationSummary(animal)",
+    "renderObservationSummary(quiz.animal)",
     '<details class="observation-summary">',
     "<summary>관찰 요약 열기</summary>",
     "renderQuickFacts(animal, \"관찰 요약\")"
@@ -126,20 +128,30 @@ test("detail modal keeps collapsed observation summary before quiz actions", () 
     assert.ok(appJs.includes(needle), `app.js should include ${needle}`);
   }
 
+  const questionIndex = appJs.indexOf("<h3>${question.text}</h3>");
+  const summaryIndex = appJs.indexOf("${renderObservationSummary(quiz.animal)}");
+  const optionsIndex = appJs.indexOf('<div class="quiz-options">');
+  assert.ok(questionIndex > -1, "quiz should render the question text");
+  assert.ok(summaryIndex > -1, "quiz should render the observation summary");
+  assert.ok(optionsIndex > -1, "quiz should render answer options");
+  assert.ok(questionIndex < summaryIndex, "observation summary should sit directly after the question");
+  assert.ok(summaryIndex < optionsIndex, "answer options should follow the optional summary");
+
   assert.ok(styles.includes(".observation-summary"));
   assert.ok(styles.includes(".observation-summary summary"));
   assert.ok(appJs.includes("quickFacts: {"));
 });
 
-test("quiz start is gated by observation checklist before first collection", () => {
+test("quiz start is gated by separated observation checks before first collection", () => {
   const appJs = read("app.js");
   const styles = read("styles.css");
 
   for (const needle of [
     "observationReadyKey",
     "observationReady: new Set(readStoredIds(observationReadyKey, animalIds))",
-    "renderObservationChecklist(animal, isCollected)",
+    "renderObservationCheckItem(animal, isCollected",
     "data-observation-check",
+    "observation-checkitem",
     "updateQuizStartGate",
     "관찰 체크 3개를 먼저 해요",
     "saveObservationReady(animalId)",
@@ -148,8 +160,8 @@ test("quiz start is gated by observation checklist before first collection", () 
     assert.ok(appJs.includes(needle), `app.js should include ${needle}`);
   }
 
-  assert.ok(styles.includes(".observation-checklist"));
-  assert.ok(styles.includes(".observation-checklist input"));
+  assert.ok(styles.includes(".observation-checkitem"));
+  assert.ok(styles.includes(".observation-checkitem input"));
 });
 
 test("regional mission completion advances to the next mission and resets stale filters", () => {
@@ -202,6 +214,45 @@ test("mission panel exposes readable state classes for current, completed, and n
     ".mission-secondary-action"
   ]) {
     assert.ok(styles.includes(needle), `styles.css should include ${needle}`);
+  }
+});
+
+test("mission panel tells students the current step and next action", () => {
+  const appJs = read("app.js");
+
+  for (const needle of [
+    "const nextActionLabel",
+    "지금 할 일",
+    "카드를 눌러 관찰하고 체크한 뒤 퀴즈를 풀어요.",
+    "다음 미션으로 넘어갈 수 있어요.",
+    "mission-next-step"
+  ]) {
+    assert.ok(appJs.includes(needle), `app.js should include ${needle}`);
+  }
+
+  const styles = read("styles.css");
+  assert.ok(styles.includes(".mission-next-step"));
+});
+
+test("teacher settings emphasizes share link and five-minute class checklist", () => {
+  const html = read("index.html");
+
+  for (const needle of [
+    "학생에게 보낼 링크와 QR만 공유하세요",
+    "수업 전 5분 확인",
+    "질문방 없이 기본 도감으로 진행하려면 이 링크를 그대로 쓰세요.",
+    "지역 미션은 사이드메뉴에서 언제든 다시 들어갈 수 있어요."
+  ]) {
+    assert.ok(html.includes(needle), `index.html should include ${needle}`);
+  }
+});
+
+test("student copy uses app-owned quiz language instead of monster ball wording", () => {
+  for (const fileName of ["index.html", "no-question.html"]) {
+    const html = read(fileName);
+    assert.equal(html.includes("몬스터볼"), false, `${fileName} should avoid monster ball wording`);
+    assert.equal(html.includes("포켓 콜렉션"), false, `${fileName} should avoid pocket collection wording`);
+    assert.ok(html.includes("탐험 카드 모으기"));
   }
 });
 

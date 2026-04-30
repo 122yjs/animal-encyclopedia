@@ -319,17 +319,32 @@ function handleModalKeydown(event) {
   }
 }
 
+function setModalBackgroundDisabled(element, disabled) {
+  if (!element) return;
+  if ("inert" in element) {
+    element.inert = disabled;
+    return;
+  }
+  if (disabled) {
+    element.setAttribute("aria-hidden", "true");
+    element.dataset.inertFallback = "true";
+  } else {
+    if (element.dataset.inertFallback === "true") element.removeAttribute("aria-hidden");
+    delete element.dataset.inertFallback;
+  }
+}
+
 function enterModalFocus(modalElement) {
   const appLayout = document.querySelector(".app-layout");
   if (state.modalFocusStack.length === 0 && appLayout) {
-    appLayout.inert = true;
+    setModalBackgroundDisabled(appLayout, true);
   }
   if (state.modalFocusStack.length > 0) {
     const prevModal = state.modalFocusStack[state.modalFocusStack.length - 1];
-    prevModal.inert = true;
+    setModalBackgroundDisabled(prevModal, true);
   }
   state.modalFocusStack.push(modalElement);
-  modalElement.inert = false;
+  setModalBackgroundDisabled(modalElement, false);
   modalElement.hidden = false;
   requestAnimationFrame(() => {
     const focusables = getFocusableElements(modalElement);
@@ -343,10 +358,10 @@ function exitModalFocus(modalElement) {
   modalElement.hidden = true;
   const appLayout = document.querySelector(".app-layout");
   if (state.modalFocusStack.length === 0) {
-    if (appLayout) appLayout.inert = false;
+    setModalBackgroundDisabled(appLayout, false);
   } else {
     const topModal = state.modalFocusStack[state.modalFocusStack.length - 1];
-    topModal.inert = false;
+    setModalBackgroundDisabled(topModal, false);
     requestAnimationFrame(() => {
       const focusables = getFocusableElements(topModal);
       if (focusables.length > 0) focusables[0].focus();
@@ -550,7 +565,7 @@ function updateSidebarLede() {
   if (els.sidebarTotalCount) {
     els.sidebarTotalCount.textContent = String(getProgramTotal());
   } else if (els.sidebarLede) {
-    els.sidebarLede.textContent = `동물을 관찰하고 퀴즈 몬스터볼을 던져 ${getProgramTotal()}마리의 카드를 모아보세요! 과연 누가 가장 먼저 도감 마스터가 될까요?`;
+    els.sidebarLede.textContent = `동물을 관찰하고 퀴즈 배지를 모아 ${getProgramTotal()}마리의 카드를 완성해 보세요! 과연 누가 가장 먼저 도감 마스터가 될까요?`;
   }
 }
 
@@ -807,7 +822,7 @@ const onboardingSteps = [
   },
   {
     title: "지역별로 완성해요",
-    body: "54마리를 한 번에 끝내지 않아도 괜찮아요. 우리 주변, 땅, 물, 특별한 환경을 하나씩 완성해 봅니다.",
+    body: "모든 동물을 한 번에 끝내지 않아도 괜찮아요. 우리 주변, 땅, 물, 특별한 환경을 하나씩 완성해 봅니다.",
     target: () => els.missionPanel || els.progressFill
   }
 ];
@@ -952,6 +967,13 @@ function renderMissionPanel() {
       : isCurrentMission
         ? `${panelFilter.label} 동물을 관찰하고 퀴즈를 맞혀 이 지역 도감을 완성해 보세요.`
         : `${currentMission.icon} ${currentMission.label} 미션이 현재 순서예요. 이 지역은 미리 둘러보는 중입니다.`;
+  const nextActionLabel = hasNextMission
+    ? "다음 미션으로 넘어갈 수 있어요."
+    : isAllMode
+      ? `${currentMission.icon} ${currentMission.label} 미션으로 돌아가 수업을 이어가요.`
+      : isCurrentMission
+        ? "카드를 눌러 관찰하고 체크한 뒤 퀴즈를 풀어요."
+        : "지금은 미리보기예요. 준비되면 현재 미션으로 돌아가요.";
   const buttonMode = hasNextMission ? "next-mission" : isAllMode || !isCurrentMission ? "mission" : "all";
   const buttonText = hasNextMission ? "다음 미션 시작" : isAllMode || !isCurrentMission ? "현재 미션으로 돌아가기" : "전체 도감 보기";
   const primaryAction = hasNextMission
@@ -968,6 +990,7 @@ function renderMissionPanel() {
         <p class="section-kicker">${modeLabel}</p>
         <h2>${title}</h2>
         <p>${body}</p>
+        <p class="mission-next-step"><strong>지금 할 일</strong> ${nextActionLabel}</p>
       </div>
       <div class="mission-meter" aria-label="${panelFilter.label} 진행도 ${progress.collected} / ${progress.total}">
         <span class="mission-meter-count">${progress.collected} / ${progress.total}</span>
@@ -1147,7 +1170,7 @@ function renderAnimalInfo(animal) {
       ? renderCollectedAction(animal)
       : `
         <button class="primary-button quiz-anchor-button" type="button" data-start-quiz="${animal.id}">
-          🎯 퀴즈 풀고 도감에 등록하기
+          🎯 동물 관찰 시작하기
         </button>
       `;
   els.detailBody.innerHTML = `
@@ -1160,26 +1183,27 @@ function renderAnimalInfo(animal) {
     </div>
     ${renderAnimalEnvironmentNote(animal)}
     <p class="encyclopedia-lede">${observation.intro}</p>
-    ${renderObservationChecklist(animal, isCollected)}
-    <div class="detail-quiz-anchor">
-      ${quizAction}
-    </div>
     <div class="encyclopedia-article" id="animalArticle">
       <section class="encyclopedia-section">
         <h3>생김새와 움직임</h3>
         <p data-hint="appearance">${observation.appearance}</p>
+        ${renderObservationCheckItem(animal, isCollected, "appearance", "생김새를 봤어요")}
         <p data-hint="lifestyle">${observation.lifestyle}</p>
+        ${renderObservationCheckItem(animal, isCollected, "lifestyle", "움직이는 방법을 봤어요")}
       </section>
       <section class="encyclopedia-section">
         <h3>사는 곳과 생활</h3>
         <p data-hint="habitat">${observation.habitatLife}</p>
+        ${renderObservationCheckItem(animal, isCollected, "habitat", "사는 곳을 봤어요")}
       </section>
       <section class="encyclopedia-section">
         <h3>환경에 알맞은 점</h3>
         <p data-hint="adaptation">${observation.habitatLink}</p>
       </section>
     </div>
-    ${renderObservationSummary(animal)}
+    <div class="detail-quiz-anchor">
+      ${quizAction}
+    </div>
     ${renderQuestionTool()}
     <button class="source-link source-link-button" type="button" data-source-url="${escapeAttribute(animal.source)}">🌐 사진 출처 보기 · 새 창에서 열어요</button>
     <p class="modal-scroll-hint" aria-hidden="true">아래로 내려보면 관찰 단서가 더 있어요.</p>
@@ -1242,16 +1266,13 @@ function renderObservationSummary(animal) {
   `;
 }
 
-function renderObservationChecklist(animal, isCollected) {
+function renderObservationCheckItem(animal, isCollected, key, label) {
   if (isCollected || readObservationReady(animal.id)) return "";
   return `
-    <section class="observation-checklist" aria-label="${animal.name} 관찰 체크">
-      <h3>퀴즈 전 관찰 체크</h3>
-      <label><input type="checkbox" data-observation-check> 사는 곳을 봤어요</label>
-      <label><input type="checkbox" data-observation-check> 움직이는 방법을 봤어요</label>
-      <label><input type="checkbox" data-observation-check> 몸의 특징을 봤어요</label>
-      <p>세 가지를 확인하면 퀴즈를 시작할 수 있어요.</p>
-    </section>
+    <label class="observation-checkitem">
+      <input type="checkbox" data-observation-check="${key}">
+      <span>${label}</span>
+    </label>
   `;
 }
 
@@ -1265,21 +1286,19 @@ function updateQuizStartGate() {
   }
   const ready = checks.every(check => check.checked);
   startButton.disabled = !ready;
-  startButton.textContent = ready ? "🎯 퀴즈 풀고 도감에 등록하기" : "관찰 체크 3개를 먼저 해요";
+  startButton.textContent = ready ? "🎯 동물 관찰 시작하기" : "관찰 체크 3개를 먼저 해요";
   if (ready) {
     const animalId = startButton.dataset.startQuiz;
     saveObservationReady(animalId);
-    const checklist = els.detailBody.querySelector(".observation-checklist");
-    if (checklist) checklist.remove();
   }
 }
 
 function renderQuizRetryPanel(quiz, retryLocked, retryDelay) {
   const progressText = `문제 ${quiz.index + 1} / ${quiz.questions.length}`;
-  const buttonLabel = retryLocked ? `⏳ ${Math.ceil(retryDelay / 1000)}초 뒤 다시 도전` : "🎯 다시 문제 풀기";
+  const buttonLabel = retryLocked ? `⏳ ${Math.ceil(retryDelay / 1000)}초 뒤 단서 보고 다시 도전` : "🎯 단서 확인하고 다시 풀기";
   return `
     <section class="quiz-retry-panel" aria-live="polite">
-      <p class="feedback retry">앗, 틀렸어요! 노란 문장을 다시 읽고 같은 문제에 다시 도전해 보세요.</p>
+      <p class="feedback retry">괜찮아요. 노란 단서를 다시 읽고 같은 문제에 다시 도전해 보세요.</p>
       <p class="card-point">${progressText}</p>
       <button class="primary-button" type="button" data-resume-quiz ${retryLocked ? "disabled" : ""}>${buttonLabel}</button>
     </section>
@@ -1897,6 +1916,7 @@ function renderQuiz() {
     </div>
     <div class="quiz-box">
       <h3>${question.text}</h3>
+      ${renderObservationSummary(quiz.animal)}
       <div class="quiz-options">
         ${question.options.map(option => {
           const isCorrect = option === question.correct;
@@ -1928,12 +1948,12 @@ function renderQuiz() {
 function renderFeedback(correct, isLast) {
   if (correct) {
     return `
-      <p class="feedback good">맞았어요! 관찰을 정말 잘했네요.</p>
+      <p class="feedback good">맞았어요! 화면 표시만 봐도 성공을 알 수 있게 초록색으로 표시했어요.</p>
       <button type="button" class="next-button" data-next>${isLast ? "결과 보기" : "다음 문제"}</button>
     `;
   } else {
     return `
-      <p class="feedback retry">틀렸어요. 다시 한번 도전해 보세요!</p>
+      <p class="feedback retry">다시 살펴볼 차례예요. 노란 단서를 확인하고 한 번 더 골라 봐요.</p>
     `;
   }
 }
@@ -1973,7 +1993,7 @@ function scheduleRetryButtonUnlock(button, delay) {
   window.setTimeout(() => {
     if (!button.isConnected) return;
     button.disabled = false;
-    button.textContent = "🎯 다시 문제 풀기";
+    button.textContent = "🎯 단서 확인하고 다시 풀기";
   }, delay);
 }
 
@@ -2041,7 +2061,7 @@ function showCatchAnimation(animal, onComplete) {
 
   const message = document.createElement("p");
   message.className = "catch-message";
-  message.textContent = "포획 완료!";
+  message.textContent = "카드 등록 완료!";
 
   const ballLayer = document.createElement("div");
   ballLayer.className = "catch-ball-layer";
@@ -2497,7 +2517,7 @@ function renderMasterReward(thumbnails) {
     <div class="master-reward-emblem" aria-hidden="true">🏆</div>
     <p class="section-kicker">최종 보상</p>
     <h2 id="rewardTitle">도감 마스터 달성!</h2>
-    <p class="master-reward-count">54 / 54</p>
+    <p class="master-reward-count">${getCollectedProgramCount()} / ${getProgramTotal()}</p>
     <p>모든 동물 카드를 등록했어요. 이제 전체 도감을 다시 둘러보며 특징을 비교해 볼 수 있습니다.</p>
     <div class="reward-collage master-collage" aria-label="등록한 동물 미리보기">
       ${thumbnails.map(animal => `<span>${animal.name}</span>`).join("")}

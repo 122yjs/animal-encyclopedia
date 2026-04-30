@@ -39,5 +39,24 @@ test("sidebar lede is ready for dynamic total count text", () => {
 
   const appJs = read("app.js");
   assert.ok(appJs.includes("function updateSidebarLede()"));
-  assert.ok(appJs.includes("els.sidebarLede.textContent = `동물을 관찰하고 퀴즈 몬스터볼을 던져 ${getProgramTotal()}마리의 카드를 모아보세요!"));
+  assert.ok(appJs.includes("els.sidebarLede.textContent = `동물을 관찰하고 퀴즈 배지를 모아 ${getProgramTotal()}마리의 카드를 완성해 보세요!"));
+});
+
+test("observation checks appear under individual explanation items before quiz start", () => {
+  const appJs = read("app.js");
+  const articleIndex = appJs.indexOf('<div class="encyclopedia-article" id="animalArticle">');
+  const firstCheckIndex = appJs.indexOf('${renderObservationCheckItem(animal, isCollected, "appearance", "생김새를 봤어요")}');
+  const secondCheckIndex = appJs.indexOf('${renderObservationCheckItem(animal, isCollected, "lifestyle", "움직이는 방법을 봤어요")}');
+  const thirdCheckIndex = appJs.indexOf('${renderObservationCheckItem(animal, isCollected, "habitat", "사는 곳을 봤어요")}');
+  const quizAnchorIndex = appJs.indexOf('<div class="detail-quiz-anchor">');
+
+  assert.ok(articleIndex > -1, "animal detail should render the explanation article");
+  assert.ok(firstCheckIndex > -1, "animal detail should render the appearance observation check");
+  assert.ok(secondCheckIndex > -1, "animal detail should render the movement observation check");
+  assert.ok(thirdCheckIndex > -1, "animal detail should render the habitat observation check");
+  assert.ok(quizAnchorIndex > -1, "animal detail should render the quiz start area");
+  assert.ok(articleIndex < firstCheckIndex, "checks should appear inside the explanation flow");
+  assert.ok(firstCheckIndex < secondCheckIndex, "checks should follow each relevant explanation item");
+  assert.ok(secondCheckIndex < thirdCheckIndex, "checks should stay separated instead of grouped");
+  assert.ok(thirdCheckIndex < quizAnchorIndex, "quiz start should remain below the observation checks");
 });
