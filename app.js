@@ -263,6 +263,9 @@ const els = {
   clearQuestionUrl: document.querySelector("#clearQuestionUrl"),
   shareLinkPanel: document.querySelector("#shareLinkPanel"),
   shareLinkOutput: document.querySelector("#shareLinkOutput"),
+  shareLinkMode: document.querySelector("#shareLinkMode"),
+  shareLinkTitle: document.querySelector("#shareLinkTitle"),
+  shareLinkDescription: document.querySelector("#shareLinkDescription"),
   copyShareLink: document.querySelector("#copyShareLink"),
   downloadQr: document.querySelector("#downloadQr"),
   qrCode: document.querySelector("#qrCode"),
@@ -1428,7 +1431,7 @@ function saveQuestionSettings(event) {
     }
   });
   els.questionUrlInput.value = url;
-  els.settingsMessage.textContent = "학생용 참여 링크를 저장했어요. 아래 수업용 도감 링크를 학생에게 보내면 같은 질문방이 열려요.";
+  els.settingsMessage.textContent = "AI 질문방을 연결했어요. 아래 학생용 링크/QR은 질문방 연결 버전으로 바뀌었어요.";
   renderShareLinkPanel();
 }
 
@@ -1445,16 +1448,55 @@ function clearQuestionSettings() {
     }
   });
   els.questionUrlInput.value = "";
-  els.settingsMessage.textContent = "이 브라우저의 질문방 설정을 지웠어요.";
+  els.settingsMessage.textContent = "AI 질문방을 사용하지 않도록 설정했어요. 아래 학생용 링크/QR은 질문방 없는 버전입니다.";
   renderShareLinkPanel();
 }
 
 function renderShareLinkPanel() {
   if (!els.shareLinkPanel || !els.shareLinkOutput) return;
   const shareLink = buildShareLink(appConfig.questionTool.url);
+  const shareLinkCopy = getShareLinkCopy(appConfig.questionTool.url);
   els.shareLinkPanel.hidden = false;
   els.shareLinkOutput.value = shareLink;
+  if (els.shareLinkMode) els.shareLinkMode.textContent = shareLinkCopy.mode;
+  if (els.shareLinkTitle) els.shareLinkTitle.textContent = shareLinkCopy.title;
+  if (els.shareLinkDescription) els.shareLinkDescription.textContent = shareLinkCopy.description;
   renderQrCode(shareLink);
+}
+
+function getShareLinkCopy(questionUrl) {
+  const hasQuestionRoom = Boolean(normalizeHttpUrl(questionUrl));
+  const hasMissionSettings = shouldIncludeMissionSelectionsInShareLink();
+
+  if (hasQuestionRoom && hasMissionSettings) {
+    return {
+      mode: "설정 반영 링크/QR",
+      title: "지역 미션 + AI 질문방 학생용 QR",
+      description: "선택한 지역별 동물 범위와 AI 질문방이 함께 들어간 학생용 링크입니다."
+    };
+  }
+
+  if (hasQuestionRoom) {
+    return {
+      mode: "설정 반영 링크/QR",
+      title: "AI 질문방 연결 학생용 QR",
+      description: "기본 도감에 AI 질문방만 연결한 학생용 링크입니다."
+    };
+  }
+
+  if (hasMissionSettings) {
+    return {
+      mode: "설정 반영 링크/QR",
+      title: "지역 미션 설정 학생용 QR",
+      description: "선택한 지역별 동물 범위가 들어간 질문방 없는 학생용 링크입니다."
+    };
+  }
+
+  return {
+    mode: "기본 학생용 링크/QR",
+    title: "기본 도감 학생용 QR",
+    description: "아무 설정 없이 바로 쓰는 40마리 기본 도감 링크입니다. 교사용 설정창은 학생 화면에 나오지 않습니다."
+  };
 }
 
 async function copyShareLink() {

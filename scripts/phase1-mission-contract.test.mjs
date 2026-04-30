@@ -44,7 +44,9 @@ test("regional animal settings appear before optional AI question settings", () 
   assert.ok(aiIndex > -1, "index.html should include AI question settings");
   assert.ok(missionIndex < aiIndex, "regional mission settings should appear before AI question settings");
   assert.ok(html.includes("두 설정은 각각 따로 할 수 있어요"));
-  assert.ok(html.includes("AI 질문방은 선택 사항이며, 지역별 동물 범위만 설정해도 학생용 링크를 만들 수 있어요."));
+  assert.ok(html.includes("AI 질문방은 선택 사항입니다."));
+  assert.ok(html.includes("AI 질문방 사용 안 함"));
+  assert.ok(html.includes("AI 질문방 연결하기"));
 });
 
 test("first teacher launch opens the regional range setup workflow", () => {
@@ -65,13 +67,16 @@ test("student share links branch by question room and regional animal settings",
 
   for (const needle of [
     "function getShareLinkTargetPath(questionUrl)",
+    "function getShareLinkCopy(questionUrl)",
     'return hasQuestionRoom ? "index.html" : "no-question.html"',
     "function hasCustomMissionSelections()",
     "function shouldIncludeMissionSelectionsInShareLink()",
     "const includeMissionSelections = shouldIncludeMissionSelectionsInShareLink()",
     "if (includeMissionSelections)",
     "if (safeUrl) current.searchParams.set(\"questionUrl\", safeUrl)",
-    "const hasQuestionRoom = Boolean(normalizeHttpUrl(questionUrl))"
+    "const hasQuestionRoom = Boolean(normalizeHttpUrl(questionUrl))",
+    "기본 학생용 링크/QR",
+    "설정 반영 링크/QR"
   ]) {
     assert.ok(appJs.includes(needle), `app.js should include ${needle}`);
   }
@@ -238,9 +243,10 @@ test("teacher settings emphasizes share link and five-minute class checklist", (
   const html = read("index.html");
 
   for (const needle of [
-    "학생에게 보낼 링크와 QR만 공유하세요",
+    "교사용 기본 배포 주소와 학생용 링크/QR은 달라요",
     "수업 전 5분 확인",
-    "질문방 없이 기본 도감으로 진행하려면 이 링크를 그대로 쓰세요.",
+    "아무 설정 없이 진행하면 기본 학생용 링크/QR을 그대로 쓰세요.",
+    "설정하지 않으면 기본 학생용 링크/QR을, 설정하면 설정이 반영된 새 링크/QR을 학생에게 보내세요.",
     "지역 미션은 사이드메뉴에서 언제든 다시 들어갈 수 있어요."
   ]) {
     assert.ok(html.includes(needle), `index.html should include ${needle}`);
