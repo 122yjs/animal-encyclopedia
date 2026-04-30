@@ -94,7 +94,7 @@ test("generated no-question.html keeps disabled question config and shared ancho
     'id="sourceConfirmModal"',
     'id="onboardingModal"',
     'id="rewardModal"',
-    '<script src="./app.js"></script>'
+    '<script src="./app.js?v=20260430-teacher-share"></script>'
   ];
 
   for (const needle of requiredNeedles) {
