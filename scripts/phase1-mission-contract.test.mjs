@@ -93,6 +93,12 @@ test("runtime preserves teacher-selected mission parameters in student share lin
   }
 });
 
+test("all-mission title uses teacher-selected total instead of fixed 54", () => {
+  const appJs = read("app.js");
+  assert.ok(appJs.includes("`전체 ${getProgramTotal()}마리 도감`"));
+  assert.equal(appJs.includes("전체 54마리 도감"), false);
+});
+
 test("student entry remains generated without teacher mission controls", () => {
   const html = read("no-question.html");
 

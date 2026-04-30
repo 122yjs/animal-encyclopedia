@@ -929,7 +929,7 @@ function renderMissionPanel() {
   }[boardStatus];
   const modeLabel = isAllMode ? "전체 도감 보기" : isCurrentMission ? "현재 미션" : "지역 미리보기";
   const title = isAllMode
-    ? "전체 54마리 도감"
+    ? `전체 ${getProgramTotal()}마리 도감`
     : isFinished
       ? "도감 마스터 미션 완료"
       : `${panelFilter.icon} ${panelFilter.label} 도감 미션`;
