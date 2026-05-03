@@ -60,3 +60,20 @@ test("observation checks appear under individual explanation items before quiz s
   assert.ok(secondCheckIndex < thirdCheckIndex, "checks should stay separated instead of grouped");
   assert.ok(thirdCheckIndex < quizAnchorIndex, "quiz start should remain below the observation checks");
 });
+
+test("header owl uses one cropped mascot pose instead of the whole sprite sheet", () => {
+  const styles = read("styles.css");
+
+  for (const fileName of ["index.html", "no-question.html"]) {
+    const html = read(fileName);
+    assert.ok(html.includes("sprite-crop-owl sidebar-owl"), `${fileName} should use a cropped owl header sprite`);
+    assert.equal(
+      html.includes('<img src="./assets/sprites/owl-mascot.png" alt="부엉이 가이드"'),
+      false,
+      `${fileName} should not show the whole owl sprite sheet in the header`
+    );
+  }
+
+  assert.ok(styles.includes(".sprite-crop-owl"));
+  assert.ok(styles.includes("--sprite-sheet-size: 200% 200%"));
+});
