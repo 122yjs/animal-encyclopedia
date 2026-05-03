@@ -41,3 +41,20 @@ test("sidebar lede is ready for dynamic total count text", () => {
   assert.ok(appJs.includes("function updateSidebarLede()"));
   assert.ok(appJs.includes("els.sidebarLede.textContent = `동물을 관찰하고 퀴즈 몬스터볼을 던져 ${getProgramTotal()}마리의 카드를 모아보세요!"));
 });
+
+test("header owl uses one cropped mascot pose instead of the whole sprite sheet", () => {
+  const styles = read("styles.css");
+
+  for (const fileName of ["index.html", "no-question.html"]) {
+    const html = read(fileName);
+    assert.ok(html.includes("sprite-crop-owl sidebar-owl"), `${fileName} should use a cropped owl header sprite`);
+    assert.equal(
+      html.includes('<img src="./assets/sprites/owl-mascot.png" alt="부엉이 가이드"'),
+      false,
+      `${fileName} should not show the whole owl sprite sheet in the header`
+    );
+  }
+
+  assert.ok(styles.includes(".sprite-crop-owl"));
+  assert.ok(styles.includes("--sprite-sheet-size: 200% 200%"));
+});

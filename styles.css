@@ -63,6 +63,43 @@ img {
   max-width: 100%;
 }
 
+.sprite-crop {
+  --sprite-size: 36px;
+  --sprite-url: none;
+  --sprite-x: 0%;
+  --sprite-y: 0%;
+  display: inline-block;
+  flex: 0 0 auto;
+  width: var(--sprite-size);
+  height: var(--sprite-size);
+  overflow: hidden;
+  background-image: var(--sprite-url);
+  background-position: var(--sprite-x) var(--sprite-y);
+  background-repeat: no-repeat;
+  background-size: var(--sprite-sheet-size, 200% 200%);
+  vertical-align: middle;
+}
+
+.sprite-crop-owl {
+  --sprite-url: url("./assets/sprites/owl-mascot.png");
+  --sprite-sheet-size: 200% 200%;
+}
+
+.sidebar-brand-row {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 8px;
+}
+
+.sidebar-owl {
+  --sprite-size: 54px;
+  border: 2px solid rgba(245,188,68,0.72);
+  border-radius: 50%;
+  background-color: #fff4ca;
+  box-shadow: 0 0 0 3px rgba(65, 37, 12, 0.45), 0 0 16px rgba(245,188,68,0.36);
+}
+
 /* ── Custom scrollbar ── */
 ::-webkit-scrollbar {
   width: 8px;
