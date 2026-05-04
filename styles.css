@@ -152,6 +152,11 @@ img {
   gap: 2px;
 }
 
+.sticky-star-status {
+  margin-left: auto;
+  padding-inline: 2px;
+}
+
 .sticky-star {
   display: inline-grid;
   place-items: center;
@@ -521,10 +526,13 @@ img {
 .completion-star-status {
   display: flex;
   align-items: center;
+  justify-content: center;
   gap: 8px;
+  width: 100%;
   color: #5d3b12;
   font-size: 0.88rem;
   font-weight: 900;
+  text-align: center;
 }
 
 .completion-star-label {
@@ -536,6 +544,11 @@ img {
   place-items: center;
   width: 24px;
   height: 24px;
+}
+
+.completion-star-stack {
+  justify-content: center;
+  flex-wrap: wrap;
 }
 
 .completion-star.is-earned {
@@ -2099,6 +2112,37 @@ button:focus-visible {
   margin-top: 18px;
 }
 
+.region-reward-hero {
+  position: relative;
+  z-index: 1;
+  display: grid;
+  grid-template-columns: minmax(92px, 118px) minmax(0, 1fr);
+  align-items: center;
+  gap: 16px;
+  margin-top: 18px;
+  padding: 16px;
+  text-align: left;
+  background: rgba(255, 249, 230, 0.76);
+  border: 2px solid rgba(245, 188, 68, 0.42);
+  border-radius: 16px;
+}
+
+.region-reward-copy {
+  display: grid;
+  gap: 8px;
+  min-width: 0;
+}
+
+.region-reward-copy p {
+  margin: 0;
+  text-align: left;
+}
+
+.region-star-context {
+  color: #5d3b12;
+  line-height: 1.55;
+}
+
 .reward-meaning-badges {
   position: relative;
   z-index: 1;
@@ -2113,7 +2157,6 @@ button:focus-visible {
   border-radius: 14px;
 }
 
-.region-reward-emblem,
 .master-reward-chest {
   position: relative;
   z-index: 1;
@@ -2123,13 +2166,6 @@ button:focus-visible {
   min-height: 126px;
   margin-top: 12px;
   pointer-events: none;
-}
-
-.region-reward-shield {
-  width: min(132px, 38vw);
-  height: 126px;
-  object-fit: contain;
-  filter: drop-shadow(0 12px 12px rgba(86, 65, 24, 0.24));
 }
 
 .master-reward-chest-sprite {
@@ -2165,6 +2201,14 @@ button:focus-visible {
   object-fit: contain;
   margin: 12px auto -4px;
   filter: drop-shadow(0 10px 10px rgba(86, 65, 24, 0.18));
+}
+
+.region-reward-owl {
+  width: 112px;
+  height: 104px;
+  margin: 0;
+  justify-self: center;
+  align-self: end;
 }
 
 .reward-collage span {

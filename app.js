@@ -2564,14 +2564,13 @@ function renderRegionReward(filter, progress, thumbnails) {
     <div class="reward-burst reward-burst-soft" aria-hidden="true">${Array.from({ length: 8 }, () => "<span></span>").join("")}</div>
     <p class="section-kicker">지역 완성 보상</p>
     <h2 id="rewardTitle">🎉 ${filter.label} 도감 완성!</h2>
-    <p>${progress.total}마리를 모두 등록했어요. 다음 지역으로 넘어가 볼까요?</p>
-    <div class="region-reward-emblem">
-      ${renderUiSprite(uiSprites.icons.shield, "", "region-reward-shield")}
+    <div class="region-reward-hero">
+      ${renderUiSprite(uiSprites.owl.cheer, "", "reward-owl-cheer region-reward-owl")}
+      <div class="region-reward-copy">
+        <p>${progress.total}마리를 모두 등록했어요.</p>
+        <p class="region-star-context"><strong>완성별이 1개 추가됐어요.</strong> 진행도에서 모은 완성별을 확인할 수 있어요.</p>
+      </div>
     </div>
-    <div class="reward-meaning-badges" aria-label="지역 완성 의미 배지">
-      <span>${renderUiSprite(uiSprites.icons.star, "", "reward-meaning-icon")}<strong>완성별 +1</strong></span>
-    </div>
-    ${renderUiSprite(uiSprites.owl.cheer, "", "reward-owl-cheer")}
     <div class="reward-collage" aria-label="등록한 동물 미리보기">
       ${thumbnails.map(animal => `<span>${animal.name}</span>`).join("")}
     </div>
