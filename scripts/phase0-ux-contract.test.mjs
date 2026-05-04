@@ -97,6 +97,8 @@ test("large UI moments use extracted transparent sprites instead of whole sprite
   assert.ok(styles.includes(".onboarding-owl"));
   assert.ok(styles.includes(".feedback-mark"));
   assert.ok(styles.includes(".region-reward-hero"));
+  assert.ok(styles.includes(".region-star-row"));
+  assert.ok(styles.includes(".region-star-icon"));
   assert.ok(styles.includes(".region-star-context"));
   assert.ok(styles.includes(".master-reward-chest"));
   assert.ok(styles.includes(".reward-meaning-badges"));
@@ -119,6 +121,7 @@ test("large UI moments use extracted transparent sprites instead of whole sprite
   assert.ok(appJs.includes("feedback-mark-good"));
   assert.ok(appJs.includes("feedback-mark-retry"));
   assert.ok(appJs.includes('renderUiSprite(uiSprites.owl.cheer, "", "reward-owl-cheer region-reward-owl")'));
+  assert.ok(appJs.includes('renderUiSprite(uiSprites.icons.star, "", "region-star-icon")'));
   assert.ok(appJs.includes("완성별이 1개 추가됐어요"));
   assert.equal(appJs.includes("<strong>x50</strong>"), false, "star should not look like a spendable reward currency");
   assert.equal(appJs.includes("<strong>x1</strong>"), false, "leaf should not look like a spendable reward currency");

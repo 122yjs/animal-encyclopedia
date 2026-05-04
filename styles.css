@@ -2116,9 +2116,9 @@ button:focus-visible {
   position: relative;
   z-index: 1;
   display: grid;
-  grid-template-columns: minmax(92px, 118px) minmax(0, 1fr);
+  grid-template-columns: 98px minmax(0, 1fr);
   align-items: center;
-  gap: 16px;
+  gap: 14px;
   margin-top: 18px;
   padding: 16px;
   text-align: left;
@@ -2136,6 +2136,20 @@ button:focus-visible {
 .region-reward-copy p {
   margin: 0;
   text-align: left;
+}
+
+.region-star-row {
+  display: grid;
+  grid-template-columns: 36px minmax(0, 1fr);
+  align-items: center;
+  gap: 9px;
+}
+
+.region-star-icon {
+  width: 36px;
+  height: 36px;
+  object-fit: contain;
+  filter: drop-shadow(0 5px 6px rgba(167, 111, 16, 0.22));
 }
 
 .region-star-context {
@@ -2204,8 +2218,8 @@ button:focus-visible {
 }
 
 .region-reward-owl {
-  width: 112px;
-  height: 104px;
+  width: 96px;
+  height: 96px;
   margin: 0;
   justify-self: center;
   align-self: end;

@@ -2568,7 +2568,10 @@ function renderRegionReward(filter, progress, thumbnails) {
       ${renderUiSprite(uiSprites.owl.cheer, "", "reward-owl-cheer region-reward-owl")}
       <div class="region-reward-copy">
         <p>${progress.total}마리를 모두 등록했어요.</p>
-        <p class="region-star-context"><strong>완성별이 1개 추가됐어요.</strong> 진행도에서 모은 완성별을 확인할 수 있어요.</p>
+        <div class="region-star-row">
+          ${renderUiSprite(uiSprites.icons.star, "", "region-star-icon")}
+          <p class="region-star-context"><strong>완성별이 1개 추가됐어요.</strong> 모은 완성별은 진행도에서 확인할 수 있어요.</p>
+        </div>
       </div>
     </div>
     <div class="reward-collage" aria-label="등록한 동물 미리보기">
