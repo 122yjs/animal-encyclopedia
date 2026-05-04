@@ -59,12 +59,10 @@ test("large UI moments use extracted transparent sprites instead of whole sprite
     "assets/sprites/extracted/owl-cheer.png",
     "assets/sprites/extracted/owl-think.png",
     "assets/sprites/extracted/icon-chest.png",
-    "assets/sprites/extracted/icon-check.png",
     "assets/sprites/extracted/icon-gem.png",
     "assets/sprites/extracted/icon-leaf.png",
     "assets/sprites/extracted/icon-shield.png",
     "assets/sprites/extracted/icon-star.png",
-    "assets/sprites/extracted/icon-x.png",
     "assets/sprites/extracted/region-around.png",
     "assets/sprites/extracted/region-forest.png",
     "assets/sprites/extracted/region-sea.png",
@@ -97,11 +95,8 @@ test("large UI moments use extracted transparent sprites instead of whole sprite
     assert.deepEqual(readPngSize(asset), { width: 288, height: 288 }, `${asset} should keep the full round badge frame`);
   }
 
-  assert.deepEqual(readPngSize("assets/sprites/extracted/icon-check.png"), { width: 272, height: 260 });
-  assert.deepEqual(readPngSize("assets/sprites/extracted/icon-x.png"), { width: 282, height: 260 });
-
   assert.ok(styles.includes(".onboarding-owl"));
-  assert.ok(styles.includes(".feedback-icon"));
+  assert.ok(styles.includes(".feedback-mark"));
   assert.ok(styles.includes(".region-reward-emblem"));
   assert.ok(styles.includes(".master-reward-chest"));
   assert.ok(styles.includes(".reward-meaning-badges"));
@@ -113,8 +108,10 @@ test("large UI moments use extracted transparent sprites instead of whole sprite
   assert.ok(appJs.includes('renderUiSprite(uiSprites.icons.star, "", "reward-meaning-icon")'));
   assert.ok(appJs.includes('renderUiSprite(uiSprites.icons.leaf, "", "reward-meaning-icon")'));
   assert.ok(appJs.includes('renderUiSprite(uiSprites.icons.gem, "", "reward-meaning-icon")'));
-  assert.ok(appJs.includes('renderUiSprite(uiSprites.icons.check, "", "feedback-icon")'));
-  assert.ok(appJs.includes('renderUiSprite(uiSprites.icons.x, "", "feedback-icon")'));
+  assert.equal(appJs.includes("icon-check.png"), false, "quiz feedback should not use the cropped check sprite image");
+  assert.equal(appJs.includes("icon-x.png"), false, "quiz feedback should not use the cropped x sprite image");
+  assert.ok(appJs.includes("feedback-mark-good"));
+  assert.ok(appJs.includes("feedback-mark-retry"));
   assert.ok(appJs.includes('renderUiSprite(uiSprites.owl.cheer, "", "reward-owl-cheer")'));
   assert.equal(appJs.includes("<strong>x50</strong>"), false, "star should not look like a spendable reward currency");
   assert.equal(appJs.includes("<strong>x1</strong>"), false, "leaf should not look like a spendable reward currency");

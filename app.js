@@ -16,12 +16,10 @@ const uiSprites = {
   },
   icons: {
     chest: "./assets/sprites/extracted/icon-chest.png",
-    check: "./assets/sprites/extracted/icon-check.png",
     gem: "./assets/sprites/extracted/icon-gem.png",
     leaf: "./assets/sprites/extracted/icon-leaf.png",
     shield: "./assets/sprites/extracted/icon-shield.png",
     star: "./assets/sprites/extracted/icon-star.png",
-    x: "./assets/sprites/extracted/icon-x.png"
   },
   regions: {
     around: "./assets/sprites/extracted/region-around.png",
@@ -1687,6 +1685,16 @@ const customQuizByAnimal = {
       "날개와 깃털로 숲 사이를 날아요."
     ])
   },
+  "개구리": {
+    text: "개구리가 물가와 물속에서 생활하기에 알맞은 특징은 무엇일까요?",
+    correct: "물갈퀴가 있는 발은 물속 이동에 도움을 줘요.",
+    hintKey: "adaptation",
+    options: shuffle([
+      "물갈퀴가 있는 발은 물속 이동에 도움을 줘요.",
+      "단단한 껍데기와 넓은 발로 바위에 붙어 있어요.",
+      "날개와 깃털로 숲 사이를 날아다녀요."
+    ])
+  },
   "소금쟁이": {
     text: "소금쟁이가 물 위를 다니는 데 도움을 주는 특징은 무엇일까요?",
     correct: "가늘고 긴 다리로 물 표면 위에서 몸을 지탱해요.",
@@ -1965,12 +1973,12 @@ function renderQuiz() {
 function renderFeedback(correct, isLast) {
   if (correct) {
     return `
-      <p class="feedback good">${renderUiSprite(uiSprites.icons.check, "", "feedback-icon")}<span>맞았어요! 관찰을 정말 잘했네요.</span></p>
+      <p class="feedback good"><span class="feedback-mark feedback-mark-good" aria-hidden="true">✓</span><span>맞았어요! 관찰을 정말 잘했네요.</span></p>
       <button type="button" class="next-button" data-next>${isLast ? "결과 보기" : "다음 문제"}</button>
     `;
   } else {
     return `
-      <p class="feedback retry">${renderUiSprite(uiSprites.icons.x, "", "feedback-icon")}<span>틀렸어요. 다시 한번 도전해 보세요!</span></p>
+      <p class="feedback retry"><span class="feedback-mark feedback-mark-retry" aria-hidden="true">×</span><span>틀렸어요. 다시 한번 도전해 보세요!</span></p>
     `;
   }
 }

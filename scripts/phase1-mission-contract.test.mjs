@@ -158,6 +158,22 @@ test("quiz start is gated by observation checklist before first collection", () 
   assert.ok(styles.includes(".observation-checkitem input"));
 });
 
+test("frog final quiz avoids ambiguous damp-place distractors", () => {
+  const appJs = read("app.js");
+  const frogQuizStart = appJs.indexOf('"개구리": {');
+  const frogQuizEnd = appJs.indexOf('  "소금쟁이": {', frogQuizStart);
+  const frogQuiz = appJs.slice(frogQuizStart, frogQuizEnd);
+
+  assert.ok(frogQuizStart > -1);
+  assert.ok(frogQuiz.includes("개구리가 물가와 물속에서 생활하기에 알맞은 특징은 무엇일까요?"));
+  assert.ok(frogQuiz.includes("물갈퀴가 있는 발은 물속 이동에 도움을 줘요."));
+  assert.equal(
+    frogQuiz.includes("몸이 마르지 않도록 축축한 곳에서 생활해요."),
+    false,
+    "frog should not offer a second plausible final-quiz answer"
+  );
+});
+
 test("regional mission completion advances to the next mission and resets stale filters", () => {
   const appJs = read("app.js");
 

@@ -1379,12 +1379,26 @@ button:focus-visible {
   font-weight: 900;
 }
 
-.feedback-icon {
+.feedback-mark {
+  display: inline-grid;
+  place-items: center;
   width: 34px;
   height: 34px;
-  object-fit: contain;
   flex: 0 0 auto;
-  filter: drop-shadow(0 4px 5px rgba(86, 65, 24, 0.16));
+  color: #fff;
+  border-radius: 50%;
+  box-shadow: 0 4px 5px rgba(86, 65, 24, 0.16), inset 0 -3px 0 rgba(0, 0, 0, 0.12);
+  font-size: 1.35rem;
+  font-weight: 1000;
+  line-height: 1;
+}
+
+.feedback-mark-good {
+  background: linear-gradient(180deg, #6bd35a, #27983e);
+}
+
+.feedback-mark-retry {
+  background: linear-gradient(180deg, #ff6969, #d93434);
 }
 
 .feedback.good {
