@@ -7,6 +7,36 @@ const filters = [
   { id: "special", label: "특별한 환경", icon: "❄️" }
 ];
 
+const uiSprites = {
+  owl: {
+    wave: "./assets/sprites/extracted/owl-wave.png",
+    search: "./assets/sprites/extracted/owl-search.png",
+    cheer: "./assets/sprites/extracted/owl-cheer.png",
+    think: "./assets/sprites/extracted/owl-think.png"
+  },
+  icons: {
+    chest: "./assets/sprites/extracted/icon-chest.png",
+    check: "./assets/sprites/extracted/icon-check.png",
+    gem: "./assets/sprites/extracted/icon-gem.png",
+    leaf: "./assets/sprites/extracted/icon-leaf.png",
+    shield: "./assets/sprites/extracted/icon-shield.png",
+    star: "./assets/sprites/extracted/icon-star.png",
+    x: "./assets/sprites/extracted/icon-x.png"
+  },
+  regions: {
+    around: "./assets/sprites/extracted/region-around.png",
+    land: "./assets/sprites/extracted/region-forest.png",
+    freshwater: "./assets/sprites/extracted/region-water.png",
+    sea: "./assets/sprites/extracted/region-sea.png",
+    special: "./assets/sprites/extracted/region-special.png"
+  }
+};
+
+function renderUiSprite(src, alt = "", className = "ui-sprite") {
+  const altAttribute = alt ? ` alt="${escapeAttribute(alt)}"` : ` alt="" aria-hidden="true"`;
+  return `<img class="${className}" src="${escapeAttribute(src)}"${altAttribute}>`;
+}
+
 const criteria = [
   { id: "hasLegs", label: "다리가 있는가?" },
   { id: "hasWings", label: "날개가 있는가?" },
@@ -798,16 +828,19 @@ const onboardingSteps = [
   {
     title: "동물 카드를 눌러 사진과 설명을 봐요",
     body: "먼저 카드 한 장을 골라 생김새, 사는 곳, 움직임을 천천히 살펴봅니다.",
+    sprite: uiSprites.owl.search,
     target: () => document.querySelector(".animal-card")
   },
   {
     title: "퀴즈를 풀어 도감에 등록해요",
     body: "설명을 읽은 뒤 짧은 퀴즈를 맞히면 카드가 내 도감에 등록됩니다.",
+    sprite: uiSprites.owl.think,
     demo: true
   },
   {
     title: "지역별로 완성해요",
     body: "54마리를 한 번에 끝내지 않아도 괜찮아요. 우리 주변, 땅, 물, 특별한 환경을 하나씩 완성해 봅니다.",
+    sprite: uiSprites.owl.cheer,
     target: () => els.missionPanel || els.progressFill
   }
 ];
@@ -832,6 +865,9 @@ function renderOnboarding() {
   }
 
   els.onboardingContent.innerHTML = `
+    <div class="onboarding-guide-art">
+      ${renderUiSprite(step.sprite || uiSprites.owl.wave, "", "onboarding-owl")}
+    </div>
     <h2 id="onboardingTitle">${step.title}</h2>
     <p>${step.body}</p>
     ${step.demo ? `
@@ -954,6 +990,7 @@ function renderMissionPanel() {
         : `${currentMission.icon} ${currentMission.label} 미션이 현재 순서예요. 이 지역은 미리 둘러보는 중입니다.`;
   const buttonMode = hasNextMission ? "next-mission" : isAllMode || !isCurrentMission ? "mission" : "all";
   const buttonText = hasNextMission ? "다음 미션 시작" : isAllMode || !isCurrentMission ? "현재 미션으로 돌아가기" : "전체 도감 보기";
+  const regionSprite = uiSprites.regions[panelFilter.id];
   const primaryAction = hasNextMission
     ? `<button class="mission-toggle" type="button" data-catalog-mode="next-mission">${buttonText}</button>`
     : `<button class="mission-toggle" type="button" data-catalog-mode="${buttonMode}">${buttonText}</button>`;
@@ -963,7 +1000,9 @@ function renderMissionPanel() {
 
   els.missionPanel.innerHTML = `
     <div class="${boardClass}">
-      <div class="mission-orb" aria-hidden="true">${isAllMode ? "🏆" : panelFilter.icon}</div>
+      <div class="mission-orb" aria-hidden="true">
+        ${isAllMode ? "🏆" : regionSprite ? renderUiSprite(regionSprite, "", "mission-region-sprite") : panelFilter.icon}
+      </div>
       <div class="mission-copy">
         <p class="section-kicker">${modeLabel}</p>
         <h2>${title}</h2>
@@ -1160,26 +1199,27 @@ function renderAnimalInfo(animal) {
     </div>
     ${renderAnimalEnvironmentNote(animal)}
     <p class="encyclopedia-lede">${observation.intro}</p>
-    ${renderObservationChecklist(animal, isCollected)}
-    <div class="detail-quiz-anchor">
-      ${quizAction}
-    </div>
     <div class="encyclopedia-article" id="animalArticle">
       <section class="encyclopedia-section">
         <h3>생김새와 움직임</h3>
         <p data-hint="appearance">${observation.appearance}</p>
+        ${renderObservationCheckItem(animal, isCollected, "appearance", "몸의 특징을 봤어요")}
         <p data-hint="lifestyle">${observation.lifestyle}</p>
+        ${renderObservationCheckItem(animal, isCollected, "movement", "움직이는 방법을 봤어요")}
       </section>
       <section class="encyclopedia-section">
         <h3>사는 곳과 생활</h3>
         <p data-hint="habitat">${observation.habitatLife}</p>
+        ${renderObservationCheckItem(animal, isCollected, "habitat", "사는 곳을 봤어요")}
       </section>
       <section class="encyclopedia-section">
         <h3>환경에 알맞은 점</h3>
         <p data-hint="adaptation">${observation.habitatLink}</p>
       </section>
     </div>
-    ${renderObservationSummary(animal)}
+    <div class="detail-quiz-anchor">
+      ${quizAction}
+    </div>
     ${renderQuestionTool()}
     <button class="source-link source-link-button" type="button" data-source-url="${escapeAttribute(animal.source)}">🌐 사진 출처 보기 · 새 창에서 열어요</button>
     <p class="modal-scroll-hint" aria-hidden="true">아래로 내려보면 관찰 단서가 더 있어요.</p>
@@ -1242,16 +1282,13 @@ function renderObservationSummary(animal) {
   `;
 }
 
-function renderObservationChecklist(animal, isCollected) {
+function renderObservationCheckItem(animal, isCollected, id, label) {
   if (isCollected || readObservationReady(animal.id)) return "";
   return `
-    <section class="observation-checklist" aria-label="${animal.name} 관찰 체크">
-      <h3>퀴즈 전 관찰 체크</h3>
-      <label><input type="checkbox" data-observation-check> 사는 곳을 봤어요</label>
-      <label><input type="checkbox" data-observation-check> 움직이는 방법을 봤어요</label>
-      <label><input type="checkbox" data-observation-check> 몸의 특징을 봤어요</label>
-      <p>세 가지를 확인하면 퀴즈를 시작할 수 있어요.</p>
-    </section>
+    <label class="observation-checkitem">
+      <input type="checkbox" data-observation-check="${escapeAttribute(id)}">
+      <span>${label}</span>
+    </label>
   `;
 }
 
@@ -1269,8 +1306,7 @@ function updateQuizStartGate() {
   if (ready) {
     const animalId = startButton.dataset.startQuiz;
     saveObservationReady(animalId);
-    const checklist = els.detailBody.querySelector(".observation-checklist");
-    if (checklist) checklist.remove();
+    els.detailBody.querySelectorAll(".observation-checkitem").forEach(checkitem => checkitem.remove());
   }
 }
 
@@ -1897,6 +1933,7 @@ function renderQuiz() {
     </div>
     <div class="quiz-box">
       <h3>${question.text}</h3>
+      ${renderObservationSummary(quiz.animal)}
       <div class="quiz-options">
         ${question.options.map(option => {
           const isCorrect = option === question.correct;
@@ -1928,12 +1965,12 @@ function renderQuiz() {
 function renderFeedback(correct, isLast) {
   if (correct) {
     return `
-      <p class="feedback good">맞았어요! 관찰을 정말 잘했네요.</p>
+      <p class="feedback good">${renderUiSprite(uiSprites.icons.check, "", "feedback-icon")}<span>맞았어요! 관찰을 정말 잘했네요.</span></p>
       <button type="button" class="next-button" data-next>${isLast ? "결과 보기" : "다음 문제"}</button>
     `;
   } else {
     return `
-      <p class="feedback retry">틀렸어요. 다시 한번 도전해 보세요!</p>
+      <p class="feedback retry">${renderUiSprite(uiSprites.icons.x, "", "feedback-icon")}<span>틀렸어요. 다시 한번 도전해 보세요!</span></p>
     `;
   }
 }
@@ -2485,6 +2522,14 @@ function renderRegionReward(filter, progress, thumbnails) {
     <p class="section-kicker">지역 완성 보상</p>
     <h2 id="rewardTitle">🎉 ${filter.label} 도감 완성!</h2>
     <p>${progress.total}마리를 모두 등록했어요. 다음 지역으로 넘어가 볼까요?</p>
+    <div class="region-reward-emblem">
+      ${renderUiSprite(uiSprites.icons.shield, "", "region-reward-shield")}
+    </div>
+    <div class="reward-meaning-badges" aria-label="지역 완성 의미 배지">
+      <span>${renderUiSprite(uiSprites.icons.star, "", "reward-meaning-icon")}<strong>완성 별</strong></span>
+      <span>${renderUiSprite(uiSprites.icons.leaf, "", "reward-meaning-icon")}<strong>다음 생태 탐험</strong></span>
+    </div>
+    ${renderUiSprite(uiSprites.owl.cheer, "", "reward-owl-cheer")}
     <div class="reward-collage" aria-label="등록한 동물 미리보기">
       ${thumbnails.map(animal => `<span>${animal.name}</span>`).join("")}
     </div>
@@ -2494,11 +2539,18 @@ function renderRegionReward(filter, progress, thumbnails) {
 function renderMasterReward(thumbnails) {
   return `
     <div class="reward-burst reward-burst-master" aria-hidden="true">${Array.from({ length: 16 }, () => "<span></span>").join("")}</div>
-    <div class="master-reward-emblem" aria-hidden="true">🏆</div>
+    <div class="master-reward-chest" aria-hidden="true">
+      ${renderUiSprite(uiSprites.icons.chest, "", "master-reward-chest-sprite")}
+    </div>
     <p class="section-kicker">최종 보상</p>
     <h2 id="rewardTitle">도감 마스터 달성!</h2>
     <p class="master-reward-count">54 / 54</p>
     <p>모든 동물 카드를 등록했어요. 이제 전체 도감을 다시 둘러보며 특징을 비교해 볼 수 있습니다.</p>
+    <div class="reward-meaning-badges master-meaning-badges" aria-label="도감 마스터 의미 배지">
+      <span>${renderUiSprite(uiSprites.icons.gem, "", "reward-meaning-icon")}<strong>도감 마스터 보석</strong></span>
+      <span>${renderUiSprite(uiSprites.icons.star, "", "reward-meaning-icon")}<strong>모든 지역 완성</strong></span>
+    </div>
+    ${renderUiSprite(uiSprites.owl.cheer, "", "reward-owl-cheer master-owl-cheer")}
     <div class="reward-collage master-collage" aria-label="등록한 동물 미리보기">
       ${thumbnails.map(animal => `<span>${animal.name}</span>`).join("")}
     </div>

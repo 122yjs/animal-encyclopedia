@@ -113,12 +113,16 @@ test("student entry remains generated without teacher mission controls", () => {
   }
 });
 
-test("detail modal keeps collapsed observation summary before quiz actions", () => {
+test("detail modal keeps observation checks under explanations and summary under quiz question", () => {
   const appJs = read("app.js");
   const styles = read("styles.css");
 
   for (const needle of [
-    "renderObservationSummary(animal)",
+    "renderObservationCheckItem(animal, isCollected, \"appearance\", \"몸의 특징을 봤어요\")",
+    "renderObservationCheckItem(animal, isCollected, \"movement\", \"움직이는 방법을 봤어요\")",
+    "renderObservationCheckItem(animal, isCollected, \"habitat\", \"사는 곳을 봤어요\")",
+    "<h3>${question.text}</h3>",
+    "renderObservationSummary(quiz.animal)",
     '<details class="observation-summary">',
     "<summary>관찰 요약 열기</summary>",
     "renderQuickFacts(animal, \"관찰 요약\")"
@@ -126,8 +130,10 @@ test("detail modal keeps collapsed observation summary before quiz actions", () 
     assert.ok(appJs.includes(needle), `app.js should include ${needle}`);
   }
 
+  assert.ok(appJs.indexOf("<h3>${question.text}</h3>") < appJs.indexOf("renderObservationSummary(quiz.animal)"));
   assert.ok(styles.includes(".observation-summary"));
   assert.ok(styles.includes(".observation-summary summary"));
+  assert.ok(styles.includes(".observation-checkitem"));
   assert.ok(appJs.includes("quickFacts: {"));
 });
 
@@ -138,7 +144,7 @@ test("quiz start is gated by observation checklist before first collection", () 
   for (const needle of [
     "observationReadyKey",
     "observationReady: new Set(readStoredIds(observationReadyKey, animalIds))",
-    "renderObservationChecklist(animal, isCollected)",
+    "renderObservationCheckItem(animal, isCollected",
     "data-observation-check",
     "updateQuizStartGate",
     "관찰 체크 3개를 먼저 해요",
@@ -148,8 +154,8 @@ test("quiz start is gated by observation checklist before first collection", () 
     assert.ok(appJs.includes(needle), `app.js should include ${needle}`);
   }
 
-  assert.ok(styles.includes(".observation-checklist"));
-  assert.ok(styles.includes(".observation-checklist input"));
+  assert.ok(styles.includes(".observation-checkitem"));
+  assert.ok(styles.includes(".observation-checkitem input"));
 });
 
 test("regional mission completion advances to the next mission and resets stale filters", () => {

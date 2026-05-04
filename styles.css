@@ -63,28 +63,6 @@ img {
   max-width: 100%;
 }
 
-.sprite-crop {
-  --sprite-size: 36px;
-  --sprite-url: none;
-  --sprite-x: 0%;
-  --sprite-y: 0%;
-  display: inline-block;
-  flex: 0 0 auto;
-  width: var(--sprite-size);
-  height: var(--sprite-size);
-  overflow: hidden;
-  background-image: var(--sprite-url);
-  background-position: var(--sprite-x) var(--sprite-y);
-  background-repeat: no-repeat;
-  background-size: var(--sprite-sheet-size, 200% 200%);
-  vertical-align: middle;
-}
-
-.sprite-crop-owl {
-  --sprite-url: url("./assets/sprites/owl-mascot.png");
-  --sprite-sheet-size: 200% 200%;
-}
-
 .sidebar-brand-row {
   display: flex;
   align-items: center;
@@ -93,7 +71,11 @@ img {
 }
 
 .sidebar-owl {
-  --sprite-size: 54px;
+  flex: 0 0 auto;
+  width: 58px;
+  height: 58px;
+  object-fit: contain;
+  padding: 2px;
   border: 2px solid rgba(245,188,68,0.72);
   border-radius: 50%;
   background-color: #fff4ca;
@@ -678,13 +660,20 @@ img {
 .mission-orb {
   display: grid;
   place-items: center;
-  width: 58px;
-  height: 58px;
+  width: 72px;
+  height: 72px;
   background: radial-gradient(circle at 30% 24%, #fff3a6, var(--sun) 54%, #a45e11);
   border: 3px solid #fff6bd;
-  border-radius: 14px;
+  border-radius: 18px;
   box-shadow: 0 0 0 3px rgba(75, 45, 15, 0.48), 0 0 18px rgba(255, 195, 0, 0.42);
   font-size: 1.8rem;
+}
+
+.mission-region-sprite {
+  width: 68px;
+  height: 60px;
+  object-fit: contain;
+  filter: drop-shadow(0 3px 4px rgba(43, 31, 18, 0.28));
 }
 
 .mission-copy {
@@ -1133,8 +1122,7 @@ button:focus-visible {
   font-weight: 800;
 }
 
-.quick-facts h3,
-.observation-checklist h3 {
+.quick-facts h3 {
   margin: 0 0 10px;
   color: var(--teal-dark);
   font-size: 1rem;
@@ -1185,35 +1173,25 @@ button:focus-visible {
   border-radius: 0;
 }
 
-.observation-checklist {
-  display: grid;
-  gap: 8px;
-  margin: 0 0 14px;
-  padding: 14px;
-  background: #effaf3;
-  border: 2px solid rgba(92, 184, 92, 0.32);
-  border-radius: 12px;
-}
-
-.observation-checklist label {
+.observation-checkitem {
   display: flex;
   align-items: center;
   gap: 8px;
-  min-height: 32px;
+  min-height: 36px;
+  margin: 10px 0 2px;
+  padding: 8px 10px;
+  color: #214b2c;
+  background: #effaf3;
+  border: 2px solid rgba(92, 184, 92, 0.32);
+  border-radius: 10px;
   font-weight: 900;
 }
 
-.observation-checklist input {
+.observation-checkitem input {
+  flex: 0 0 auto;
   width: 20px;
   height: 20px;
   accent-color: var(--leaf);
-}
-
-.observation-checklist p {
-  margin: 0;
-  color: var(--muted);
-  font-size: 0.86rem;
-  font-weight: 800;
 }
 
 .detail-quiz-anchor {
@@ -1394,8 +1372,19 @@ button:focus-visible {
 }
 
 .feedback {
+  display: flex;
+  align-items: center;
+  gap: 8px;
   margin: 0;
   font-weight: 900;
+}
+
+.feedback-icon {
+  width: 34px;
+  height: 34px;
+  object-fit: contain;
+  flex: 0 0 auto;
+  filter: drop-shadow(0 4px 5px rgba(86, 65, 24, 0.16));
 }
 
 .feedback.good {
@@ -1966,6 +1955,20 @@ button:focus-visible {
   border-radius: 8px;
 }
 
+.onboarding-guide-art {
+  display: flex;
+  justify-content: center;
+  min-height: 118px;
+  margin: -4px 0 10px;
+}
+
+.onboarding-owl {
+  width: min(152px, 42vw);
+  height: 118px;
+  object-fit: contain;
+  filter: drop-shadow(0 12px 14px rgba(86, 65, 24, 0.2));
+}
+
 .demo-badge {
   justify-self: start;
   padding: 3px 8px;
@@ -2031,6 +2034,74 @@ button:focus-visible {
   margin-top: 18px;
 }
 
+.reward-meaning-badges {
+  position: relative;
+  z-index: 1;
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  justify-content: center;
+  gap: 10px;
+  margin-top: 18px;
+  padding: 14px;
+  background: rgba(255, 248, 223, 0.78);
+  border: 2px solid rgba(245, 188, 68, 0.55);
+  border-radius: 14px;
+}
+
+.region-reward-emblem,
+.master-reward-chest {
+  position: relative;
+  z-index: 1;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 126px;
+  margin-top: 12px;
+  pointer-events: none;
+}
+
+.region-reward-shield {
+  width: min(132px, 38vw);
+  height: 126px;
+  object-fit: contain;
+  filter: drop-shadow(0 12px 12px rgba(86, 65, 24, 0.24));
+}
+
+.master-reward-chest-sprite {
+  width: min(230px, 62vw);
+  height: 150px;
+  object-fit: contain;
+  filter: drop-shadow(0 14px 14px rgba(86, 65, 24, 0.26));
+}
+
+.reward-meaning-badges span {
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr);
+  align-items: center;
+  gap: 8px;
+  min-width: 0;
+  color: #5d3b12;
+  font-size: 0.95rem;
+  font-weight: 900;
+}
+
+.reward-meaning-icon {
+  width: 46px;
+  height: 46px;
+  object-fit: contain;
+  filter: drop-shadow(0 5px 6px rgba(86, 65, 24, 0.18));
+}
+
+.reward-owl-cheer {
+  position: relative;
+  z-index: 1;
+  width: min(116px, 32vw);
+  height: 92px;
+  object-fit: contain;
+  margin: 12px auto -4px;
+  filter: drop-shadow(0 10px 10px rgba(86, 65, 24, 0.18));
+}
+
 .reward-collage span {
   padding: 6px 10px;
   color: var(--teal-dark);
@@ -2039,22 +2110,6 @@ button:focus-visible {
   border-radius: 999px;
   font-size: 0.84rem;
   font-weight: 900;
-}
-
-.master-reward-emblem {
-  position: relative;
-  z-index: 1;
-  display: grid;
-  place-items: center;
-  width: 94px;
-  height: 94px;
-  margin: 0 auto 14px;
-  color: #6b5100;
-  background: radial-gradient(circle at 35% 28%, #fff7b4, #ffc300 62%, #c98500);
-  border: 4px solid #fff2a8;
-  border-radius: 50%;
-  box-shadow: 0 18px 32px rgba(255, 176, 0, 0.38), 0 0 0 8px rgba(255, 195, 0, 0.18);
-  font-size: 3rem;
 }
 
 .reward-card.master-reward-card {
@@ -2089,6 +2144,15 @@ button:focus-visible {
 
 .master-collage {
   justify-content: center;
+}
+
+.master-meaning-badges {
+  max-width: 420px;
+  margin-inline: auto;
+}
+
+.master-owl-cheer {
+  margin-top: 10px;
 }
 
 .master-collage span {
