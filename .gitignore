@@ -9,3 +9,12 @@ session-ses_268b.md
 gamified-animal-encyclopedia-webapp/
 .playwright-cli/
 .sisyphus/
+graphify-out/cache/
+graphify-out/*.bak
+graphify-out/.graphify*
+.omx/
+.agents/
+.codex/
+.gemini/
+docs/ai-sessions/
+/*.png
