@@ -289,9 +289,13 @@ const els = {
   closeSettings: document.querySelector("#closeSettings"),
   questionSettingsForm: document.querySelector("#questionSettingsForm"),
   questionUrlInput: document.querySelector("#questionUrlInput"),
+  connectQuestionUrl: document.querySelector("#connectQuestionUrl"),
   clearQuestionUrl: document.querySelector("#clearQuestionUrl"),
   shareLinkPanel: document.querySelector("#shareLinkPanel"),
   shareLinkOutput: document.querySelector("#shareLinkOutput"),
+  shareLinkMode: document.querySelector("#shareLinkMode"),
+  shareLinkTitle: document.querySelector("#shareLinkTitle"),
+  shareLinkDescription: document.querySelector("#shareLinkDescription"),
   copyShareLink: document.querySelector("#copyShareLink"),
   downloadQr: document.querySelector("#downloadQr"),
   qrCode: document.querySelector("#qrCode"),
@@ -348,17 +352,32 @@ function handleModalKeydown(event) {
   }
 }
 
+function setModalBackgroundDisabled(element, disabled) {
+  if (!element) return;
+  if ("inert" in element) {
+    element.inert = disabled;
+    return;
+  }
+  if (disabled) {
+    element.setAttribute("aria-hidden", "true");
+    element.dataset.inertFallback = "true";
+  } else {
+    if (element.dataset.inertFallback === "true") element.removeAttribute("aria-hidden");
+    delete element.dataset.inertFallback;
+  }
+}
+
 function enterModalFocus(modalElement) {
   const appLayout = document.querySelector(".app-layout");
   if (state.modalFocusStack.length === 0 && appLayout) {
-    appLayout.inert = true;
+    setModalBackgroundDisabled(appLayout, true);
   }
   if (state.modalFocusStack.length > 0) {
     const prevModal = state.modalFocusStack[state.modalFocusStack.length - 1];
-    prevModal.inert = true;
+    setModalBackgroundDisabled(prevModal, true);
   }
   state.modalFocusStack.push(modalElement);
-  modalElement.inert = false;
+  setModalBackgroundDisabled(modalElement, false);
   modalElement.hidden = false;
   requestAnimationFrame(() => {
     const focusables = getFocusableElements(modalElement);
@@ -372,10 +391,10 @@ function exitModalFocus(modalElement) {
   modalElement.hidden = true;
   const appLayout = document.querySelector(".app-layout");
   if (state.modalFocusStack.length === 0) {
-    if (appLayout) appLayout.inert = false;
+    setModalBackgroundDisabled(appLayout, false);
   } else {
     const topModal = state.modalFocusStack[state.modalFocusStack.length - 1];
-    topModal.inert = false;
+    setModalBackgroundDisabled(topModal, false);
     requestAnimationFrame(() => {
       const focusables = getFocusableElements(topModal);
       if (focusables.length > 0) focusables[0].focus();
@@ -579,7 +598,7 @@ function updateSidebarLede() {
   if (els.sidebarTotalCount) {
     els.sidebarTotalCount.textContent = String(getProgramTotal());
   } else if (els.sidebarLede) {
-    els.sidebarLede.textContent = `동물을 관찰하고 퀴즈 몬스터볼을 던져 ${getProgramTotal()}마리의 카드를 모아보세요! 과연 누가 가장 먼저 도감 마스터가 될까요?`;
+    els.sidebarLede.textContent = `동물을 관찰하고 퀴즈 배지를 모아 ${getProgramTotal()}마리의 카드를 완성해 보세요! 과연 누가 가장 먼저 도감 마스터가 될까요?`;
   }
 }
 
@@ -838,7 +857,7 @@ const onboardingSteps = [
   },
   {
     title: "지역별로 완성해요",
-    body: "54마리를 한 번에 끝내지 않아도 괜찮아요. 우리 주변, 땅, 물, 특별한 환경을 하나씩 완성해 봅니다.",
+    body: "모든 동물을 한 번에 끝내지 않아도 괜찮아요. 우리 주변, 땅, 물, 특별한 환경을 하나씩 완성해 봅니다.",
     sprite: uiSprites.owl.cheer,
     target: () => els.missionPanel || els.progressFill
   }
@@ -987,6 +1006,13 @@ function renderMissionPanel() {
       : isCurrentMission
         ? `${panelFilter.label} 동물을 관찰하고 퀴즈를 맞혀 이 지역 도감을 완성해 보세요.`
         : `${currentMission.icon} ${currentMission.label} 미션이 현재 순서예요. 이 지역은 미리 둘러보는 중입니다.`;
+  const nextActionLabel = hasNextMission
+    ? "다음 미션으로 넘어갈 수 있어요."
+    : isAllMode
+      ? `${currentMission.icon} ${currentMission.label} 미션으로 돌아가 수업을 이어가요.`
+      : isCurrentMission
+        ? "카드를 눌러 관찰하고 체크한 뒤 퀴즈를 풀어요."
+        : "지금은 미리보기예요. 준비되면 현재 미션으로 돌아가요.";
   const buttonMode = hasNextMission ? "next-mission" : isAllMode || !isCurrentMission ? "mission" : "all";
   const buttonText = hasNextMission ? "다음 미션 시작" : isAllMode || !isCurrentMission ? "현재 미션으로 돌아가기" : "전체 도감 보기";
   const regionSprite = uiSprites.regions[panelFilter.id];
@@ -1006,6 +1032,7 @@ function renderMissionPanel() {
         <p class="section-kicker">${modeLabel}</p>
         <h2>${title}</h2>
         <p>${body}</p>
+        <p class="mission-next-step"><strong>지금 할 일</strong> ${nextActionLabel}</p>
       </div>
       <div class="mission-meter" aria-label="${panelFilter.label} 진행도 ${progress.collected} / ${progress.total}">
         <span class="mission-meter-count">${progress.collected} / ${progress.total}</span>
@@ -1185,7 +1212,7 @@ function renderAnimalInfo(animal) {
       ? renderCollectedAction(animal)
       : `
         <button class="primary-button quiz-anchor-button" type="button" data-start-quiz="${animal.id}">
-          🎯 퀴즈 풀고 도감에 등록하기
+          🎯 동물 관찰 시작하기
         </button>
       `;
   els.detailBody.innerHTML = `
@@ -1301,7 +1328,7 @@ function updateQuizStartGate() {
   }
   const ready = checks.every(check => check.checked);
   startButton.disabled = !ready;
-  startButton.textContent = ready ? "🎯 퀴즈 풀고 도감에 등록하기" : "관찰 체크 3개를 먼저 해요";
+  startButton.textContent = ready ? "🎯 동물 관찰 시작하기" : "관찰 체크 3개를 먼저 해요";
   if (ready) {
     const animalId = startButton.dataset.startQuiz;
     saveObservationReady(animalId);
@@ -1311,10 +1338,10 @@ function updateQuizStartGate() {
 
 function renderQuizRetryPanel(quiz, retryLocked, retryDelay) {
   const progressText = `문제 ${quiz.index + 1} / ${quiz.questions.length}`;
-  const buttonLabel = retryLocked ? `⏳ ${Math.ceil(retryDelay / 1000)}초 뒤 다시 도전` : "🎯 다시 문제 풀기";
+  const buttonLabel = retryLocked ? `⏳ ${Math.ceil(retryDelay / 1000)}초 뒤 단서 보고 다시 도전` : "🎯 단서 확인하고 다시 풀기";
   return `
     <section class="quiz-retry-panel" aria-live="polite">
-      <p class="feedback retry">앗, 틀렸어요! 노란 문장을 다시 읽고 같은 문제에 다시 도전해 보세요.</p>
+      <p class="feedback retry">괜찮아요. 노란 단서를 다시 읽고 같은 문제에 다시 도전해 보세요.</p>
       <p class="card-point">${progressText}</p>
       <button class="primary-button" type="button" data-resume-quiz ${retryLocked ? "disabled" : ""}>${buttonLabel}</button>
     </section>
@@ -1444,7 +1471,7 @@ function saveQuestionSettings(event) {
     }
   });
   els.questionUrlInput.value = url;
-  els.settingsMessage.textContent = "학생용 참여 링크를 저장했어요. 아래 수업용 도감 링크를 학생에게 보내면 같은 질문방이 열려요.";
+  els.settingsMessage.textContent = "AI 질문방을 연결했어요. 아래 학생용 링크/QR은 질문방 연결 버전으로 바뀌었어요.";
   renderShareLinkPanel();
 }
 
@@ -1461,16 +1488,69 @@ function clearQuestionSettings() {
     }
   });
   els.questionUrlInput.value = "";
-  els.settingsMessage.textContent = "이 브라우저의 질문방 설정을 지웠어요.";
+  els.settingsMessage.textContent = "AI 질문방을 사용하지 않도록 설정했어요. 아래 학생용 링크/QR은 질문방 없는 버전입니다.";
   renderShareLinkPanel();
 }
 
 function renderShareLinkPanel() {
   if (!els.shareLinkPanel || !els.shareLinkOutput) return;
   const shareLink = buildShareLink(appConfig.questionTool.url);
+  const shareLinkCopy = getShareLinkCopy(appConfig.questionTool.url);
+  const hasQuestionRoom = Boolean(normalizeHttpUrl(appConfig.questionTool.url));
   els.shareLinkPanel.hidden = false;
   els.shareLinkOutput.value = shareLink;
+  if (els.shareLinkMode) els.shareLinkMode.textContent = shareLinkCopy.mode;
+  if (els.shareLinkTitle) els.shareLinkTitle.textContent = shareLinkCopy.title;
+  if (els.shareLinkDescription) els.shareLinkDescription.textContent = shareLinkCopy.description;
+  updateQuestionChoiceButtons(hasQuestionRoom);
   renderQrCode(shareLink);
+}
+
+function updateQuestionChoiceButtons(hasQuestionRoom) {
+  if (els.connectQuestionUrl) {
+    els.connectQuestionUrl.classList.toggle("selected", hasQuestionRoom);
+    els.connectQuestionUrl.setAttribute("aria-pressed", String(hasQuestionRoom));
+  }
+
+  if (els.clearQuestionUrl) {
+    els.clearQuestionUrl.classList.toggle("selected", !hasQuestionRoom);
+    els.clearQuestionUrl.setAttribute("aria-pressed", String(!hasQuestionRoom));
+  }
+}
+
+function getShareLinkCopy(questionUrl) {
+  const hasQuestionRoom = Boolean(normalizeHttpUrl(questionUrl));
+  const hasMissionSettings = shouldIncludeMissionSelectionsInShareLink();
+
+  if (hasQuestionRoom && hasMissionSettings) {
+    return {
+      mode: "설정 반영 링크/QR",
+      title: "지역 미션 + AI 질문방 학생용 QR",
+      description: "선택한 지역별 동물 범위와 AI 질문방이 함께 들어간 학생용 링크입니다."
+    };
+  }
+
+  if (hasQuestionRoom) {
+    return {
+      mode: "설정 반영 링크/QR",
+      title: "AI 질문방 연결 학생용 QR",
+      description: "기본 도감에 AI 질문방만 연결한 학생용 링크입니다."
+    };
+  }
+
+  if (hasMissionSettings) {
+    return {
+      mode: "설정 반영 링크/QR",
+      title: "지역 미션 설정 학생용 QR",
+      description: "선택한 지역별 동물 범위가 들어간 질문방 없는 학생용 링크입니다."
+    };
+  }
+
+  return {
+    mode: "기본 학생용 링크/QR",
+    title: "바로 배포용 기본 QR",
+    description: "아무 설정 없이 바로 쓰는 no-question 기본 링크입니다. 학생 화면에는 교사용 설정창과 AI 질문방이 나오지 않습니다."
+  };
 }
 
 async function copyShareLink() {
@@ -1541,8 +1621,8 @@ function buildShareLink(questionUrl) {
 }
 
 function getShareLinkTargetPath(questionUrl) {
-  const hasQuestionRoom = Boolean(normalizeHttpUrl(questionUrl));
-  return hasQuestionRoom ? "index.html" : "no-question.html";
+  normalizeHttpUrl(questionUrl);
+  return "no-question.html";
 }
 
 function shouldIncludeMissionSelectionsInShareLink() {
@@ -2019,7 +2099,7 @@ function scheduleRetryButtonUnlock(button, delay) {
   window.setTimeout(() => {
     if (!button.isConnected) return;
     button.disabled = false;
-    button.textContent = "🎯 다시 문제 풀기";
+    button.textContent = "🎯 단서 확인하고 다시 풀기";
   }, delay);
 }
 
@@ -2087,7 +2167,7 @@ function showCatchAnimation(animal, onComplete) {
 
   const message = document.createElement("p");
   message.className = "catch-message";
-  message.textContent = "포획 완료!";
+  message.textContent = "카드 등록 완료!";
 
   const ballLayer = document.createElement("div");
   ballLayer.className = "catch-ball-layer";
@@ -2588,7 +2668,7 @@ function renderMasterReward(thumbnails) {
     </div>
     <p class="section-kicker">최종 보상</p>
     <h2 id="rewardTitle">도감 마스터 달성!</h2>
-    <p class="master-reward-count">54 / 54</p>
+    <p class="master-reward-count">${getCollectedProgramCount()} / ${getProgramTotal()}</p>
     <p>모든 동물 카드를 등록했어요. 이제 전체 도감을 다시 둘러보며 특징을 비교해 볼 수 있습니다.</p>
     <div class="reward-meaning-badges master-meaning-badges" aria-label="도감 마스터 의미 배지">
       <span>${renderUiSprite(uiSprites.icons.gem, "", "reward-meaning-icon")}<strong>도감 마스터 보석</strong></span>

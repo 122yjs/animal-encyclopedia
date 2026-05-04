@@ -99,5 +99,71 @@ test("local image manifest covers every animal with thumb and detail paths", () 
   for (const [animalName, paths] of Object.entries(manifest)) {
     assert.ok(paths.thumb, `${animalName} should have a thumb image path`);
     assert.ok(paths.detail, `${animalName} should have a detail image path`);
+    assert.ok(paths.detail.includes("/details/"), `${animalName} detail image should use the detail bundle`);
+    assert.notEqual(paths.thumb, paths.detail, `${animalName} thumb/detail paths should not be duplicated`);
+    const thumbPath = path.join(rootDir, decodeURIComponent(paths.thumb.replace(/^\.\//, "")));
+    const detailPath = path.join(rootDir, decodeURIComponent(paths.detail.replace(/^\.\//, "")));
+    assert.ok(fs.existsSync(thumbPath), `${animalName} thumb image should exist`);
+    assert.ok(fs.existsSync(detailPath), `${animalName} detail image should exist`);
   }
+});
+
+test("entry pages include share preview metadata without runtime CDN scripts", () => {
+  for (const fileName of ["index.html", "no-question.html"]) {
+    const html = read(path.join(rootDir, fileName));
+
+    assert.ok(html.includes('<meta name="description"'));
+    assert.ok(html.includes('<meta property="og:title"'));
+    assert.ok(html.includes('<meta property="og:description"'));
+    assert.ok(html.includes('<meta property="og:image"'));
+    assert.ok(html.includes('<meta name="twitter:card" content="summary"'));
+    assert.ok(html.includes('<meta name="theme-color"'));
+    assert.ok(html.includes('rel="icon" href="data:image/svg+xml'));
+    assert.equal(html.includes("@tailwindcss/browser"), false, `${fileName} should not depend on Tailwind CDN at runtime`);
+    assert.equal(html.includes("NanumSquareRound"), false, `${fileName} should avoid the extra font CDN`);
+  }
+});
+
+test("styles keep a simple Korean font stack and reduced-motion fallback", () => {
+  const styles = read(path.join(rootDir, "styles.css"));
+
+  assert.ok(styles.includes('"Pretendard Variable", "Pretendard", "Noto Sans KR"'));
+  assert.equal(styles.includes("NanumSquareRound"), false);
+  assert.ok(styles.includes("@media (prefers-reduced-motion: reduce)"));
+  assert.ok(styles.includes("transition: none !important;"));
+});
+
+test("modal focus uses an inert fallback for older tablets", () => {
+  const appJs = read(appPath);
+
+  assert.ok(appJs.includes("function setModalBackgroundDisabled"));
+  assert.ok(appJs.includes('"inert" in element'));
+  assert.ok(appJs.includes('element.setAttribute("aria-hidden", "true")'));
+  assert.ok(appJs.includes("dataset.inertFallback"));
+  assert.equal(appJs.includes("appLayout.inert = true"), false);
+});
+
+test("local image bundle stays classroom-friendly in size", () => {
+  const imageDir = path.join(rootDir, "images");
+  const files = [];
+
+  function walk(currentDir) {
+    for (const entry of fs.readdirSync(currentDir, { withFileTypes: true })) {
+      const fullPath = path.join(currentDir, entry.name);
+      if (entry.isDirectory()) {
+        walk(fullPath);
+      } else if (/\.(jpe?g|png|webp|avif)$/i.test(entry.name)) {
+        files.push(fullPath);
+      }
+    }
+  }
+
+  walk(imageDir);
+
+  const totalBytes = files.reduce((sum, filePath) => sum + fs.statSync(filePath).size, 0);
+  const largestBytes = Math.max(...files.map(filePath => fs.statSync(filePath).size));
+
+  assert.ok(files.length > 0, "local image bundle should contain optimized classroom images");
+  assert.ok(totalBytes < 6 * 1024 * 1024, `local image bundle should stay under 6MB, got ${totalBytes}`);
+  assert.ok(largestBytes < 250 * 1024, `largest image should stay under 250KB, got ${largestBytes}`);
 });
