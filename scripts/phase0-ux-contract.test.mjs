@@ -60,7 +60,6 @@ test("large UI moments use extracted transparent sprites instead of whole sprite
     "assets/sprites/extracted/owl-think.png",
     "assets/sprites/extracted/icon-chest.png",
     "assets/sprites/extracted/icon-gem.png",
-    "assets/sprites/extracted/icon-leaf.png",
     "assets/sprites/extracted/icon-shield.png",
     "assets/sprites/extracted/icon-star.png",
     "assets/sprites/extracted/region-around.png",
@@ -106,8 +105,14 @@ test("large UI moments use extracted transparent sprites instead of whole sprite
   assert.ok(appJs.includes('renderUiSprite(uiSprites.icons.shield, "", "region-reward-shield")'));
   assert.ok(appJs.includes('renderUiSprite(uiSprites.icons.chest, "", "master-reward-chest-sprite")'));
   assert.ok(appJs.includes('renderUiSprite(uiSprites.icons.star, "", "reward-meaning-icon")'));
-  assert.ok(appJs.includes('renderUiSprite(uiSprites.icons.leaf, "", "reward-meaning-icon")'));
   assert.ok(appJs.includes('renderUiSprite(uiSprites.icons.gem, "", "reward-meaning-icon")'));
+  assert.equal(appJs.includes("icon-leaf.png"), false, "leaf should not be a macguffin reward without state");
+  assert.ok(appJs.includes("function getCompletedRegionCount()"));
+  assert.ok(appJs.includes("function renderCompletionStars(completed, total, className)"));
+  assert.ok(read("index.html").includes('id="stickyStarStatus"'));
+  assert.ok(read("index.html").includes('id="completionStarStatus"'));
+  assert.ok(styles.includes(".sticky-star-status"));
+  assert.ok(styles.includes(".completion-star-status"));
   assert.equal(appJs.includes("icon-check.png"), false, "quiz feedback should not use the cropped check sprite image");
   assert.equal(appJs.includes("icon-x.png"), false, "quiz feedback should not use the cropped x sprite image");
   assert.ok(appJs.includes("feedback-mark-good"));

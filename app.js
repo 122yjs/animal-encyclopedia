@@ -17,7 +17,6 @@ const uiSprites = {
   icons: {
     chest: "./assets/sprites/extracted/icon-chest.png",
     gem: "./assets/sprites/extracted/icon-gem.png",
-    leaf: "./assets/sprites/extracted/icon-leaf.png",
     shield: "./assets/sprites/extracted/icon-shield.png",
     star: "./assets/sprites/extracted/icon-star.png",
   },
@@ -265,6 +264,8 @@ const els = {
   stickyProgress: document.querySelector("#stickyProgress"),
   stickyProgressLabel: document.querySelector("#stickyProgressLabel"),
   stickyProgressFill: document.querySelector("#stickyProgressFill"),
+  stickyStarStatus: document.querySelector("#stickyStarStatus"),
+  completionStarStatus: document.querySelector("#completionStarStatus"),
   searchInput: document.querySelector("#searchInput"),
   gameCriterion: document.querySelector("#gameCriterion"),
   gamePool: document.querySelector("#gamePool"),
@@ -2424,6 +2425,8 @@ function dedupeSources(sources) {
 function updateProgress() {
   const count = getCollectedProgramCount();
   const total = getProgramTotal();
+  const completedRegions = getCompletedRegionCount();
+  const totalRegions = milestoneFilters.length;
   els.collectedCount.textContent = count;
   if (els.totalCount) els.totalCount.textContent = total;
   els.progressFill.style.width = `${Math.round((count / total) * 100)}%`;
@@ -2433,8 +2436,37 @@ function updateProgress() {
   if (els.stickyProgressFill) {
     els.stickyProgressFill.style.width = `${Math.round((count / total) * 100)}%`;
   }
+  if (els.stickyStarStatus) {
+    els.stickyStarStatus.innerHTML = renderCompletionStars(completedRegions, totalRegions, "sticky-star");
+    els.stickyStarStatus.setAttribute("aria-label", `완성별 ${completedRegions} / ${totalRegions}`);
+  }
+  if (els.completionStarStatus) {
+    els.completionStarStatus.innerHTML = `
+      <span class="completion-star-label">완성별</span>
+      <span class="completion-star-stack" aria-hidden="true">
+        ${renderCompletionStars(completedRegions, totalRegions, "completion-star")}
+      </span>
+      <strong>${completedRegions} / ${totalRegions}</strong>
+    `;
+    els.completionStarStatus.setAttribute("aria-label", `완성별 ${completedRegions}개. 지역 도감 ${totalRegions}개 중 ${completedRegions}개 완성`);
+  }
   renderMissionPanel();
   renderFilters();
+}
+
+function getCompletedRegionCount() {
+  return milestoneFilters.filter(filter => {
+    const progress = getFilterProgress(filter.id);
+    return progress.total > 0 && progress.collected === progress.total;
+  }).length;
+}
+
+function renderCompletionStars(completed, total, className) {
+  return Array.from({ length: total }, (_, index) => {
+    const isEarned = index < completed;
+    const label = isEarned ? "획득한 완성별" : "아직 모으지 못한 완성별";
+    return `<span class="${className} ${isEarned ? "is-earned" : "is-empty"}">${renderUiSprite(uiSprites.icons.star, label, `${className}-icon`)}</span>`;
+  }).join("");
 }
 
 function returnToCurrentMission(shouldRender = true) {
@@ -2534,8 +2566,7 @@ function renderRegionReward(filter, progress, thumbnails) {
       ${renderUiSprite(uiSprites.icons.shield, "", "region-reward-shield")}
     </div>
     <div class="reward-meaning-badges" aria-label="지역 완성 의미 배지">
-      <span>${renderUiSprite(uiSprites.icons.star, "", "reward-meaning-icon")}<strong>완성 별</strong></span>
-      <span>${renderUiSprite(uiSprites.icons.leaf, "", "reward-meaning-icon")}<strong>다음 생태 탐험</strong></span>
+      <span>${renderUiSprite(uiSprites.icons.star, "", "reward-meaning-icon")}<strong>완성별 +1</strong></span>
     </div>
     ${renderUiSprite(uiSprites.owl.cheer, "", "reward-owl-cheer")}
     <div class="reward-collage" aria-label="등록한 동물 미리보기">
