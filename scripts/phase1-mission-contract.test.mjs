@@ -192,6 +192,18 @@ test("regional mission completion advances to the next mission and resets stale 
   }
 });
 
+test("master reward wins over final regional reward when all animals are collected", () => {
+  const appJs = read("app.js");
+  const rewardStart = appJs.indexOf("function showNewMilestoneRewards()");
+  const rewardEnd = appJs.indexOf("function showReward(filterId)", rewardStart);
+  const rewardCode = appJs.slice(rewardStart, rewardEnd);
+
+  assert.ok(rewardStart > -1);
+  assert.ok(rewardCode.includes('const masterCompleted = completed.includes("all") && !state.completedMilestones.has("all")'));
+  assert.ok(rewardCode.includes("const next = masterCompleted"));
+  assert.ok(rewardCode.indexOf("const masterCompleted") < rewardCode.indexOf("completed.find"));
+});
+
 test("manual sidebar mission navigation shows each teacher-selected regional set", () => {
   const appJs = read("app.js");
 

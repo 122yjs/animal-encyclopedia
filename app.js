@@ -2528,7 +2528,10 @@ function getCollectedProgramCount() {
 
 function showNewMilestoneRewards() {
   const completed = getCompletedMilestones();
-  const next = completed.find(id => !state.completedMilestones.has(id));
+  const masterCompleted = completed.includes("all") && !state.completedMilestones.has("all");
+  const next = masterCompleted
+    ? "all"
+    : completed.find(id => !state.completedMilestones.has(id));
   if (!next) return;
 
   state.completedMilestones.add(next);
