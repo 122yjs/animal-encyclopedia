@@ -9,6 +9,14 @@ function read(fileName) {
   return fs.readFileSync(path.join(rootDir, fileName), "utf8");
 }
 
+function readPngSize(fileName) {
+  const buffer = fs.readFileSync(path.join(rootDir, fileName));
+  return {
+    width: buffer.readUInt32BE(16),
+    height: buffer.readUInt32BE(20)
+  };
+}
+
 test("entry pages warn students before opening external source links", () => {
   for (const fileName of ["index.html", "no-question.html"]) {
     const html = read(fileName);
@@ -45,8 +53,8 @@ test("sidebar lede is ready for dynamic total count text", () => {
 test("observation checks appear under individual explanation items before quiz start", () => {
   const appJs = read("app.js");
   const articleIndex = appJs.indexOf('<div class="encyclopedia-article" id="animalArticle">');
-  const firstCheckIndex = appJs.indexOf('${renderObservationCheckItem(animal, isCollected, "appearance", "생김새를 봤어요")}');
-  const secondCheckIndex = appJs.indexOf('${renderObservationCheckItem(animal, isCollected, "lifestyle", "움직이는 방법을 봤어요")}');
+  const firstCheckIndex = appJs.indexOf('${renderObservationCheckItem(animal, isCollected, "appearance", "몸의 특징을 봤어요")}');
+  const secondCheckIndex = appJs.indexOf('${renderObservationCheckItem(animal, isCollected, "movement", "움직이는 방법을 봤어요")}');
   const thirdCheckIndex = appJs.indexOf('${renderObservationCheckItem(animal, isCollected, "habitat", "사는 곳을 봤어요")}');
   const quizAnchorIndex = appJs.indexOf('<div class="detail-quiz-anchor">');
 
@@ -61,12 +69,28 @@ test("observation checks appear under individual explanation items before quiz s
   assert.ok(thirdCheckIndex < quizAnchorIndex, "quiz start should remain below the observation checks");
 });
 
-test("header owl uses one cropped mascot pose instead of the whole sprite sheet", () => {
+test("large UI moments use extracted transparent sprites instead of whole sprite sheets", () => {
+  const appJs = read("app.js");
   const styles = read("styles.css");
+  const requiredAssets = [
+    "assets/sprites/extracted/owl-wave.png",
+    "assets/sprites/extracted/owl-search.png",
+    "assets/sprites/extracted/owl-cheer.png",
+    "assets/sprites/extracted/owl-think.png",
+    "assets/sprites/extracted/icon-chest.png",
+    "assets/sprites/extracted/icon-gem.png",
+    "assets/sprites/extracted/icon-shield.png",
+    "assets/sprites/extracted/icon-star.png",
+    "assets/sprites/extracted/region-around.png",
+    "assets/sprites/extracted/region-forest.png",
+    "assets/sprites/extracted/region-sea.png",
+    "assets/sprites/extracted/region-special.png",
+    "assets/sprites/extracted/region-water.png"
+  ];
 
   for (const fileName of ["index.html", "no-question.html"]) {
     const html = read(fileName);
-    assert.ok(html.includes("sprite-crop-owl sidebar-owl"), `${fileName} should use a cropped owl header sprite`);
+    assert.ok(html.includes("./assets/sprites/extracted/owl-wave.png"), `${fileName} should use one extracted owl pose`);
     assert.equal(
       html.includes('<img src="./assets/sprites/owl-mascot.png" alt="부엉이 가이드"'),
       false,
@@ -74,6 +98,51 @@ test("header owl uses one cropped mascot pose instead of the whole sprite sheet"
     );
   }
 
-  assert.ok(styles.includes(".sprite-crop-owl"));
-  assert.ok(styles.includes("--sprite-sheet-size: 200% 200%"));
+  for (const asset of requiredAssets) {
+    assert.ok(fs.existsSync(path.join(rootDir, asset)), `${asset} should exist`);
+    assert.ok(appJs.includes(asset) || read("index.html").includes(asset), `${asset} should be referenced by the UI`);
+  }
+
+  for (const asset of [
+    "assets/sprites/extracted/region-around.png",
+    "assets/sprites/extracted/region-forest.png",
+    "assets/sprites/extracted/region-sea.png",
+    "assets/sprites/extracted/region-special.png",
+    "assets/sprites/extracted/region-water.png"
+  ]) {
+    assert.deepEqual(readPngSize(asset), { width: 288, height: 288 }, `${asset} should keep the full round badge frame`);
+  }
+
+  assert.ok(styles.includes(".onboarding-owl"));
+  assert.ok(styles.includes(".feedback-mark"));
+  assert.ok(styles.includes(".region-reward-hero"));
+  assert.ok(styles.includes(".region-star-row"));
+  assert.ok(styles.includes(".region-star-icon"));
+  assert.ok(styles.includes(".region-star-context"));
+  assert.ok(styles.includes(".master-reward-chest"));
+  assert.ok(styles.includes(".reward-meaning-badges"));
+  assert.equal(appJs.includes("icon-catch-ball.png"), false, "quiz catch ball should use the original CSS ball");
+  assert.ok(styles.includes(".catch-ball::before"));
+  assert.ok(styles.includes(".catch-ball-button"));
+  assert.equal(appJs.includes("region-reward-shield"), false, "region reward should not show a detached shield badge");
+  assert.ok(appJs.includes('renderUiSprite(uiSprites.icons.chest, "", "master-reward-chest-sprite")'));
+  assert.ok(appJs.includes('renderUiSprite(uiSprites.icons.star, "", "reward-meaning-icon")'));
+  assert.ok(appJs.includes('renderUiSprite(uiSprites.icons.gem, "", "reward-meaning-icon")'));
+  assert.equal(appJs.includes("icon-leaf.png"), false, "leaf should not be a macguffin reward without state");
+  assert.ok(appJs.includes("function getCompletedRegionCount()"));
+  assert.ok(appJs.includes("function renderCompletionStars(completed, total, className)"));
+  assert.ok(read("index.html").includes('id="stickyStarStatus"'));
+  assert.ok(read("index.html").includes('id="completionStarStatus"'));
+  assert.ok(styles.includes(".sticky-star-status"));
+  assert.ok(styles.includes(".completion-star-status"));
+  assert.equal(appJs.includes("icon-check.png"), false, "quiz feedback should not use the cropped check sprite image");
+  assert.equal(appJs.includes("icon-x.png"), false, "quiz feedback should not use the cropped x sprite image");
+  assert.ok(appJs.includes("feedback-mark-good"));
+  assert.ok(appJs.includes("feedback-mark-retry"));
+  assert.ok(appJs.includes('renderUiSprite(uiSprites.owl.cheer, "", "reward-owl-cheer region-reward-owl")'));
+  assert.ok(appJs.includes('renderUiSprite(uiSprites.icons.star, "", "region-star-icon")'));
+  assert.ok(appJs.includes("완성별이 1개 추가됐어요"));
+  assert.equal(appJs.includes("<strong>x50</strong>"), false, "star should not look like a spendable reward currency");
+  assert.equal(appJs.includes("<strong>x1</strong>"), false, "leaf should not look like a spendable reward currency");
+  assert.equal(appJs.includes("filter-icon\"><img"), false, "small filter controls should not use pasted sheet crops");
 });

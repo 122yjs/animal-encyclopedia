@@ -129,11 +129,15 @@ test("student entry remains generated without teacher mission controls", () => {
   }
 });
 
-test("quiz modal keeps collapsed observation summary directly under the question", () => {
+test("detail modal keeps observation checks under explanations and summary under quiz question", () => {
   const appJs = read("app.js");
   const styles = read("styles.css");
 
   for (const needle of [
+    "renderObservationCheckItem(animal, isCollected, \"appearance\", \"몸의 특징을 봤어요\")",
+    "renderObservationCheckItem(animal, isCollected, \"movement\", \"움직이는 방법을 봤어요\")",
+    "renderObservationCheckItem(animal, isCollected, \"habitat\", \"사는 곳을 봤어요\")",
+    "<h3>${question.text}</h3>",
     "renderObservationSummary(quiz.animal)",
     '<details class="observation-summary">',
     "<summary>관찰 요약 열기</summary>",
@@ -142,6 +146,7 @@ test("quiz modal keeps collapsed observation summary directly under the question
     assert.ok(appJs.includes(needle), `app.js should include ${needle}`);
   }
 
+  assert.ok(appJs.indexOf("<h3>${question.text}</h3>") < appJs.indexOf("renderObservationSummary(quiz.animal)"));
   const questionIndex = appJs.indexOf("<h3>${question.text}</h3>");
   const summaryIndex = appJs.indexOf("${renderObservationSummary(quiz.animal)}");
   const optionsIndex = appJs.indexOf('<div class="quiz-options">');
@@ -150,9 +155,9 @@ test("quiz modal keeps collapsed observation summary directly under the question
   assert.ok(optionsIndex > -1, "quiz should render answer options");
   assert.ok(questionIndex < summaryIndex, "observation summary should sit directly after the question");
   assert.ok(summaryIndex < optionsIndex, "answer options should follow the optional summary");
-
   assert.ok(styles.includes(".observation-summary"));
   assert.ok(styles.includes(".observation-summary summary"));
+  assert.ok(styles.includes(".observation-checkitem"));
   assert.ok(appJs.includes("quickFacts: {"));
 });
 
@@ -178,6 +183,22 @@ test("quiz start is gated by separated observation checks before first collectio
   assert.ok(styles.includes(".observation-checkitem input"));
 });
 
+test("frog final quiz avoids ambiguous damp-place distractors", () => {
+  const appJs = read("app.js");
+  const frogQuizStart = appJs.indexOf('"개구리": {');
+  const frogQuizEnd = appJs.indexOf('  "소금쟁이": {', frogQuizStart);
+  const frogQuiz = appJs.slice(frogQuizStart, frogQuizEnd);
+
+  assert.ok(frogQuizStart > -1);
+  assert.ok(frogQuiz.includes("개구리가 물가와 물속에서 생활하기에 알맞은 특징은 무엇일까요?"));
+  assert.ok(frogQuiz.includes("물갈퀴가 있는 발은 물속 이동에 도움을 줘요."));
+  assert.equal(
+    frogQuiz.includes("몸이 마르지 않도록 축축한 곳에서 생활해요."),
+    false,
+    "frog should not offer a second plausible final-quiz answer"
+  );
+});
+
 test("regional mission completion advances to the next mission and resets stale filters", () => {
   const appJs = read("app.js");
 
@@ -194,6 +215,18 @@ test("regional mission completion advances to the next mission and resets stale 
   ]) {
     assert.ok(appJs.includes(needle), `app.js should include ${needle}`);
   }
+});
+
+test("master reward wins over final regional reward when all animals are collected", () => {
+  const appJs = read("app.js");
+  const rewardStart = appJs.indexOf("function showNewMilestoneRewards()");
+  const rewardEnd = appJs.indexOf("function showReward(filterId)", rewardStart);
+  const rewardCode = appJs.slice(rewardStart, rewardEnd);
+
+  assert.ok(rewardStart > -1);
+  assert.ok(rewardCode.includes('const masterCompleted = completed.includes("all") && !state.completedMilestones.has("all")'));
+  assert.ok(rewardCode.includes("const next = masterCompleted"));
+  assert.ok(rewardCode.indexOf("const masterCompleted") < rewardCode.indexOf("completed.find"));
 });
 
 test("manual sidebar mission navigation shows each teacher-selected regional set", () => {

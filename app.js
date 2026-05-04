@@ -7,6 +7,33 @@ const filters = [
   { id: "special", label: "특별한 환경", icon: "❄️" }
 ];
 
+const uiSprites = {
+  owl: {
+    wave: "./assets/sprites/extracted/owl-wave.png",
+    search: "./assets/sprites/extracted/owl-search.png",
+    cheer: "./assets/sprites/extracted/owl-cheer.png",
+    think: "./assets/sprites/extracted/owl-think.png"
+  },
+  icons: {
+    chest: "./assets/sprites/extracted/icon-chest.png",
+    gem: "./assets/sprites/extracted/icon-gem.png",
+    shield: "./assets/sprites/extracted/icon-shield.png",
+    star: "./assets/sprites/extracted/icon-star.png",
+  },
+  regions: {
+    around: "./assets/sprites/extracted/region-around.png",
+    land: "./assets/sprites/extracted/region-forest.png",
+    freshwater: "./assets/sprites/extracted/region-water.png",
+    sea: "./assets/sprites/extracted/region-sea.png",
+    special: "./assets/sprites/extracted/region-special.png"
+  }
+};
+
+function renderUiSprite(src, alt = "", className = "ui-sprite") {
+  const altAttribute = alt ? ` alt="${escapeAttribute(alt)}"` : ` alt="" aria-hidden="true"`;
+  return `<img class="${className}" src="${escapeAttribute(src)}"${altAttribute}>`;
+}
+
 const criteria = [
   { id: "hasLegs", label: "다리가 있는가?" },
   { id: "hasWings", label: "날개가 있는가?" },
@@ -237,6 +264,8 @@ const els = {
   stickyProgress: document.querySelector("#stickyProgress"),
   stickyProgressLabel: document.querySelector("#stickyProgressLabel"),
   stickyProgressFill: document.querySelector("#stickyProgressFill"),
+  stickyStarStatus: document.querySelector("#stickyStarStatus"),
+  completionStarStatus: document.querySelector("#completionStarStatus"),
   searchInput: document.querySelector("#searchInput"),
   gameCriterion: document.querySelector("#gameCriterion"),
   gamePool: document.querySelector("#gamePool"),
@@ -817,16 +846,19 @@ const onboardingSteps = [
   {
     title: "동물 카드를 눌러 사진과 설명을 봐요",
     body: "먼저 카드 한 장을 골라 생김새, 사는 곳, 움직임을 천천히 살펴봅니다.",
+    sprite: uiSprites.owl.search,
     target: () => document.querySelector(".animal-card")
   },
   {
     title: "퀴즈를 풀어 도감에 등록해요",
     body: "설명을 읽은 뒤 짧은 퀴즈를 맞히면 카드가 내 도감에 등록됩니다.",
+    sprite: uiSprites.owl.think,
     demo: true
   },
   {
     title: "지역별로 완성해요",
     body: "모든 동물을 한 번에 끝내지 않아도 괜찮아요. 우리 주변, 땅, 물, 특별한 환경을 하나씩 완성해 봅니다.",
+    sprite: uiSprites.owl.cheer,
     target: () => els.missionPanel || els.progressFill
   }
 ];
@@ -851,6 +883,9 @@ function renderOnboarding() {
   }
 
   els.onboardingContent.innerHTML = `
+    <div class="onboarding-guide-art">
+      ${renderUiSprite(step.sprite || uiSprites.owl.wave, "", "onboarding-owl")}
+    </div>
     <h2 id="onboardingTitle">${step.title}</h2>
     <p>${step.body}</p>
     ${step.demo ? `
@@ -980,6 +1015,7 @@ function renderMissionPanel() {
         : "지금은 미리보기예요. 준비되면 현재 미션으로 돌아가요.";
   const buttonMode = hasNextMission ? "next-mission" : isAllMode || !isCurrentMission ? "mission" : "all";
   const buttonText = hasNextMission ? "다음 미션 시작" : isAllMode || !isCurrentMission ? "현재 미션으로 돌아가기" : "전체 도감 보기";
+  const regionSprite = uiSprites.regions[panelFilter.id];
   const primaryAction = hasNextMission
     ? `<button class="mission-toggle" type="button" data-catalog-mode="next-mission">${buttonText}</button>`
     : `<button class="mission-toggle" type="button" data-catalog-mode="${buttonMode}">${buttonText}</button>`;
@@ -989,7 +1025,9 @@ function renderMissionPanel() {
 
   els.missionPanel.innerHTML = `
     <div class="${boardClass}">
-      <div class="mission-orb" aria-hidden="true">${isAllMode ? "🏆" : panelFilter.icon}</div>
+      <div class="mission-orb" aria-hidden="true">
+        ${isAllMode ? "🏆" : regionSprite ? renderUiSprite(regionSprite, "", "mission-region-sprite") : panelFilter.icon}
+      </div>
       <div class="mission-copy">
         <p class="section-kicker">${modeLabel}</p>
         <h2>${title}</h2>
@@ -1191,9 +1229,9 @@ function renderAnimalInfo(animal) {
       <section class="encyclopedia-section">
         <h3>생김새와 움직임</h3>
         <p data-hint="appearance">${observation.appearance}</p>
-        ${renderObservationCheckItem(animal, isCollected, "appearance", "생김새를 봤어요")}
+        ${renderObservationCheckItem(animal, isCollected, "appearance", "몸의 특징을 봤어요")}
         <p data-hint="lifestyle">${observation.lifestyle}</p>
-        ${renderObservationCheckItem(animal, isCollected, "lifestyle", "움직이는 방법을 봤어요")}
+        ${renderObservationCheckItem(animal, isCollected, "movement", "움직이는 방법을 봤어요")}
       </section>
       <section class="encyclopedia-section">
         <h3>사는 곳과 생활</h3>
@@ -1270,11 +1308,11 @@ function renderObservationSummary(animal) {
   `;
 }
 
-function renderObservationCheckItem(animal, isCollected, key, label) {
+function renderObservationCheckItem(animal, isCollected, id, label) {
   if (isCollected || readObservationReady(animal.id)) return "";
   return `
     <label class="observation-checkitem">
-      <input type="checkbox" data-observation-check="${key}">
+      <input type="checkbox" data-observation-check="${escapeAttribute(id)}">
       <span>${label}</span>
     </label>
   `;
@@ -1294,6 +1332,7 @@ function updateQuizStartGate() {
   if (ready) {
     const animalId = startButton.dataset.startQuiz;
     saveObservationReady(animalId);
+    els.detailBody.querySelectorAll(".observation-checkitem").forEach(checkitem => checkitem.remove());
   }
 }
 
@@ -1727,6 +1766,16 @@ const customQuizByAnimal = {
       "날개와 깃털로 숲 사이를 날아요."
     ])
   },
+  "개구리": {
+    text: "개구리가 물가와 물속에서 생활하기에 알맞은 특징은 무엇일까요?",
+    correct: "물갈퀴가 있는 발은 물속 이동에 도움을 줘요.",
+    hintKey: "adaptation",
+    options: shuffle([
+      "물갈퀴가 있는 발은 물속 이동에 도움을 줘요.",
+      "단단한 껍데기와 넓은 발로 바위에 붙어 있어요.",
+      "날개와 깃털로 숲 사이를 날아다녀요."
+    ])
+  },
   "소금쟁이": {
     text: "소금쟁이가 물 위를 다니는 데 도움을 주는 특징은 무엇일까요?",
     correct: "가늘고 긴 다리로 물 표면 위에서 몸을 지탱해요.",
@@ -2005,12 +2054,12 @@ function renderQuiz() {
 function renderFeedback(correct, isLast) {
   if (correct) {
     return `
-      <p class="feedback good">맞았어요! 화면 표시만 봐도 성공을 알 수 있게 초록색으로 표시했어요.</p>
+      <p class="feedback good"><span class="feedback-mark feedback-mark-good" aria-hidden="true">✓</span><span>맞았어요! 관찰을 정말 잘했네요.</span></p>
       <button type="button" class="next-button" data-next>${isLast ? "결과 보기" : "다음 문제"}</button>
     `;
   } else {
     return `
-      <p class="feedback retry">다시 살펴볼 차례예요. 노란 단서를 확인하고 한 번 더 골라 봐요.</p>
+      <p class="feedback retry"><span class="feedback-mark feedback-mark-retry" aria-hidden="true">×</span><span>틀렸어요. 다시 한번 도전해 보세요!</span></p>
     `;
   }
 }
@@ -2456,6 +2505,8 @@ function dedupeSources(sources) {
 function updateProgress() {
   const count = getCollectedProgramCount();
   const total = getProgramTotal();
+  const completedRegions = getCompletedRegionCount();
+  const totalRegions = milestoneFilters.length;
   els.collectedCount.textContent = count;
   if (els.totalCount) els.totalCount.textContent = total;
   els.progressFill.style.width = `${Math.round((count / total) * 100)}%`;
@@ -2465,8 +2516,37 @@ function updateProgress() {
   if (els.stickyProgressFill) {
     els.stickyProgressFill.style.width = `${Math.round((count / total) * 100)}%`;
   }
+  if (els.stickyStarStatus) {
+    els.stickyStarStatus.innerHTML = renderCompletionStars(completedRegions, totalRegions, "sticky-star");
+    els.stickyStarStatus.setAttribute("aria-label", `완성별 ${completedRegions} / ${totalRegions}`);
+  }
+  if (els.completionStarStatus) {
+    els.completionStarStatus.innerHTML = `
+      <span class="completion-star-label">완성별</span>
+      <span class="completion-star-stack" aria-hidden="true">
+        ${renderCompletionStars(completedRegions, totalRegions, "completion-star")}
+      </span>
+      <strong>${completedRegions} / ${totalRegions}</strong>
+    `;
+    els.completionStarStatus.setAttribute("aria-label", `완성별 ${completedRegions}개. 지역 도감 ${totalRegions}개 중 ${completedRegions}개 완성`);
+  }
   renderMissionPanel();
   renderFilters();
+}
+
+function getCompletedRegionCount() {
+  return milestoneFilters.filter(filter => {
+    const progress = getFilterProgress(filter.id);
+    return progress.total > 0 && progress.collected === progress.total;
+  }).length;
+}
+
+function renderCompletionStars(completed, total, className) {
+  return Array.from({ length: total }, (_, index) => {
+    const isEarned = index < completed;
+    const label = isEarned ? "획득한 완성별" : "아직 모으지 못한 완성별";
+    return `<span class="${className} ${isEarned ? "is-earned" : "is-empty"}">${renderUiSprite(uiSprites.icons.star, label, `${className}-icon`)}</span>`;
+  }).join("");
 }
 
 function returnToCurrentMission(shouldRender = true) {
@@ -2528,7 +2608,10 @@ function getCollectedProgramCount() {
 
 function showNewMilestoneRewards() {
   const completed = getCompletedMilestones();
-  const next = completed.find(id => !state.completedMilestones.has(id));
+  const masterCompleted = completed.includes("all") && !state.completedMilestones.has("all");
+  const next = masterCompleted
+    ? "all"
+    : completed.find(id => !state.completedMilestones.has(id));
   if (!next) return;
 
   state.completedMilestones.add(next);
@@ -2561,7 +2644,16 @@ function renderRegionReward(filter, progress, thumbnails) {
     <div class="reward-burst reward-burst-soft" aria-hidden="true">${Array.from({ length: 8 }, () => "<span></span>").join("")}</div>
     <p class="section-kicker">지역 완성 보상</p>
     <h2 id="rewardTitle">🎉 ${filter.label} 도감 완성!</h2>
-    <p>${progress.total}마리를 모두 등록했어요. 다음 지역으로 넘어가 볼까요?</p>
+    <div class="region-reward-hero">
+      ${renderUiSprite(uiSprites.owl.cheer, "", "reward-owl-cheer region-reward-owl")}
+      <div class="region-reward-copy">
+        <p>${progress.total}마리를 모두 등록했어요.</p>
+        <div class="region-star-row">
+          ${renderUiSprite(uiSprites.icons.star, "", "region-star-icon")}
+          <p class="region-star-context"><strong>완성별이 1개 추가됐어요.</strong> 모은 완성별은 진행도에서 확인할 수 있어요.</p>
+        </div>
+      </div>
+    </div>
     <div class="reward-collage" aria-label="등록한 동물 미리보기">
       ${thumbnails.map(animal => `<span>${animal.name}</span>`).join("")}
     </div>
@@ -2571,11 +2663,18 @@ function renderRegionReward(filter, progress, thumbnails) {
 function renderMasterReward(thumbnails) {
   return `
     <div class="reward-burst reward-burst-master" aria-hidden="true">${Array.from({ length: 16 }, () => "<span></span>").join("")}</div>
-    <div class="master-reward-emblem" aria-hidden="true">🏆</div>
+    <div class="master-reward-chest" aria-hidden="true">
+      ${renderUiSprite(uiSprites.icons.chest, "", "master-reward-chest-sprite")}
+    </div>
     <p class="section-kicker">최종 보상</p>
     <h2 id="rewardTitle">도감 마스터 달성!</h2>
     <p class="master-reward-count">${getCollectedProgramCount()} / ${getProgramTotal()}</p>
     <p>모든 동물 카드를 등록했어요. 이제 전체 도감을 다시 둘러보며 특징을 비교해 볼 수 있습니다.</p>
+    <div class="reward-meaning-badges master-meaning-badges" aria-label="도감 마스터 의미 배지">
+      <span>${renderUiSprite(uiSprites.icons.gem, "", "reward-meaning-icon")}<strong>도감 마스터 보석</strong></span>
+      <span>${renderUiSprite(uiSprites.icons.star, "", "reward-meaning-icon")}<strong>모든 지역 완성</strong></span>
+    </div>
+    ${renderUiSprite(uiSprites.owl.cheer, "", "reward-owl-cheer master-owl-cheer")}
     <div class="reward-collage master-collage" aria-label="등록한 동물 미리보기">
       ${thumbnails.map(animal => `<span>${animal.name}</span>`).join("")}
     </div>
