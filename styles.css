@@ -4059,25 +4059,25 @@ body[data-view="game"] .sticky-progress {
   text-align: center !important;
 }
 
-/* 분류 게임 안내 멘트 및 힌트 텍스트들의 가독성을 다크 테마와 매끄럽게 어우러지는 고대비 네온 크림골드 형태로 개선 */
+/* 분류 게임 안내 멘트 및 힌트 텍스트들을 고가독성 짙은 어두운 텍스트와 골드 크림 칠판 배경판 형태로 전격 개선 */
 .game-source p.game-source-help,
 .drop-zone p.game-source-help,
 #yesHint,
 #noHint,
 p.game-source-help {
-  color: #fff8df !important;
-  font-weight: 800 !important;
-  font-size: 0.92rem !important;
+  color: #111122 !important; /* 가독성 100% 보장하는 깊고 짙은 차콜 다크 네이비 */
+  font-weight: 850 !important;
+  font-size: 0.95rem !important;
   line-height: 1.55 !important;
-  text-shadow: 0 2px 5px rgba(0, 0, 0, 0.7), 0 0 8px rgba(255, 248, 223, 0.25) !important;
-  background: rgba(255, 255, 255, 0.06) !important;
-  border: 1.5px solid rgba(255, 248, 223, 0.18) !important;
-  padding: 11px 15px !important;
+  text-shadow: none !important; /* 텍스트 섀도우 번짐을 제거하여 시인성 최상 보장 */
+  background: #fff9e6 !important; /* 따스하고 부드러운 밝은 골드 밀크 크림 칠판 배경판 */
+  border: 2px solid #b48934 !important; /* 세련된 청동 골드 경계선 */
+  padding: 12px 16px !important;
   border-radius: 12px !important;
   display: block !important;
   width: auto !important;
   margin: 12px 0 !important;
-  box-shadow: inset 0 1px 3px rgba(255,255,255,0.05) !important;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.15) !important;
   text-align: center !important;
 }
 
