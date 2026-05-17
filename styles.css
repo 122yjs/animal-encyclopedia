@@ -3545,3 +3545,602 @@ body[data-view="game"] .sticky-progress {
   color: var(--muted);
   font-weight: 900;
 }
+
+/* ==========================================================================
+   🎮 부엉이 동물도감 탐험대 게이미피케이션 (Gamification) 확장 스타일
+   ========================================================================== */
+
+:root {
+  /* 게임/네온 테마 */
+  --game-primary: #ff007f;     /* 네온 핑크 */
+  --game-secondary: #00f0ff;   /* 네온 사이언 */
+  --game-accent: #ffae00;      /* 골드 옐로우 */
+  --game-neon-gold: #ffc300;   /* 밝은 골드 */
+  --game-dark-panel: #1e1e2f;  /* 어두운 게임기 캔버스 */
+  --game-card-shadow: 0 8px 24px rgba(245, 188, 68, 0.15);
+  
+  /* EXP 젤리 그라데이션 */
+  --exp-gradient: linear-gradient(90deg, #00f0ff 0%, #7000ff 100%);
+  --exp-glow: 0 0 15px rgba(0, 240, 255, 0.7);
+  --exp-jelly-shine: linear-gradient(180deg, rgba(255,255,255,0.4) 0%, rgba(255,255,255,0) 50%);
+}
+
+/* ❶ 포켓몬 도감 스타일(Pokedex) 카드 연출 */
+
+/* 미획득 동물 카드 */
+.animal-card:not(.collected) {
+  background: var(--game-dark-panel) !important;
+  border: 2.5px dashed rgba(180, 137, 52, 0.35) !important;
+  box-shadow: none !important;
+  filter: saturate(0.4) brightness(0.85);
+  position: relative;
+  overflow: hidden;
+}
+
+.animal-card:not(.collected) .card-photo-frame {
+  background: #12121e !important;
+  position: relative;
+}
+
+.animal-card:not(.collected) .card-photo-frame::after {
+  content: "❓";
+  position: absolute;
+  inset: 0;
+  display: grid;
+  place-items: center;
+  font-size: 3.2rem;
+  color: rgba(255, 241, 214, 0.15);
+  font-weight: 900;
+  text-shadow: 0 0 10px rgba(0, 240, 255, 0.1);
+  animation: silhouette-pulse 2s ease-in-out infinite;
+}
+
+.animal-card:not(.collected) h3 {
+  color: rgba(255, 241, 214, 0.45) !important;
+}
+
+.animal-card:not(.collected) .card-tags span {
+  background: rgba(255, 241, 214, 0.05) !important;
+  color: rgba(255, 241, 214, 0.3) !important;
+  border-color: transparent !important;
+}
+
+/* 미획득 카드 마우스 오버(Hover) 시 들썩이는 애니메이션 */
+.animal-card:not(.collected):hover {
+  transform: translateY(-5px) scale(1.02);
+  border-color: var(--game-secondary) !important;
+  filter: saturate(0.7) brightness(0.95);
+  box-shadow: 0 8px 20px rgba(0, 240, 255, 0.2) !important;
+  animation: game-card-bounce 0.4s ease-out;
+}
+
+@keyframes game-card-bounce {
+  0% { transform: translateY(0); }
+  50% { transform: translateY(-8px) rotate(2deg); }
+  100% { transform: translateY(-5px) rotate(0); }
+}
+
+@keyframes silhouette-pulse {
+  0%, 100% { opacity: 0.4; transform: scale(0.95); }
+  50% { opacity: 0.85; transform: scale(1.05); }
+}
+
+/* 획득 완료(Collected) 카드 - 골드빛 네온 테두리 & 반짝이(Shine) 광원 효과 */
+.animal-card.collected {
+  border: 2.5px solid var(--game-neon-gold) !important;
+  background: var(--card-bg) !important;
+  box-shadow: var(--gold-glow) !important;
+  position: relative;
+  overflow: hidden;
+}
+
+/* 반짝이 훑기 광원 */
+.animal-card.collected::after {
+  content: "";
+  position: absolute;
+  top: -50%;
+  left: -60%;
+  width: 30%;
+  height: 200%;
+  background: linear-gradient(
+    to right,
+    rgba(255, 255, 255, 0) 0%,
+    rgba(255, 255, 255, 0.4) 30%,
+    rgba(255, 255, 255, 0.7) 50%,
+    rgba(255, 255, 255, 0.4) 70%,
+    rgba(255, 255, 255, 0) 100%
+  );
+  transform: rotate(30deg);
+  pointer-events: none;
+  animation: card-shine 6s ease-in-out infinite;
+}
+
+@keyframes card-shine {
+  0% { left: -60%; }
+  15%, 100% { left: 150%; }
+}
+
+
+/* ❷ RPG 스타일 경험치(EXP) 및 레벨 업 시스템 */
+
+/* 경험치 레벨 배지 */
+.exp-level-container {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 6px;
+}
+
+.exp-level-badge {
+  flex-shrink: 0;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 4px 10px;
+  background: linear-gradient(135deg, #7000ff, #00f0ff);
+  color: #ffffff;
+  border: 2px solid #ffffff;
+  border-radius: 999px;
+  font-size: 0.82rem;
+  font-weight: 900;
+  box-shadow: 0 4px 8px rgba(112, 0, 255, 0.3), inset 0 2px 2px rgba(255,255,255,0.4);
+  text-shadow: 0 1px 2px rgba(0,0,0,0.4);
+  animation: level-pulse 2s ease-in-out infinite;
+}
+
+@keyframes level-pulse {
+  0%, 100% { transform: scale(1); }
+  50% { transform: scale(1.05); }
+}
+
+/* EXP 바 개편 */
+.progress-panel {
+  background: radial-gradient(circle at top left, #fffdf8, #fff8e8) !important;
+  border: 3.5px solid var(--game-neon-gold) !important;
+  box-shadow: var(--game-card-shadow) !important;
+}
+
+.progress-track {
+  background: #242438 !important;
+  border: 2.5px solid #1a1a2e;
+  box-shadow: inset 0 2px 5px rgba(0,0,0,0.5);
+  position: relative;
+  overflow: hidden;
+}
+
+/* 젤리 광원 EXP */
+.progress-track span {
+  background: var(--exp-gradient) !important;
+  box-shadow: var(--exp-glow);
+  position: relative;
+}
+
+.progress-track span::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 40%;
+  background: rgba(255, 255, 255, 0.35);
+  border-radius: inherit;
+  pointer-events: none;
+}
+
+.progress-track span::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(90deg, rgba(255,255,255,0) 0%, rgba(255,255,255,0.4) 50%, rgba(255,255,255,0) 100%);
+  animation: jelly-glow-sweep 2.5s linear infinite;
+}
+
+@keyframes jelly-glow-sweep {
+  0% { transform: translateX(-100%); }
+  100% { transform: translateX(200%); }
+}
+
+/* 플로팅 EXP 텍스트 */
+.floating-exp-text {
+  position: fixed;
+  z-index: 1000;
+  color: #00f0ff;
+  font-size: 1.8rem;
+  font-weight: 900;
+  text-shadow: 
+    -2px -2px 0 #000,  
+     2px -2px 0 #000,
+    -2px  2px 0 #000,
+     2px  2px 0 #000,
+     0 0 10px rgba(0, 240, 255, 0.8);
+  pointer-events: none;
+  animation: float-up-fade-exp 1.6s cubic-bezier(0.25, 1, 0.5, 1) forwards;
+}
+
+.floating-exp-text.level-up {
+  color: #ffae00;
+  font-size: 2.4rem;
+  text-shadow: 
+    -2px -2px 0 #000,  
+     2px -2px 0 #000,
+    -2px  2px 0 #000,
+     2px  2px 0 #000,
+     0 0 20px rgba(255, 174, 0, 0.9);
+  animation: float-up-fade-levelup 2s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards;
+}
+
+@keyframes float-up-fade-exp {
+  0% { opacity: 0; transform: translate(-50%, 0) scale(0.6); }
+  15% { opacity: 1; transform: translate(-50%, -40px) scale(1.1); }
+  100% { opacity: 0; transform: translate(-50%, -180px) scale(0.8); }
+}
+
+@keyframes float-up-fade-levelup {
+  0% { opacity: 0; transform: translate(-50%, 40px) scale(0.5) rotate(-10deg); }
+  20% { opacity: 1; transform: translate(-50%, -30px) scale(1.2) rotate(5deg); }
+  40% { transform: translate(-50%, -40px) scale(1) rotate(-3deg); }
+  100% { opacity: 0; transform: translate(-50%, -150px) scale(0.8) rotate(0deg); }
+}
+
+
+/* ❸ 몬스터볼 포획 인터랙션 및 시각 효과 극대화 */
+
+/* 포획 씬 격자 펄스 섀도우 */
+.catch-overlay {
+  background: rgba(18, 18, 30, 0.94) !important;
+}
+
+.catch-overlay::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background-image: 
+    linear-gradient(rgba(255,255,255,0.03) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(255,255,255,0.03) 1px, transparent 1px);
+  background-size: 24px 24px;
+  pointer-events: none;
+}
+
+/* 흡수될 때의 번개 펄스 링 (Show-off!) */
+.catch-overlay.is-absorbing::before {
+  animation: lightning-grid 0.4s linear infinite;
+  background-color: rgba(0, 240, 255, 0.05);
+}
+
+@keyframes lightning-grid {
+  0%, 100% { opacity: 0.3; }
+  50% { opacity: 0.8; }
+}
+
+/* 흔들릴 때의 번개 펄스 충격파 */
+.catch-ball::before {
+  content: "";
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 100px;
+  height: 100px;
+  margin-top: -50px;
+  margin-left: -50px;
+  background: radial-gradient(circle, rgba(255, 174, 0, 0.4) 0%, rgba(255, 174, 0, 0) 70%);
+  border-radius: 50%;
+  transform: scale(0);
+  pointer-events: none;
+  z-index: -1;
+  transition: transform 0.3s ease;
+}
+
+.catch-overlay.is-shaking .catch-ball::before {
+  animation: shockwave-pulse 0.9s ease-out infinite;
+}
+
+@keyframes shockwave-pulse {
+  0% { transform: scale(0.4); opacity: 1; }
+  50% { transform: scale(1.6); opacity: 0.5; border: 2px solid rgba(255, 174, 0, 0.6); }
+  100% { transform: scale(2.4); opacity: 0; }
+}
+
+/* 무지개색 확산 파티클 효과 */
+.catch-sparkles span {
+  position: absolute;
+  display: block;
+  width: 14px;
+  height: 14px;
+  border-radius: 50%;
+  opacity: 0;
+  pointer-events: none;
+}
+
+.catch-overlay.is-success .catch-sparkles span {
+  animation: rainbow-particle 1.2s cubic-bezier(0.1, 0.8, 0.3, 1) forwards;
+}
+
+.catch-sparkles span:nth-child(1) { background: #ff007f; --dx: -130px; --dy: -130px; }
+.catch-sparkles span:nth-child(2) { background: #00f0ff; --dx: 130px; --dy: -130px; }
+.catch-sparkles span:nth-child(3) { background: #ffae00; --dx: -150px; --dy: 20px; }
+.catch-sparkles span:nth-child(4) { background: #7000ff; --dx: 150px; --dy: 20px; }
+.catch-sparkles span:nth-child(5) { background: #00ff66; --dx: -80px; --dy: 120px; }
+.catch-sparkles span:nth-child(6) { background: #ff3300; --dx: 80px; --dy: 120px; }
+
+@keyframes rainbow-particle {
+  0% { opacity: 1; transform: translate(-50%, -50%) scale(0.2) rotate(0deg); }
+  50% { opacity: 0.8; }
+  100% { opacity: 0; transform: translate(calc(-50% + var(--dx)), calc(-50% + var(--dy))) scale(1.5) rotate(360deg); }
+}
+
+
+/* ❹ 분류 게임 '미션 도전' 리뉴얼 */
+
+/* 닌텐도 스위치 게임기 스타일의 아케이드 프레임 */
+.game-view {
+  background: radial-gradient(circle at center, #1c1c30 0%, #0d0d18 100%) !important;
+  border: 6px solid #2f2f4f !important;
+  border-radius: 24px !important;
+  box-shadow: 
+    0 15px 35px rgba(0, 0, 0, 0.6), 
+    0 0 0 10px rgba(47, 47, 79, 0.4),
+    inset 0 0 40px rgba(0, 240, 255, 0.15) !important;
+  color: #fff4ca !important;
+  padding: 24px !important;
+}
+
+.game-header h2 {
+  color: #ffffff !important;
+  text-shadow: 0 0 10px rgba(0, 240, 255, 0.5) !important;
+}
+
+.game-description {
+  color: rgba(255, 244, 202, 0.7) !important;
+}
+
+/* 분류 미션 카테고리 헤더 */
+.game-source h3,
+.drop-zone h3 {
+  font-size: 1.15rem;
+  font-weight: 900;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  padding: 8px 14px;
+  border-radius: 8px;
+  text-shadow: 0 2px 4px rgba(0,0,0,0.3);
+}
+
+.game-source h3 {
+  background: #32325d;
+  color: #a5b4fc;
+  border: 1px solid #4338ca;
+}
+
+.drop-zone[data-answer="yes"] h3 {
+  background: rgba(92, 184, 92, 0.2);
+  color: #8fd66d;
+  border: 1.5px solid #2f7f3b;
+}
+
+.drop-zone[data-answer="no"] h3 {
+  background: rgba(232, 93, 58, 0.2);
+  color: #ff8b70;
+  border: 1.5px solid #b93c1d;
+}
+
+/* 아케이드 게임존 카드 배치 */
+.token-zone {
+  background: rgba(0,0,0,0.3) !important;
+  border: 2px dashed rgba(255,255,255,0.1) !important;
+  border-radius: 12px;
+}
+
+.game-token {
+  background: #252538 !important;
+  border: 2.5px solid #3c3c5c !important;
+  color: #fff8e8 !important;
+  box-shadow: 0 4px 8px rgba(0,0,0,0.3) !important;
+  transition: all 0.2s cubic-bezier(0.175, 0.885, 0.32, 1.275) !important;
+}
+
+/* 정답/오답 기쁘게 점핑 & 흔들림 */
+.game-token.bounce-success {
+  animation: token-bounce 0.6s ease infinite alternate;
+  border-color: #8fd66d !important;
+  box-shadow: 0 0 15px rgba(92, 184, 92, 0.6) !important;
+}
+
+.game-token.shake-failed {
+  animation: token-shake 0.4s ease;
+  border-color: #ff8b70 !important;
+  box-shadow: 0 0 15px rgba(232, 93, 58, 0.6) !important;
+}
+
+@keyframes token-bounce {
+  0% { transform: translateY(0); }
+  100% { transform: translateY(-16px); }
+}
+
+@keyframes token-shake {
+  0%, 100% { transform: translateX(0); }
+  20%, 60% { transform: translateX(-8px); }
+  40%, 80% { transform: translateX(8px); }
+}
+
+/* 퀴즈 문제박스 게이밍 리스타일 */
+.quiz-box {
+  background: var(--game-dark-panel) !important;
+  border: 3px solid var(--game-neon-gold) !important;
+  box-shadow: 0 12px 30px rgba(0,0,0,0.4), inset 0 0 20px rgba(255, 195, 0, 0.1) !important;
+  border-radius: 16px;
+  color: #ffffff;
+  padding: 24px;
+}
+
+.quiz-box h3 {
+  color: #fff8df !important;
+  font-size: 1.3rem;
+  line-height: 1.4;
+  margin-top: 0;
+  text-shadow: 0 2px 4px rgba(0,0,0,0.4);
+}
+
+.answer-button {
+  background: rgba(255, 255, 255, 0.06) !important;
+  border: 2px solid rgba(255, 255, 255, 0.15) !important;
+  color: #e2e8f0 !important;
+  font-weight: 800 !important;
+  text-shadow: none !important;
+  transition: all 0.18s ease !important;
+}
+
+.answer-button:hover:not(:disabled) {
+  background: var(--game-secondary) !important;
+  color: #12121e !important;
+  border-color: #ffffff !important;
+  transform: scale(1.03);
+  box-shadow: 0 0 15px rgba(0, 240, 255, 0.5);
+}
+
+.answer-button.correct {
+  background: var(--game-neon-gold) !important;
+  color: #3f2a0e !important;
+  border-color: #ffffff !important;
+  box-shadow: var(--gold-glow) !important;
+}
+
+/* ───────────────────────────────────────────
+   💡 수집도감 게이미피케이션 레이아웃 & 시각 보강
+   ─────────────────────────────────────────── */
+
+/* 1. 미수집 카드 썸네일 이미지 실루엣/블러 필터 처리 */
+.animal-card:not(.collected) img {
+  filter: brightness(0.15) blur(5px) grayscale(0.95);
+  pointer-events: none;
+  transition: filter 0.4s ease;
+}
+
+/* 수집 전 물음표 가상요소가 실루엣과 고급스럽게 매핑되도록 투명도 및 위치 재조정 */
+.animal-card:not(.collected) .card-photo-frame::after {
+  content: "❓";
+  position: absolute;
+  inset: 0;
+  display: grid;
+  place-items: center;
+  font-size: 2.8rem;
+  color: rgba(0, 240, 255, 0.42) !important;
+  text-shadow: 0 0 12px rgba(0, 240, 255, 0.7) !important;
+  font-weight: 900;
+  pointer-events: none;
+  z-index: 2;
+  animation: silhouette-pulse 2s ease-in-out infinite;
+}
+
+/* 안내 멘트 글자색을 명도비가 확실한 짙은 남청색 계열로 변경하고,
+   크림색 플레이트 배경을 씌워 주변 배경색에 상관없이 가독성을 100% 온전히 보장 */
+.game-source p.game-source-help,
+.drop-zone p.game-source-help,
+#yesHint,
+#noHint,
+p.game-source-help {
+  color: #2c3e50 !important;
+  font-weight: 800 !important;
+  text-shadow: none !important;
+  background: #fffdf5 !important;
+  padding: 10px 16px !important;
+  border-radius: 10px !important;
+  display: block !important;
+  width: fit-content !important;
+  margin: 12px auto !important;
+  border: 2px solid #e2d2b2 !important;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.06) !important;
+  text-align: center !important;
+}
+
+/* 2-1. 모바일 및 좁은 화면(800px 이하)에서 미니 프로그레스 캡슐을 우하단으로 안전하게 강제 이동하여 헤더 글자 겹침 완벽 방지 */
+@media (max-width: 800px) {
+  .sticky-progress {
+    top: auto !important;
+    bottom: 16px !important;
+    right: 16px !important;
+    box-shadow: 0 8px 24px rgba(45, 27, 14, 0.4), 0 0 15px rgba(245, 188, 68, 0.2) !important;
+    border-color: rgba(245, 188, 68, 0.7) !important;
+  }
+}
+
+.game-feedback,
+#gameFeedback {
+  color: #00f0ff !important;
+  font-weight: 900 !important;
+  font-size: 1.05rem !important;
+  text-shadow: 0 0 10px rgba(0, 240, 255, 0.5) !important;
+  background: rgba(0, 0, 0, 0.25) !important;
+  border: 1px solid rgba(0, 240, 255, 0.2) !important;
+  border-radius: 8px;
+  padding: 10px 14px !important;
+  margin-top: 14px;
+}
+
+/* 3. 진행상황 패널 글자 및 뱃지 뒤틀림 방지 반응형 Flexbox 최적화 */
+.progress-panel {
+  display: flex !important;
+  flex-direction: row !important;
+  flex-wrap: wrap !important;
+  align-items: center !important;
+  justify-content: space-between !important;
+  gap: 12px 16px !important;
+  padding: 18px 22px !important;
+}
+
+/* 내 도감 완성도 글씨 */
+.progress-panel .progress-label {
+  margin: 0 !important;
+  font-size: 1.05rem !important;
+  font-weight: 900 !important;
+  white-space: nowrap !important;
+}
+
+/* 레벨 뱃지 */
+.progress-panel .exp-level-badge {
+  margin: 0 10px !important; /* 양 옆에 확실한 마진을 주어 다른 글자들과의 겹침/밀착 방지 */
+  font-size: 0.85rem !important;
+  font-weight: 900 !important;
+  white-space: nowrap !important;
+  display: inline-flex !important;
+  align-items: center;
+}
+
+/* 분할 수치 (예: 2 / 40) */
+.progress-panel strong {
+  margin-left: auto !important;
+  font-size: 1.25rem !important;
+  font-weight: 1000 !important;
+  white-space: nowrap !important;
+  color: var(--teal-dark) !important;
+}
+
+/* 전체 경험치 트랙 바 너비 강제 적용 */
+.progress-panel .progress-track {
+  width: 100% !important;
+  margin-top: 4px !important;
+  margin-bottom: 2px !important;
+}
+
+/* 완성별 스택 */
+.progress-panel .completion-star-status {
+  width: 100% !important;
+  display: flex !important;
+  justify-content: flex-end !important;
+  margin-top: 2px !important;
+}
+
+/* 반응형 미디어 쿼리 튜닝 (소형 모바일 기기 대응) */
+@media (max-width: 600px) {
+  .progress-panel {
+    flex-direction: column !important;
+    align-items: flex-start !important;
+    gap: 8px !important;
+  }
+  .progress-panel strong {
+    margin-left: 0 !important;
+    align-self: flex-end !important;
+  }
+  .progress-panel .completion-star-status {
+    justify-content: flex-start !important;
+  }
+}
