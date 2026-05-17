@@ -3583,16 +3583,8 @@ body[data-view="game"] .sticky-progress {
 }
 
 .animal-card:not(.collected) .card-photo-frame::after {
-  content: "❓";
-  position: absolute;
-  inset: 0;
-  display: grid;
-  place-items: center;
-  font-size: 3.2rem;
-  color: rgba(255, 241, 214, 0.15);
-  font-weight: 900;
-  text-shadow: 0 0 10px rgba(0, 240, 255, 0.1);
-  animation: silhouette-pulse 2s ease-in-out infinite;
+  content: "" !important; /* 미수집 시 ❓ 물음표 마크를 원천 제거하여 실루엣(형태)만 또렷하고 완벽하게 노출 */
+  display: none !important;
 }
 
 .animal-card:not(.collected) h3 {
@@ -4015,40 +4007,69 @@ body[data-view="game"] .sticky-progress {
   transition: filter 0.4s ease;
 }
 
-/* 수집 전 물음표 가상요소가 실루엣과 고급스럽게 매핑되도록 투명도 및 위치 재조정 */
-.animal-card:not(.collected) .card-photo-frame::after {
-  content: "❓";
-  position: absolute;
-  inset: 0;
-  display: grid;
-  place-items: center;
-  font-size: 2.8rem;
-  color: rgba(0, 240, 255, 0.42) !important;
-  text-shadow: 0 0 12px rgba(0, 240, 255, 0.7) !important;
-  font-weight: 900;
-  pointer-events: none;
-  z-index: 2;
-  animation: silhouette-pulse 2s ease-in-out infinite;
+
+
+/* 분류미션 드롭다운 라벨 가독성 보장 */
+.select-field span {
+  color: #fff8df !important;
+  font-size: 1.05rem !important;
+  text-shadow: 0 2px 4px rgba(0,0,0,0.5) !important;
 }
 
-/* 안내 멘트 글자색을 명도비가 확실한 짙은 남청색 계열로 변경하고,
-   크림색 플레이트 배경을 씌워 주변 배경색에 상관없이 가독성을 100% 온전히 보장 */
+/* 분류미션 선택창(select) 스타일 커스터마이징 */
+.select-field select {
+  color: #fff8e8 !important;
+  background: #252538 !important;
+  border: 2px solid #3c3c5c !important;
+}
+
+/* 분류 미션 카드 더미와 맞는 카드/다른 카드 영역의 H3 헤더의 시인성을 다크 게이밍 테마에 맞게 100% 선명하게 보정 */
+.game-source h3 {
+  background: #24243e !important;
+  color: #a5b4fc !important;
+  border: 2px solid #4f46e5 !important;
+  font-size: 1.25rem !important;
+  font-weight: 900 !important;
+  text-align: center !important;
+}
+
+.drop-zone[data-answer="yes"] h3 {
+  background: rgba(46, 125, 50, 0.45) !important;
+  color: #a7f3d0 !important;
+  border: 2px solid #059669 !important;
+  font-size: 1.25rem !important;
+  font-weight: 900 !important;
+  text-align: center !important;
+}
+
+.drop-zone[data-answer="no"] h3 {
+  background: rgba(198, 40, 40, 0.45) !important;
+  color: #fecaca !important;
+  border: 2px solid #dc2626 !important;
+  font-size: 1.25rem !important;
+  font-weight: 900 !important;
+  text-align: center !important;
+}
+
+/* 분류 게임 안내 멘트 및 힌트 텍스트들의 가독성을 다크 테마와 매끄럽게 어우러지는 고대비 네온 크림골드 형태로 개선 */
 .game-source p.game-source-help,
 .drop-zone p.game-source-help,
 #yesHint,
 #noHint,
 p.game-source-help {
-  color: #2c3e50 !important;
+  color: #fff8df !important;
   font-weight: 800 !important;
-  text-shadow: none !important;
-  background: #fffdf5 !important;
-  padding: 10px 16px !important;
-  border-radius: 10px !important;
+  font-size: 0.92rem !important;
+  line-height: 1.55 !important;
+  text-shadow: 0 2px 5px rgba(0, 0, 0, 0.7), 0 0 8px rgba(255, 248, 223, 0.25) !important;
+  background: rgba(255, 255, 255, 0.06) !important;
+  border: 1.5px solid rgba(255, 248, 223, 0.18) !important;
+  padding: 11px 15px !important;
+  border-radius: 12px !important;
   display: block !important;
-  width: fit-content !important;
-  margin: 12px auto !important;
-  border: 2px solid #e2d2b2 !important;
-  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.06) !important;
+  width: auto !important;
+  margin: 12px 0 !important;
+  box-shadow: inset 0 1px 3px rgba(255,255,255,0.05) !important;
   text-align: center !important;
 }
 
