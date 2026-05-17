@@ -1171,18 +1171,23 @@ button:focus-visible {
   gap: 6px;
   min-height: var(--min-touch);
   padding: 10px 16px;
-  color: var(--paper);
-  background: var(--teal);
-  border: 2px solid var(--teal);
+  background: #111122 !important; /* 어두운 다크 퍼플 네이비 */
+  border: 2.5px solid #b48934 !important; /* 고급스러운 청동 골드 테두리 */
+  color: #ffd700 !important; /* 선명한 리얼 골드 옐로우 텍스트 */
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3) !important;
   border-radius: 8px;
   font-weight: 900;
   font-size: 0.95rem;
   text-decoration: none;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1) !important;
 }
 
 .back-to-catalog:hover {
-  background: var(--teal-dark);
-  border-color: var(--teal-dark);
+  background: #b48934 !important; /* 골드로 채워짐 */
+  color: #ffffff !important; /* 텍스트는 화이트로 반전 */
+  border-color: #ffd700 !important;
+  box-shadow: 0 0 15px rgba(180, 137, 52, 0.6) !important;
+  transform: translateY(-2px) !important;
 }
 
 .modal-title-row {
@@ -1869,16 +1874,16 @@ button:focus-visible {
   align-items: center;
   margin-bottom: 18px;
   padding: 22px;
-  background: var(--paper);
-  border: 2px solid var(--line);
+  background: #18182b !important; /* 다크 게이밍 테마로 강제 고정하여 흰 배경/흰 글씨 가독성 차단 버그 전면 박멸 */
+  border: 2px solid #3c3c5c !important;
   border-radius: var(--radius);
-  box-shadow: var(--shadow-sm);
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4) !important;
 }
 
 .game-header p {
   max-width: 760px;
   margin: 8px 0 0;
-  color: var(--muted);
+  color: #e5e7eb !important; /* 고대비 밝은 실버그레이로 변경 */
   font-weight: 700;
 }
 
@@ -2520,7 +2525,10 @@ button:focus-visible {
   }
 
   .game-description {
-    display: none;
+    display: block !important;
+    font-size: 0.9rem !important;
+    line-height: 1.4 !important;
+    margin-top: 6px !important;
   }
 
   .game-view {
@@ -4164,4 +4172,75 @@ p.game-source-help {
   .progress-panel .completion-star-status {
     justify-content: flex-start !important;
   }
+}
+
+/* ==========================================
+   🎮 분류 미션 상단 게임 헤더 및 버튼 비주얼 개선 
+   (흰 배경/흰 글씨 가독성 붕괴 현상 완치)
+   ========================================== */
+
+/* 1. 게임 헤더 박스: 칙칙한 흰 배경을 걷어내고 세련된 반투명 다크 아케이드 패널로 고정 */
+.game-header {
+  background: #18182b !important;
+  border: 2px solid #3c3c5c !important;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4) !important;
+  padding: 24px !important;
+  border-radius: 16px !important;
+  color: #ffffff !important;
+}
+
+/* 2. 타이틀 '카드를 기준에 따라 나누기 미션' */
+.game-header h2 {
+  color: #fff8df !important; /* 선명하고 고급스러운 크림 골드 */
+  font-size: 1.6rem !important;
+  font-weight: 900 !important;
+  text-shadow: 0 2px 4px rgba(0, 0, 0, 0.5) !important;
+  margin-top: 8px !important;
+  margin-bottom: 8px !important;
+}
+
+/* 3. 상단 소제목 '분류 게임' */
+.game-header .section-kicker {
+  color: #a5b4fc !important; /* 화사한 네온 연보라 */
+  font-size: 0.95rem !important;
+  font-weight: 800 !important;
+  text-shadow: 0 0 8px rgba(165, 180, 252, 0.3) !important;
+}
+
+/* 4. 본문 설명 '분류 기준을 보고 동물 카드를 직접 옮겨서 미션을 완료하세요...' */
+.game-header .game-description {
+  color: #e5e7eb !important; /* 고대비 밝은 실버그레이 */
+  font-size: 1.05rem !important;
+  line-height: 1.6 !important;
+  font-weight: 500 !important;
+}
+
+/* 5. 도감으로 돌아가기 버튼: 노란 배경에 흰글씨로 묻히던 최악의 가독성 완벽 개선 */
+.back-to-catalog {
+  background: #111122 !important; /* 어두운 다크 퍼플 네이비 */
+  border: 2.5px solid #b48934 !important; /* 고급스러운 청동 골드 테두리 */
+  color: #ffd700 !important; /* 선명한 리얼 골드 옐로우 텍스트 */
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3) !important;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1) !important;
+}
+
+.back-to-catalog:hover {
+  background: #b48934 !important; /* 골드로 채워짐 */
+  color: #ffffff !important; /* 텍스트는 화이트로 반전 */
+  border-color: #ffd700 !important;
+  box-shadow: 0 0 15px rgba(180, 137, 52, 0.6) !important;
+  transform: translateY(-2px) !important;
+}
+
+/* 6. 게임 점수 표시기 (오른쪽 0 / 8) 가독성 극대화 */
+.game-score {
+  background: #25253d !important;
+  border: 2px solid #4f46e5 !important;
+  color: #ffd700 !important; /* 골드 네온 */
+  font-size: 2rem !important;
+  font-weight: 900 !important;
+  text-shadow: 0 0 10px rgba(255, 215, 0, 0.3) !important;
+  border-radius: 12px !important;
+  padding: 12px !important;
+  box-shadow: inset 0 0 12px rgba(79, 70, 229, 0.3) !important;
 }
