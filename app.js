@@ -239,7 +239,8 @@ const state = {
   onboardingIndex: 0,
   lastFocus: null,
   settingsLastFocus: null,
-  modalFocusStack: []
+  modalFocusStack: [],
+  lastLevel: null
 };
 
 let audioContext = null;
@@ -1083,12 +1084,13 @@ function renderAnimals() {
     card.addEventListener("click", () => openAnimal(animal));
 
     const imageFrame = document.createElement("div");
-    imageFrame.className = "image-frame";
+    imageFrame.className = "image-frame card-photo-frame";
     imageFrame.textContent = "사진 준비 중";
     const image = document.createElement("img");
     image.alt = `${animal.name} 사진`;
     image.loading = "lazy";
     imageFrame.append(image);
+
     setImage(animal, image, imageFrame, "thumb");
 
     const cardBody = document.createElement("div");
@@ -2235,6 +2237,9 @@ function finishQuiz() {
   showCatchAnimation(quiz.animal, () => {
     state.collected.add(quiz.animal.id);
     saveCollected();
+    if (!wasCollected) {
+      spawnFloatingText("+10 EXP ✨");
+    }
     updateProgress();
     renderAnimals();
 
@@ -2352,6 +2357,18 @@ function checkGame() {
   const placed = state.game.round.filter(id => state.game.placements[id] !== "pool");
   const correct = placed.filter(id => isGamePlacementCorrect(id));
   renderGameBoard();
+
+  // 정답/오답 기쁘게 점핑 & 부르르 흔들림 애니메이션 효과 동적 추가
+  const tokens = document.querySelectorAll(".game-token");
+  tokens.forEach(token => {
+    if (token.classList.contains("correct-token")) {
+      token.classList.add("bounce-success");
+      setTimeout(() => token.classList.remove("bounce-success"), 1000);
+    } else if (token.classList.contains("wrong-token")) {
+      token.classList.add("shake-failed");
+      setTimeout(() => token.classList.remove("shake-failed"), 1000);
+    }
+  });
 
   const yesWrong = state.game.round.some(id => state.game.placements[id] === "yes" && !isGamePlacementCorrect(id));
   const noWrong = state.game.round.some(id => state.game.placements[id] === "no" && !isGamePlacementCorrect(id));
@@ -2502,19 +2519,68 @@ function dedupeSources(sources) {
   return [...new Set(sources.filter(Boolean))];
 }
 
+function getExplorerLevel(collectedCount) {
+  if (collectedCount >= 26) return { level: 5, name: "마스터 탐험가 👑", min: 26, max: 40, nextRequired: 0 };
+  if (collectedCount >= 18) return { level: 4, name: "전문 탐험가 🤠", min: 18, max: 25, nextRequired: 8 };
+  if (collectedCount >= 10) return { level: 3, name: "숙련 탐험가 🗺️", min: 10, max: 17, nextRequired: 8 };
+  if (collectedCount >= 5) return { level: 2, name: "견습 탐험가 🔍", min: 5, max: 9, nextRequired: 5 };
+  return { level: 1, name: "초보 탐험가 🐣", min: 0, max: 4, nextRequired: 5 };
+}
+
+function spawnFloatingText(text, isLevelUp = false) {
+  const el = document.createElement("div");
+  el.className = `floating-exp-text${isLevelUp ? " level-up" : ""}`;
+  el.textContent = text;
+  el.style.left = "50%";
+  el.style.top = "40%";
+  document.body.appendChild(el);
+  window.setTimeout(() => el.remove(), 2000);
+}
+
 function updateProgress() {
   const count = getCollectedProgramCount();
   const total = getProgramTotal();
   const completedRegions = getCompletedRegionCount();
   const totalRegions = milestoneFilters.length;
+
+  const explorer = getExplorerLevel(count);
+
+  if (state.lastLevel !== null && explorer.level > state.lastLevel) {
+    playSound("levelup");
+    spawnFloatingText(`LEVEL UP! 🎉\n${explorer.name}`, true);
+  }
+  state.lastLevel = explorer.level;
+
+  let badgeEl = document.querySelector(".exp-level-badge");
+  if (!badgeEl && els.collectedCount) {
+    badgeEl = document.createElement("div");
+    badgeEl.className = "exp-level-badge";
+    const progressLabel = document.querySelector(".progress-label");
+    if (progressLabel) {
+      progressLabel.insertAdjacentElement("afterend", badgeEl);
+    } else if (els.collectedCount.parentElement) {
+      els.collectedCount.parentElement.insertBefore(badgeEl, els.collectedCount);
+    }
+  }
+  if (badgeEl) {
+    badgeEl.textContent = `${explorer.name} (LV.${explorer.level})`;
+  }
+
   els.collectedCount.textContent = count;
   if (els.totalCount) els.totalCount.textContent = total;
-  els.progressFill.style.width = `${Math.round((count / total) * 100)}%`;
+
+  let percent = 100;
+  if (explorer.nextRequired > 0) {
+    const currentCollectedInLevel = count - explorer.min;
+    percent = Math.round((currentCollectedInLevel / explorer.nextRequired) * 100);
+  }
+
+  els.progressFill.style.width = `${percent}%`;
   if (els.stickyProgressLabel) {
-    els.stickyProgressLabel.textContent = `🐾 ${count} / ${total}`;
+    els.stickyProgressLabel.textContent = `🐾 ${count} / ${total} (LV.${explorer.level})`;
   }
   if (els.stickyProgressFill) {
-    els.stickyProgressFill.style.width = `${Math.round((count / total) * 100)}%`;
+    els.stickyProgressFill.style.width = `${percent}%`;
   }
   if (els.stickyStarStatus) {
     els.stickyStarStatus.innerHTML = renderCompletionStars(completedRegions, totalRegions, "sticky-star");
@@ -2845,7 +2911,8 @@ function playSound(type) {
     catchStart: [[420, 0, 0.08], [620, 0.08, 0.12]],
     catchSuccess: [[720, 0, 0.08], [960, 0.08, 0.1], [1200, 0.18, 0.12]],
     region: [[620, 0, 0.08], [820, 0.08, 0.08], [1040, 0.16, 0.16]],
-    master: [[520, 0, 0.08], [780, 0.08, 0.08], [1040, 0.16, 0.08], [1320, 0.24, 0.18]]
+    master: [[520, 0, 0.08], [780, 0.08, 0.08], [1040, 0.16, 0.08], [1320, 0.24, 0.18]],
+    levelup: [[523.25, 0, 0.08], [659.25, 0.08, 0.08], [783.99, 0.16, 0.08], [1046.50, 0.24, 0.25]]
   };
 
   (patterns[type] || patterns.select).forEach(([frequency, delay, duration]) => {
