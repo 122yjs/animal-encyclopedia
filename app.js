@@ -641,11 +641,14 @@ function applyInitialMissionSettings() {
 
 function getMissionRegionFromPageUrl() {
   const params = new URLSearchParams(window.location.search);
-  return normalizeMissionRegionId(params.get("region") || params.get("set") || "");
+  return getMissionRegionFromCompactCode(params.get("r")) || normalizeMissionRegionId(params.get("region") || params.get("set") || "");
 }
 
 function getMissionAnimalIdsFromPageUrl(mission = getCurrentMissionPreset()) {
   const params = new URLSearchParams(window.location.search);
+  const compactSelections = getMissionSelectionsFromCompactParam(params.get("s"));
+  if (compactSelections[mission.id]?.length) return compactSelections[mission.id];
+
   const raw = getMissionAnimalsParam(params, mission.id);
   const validIds = new Set(getMissionCandidateAnimals(mission.id).map(animal => animal.id));
   const requested = raw
@@ -657,8 +660,12 @@ function getMissionAnimalIdsFromPageUrl(mission = getCurrentMissionPreset()) {
 
 function getMissionSelectionsFromPageUrl() {
   const selections = {};
+  const params = new URLSearchParams(window.location.search);
+  const compactSelections = getMissionSelectionsFromCompactParam(params.get("s"));
   defaultMissionSelections.forEach(mission => {
-    selections[mission.id] = getMissionAnimalIdsFromPageUrl(mission);
+    selections[mission.id] = compactSelections[mission.id]?.length
+      ? compactSelections[mission.id]
+      : getMissionAnimalIdsFromPageUrl(mission);
   });
   return selections;
 }
@@ -819,6 +826,82 @@ function writeMissionSelectionParams(searchParams) {
     const ids = getSelectedMissionAnimalIds(mission.id);
     searchParams.set(`${mission.id}Animals`, ids.join(","));
   });
+}
+
+function writeCompactMissionSelectionParams(searchParams) {
+  const entries = getCompactMissionSelectionEntries();
+  if (!entries.length) {
+    searchParams.delete("s");
+    return;
+  }
+
+  searchParams.set("s", entries.join("-"));
+}
+
+function getCompactMissionSelectionEntries() {
+  return defaultMissionSelections
+    .map((mission, missionIndex) => {
+      const selectedIds = getSelectedMissionAnimalIds(mission.id);
+      const defaultIds = getDefaultMissionAnimalIds(mission);
+      const isDefaultSelection = selectedIds.length === defaultIds.length
+        && selectedIds.every((id, index) => id === defaultIds[index]);
+      if (isDefaultSelection) return "";
+
+      const mask = encodeCompactMissionAnimalMask(mission.id, selectedIds);
+      return mask ? `${missionIndex.toString(36)}:${mask}` : "";
+    })
+    .filter(Boolean);
+}
+
+function getMissionSelectionsFromCompactParam(value) {
+  const selections = {};
+  if (!value) return selections;
+
+  String(value).split("-").forEach(entry => {
+    const [encodedMissionIndex, encodedSelection] = entry.split(":");
+    const missionIndex = parseCompactBase36Code(encodedMissionIndex);
+    const mission = defaultMissionSelections[missionIndex];
+    if (!mission) return;
+
+    const uniqueIds = decodeCompactMissionAnimalMask(mission.id, encodedSelection);
+    if (uniqueIds.length) selections[mission.id] = uniqueIds;
+  });
+
+  return selections;
+}
+
+function encodeCompactMissionAnimalMask(regionId, animalIds) {
+  const candidateIds = getMissionCandidateAnimals(regionId).map(animal => animal.id);
+  const mask = animalIds.reduce((value, id) => {
+    const index = candidateIds.indexOf(id);
+    return index >= 0 ? value | (1 << index) : value;
+  }, 0);
+  return mask > 0 ? mask.toString(36) : "";
+}
+
+function decodeCompactMissionAnimalMask(regionId, encodedMask) {
+  const mask = parseCompactBase36Code(encodedMask);
+  if (mask <= 0) return [];
+
+  return getMissionCandidateAnimals(regionId)
+    .filter((animal, index) => Boolean(mask & (1 << index)))
+    .map(animal => animal.id);
+}
+
+function getCompactMissionRegionCode(regionId) {
+  const index = defaultMissionSelections.findIndex(mission => mission.id === normalizeMissionRegionId(regionId));
+  return index >= 0 ? index.toString(36) : "";
+}
+
+function getMissionRegionFromCompactCode(code) {
+  const index = parseCompactBase36Code(code);
+  return index >= 0 ? defaultMissionSelections[index]?.id || "" : "";
+}
+
+function parseCompactBase36Code(code) {
+  const value = String(code || "").trim();
+  if (!/^[0-9a-z]+$/i.test(value)) return -1;
+  return parseInt(value, 36);
 }
 
 function setView(view) {
@@ -1613,12 +1696,13 @@ function buildShareLink(questionUrl) {
   current.search = "";
 
   if (includeMissionSelections) {
-    current.searchParams.set("set", state.missionRegion);
-    current.searchParams.set("animals", state.missionAnimalIds.join(","));
-    writeMissionSelectionParams(current.searchParams);
+    current.searchParams.set("r", getCompactMissionRegionCode(state.missionRegion));
+    writeCompactMissionSelectionParams(current.searchParams);
   }
 
-  if (safeUrl) current.searchParams.set("questionUrl", safeUrl);
+  const questionCode = getCompactQuestionRoomCode(safeUrl);
+  if (questionCode) current.searchParams.set("q", questionCode);
+  else if (safeUrl) current.searchParams.set("questionUrl", safeUrl);
   return current.toString();
 }
 
@@ -1641,7 +1725,33 @@ function hasCustomMissionSelections() {
 
 function getQuestionUrlFromPageUrl() {
   const params = new URLSearchParams(window.location.search);
-  return normalizeHttpUrl(params.get("questionUrl") || "");
+  const compactCode = params.get("q") || "";
+  return buildQuestionRoomUrlFromCode(compactCode) || normalizeHttpUrl(params.get("questionUrl") || "");
+}
+
+function getCompactQuestionRoomCode(questionUrl) {
+  const safeUrl = normalizeHttpUrl(questionUrl);
+  if (!safeUrl) return "";
+
+  try {
+    const parsed = new URL(safeUrl);
+    if (!parsed.hostname.endsWith("magicschool.ai")) return "";
+    return normalizeQuestionRoomCode(parsed.searchParams.get("joinCode") || "");
+  } catch {
+    return "";
+  }
+}
+
+function buildQuestionRoomUrlFromCode(code) {
+  const compactCode = normalizeQuestionRoomCode(code);
+  if (!compactCode) return "";
+  return `https://student.magicschool.ai/s/join?joinCode=${encodeURIComponent(compactCode)}`;
+}
+
+function normalizeQuestionRoomCode(code) {
+  const compactCode = String(code || "").trim();
+  if (!/^[A-Za-z0-9_-]{3,80}$/.test(compactCode)) return "";
+  return compactCode;
 }
 
 function readQuestionToolUrl() {

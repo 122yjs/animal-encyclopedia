@@ -87,6 +87,37 @@ test("student share links branch by question room and regional animal settings",
   }
 });
 
+test("student QR links use compact question room codes when possible", () => {
+  const appJs = read("app.js");
+
+  for (const needle of [
+    "function getCompactQuestionRoomCode(questionUrl)",
+    'if (questionCode) current.searchParams.set("q", questionCode)',
+    'else if (safeUrl) current.searchParams.set("questionUrl", safeUrl)',
+    'return buildQuestionRoomUrlFromCode(compactCode) || normalizeHttpUrl(params.get("questionUrl") || "")'
+  ]) {
+    assert.ok(appJs.includes(needle), `app.js should include ${needle}`);
+  }
+});
+
+test("student QR links encode regional animal settings compactly", () => {
+  const appJs = read("app.js");
+
+  for (const needle of [
+    "function writeCompactMissionSelectionParams(searchParams)",
+    "function getMissionSelectionsFromCompactParam(value)",
+    "function getCompactMissionSelectionEntries()",
+    "function encodeCompactMissionAnimalMask(regionId, animalIds)",
+    'current.searchParams.set("r", getCompactMissionRegionCode(state.missionRegion))',
+    "writeCompactMissionSelectionParams(current.searchParams)",
+    'searchParams.delete("s")',
+    'params.get("r")',
+    'params.get("s")'
+  ]) {
+    assert.ok(appJs.includes(needle), `app.js should include ${needle}`);
+  }
+});
+
 test("runtime preserves teacher-selected mission parameters in student share links", () => {
   const appJs = read("app.js");
 
