@@ -100,6 +100,21 @@ test("student QR links use compact question room codes when possible", () => {
   }
 });
 
+test("clearing question room keeps the previous URL as input placeholder only", () => {
+  const appJs = read("app.js");
+
+  for (const needle of [
+    "function rememberQuestionUrlPlaceholder(url)",
+    "function getQuestionUrlPlaceholder()",
+    "const previousQuestionUrl = getQuestionUrlPlaceholder() || normalizeHttpUrl(appConfig.questionTool.url)",
+    "rememberQuestionUrlPlaceholder(previousQuestionUrl)",
+    "els.questionUrlInput.value = \"\"",
+    "els.questionUrlInput.placeholder = previousQuestionUrl || getDefaultQuestionUrlPlaceholder()"
+  ]) {
+    assert.ok(appJs.includes(needle), `app.js should include ${needle}`);
+  }
+});
+
 test("student QR links encode regional animal settings compactly", () => {
   const appJs = read("app.js");
 

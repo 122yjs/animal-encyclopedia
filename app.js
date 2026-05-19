@@ -239,6 +239,8 @@ const state = {
   onboardingIndex: 0,
   lastFocus: null,
   settingsLastFocus: null,
+  questionUrlPlaceholder: "",
+  questionUrlDefaultPlaceholder: "",
   modalFocusStack: [],
   lastLevel: null
 };
@@ -1508,6 +1510,7 @@ function openSettings() {
   if (!els.questionUrlInput || !els.settingsMessage || !els.settingsModal) return;
   state.settingsLastFocus = document.activeElement;
   els.questionUrlInput.value = appConfig.questionTool.url || "";
+  els.questionUrlInput.placeholder = getQuestionUrlPlaceholder() || getDefaultQuestionUrlPlaceholder();
   els.settingsMessage.textContent = "";
   if (els.teacherBanner) els.teacherBanner.hidden = false;
   renderTeacherMissionPanel();
@@ -1547,6 +1550,7 @@ function saveQuestionSettings(event) {
   }
 
   saveQuestionToolUrl(url);
+  rememberQuestionUrlPlaceholder(url);
   appConfig = normalizeAppConfig({
     questionTool: {
       ...appConfig.questionTool,
@@ -1562,6 +1566,8 @@ function saveQuestionSettings(event) {
 
 function clearQuestionSettings() {
   if (!els.questionUrlInput || !els.settingsMessage) return;
+  const previousQuestionUrl = getQuestionUrlPlaceholder() || normalizeHttpUrl(appConfig.questionTool.url);
+  rememberQuestionUrlPlaceholder(previousQuestionUrl);
   safeRemoveStorage(questionToolStorageKey);
   appConfig = normalizeAppConfig({
     questionTool: {
@@ -1573,8 +1579,25 @@ function clearQuestionSettings() {
     }
   });
   els.questionUrlInput.value = "";
+  els.questionUrlInput.placeholder = previousQuestionUrl || getDefaultQuestionUrlPlaceholder();
   els.settingsMessage.textContent = "AI 질문방을 사용하지 않도록 설정했어요. 아래 학생용 링크/QR은 질문방 없는 버전입니다.";
   renderShareLinkPanel();
+}
+
+function rememberQuestionUrlPlaceholder(url) {
+  const safeUrl = normalizeHttpUrl(url);
+  if (safeUrl) state.questionUrlPlaceholder = safeUrl;
+}
+
+function getQuestionUrlPlaceholder() {
+  return normalizeHttpUrl(state.questionUrlPlaceholder);
+}
+
+function getDefaultQuestionUrlPlaceholder() {
+  if (!state.questionUrlDefaultPlaceholder && els.questionUrlInput) {
+    state.questionUrlDefaultPlaceholder = els.questionUrlInput.getAttribute("placeholder") || "";
+  }
+  return state.questionUrlDefaultPlaceholder;
 }
 
 function renderShareLinkPanel() {

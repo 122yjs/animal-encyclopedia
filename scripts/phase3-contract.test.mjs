@@ -94,7 +94,7 @@ test("generated no-question.html keeps student-only question config and shared a
     'id="sourceConfirmModal"',
     'id="onboardingModal"',
     'id="rewardModal"',
-    '<script src="./app.js?v=20260519-compact-qr"></script>'
+    '<script src="./app.js?v=20260519-question-placeholder"></script>'
   ];
 
   for (const needle of requiredNeedles) {
