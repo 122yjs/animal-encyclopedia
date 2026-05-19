@@ -156,3 +156,15 @@ test("uncollected cards keep readable text while only dimming photos", () => {
   assert.ok(styles.includes(".animal-card:not(.collected) .card-photo-frame"));
   assert.ok(styles.includes(".animal-card:not(.collected) img"));
 });
+
+test("uncollected card photos keep recognizable silhouettes with question context", () => {
+  const styles = read("styles.css");
+  const questionOverlayRule = styles.match(/\.animal-card:not\(\.collected\) \.card-photo-frame::after \{[\s\S]*?\n\}/)?.[0] ?? "";
+
+  assert.equal(styles.includes("brightness(0.15)"), false);
+  assert.equal(questionOverlayRule.includes("display: none"), false);
+  assert.ok(styles.includes('content: "?"'));
+  assert.ok(styles.includes("brightness(0.42)"));
+  assert.ok(styles.includes("blur(3px)"));
+  assert.ok(styles.includes("card-photo-frame::after"));
+});
