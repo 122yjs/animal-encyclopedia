@@ -3577,10 +3577,8 @@ body[data-view="game"] .sticky-progress {
 
 /* 미획득 동물 카드 */
 .animal-card:not(.collected) {
-  background: var(--game-dark-panel) !important;
   border: 2.5px dashed rgba(180, 137, 52, 0.35) !important;
   box-shadow: none !important;
-  filter: saturate(0.4) brightness(0.85);
   position: relative;
   overflow: hidden;
 }
@@ -3595,21 +3593,12 @@ body[data-view="game"] .sticky-progress {
   display: none !important;
 }
 
-.animal-card:not(.collected) h3 {
-  color: rgba(255, 241, 214, 0.45) !important;
-}
 
-.animal-card:not(.collected) .card-tags span {
-  background: rgba(255, 241, 214, 0.05) !important;
-  color: rgba(255, 241, 214, 0.3) !important;
-  border-color: transparent !important;
-}
 
 /* 미획득 카드 마우스 오버(Hover) 시 들썩이는 애니메이션 */
 .animal-card:not(.collected):hover {
   transform: translateY(-5px) scale(1.02);
   border-color: var(--game-secondary) !important;
-  filter: saturate(0.7) brightness(0.95);
   box-shadow: 0 8px 20px rgba(0, 240, 255, 0.2) !important;
   animation: game-card-bounce 0.4s ease-out;
 }

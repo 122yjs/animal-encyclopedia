@@ -146,3 +146,13 @@ test("large UI moments use extracted transparent sprites instead of whole sprite
   assert.equal(appJs.includes("<strong>x1</strong>"), false, "leaf should not look like a spendable reward currency");
   assert.equal(appJs.includes("filter-icon\"><img"), false, "small filter controls should not use pasted sheet crops");
 });
+
+test("uncollected cards keep readable text while only dimming photos", () => {
+  const styles = read("styles.css");
+
+  assert.equal(styles.includes(".animal-card:not(.collected) {\n  background: var(--game-dark-panel)"), false);
+  assert.equal(styles.includes(".animal-card:not(.collected) h3"), false);
+  assert.equal(styles.includes(".animal-card:not(.collected) .card-tags span"), false);
+  assert.ok(styles.includes(".animal-card:not(.collected) .card-photo-frame"));
+  assert.ok(styles.includes(".animal-card:not(.collected) img"));
+});
