@@ -35,7 +35,16 @@ Pushing to `main` triggers GitHub Actions (`.github/workflows/deploy-pages.yml`)
 - Animal images load from Wikimedia at runtime (no local image assets)
 - `app.js` reads `window.APP_CONFIG` at load time to enable/disable the question tool
 - Student progress is stored in `localStorage` under `animal-encyclopedia-collected-v1`
+- Region badges (adventure progression) are stored under `animal-encyclopedia-badges-v1`; legacy `completedMilestones` region entries are auto-migrated to badges on load
 - Question tool URLs are shared via URL query param `?questionUrl=...` at runtime
+
+## Adventure progression (Pokemon-style flow)
+
+- Default landing view is the adventure map (`#mapView`); views are `map` / `catalog` / `game` via `setView`
+- Region order comes from `journeyStops` in `app.js`; the story pointer is `getNextMissionFilter()` (first region **without a badge**)
+- A region completes in two steps: collect all its animals (quiz flow) → win the region's classification **badge challenge** (`startBadgeChallenge`, game view `challenge` mode with a dynamically picked criterion via `pickChallengeCriterion`)
+- The map's quest target is `getActiveQuestRegion()`: a teacher-pinned/current `state.missionRegion` without a badge wins over story order
+- When changing mission/badge logic, keep the contract-test strings in `scripts/phase*-contract.test.mjs` intact (e.g. `data-catalog-mode="next-mission"`, reward sprite lines)
 
 ## What not to do
 

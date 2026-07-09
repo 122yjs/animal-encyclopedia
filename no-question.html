@@ -16,7 +16,7 @@
   <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='14' fill='%230f6f68'/%3E%3Ctext x='50%25' y='55%25' text-anchor='middle' font-size='38'%3E%F0%9F%A6%89%3C/text%3E%3C/svg%3E">
   <link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin>
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/variable/pretendardvariable-dynamic-subset.min.css">
-  <link rel="stylesheet" href="./styles.css?v=20260519-uncollected-photo-hint">
+  <link rel="stylesheet" href="./styles.css?v=20260709-adventure-map">
 </head>
 
 <body>
@@ -45,19 +45,49 @@
       <div class="sidebar-section">
         <h2 class="sidebar-section-title">모드</h2>
         <div class="mode-buttons">
-          <button class="mode-button active" type="button" data-view="catalog">🔍 도감 모드</button>
-          <button class="mode-button" type="button" data-view="game">🎮 분류 미션</button>
+          <button class="mode-button active" type="button" data-view="map">🗺️ 모험 지도</button>
+          <button class="mode-button" type="button" data-view="catalog">🔍 도감 탐험</button>
+          <button class="mode-button" type="button" data-view="game">🎮 분류 연습</button>
         </div>
       </div>
       <button id="openSettings" class="settings-button" type="button" hidden aria-hidden="true" style="display:none">교사용 설정</button>
 
 
       <div class="sidebar-section">
-        <h2 class="sidebar-section-title">지역 미션</h2>
-        <nav class="sidebar-nav" id="filterTabs" role="tablist" aria-label="지역 미션"></nav>
+        <h2 class="sidebar-section-title">모험 지역</h2>
+        <nav class="sidebar-nav" id="filterTabs" role="tablist" aria-label="모험 지역"></nav>
       </div>
 
     </aside>
+
+    <section class="map-view" id="mapView" aria-label="모험 지도">
+      <div class="map-header">
+        <div class="map-header-copy">
+          <p class="section-kicker">모험 지도</p>
+          <h2>🦉 부엉이 탐험대의 동물 모험</h2>
+          <p class="map-lede">우리 주변에서 출발해 특별한 환경까지! 지역마다 동물을 모으고 <strong>분류 배지 도전</strong>을 완수하면 배지를 받아요. 배지를 모두 모으면 도감 마스터가 됩니다.</p>
+        </div>
+        <div class="map-quest-card" id="mapQuestCard" aria-live="polite"></div>
+      </div>
+      <div class="badge-case" id="badgeCase" aria-label="탐험 배지 케이스"></div>
+      <div class="adventure-map" id="adventureMap">
+        <svg class="map-trail" id="mapTrail" viewBox="0 0 100 100" preserveAspectRatio="none" aria-hidden="true"></svg>
+        <div class="map-decorations" aria-hidden="true">
+          <span class="map-deco deco-cloud" style="left:6%;top:2%">☁️</span>
+          <span class="map-deco deco-cloud" style="right:8%;top:12%">☁️</span>
+          <span class="map-deco" style="left:64%;top:4%">🏫</span>
+          <span class="map-deco" style="left:10%;top:26%">🌳</span>
+          <span class="map-deco" style="right:6%;top:34%">🌲</span>
+          <span class="map-deco" style="left:60%;top:42%">🌾</span>
+          <span class="map-deco" style="right:10%;top:52%">🐚</span>
+          <span class="map-deco" style="left:8%;top:62%">⛵</span>
+          <span class="map-deco" style="left:66%;top:72%">🌵</span>
+          <span class="map-deco" style="right:12%;top:82%">⛄</span>
+        </div>
+        <div class="map-nodes" id="mapNodes"></div>
+        <img class="map-player" id="mapPlayer" src="./assets/sprites/extracted/owl-search.png" alt="내 탐험 위치">
+      </div>
+    </section>
 
     <section class="center-area" id="catalogView">
       <div class="center-header">
@@ -99,15 +129,17 @@
       <div class="game-header">
         <div>
           <button id="backToCatalog" class="back-to-catalog" type="button">← 도감으로 돌아가기</button>
-          <p class="section-kicker" style="margin-top:12px">분류 게임</p>
-          <h2>카드를 기준에 따라 나누기 미션</h2>
-          <p class="game-description">분류 기준을 보고 동물 카드를 직접 옮겨서 미션을 완료하세요. 채점하면 어떤 동물의 특징을 다시 살펴봐야 하는지 알려 줍니다.</p>
+          <p class="section-kicker" id="gameKicker" style="margin-top:12px">분류 연습</p>
+          <h2 id="gameTitle">카드를 기준에 따라 나누기 연습</h2>
+          <p class="game-description" id="gameDescription">분류 기준을 보고 동물 카드를 직접 옮겨서 연습하세요. 채점하면 어떤 동물의 특징을 다시 살펴봐야 하는지 알려 줍니다.</p>
         </div>
         <div class="game-score" id="gameScore">0 / 8</div>
       </div>
 
+      <div class="challenge-banner" id="challengeBanner" hidden aria-live="polite"></div>
+
       <section class="game-controls" aria-label="분류 게임 설정">
-        <label class="select-field" for="gameCriterion">
+        <label class="select-field" for="gameCriterion" id="gameCriterionField">
           <span>분류 기준</span>
           <select id="gameCriterion"></select>
         </label>
@@ -174,7 +206,8 @@
     <div class="reward-card" role="dialog" aria-modal="true" aria-labelledby="rewardTitle">
       <div id="rewardContent"></div>
       <div class="reward-actions">
-        <button id="rewardNextRegion" class="primary-button" type="button">다음 미션 시작</button>
+        <button id="rewardChallenge" class="primary-button" type="button" hidden>🏅 배지 도전 시작</button>
+        <button id="rewardNextRegion" class="primary-button" type="button">다음 지역으로 출발</button>
         <button id="rewardClose" class="primary-button secondary" type="button">계속 둘러보기</button>
         <button id="rewardReset" class="text-button" type="button" hidden>처음부터 다시 시작</button>
       </div>
@@ -206,7 +239,7 @@
     };
   </script>
 
-  <script src="./app.js?v=20260519-question-placeholder"></script>
+  <script src="./app.js?v=20260709-adventure-map"></script>
 </body>
 
 </html>

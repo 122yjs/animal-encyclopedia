@@ -88,13 +88,14 @@ test("generated no-question.html keeps student-only question config and shared a
     "allowTeacherSettings: false",
     "hideTeacherSettingsOnSharedPage: true",
     "showWhenDisabled: false",
+    'id="mapView"',
     'id="catalogView"',
     'id="gameView"',
     'id="detailModal"',
     'id="sourceConfirmModal"',
     'id="onboardingModal"',
     'id="rewardModal"',
-    '<script src="./app.js?v=20260519-question-placeholder"></script>'
+    '<script src="./app.js?v=20260709-adventure-map"></script>'
   ];
 
   for (const needle of requiredNeedles) {

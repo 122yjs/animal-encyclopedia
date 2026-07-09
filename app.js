@@ -212,8 +212,20 @@ const onboardingSeenKey = "animal-encyclopedia-onboarding-seen-v1";
 const completedMilestonesKey = "animal-encyclopedia-completed-milestones-v1";
 const soundMutedKey = "animal-encyclopedia-sound-muted-v1";
 const observationReadyKey = "animal-encyclopedia-observation-ready-v1";
+const badgesKey = "animal-encyclopedia-badges-v1";
 const imageCache = new Map();
 const milestoneFilters = filters.filter(filter => filter.id !== "all");
+
+// 모험 지도 여정: 지역을 순서대로 지나 최종 도감 마스터에 도착한다.
+// x, y는 지도 컨테이너 기준 퍼센트 좌표.
+const journeyStops = [
+  { id: "around", x: 22, y: 8 },
+  { id: "land", x: 68, y: 24 },
+  { id: "freshwater", x: 26, y: 41 },
+  { id: "sea", x: 70, y: 58 },
+  { id: "special", x: 28, y: 75 },
+  { id: "master", x: 62, y: 91 }
+];
 const state = {
   view: "catalog",
   filter: "all",
@@ -226,9 +238,12 @@ const state = {
   collected: new Set(readCollected()),
   observationReady: new Set(readStoredIds(observationReadyKey, animalIds)),
   completedMilestones: new Set(readStoredIds(completedMilestonesKey, new Set(filters.map(filter => filter.id)))),
+  badges: new Set(readStoredIds(badgesKey, new Set(milestoneFilters.map(filter => filter.id)))),
   soundMuted: readBoolean(soundMutedKey, false),
   selectedAnimal: null,
   game: {
+    mode: "practice",
+    challengeRegion: null,
     criterion: "hasLegs",
     round: [],
     placements: {},
@@ -252,6 +267,12 @@ const els = {
   modeButtons: document.querySelectorAll("[data-view]"),
   catalogView: document.querySelector("#catalogView"),
   gameView: document.querySelector("#gameView"),
+  mapView: document.querySelector("#mapView"),
+  mapNodes: document.querySelector("#mapNodes"),
+  mapTrail: document.querySelector("#mapTrail"),
+  mapPlayer: document.querySelector("#mapPlayer"),
+  mapQuestCard: document.querySelector("#mapQuestCard"),
+  badgeCase: document.querySelector("#badgeCase"),
   filterTabs: document.querySelector("#filterTabs"),
   missionPanel: document.querySelector("#missionPanel"),
   sidebarLede: document.querySelector(".sidebar-lede"),
@@ -271,6 +292,11 @@ const els = {
   completionStarStatus: document.querySelector("#completionStarStatus"),
   searchInput: document.querySelector("#searchInput"),
   gameCriterion: document.querySelector("#gameCriterion"),
+  gameCriterionField: document.querySelector("#gameCriterionField"),
+  gameKicker: document.querySelector("#gameKicker"),
+  gameTitle: document.querySelector("#gameTitle"),
+  gameDescription: document.querySelector("#gameDescription"),
+  challengeBanner: document.querySelector("#challengeBanner"),
   gamePool: document.querySelector("#gamePool"),
   gameYes: document.querySelector("#gameYes"),
   gameNo: document.querySelector("#gameNo"),
@@ -325,6 +351,7 @@ const els = {
   skipOnboarding: document.querySelector("#skipOnboarding"),
   rewardModal: document.querySelector("#rewardModal"),
   rewardContent: document.querySelector("#rewardContent"),
+  rewardChallenge: document.querySelector("#rewardChallenge"),
   rewardNextRegion: document.querySelector("#rewardNextRegion"),
   rewardClose: document.querySelector("#rewardClose"),
   rewardReset: document.querySelector("#rewardReset"),
@@ -432,6 +459,7 @@ function makeAnimal(name, wiki, categories, habitat, move, body, point, relation
 
 function init() {
   applyInitialMissionSettings();
+  migrateLegacyBadges();
   hydrateQuestionToolConfig();
   applyQuestionToolMode();
   returnToCurrentMission(false);
@@ -552,7 +580,15 @@ function init() {
   }
   if (els.rewardClose) els.rewardClose.addEventListener("click", closeReward);
   if (els.rewardNextRegion) els.rewardNextRegion.addEventListener("click", goToNextRewardRegion);
+  if (els.rewardChallenge) {
+    els.rewardChallenge.addEventListener("click", () => {
+      const regionId = els.rewardChallenge.dataset.challengeRegion;
+      closeReward();
+      if (regionId) startBadgeChallenge(regionId);
+    });
+  }
   if (els.rewardReset) els.rewardReset.addEventListener("click", resetProgressFromReward);
+  bindAdventureMap();
   if (els.rewardModal) {
     els.rewardModal.addEventListener("click", event => {
       if (event.target === els.rewardModal) closeReward();
@@ -583,6 +619,7 @@ function init() {
     });
   });
 
+  setView("map");
   openFirstRunTeacherWorkflow();
   updateSidebarLede();
 
@@ -607,8 +644,21 @@ function updateSidebarLede() {
 
 function bindViewTabs() {
   els.modeButtons.forEach(button => {
-    button.addEventListener("click", () => setView(button.dataset.view));
+    button.addEventListener("click", () => {
+      const view = button.dataset.view;
+      if (view === "game" && state.game.mode === "challenge") {
+        exitChallengeMode();
+      }
+      setView(view);
+    });
   });
+}
+
+function exitChallengeMode() {
+  state.game.mode = "practice";
+  state.game.challengeRegion = null;
+  startNewRound();
+  updateChallengeUi();
 }
 
 function bindMissionPanel() {
@@ -617,6 +667,10 @@ function bindMissionPanel() {
     const action = event.target.closest("[data-catalog-mode]");
     if (!action) return;
     playSound("select");
+    if (action.dataset.catalogMode === "badge-challenge") {
+      startBadgeChallenge(state.filter);
+      return;
+    }
     if (action.dataset.catalogMode === "all") {
       state.catalogMode = "all";
       state.filter = "all";
@@ -910,19 +964,25 @@ function setView(view) {
   state.view = view;
   document.body.dataset.view = view;
   const sidebar = document.querySelector(".sidebar");
+  const isMap = view === "map";
+  const isGame = view === "game";
+  const isCatalog = view === "catalog";
 
-  if (view === "catalog") {
-    els.catalogView.style.display = "";
-    els.gameView.classList.remove("active");
-    els.gameView.style.display = "none";
-    if (sidebar) sidebar.style.display = "";
-  } else {
-    els.catalogView.style.display = "none";
-    els.gameView.classList.add("active");
-    els.gameView.style.display = "";
-    if (sidebar) sidebar.style.display = "none";
+  // 뷰가 바뀔 때 열린 동물 상세 모달이 새 화면을 가리지 않게 닫는다.
+  if (els.detailModal && !els.detailModal.hidden) closeDetail();
+
+  if (els.mapView) els.mapView.style.display = isMap ? "flex" : "none";
+  els.catalogView.style.display = isCatalog ? "" : "none";
+  els.gameView.classList.toggle("active", isGame);
+  els.gameView.style.display = isGame ? "" : "none";
+  if (sidebar) sidebar.style.display = isGame ? "none" : "";
+
+  if (isGame) {
     updateProgress();
+    updateChallengeUi();
   }
+  if (isMap) renderAdventureMap();
+
   els.modeButtons.forEach(button => {
     button.classList.toggle("active", button.dataset.view === view);
   });
@@ -930,28 +990,28 @@ function setView(view) {
 
 const onboardingSteps = [
   {
-    title: "동물 카드를 눌러 사진과 설명을 봐요",
-    body: "먼저 카드 한 장을 골라 생김새, 사는 곳, 움직임을 천천히 살펴봅니다.",
-    sprite: uiSprites.owl.search,
-    target: () => document.querySelector(".animal-card")
+    title: "모험 지도에서 출발해요",
+    body: "부엉이 탐험대는 우리 주변에서 출발해 땅, 강·호수, 바다, 특별한 환경까지 차례대로 모험해요. 지도에서 반짝이는 지역을 누르면 그곳으로 이동합니다.",
+    sprite: uiSprites.owl.wave,
+    target: () => document.querySelector(".map-node.is-current")
   },
   {
-    title: "퀴즈를 풀어 도감에 등록해요",
-    body: "설명을 읽은 뒤 짧은 퀴즈를 맞히면 카드가 내 도감에 등록됩니다.",
+    title: "동물을 관찰하고 퀴즈로 도감에 등록해요",
+    body: "동물 카드를 눌러 생김새, 움직임, 사는 곳을 관찰한 뒤 퀴즈를 모두 맞히면 카드가 내 도감에 들어옵니다.",
     sprite: uiSprites.owl.think,
     demo: true
   },
   {
-    title: "지역별로 완성해요",
-    body: "모든 동물을 한 번에 끝내지 않아도 괜찮아요. 우리 주변, 땅, 물, 특별한 환경을 하나씩 완성해 봅니다.",
+    title: "배지를 모아 도감 마스터가 돼요",
+    body: "한 지역의 동물을 모두 모으면 분류 배지 도전이 열려요. 카드를 기준에 맞게 나누면 지역 배지를 받고, 배지를 모두 모으면 도감 마스터가 됩니다!",
     sprite: uiSprites.owl.cheer,
-    target: () => els.missionPanel || els.progressFill
+    target: () => els.badgeCase
   }
 ];
 
 function openOnboarding() {
   if (!els.onboardingModal || !els.onboardingContent) return;
-  if (state.view !== "catalog") setView("catalog");
+  if (state.view !== "map") setView("map");
   state.onboardingIndex = 0;
   renderOnboarding();
   enterModalFocus(els.onboardingModal);
@@ -1063,51 +1123,80 @@ function renderMissionPanel() {
   const progress = getFilterProgress(panelFilter.id);
   const percent = progress.total ? Math.round((progress.collected / progress.total) * 100) : 0;
   const isCurrentMission = !isAllMode && state.filter === nextMissionId;
-  const isFinished = nextMissionId === "all" && state.collected.size === animals.length;
-  const isCompletedMission = !isAllMode && panelFilter.id !== "all" && progress.total > 0 && progress.collected === progress.total;
-  const hasNextMission = isCompletedMission && nextMissionId !== "all";
+  const isFinished = nextMissionId === "all" && areAllBadgesEarned();
+  const isRegionPanel = !isAllMode && panelFilter.id !== "all";
+  const isBadgeEarned = isRegionPanel && hasRegionBadge(panelFilter.id);
+  const isChallengeReady = isRegionPanel && !isBadgeEarned && isRegionCollectionComplete(panelFilter.id);
+  const hasNextMission = isBadgeEarned && nextMissionId !== "all";
   const boardStatus = isAllMode
     ? "all"
-    : isFinished || isCompletedMission
-      ? "complete"
-      : isCurrentMission
-        ? "current"
-        : "next";
+    : isChallengeReady
+      ? "challenge"
+      : isFinished || isBadgeEarned
+        ? "complete"
+        : isCurrentMission
+          ? "current"
+          : "next";
   const boardClass = {
     all: "mission-board status-all",
     current: "mission-board status-current",
+    challenge: "mission-board status-challenge",
     complete: "mission-board status-complete",
     next: "mission-board status-next"
   }[boardStatus];
-  const modeLabel = isAllMode ? "전체 도감 보기" : isCurrentMission ? "현재 미션" : "지역 미리보기";
+  const modeLabel = isAllMode
+    ? "전체 도감 보기"
+    : isChallengeReady
+      ? "배지 도전"
+      : isBadgeEarned
+        ? "배지 획득 지역"
+        : isCurrentMission
+          ? "현재 탐험"
+          : "지역 미리보기";
   const title = isAllMode
     ? `전체 ${getProgramTotal()}마리 도감`
-    : isFinished
-      ? "도감 마스터 미션 완료"
-      : `${panelFilter.icon} ${panelFilter.label} 도감 미션`;
+    : isFinished && isBadgeEarned
+      ? "도감 마스터 모험 완료"
+      : isChallengeReady
+        ? `🏅 ${panelFilter.label} 배지 도전`
+        : `${panelFilter.icon} ${panelFilter.label} 탐험 미션`;
   const body = isAllMode
     ? "모든 동물을 한눈에 둘러볼 수 있어요. 수업 흐름은 현재 미션으로 언제든 돌아갈 수 있습니다."
+    : isChallengeReady
+      ? `${panelFilter.label} 동물을 모두 모았어요! 카드를 기준에 맞게 나누는 배지 도전에 성공하면 ${panelFilter.label} 배지를 받아요.`
+      : hasNextMission
+        ? `${panelFilter.label} 배지를 획득했어요. 다음 지역 ${currentMission.icon} ${currentMission.label} 탐험으로 모험을 이어가요.`
+        : isBadgeEarned
+          ? `${panelFilter.label} 배지를 획득했어요. 모든 지역의 배지를 모아 모험을 완주했습니다!`
+          : isCurrentMission
+            ? `${panelFilter.label} 동물을 관찰하고 퀴즈를 맞혀 이 지역 도감을 완성해 보세요.`
+            : `${currentMission.icon} ${currentMission.label} 미션이 현재 순서예요. 이 지역은 미리 둘러보는 중입니다.`;
+  const nextActionLabel = isChallengeReady
+    ? "배지 도전 시작을 눌러 카드를 기준에 맞게 나눠 봐요."
     : hasNextMission
-      ? `${panelFilter.label} 미션이 완료되었어요. 다음 미션 ${currentMission.icon} ${currentMission.label} 카드로 이동할 수 있어요.`
-      : isCurrentMission
-        ? `${panelFilter.label} 동물을 관찰하고 퀴즈를 맞혀 이 지역 도감을 완성해 보세요.`
-        : `${currentMission.icon} ${currentMission.label} 미션이 현재 순서예요. 이 지역은 미리 둘러보는 중입니다.`;
-  const nextActionLabel = hasNextMission
-    ? "다음 미션으로 넘어갈 수 있어요."
-    : isAllMode
-      ? `${currentMission.icon} ${currentMission.label} 미션으로 돌아가 수업을 이어가요.`
-      : isCurrentMission
-        ? "카드를 눌러 관찰하고 체크한 뒤 퀴즈를 풀어요."
-        : "지금은 미리보기예요. 준비되면 현재 미션으로 돌아가요.";
-  const buttonMode = hasNextMission ? "next-mission" : isAllMode || !isCurrentMission ? "mission" : "all";
-  const buttonText = hasNextMission ? "다음 미션 시작" : isAllMode || !isCurrentMission ? "현재 미션으로 돌아가기" : "전체 도감 보기";
+      ? "다음 미션으로 넘어갈 수 있어요."
+      : isAllMode
+        ? `${currentMission.icon} ${currentMission.label} 미션으로 돌아가 수업을 이어가요.`
+        : isBadgeEarned
+          ? "전체 도감을 둘러보며 동물의 특징을 비교해 봐요."
+          : isCurrentMission
+            ? "카드를 눌러 관찰하고 체크한 뒤 퀴즈를 풀어요."
+            : "지금은 미리보기예요. 준비되면 현재 미션으로 돌아가요.";
   const regionSprite = uiSprites.regions[panelFilter.id];
-  const primaryAction = hasNextMission
-    ? `<button class="mission-toggle" type="button" data-catalog-mode="next-mission">${buttonText}</button>`
-    : `<button class="mission-toggle" type="button" data-catalog-mode="${buttonMode}">${buttonText}</button>`;
+  const primaryAction = isChallengeReady
+    ? `<button class="mission-toggle" type="button" data-catalog-mode="badge-challenge">🏅 배지 도전 시작</button>`
+    : hasNextMission
+      ? `<button class="mission-toggle" type="button" data-catalog-mode="next-mission">🧭 다음 지역으로 출발</button>`
+      : isBadgeEarned || (isAllMode && isFinished)
+        ? `<button class="mission-toggle" type="button" data-catalog-mode="all">전체 도감 보기</button>`
+        : isAllMode || !isCurrentMission
+          ? `<button class="mission-toggle" type="button" data-catalog-mode="mission">현재 미션으로 돌아가기</button>`
+          : `<button class="mission-toggle" type="button" data-catalog-mode="all">전체 도감 보기</button>`;
   const secondaryAction = hasNextMission
     ? `<button class="mission-secondary-action" type="button" data-catalog-mode="mission">완료한 미션 다시 보기</button>`
-    : "";
+    : isChallengeReady
+      ? `<button class="mission-secondary-action" type="button" data-catalog-mode="mission">카드 다시 살펴보기</button>`
+      : "";
 
   els.missionPanel.innerHTML = `
     <div class="${boardClass}">
@@ -2397,10 +2486,20 @@ function finishQuiz() {
 }
 
 function startNewRound() {
+  if (state.game.mode === "challenge" && state.game.challengeRegion) {
+    dealRound(getAnimalsForFilter(state.game.challengeRegion));
+    return;
+  }
   const criterion = state.game.criterion;
   state.criterion = criterion;
-  const yes = shuffle(animals.filter(animal => animal[criterion])).slice(0, 4);
-  const no = shuffle(animals.filter(animal => !animal[criterion])).slice(0, 4);
+  dealRound(animals);
+  renderAnimals();
+}
+
+function dealRound(pool) {
+  const criterion = state.game.criterion;
+  const yes = shuffle(pool.filter(animal => animal[criterion])).slice(0, 4);
+  const no = shuffle(pool.filter(animal => !animal[criterion])).slice(0, 4);
   const round = shuffle([...yes, ...no]);
   state.game.round = round.map(animal => animal.id);
   state.game.placements = Object.fromEntries(round.map(animal => [animal.id, "pool"]));
@@ -2409,7 +2508,67 @@ function startNewRound() {
   els.gameFeedback.textContent = "";
   updateGameHints();
   renderGameBoard();
-  renderAnimals();
+}
+
+// 지역 동물 무리에서 '그렇다/그렇지 않다'가 가장 고르게 나뉘는 분류 기준을 고른다.
+// 교사가 지역 동물 범위를 바꿔도 항상 풀 수 있는 도전이 되도록 동적으로 계산한다.
+function pickChallengeCriterion(pool) {
+  let best = criteria[0];
+  let bestScore = -1;
+  criteria.forEach(criterion => {
+    const yesCount = pool.filter(animal => animal[criterion.id]).length;
+    const score = Math.min(yesCount, pool.length - yesCount);
+    if (score > bestScore) {
+      bestScore = score;
+      best = criterion;
+    }
+  });
+  return best;
+}
+
+function startBadgeChallenge(regionId) {
+  const filter = filters.find(item => item.id === regionId);
+  if (!filter || filter.id === "all") return;
+  const pool = getAnimalsForFilter(regionId);
+  if (!pool.length) return;
+  const criterion = pickChallengeCriterion(pool);
+  state.game.mode = "challenge";
+  state.game.challengeRegion = regionId;
+  state.game.criterion = criterion.id;
+  state.criterion = criterion.id;
+  if (els.gameCriterion) els.gameCriterion.value = criterion.id;
+  dealRound(pool);
+  playSound("select");
+  setView("game");
+}
+
+function updateChallengeUi() {
+  const isChallenge = state.game.mode === "challenge";
+  const filter = isChallenge ? filters.find(item => item.id === state.game.challengeRegion) : null;
+  const criterion = criteria.find(item => item.id === state.game.criterion);
+  els.gameView.classList.toggle("challenge-mode", isChallenge);
+  if (els.gameCriterionField) els.gameCriterionField.hidden = isChallenge;
+  if (els.gameKicker) els.gameKicker.textContent = isChallenge ? "배지 도전" : "분류 연습";
+  if (els.gameTitle) {
+    els.gameTitle.textContent = isChallenge && filter
+      ? `${filter.icon} ${filter.label} 배지 도전`
+      : "카드를 기준에 따라 나누기 연습";
+  }
+  if (els.gameDescription) {
+    els.gameDescription.textContent = isChallenge && filter && criterion
+      ? `"${criterion.label}" 기준에 맞게 모든 카드를 나누면 ${filter.label} 배지를 받아요. 틀려도 괜찮아요. 관찰한 특징을 떠올리며 다시 도전할 수 있어요.`
+      : "분류 기준을 보고 동물 카드를 직접 옮겨서 연습하세요. 채점하면 어떤 동물의 특징을 다시 살펴봐야 하는지 알려 줍니다.";
+  }
+  if (els.challengeBanner) {
+    els.challengeBanner.hidden = !isChallenge;
+    if (isChallenge && filter && criterion) {
+      els.challengeBanner.innerHTML = `
+        ${renderUiSprite(uiSprites.icons.shield, "", "challenge-banner-icon")}
+        <span><strong>${filter.label} 배지 도전!</strong> "${criterion.label}" 기준으로 카드를 모두 나눈 뒤 채점하기를 눌러요.</span>
+      `;
+    }
+  }
+  if (els.newRound) els.newRound.textContent = isChallenge ? "카드 다시 섞기" : "새 카드 받기";
 }
 
 function updateGameHints() {
@@ -2516,8 +2675,22 @@ function checkGame() {
   }
 
   const criterion = criteria.find(item => item.id === state.game.criterion);
-  playSound(correct.length === state.game.round.length ? "correct" : "wrong");
-  els.gameFeedback.textContent = correct.length === state.game.round.length
+  const allCorrect = correct.length === state.game.round.length;
+  playSound(allCorrect ? "correct" : "wrong");
+
+  if (state.game.mode === "challenge" && allCorrect) {
+    const regionFilter = filters.find(item => item.id === state.game.challengeRegion);
+    const regionLabel = regionFilter ? regionFilter.label : "지역";
+    els.gameFeedback.textContent = `완벽해요! "${criterion.label}" 기준으로 겹치거나 빠진 카드 없이 나눴어요. ${regionLabel} 배지를 획득합니다!`;
+    updateGameScore(correct.length);
+    if (!hasRegionBadge(state.game.challengeRegion)) {
+      const regionId = state.game.challengeRegion;
+      window.setTimeout(() => awardRegionBadge(regionId), 900);
+    }
+    return;
+  }
+
+  els.gameFeedback.textContent = allCorrect
     ? `모두 맞았어요. "${criterion.label}" 기준으로 겹치거나 빠진 동물 없이 분류했어요.`
     : `${correct.length}장을 맞혔어요. 빨간 테두리 카드는 몸의 단서와 이동 방법을 다시 보고 옮겨 보세요.`;
   updateGameScore(correct.length);
@@ -2731,13 +2904,59 @@ function updateProgress() {
   }
   renderMissionPanel();
   renderFilters();
+  renderAdventureMap();
 }
 
 function getCompletedRegionCount() {
-  return milestoneFilters.filter(filter => {
-    const progress = getFilterProgress(filter.id);
-    return progress.total > 0 && progress.collected === progress.total;
-  }).length;
+  return milestoneFilters.filter(filter => hasRegionBadge(filter.id)).length;
+}
+
+function hasRegionBadge(regionId) {
+  return state.badges.has(regionId);
+}
+
+function isRegionCollectionComplete(regionId) {
+  const progress = getFilterProgress(regionId);
+  return progress.total > 0 && progress.collected === progress.total;
+}
+
+function areAllBadgesEarned() {
+  return milestoneFilters.every(filter => hasRegionBadge(filter.id));
+}
+
+function saveBadges() {
+  safeSetStorage(badgesKey, JSON.stringify([...state.badges]));
+}
+
+// 배지 시스템 도입 전에 지역을 완성한 학생은 완성 기록(completedMilestones)을
+// 그대로 배지로 인정해 진행도가 뒤로 밀리지 않게 한다.
+function migrateLegacyBadges() {
+  let changed = false;
+  milestoneFilters.forEach(filter => {
+    if (state.completedMilestones.has(filter.id) && !state.badges.has(filter.id)) {
+      state.badges.add(filter.id);
+      changed = true;
+    }
+  });
+  if (changed) saveBadges();
+}
+
+function awardRegionBadge(regionId) {
+  if (!getMissionPreset(regionId) || hasRegionBadge(regionId)) return;
+  state.badges.add(regionId);
+  saveBadges();
+  if (!state.completedMilestones.has(regionId)) {
+    state.completedMilestones.add(regionId);
+    saveCompletedMilestones();
+  }
+  updateProgress();
+  if (areAllBadgesEarned() && getCollectedProgramCount() === getProgramTotal() && !state.completedMilestones.has("all")) {
+    state.completedMilestones.add("all");
+    saveCompletedMilestones();
+    showReward("all");
+    return;
+  }
+  showBadgeReward(regionId);
 }
 
 function renderCompletionStars(completed, total, className) {
@@ -2752,23 +2971,225 @@ function returnToCurrentMission(shouldRender = true) {
   activateMissionRegion(state.missionRegion, { shouldRender });
 }
 
-function getNextMissionFilter() {
-  const next = milestoneFilters.find(filter => {
-    const progress = getFilterProgress(filter.id);
-    return progress.collected < progress.total;
+/* ── 모험 지도 ───────────────────────────────────────────── */
+
+function bindAdventureMap() {
+  if (els.mapNodes) {
+    els.mapNodes.addEventListener("click", event => {
+      const node = event.target.closest(".map-node");
+      if (!node) return;
+      if (node.dataset.mapMaster) {
+        if (areAllBadgesEarned()) {
+          openMasterDex();
+        } else {
+          playSound("select");
+          showToast(`🏆 배지 ${milestoneFilters.length}개를 모두 모으면 도감 마스터에 도전할 수 있어요!`);
+        }
+        return;
+      }
+      const regionId = node.dataset.mapRegion;
+      if (regionId) travelToRegion(regionId);
+    });
+  }
+  if (els.mapQuestCard) {
+    els.mapQuestCard.addEventListener("click", event => {
+      const action = event.target.closest("[data-map-action]");
+      if (!action) return;
+      if (action.dataset.mapAction === "master") {
+        openMasterDex();
+      } else if (action.dataset.mapAction === "challenge") {
+        startBadgeChallenge(action.dataset.region);
+      } else if (action.dataset.mapAction === "travel") {
+        travelToRegion(action.dataset.region);
+      }
+    });
+  }
+}
+
+// 지도에서 안내할 현재 목표 지역.
+// 교사가 링크로 고정했거나 학생이 머무는 지역(missionRegion)이 아직 배지를 못 받았다면
+// 그 지역을 우선하고, 배지를 받았다면 여정 순서상 다음 지역으로 안내한다.
+function getActiveQuestRegion() {
+  const pinned = state.missionRegion;
+  if (pinned && getMissionPreset(pinned) && !hasRegionBadge(pinned)) return pinned;
+  return getNextMissionFilter();
+}
+
+function renderAdventureMap() {
+  if (!els.mapNodes || !els.mapTrail) return;
+  const activeQuestId = getActiveQuestRegion();
+  renderBadgeCase();
+  renderMapQuestCard(activeQuestId);
+  renderMapTrail();
+  els.mapNodes.innerHTML = "";
+  journeyStops.forEach((stop, index) => {
+    els.mapNodes.append(createMapNode(stop, index, activeQuestId));
   });
+  positionMapPlayer(activeQuestId);
+}
+
+function createMapNode(stop, index, nextMissionId) {
+  const button = document.createElement("button");
+  button.type = "button";
+  button.style.left = `${stop.x}%`;
+  button.style.top = `${stop.y}%`;
+
+  if (stop.id === "master") {
+    const unlocked = areAllBadgesEarned();
+    const done = unlocked && getCollectedProgramCount() === getProgramTotal();
+    const status = done ? "complete" : unlocked ? "challenge" : "locked";
+    button.className = `map-node map-node-master map-status-${status}${unlocked && !done ? " is-current" : ""}`;
+    button.dataset.mapMaster = "true";
+    button.innerHTML = `
+      <span class="map-node-step" aria-hidden="true">${index + 1}</span>
+      <span class="map-node-face"><span class="map-node-emoji">🏆</span></span>
+      <span class="map-node-label">
+        <strong>도감 마스터</strong>
+        <span class="map-node-status">${done ? "달성!" : unlocked ? "도전 가능" : `배지 ${getCompletedRegionCount()} / ${milestoneFilters.length}`}</span>
+      </span>
+    `;
+    button.setAttribute("aria-label", `도감 마스터 — ${done ? "달성" : unlocked ? "도전 가능" : "배지를 모두 모으면 열려요"}`);
+    return button;
+  }
+
+  const filter = filters.find(item => item.id === stop.id);
+  const stage = getStageStatus(filter, nextMissionId);
+  const progress = getFilterProgress(filter.id);
+  const isCurrent = filter.id === nextMissionId;
+  const sprite = uiSprites.regions[filter.id];
+  button.className = `map-node map-status-${stage.status}${isCurrent ? " is-current" : ""}`;
+  button.dataset.mapRegion = filter.id;
+  button.innerHTML = `
+    <span class="map-node-step" aria-hidden="true">${index + 1}</span>
+    <span class="map-node-face">
+      ${sprite ? renderUiSprite(sprite, "", "map-node-sprite") : `<span class="map-node-emoji">${filter.icon}</span>`}
+      ${hasRegionBadge(filter.id) ? '<span class="map-node-medal" aria-hidden="true">🏅</span>' : ""}
+    </span>
+    <span class="map-node-label">
+      <strong>${filter.label}</strong>
+      <span class="map-node-status">${stage.label}</span>
+      <span class="map-node-progress">🐾 ${progress.collected} / ${progress.total}</span>
+    </span>
+  `;
+  button.setAttribute("aria-label", `${filter.label} — ${stage.label}, ${progress.total}마리 중 ${progress.collected}마리 등록`);
+  return button;
+}
+
+function renderMapTrail() {
+  if (!els.mapTrail) return;
+  const segments = [];
+  for (let index = 0; index < journeyStops.length - 1; index += 1) {
+    const from = journeyStops[index];
+    const to = journeyStops[index + 1];
+    const midX = (from.x + to.x) / 2;
+    const cleared = hasRegionBadge(from.id);
+    segments.push(
+      `<path class="trail-seg${cleared ? " is-cleared" : ""}" d="M ${from.x} ${from.y} C ${midX} ${from.y + 5}, ${midX} ${to.y - 5}, ${to.x} ${to.y}" />`
+    );
+  }
+  els.mapTrail.innerHTML = segments.join("");
+}
+
+function positionMapPlayer(nextMissionId) {
+  if (!els.mapPlayer) return;
+  const targetId = nextMissionId === "all" ? "master" : nextMissionId;
+  const stop = journeyStops.find(item => item.id === targetId) || journeyStops[0];
+  els.mapPlayer.style.left = `${stop.x}%`;
+  els.mapPlayer.style.top = `${stop.y}%`;
+}
+
+function renderBadgeCase() {
+  if (!els.badgeCase) return;
+  const slots = milestoneFilters.map(filter => {
+    const earned = hasRegionBadge(filter.id);
+    const sprite = uiSprites.regions[filter.id];
+    return `
+      <span class="badge-slot${earned ? " is-earned" : " is-empty"}" role="img" aria-label="${filter.label} 배지 ${earned ? "획득" : "미획득"}">
+        <span class="badge-slot-face">${sprite ? renderUiSprite(sprite, "", "badge-slot-sprite") : filter.icon}</span>
+        <span class="badge-slot-label">${filter.label}</span>
+      </span>
+    `;
+  });
+  const masterDone = areAllBadgesEarned() && getCollectedProgramCount() === getProgramTotal();
+  slots.push(`
+    <span class="badge-slot badge-slot-master${masterDone ? " is-earned" : " is-empty"}" role="img" aria-label="도감 마스터 ${masterDone ? "달성" : "미달성"}">
+      <span class="badge-slot-face"><span class="badge-slot-emoji">🏆</span></span>
+      <span class="badge-slot-label">마스터</span>
+    </span>
+  `);
+  els.badgeCase.innerHTML = `<span class="badge-case-title">탐험 배지</span><span class="badge-case-slots">${slots.join("")}</span>`;
+}
+
+function renderMapQuestCard(nextMissionId) {
+  if (!els.mapQuestCard) return;
+  const badgeCount = getCompletedRegionCount();
+  const badgeTotal = milestoneFilters.length;
+
+  if (nextMissionId === "all") {
+    const masterDone = getCollectedProgramCount() === getProgramTotal();
+    els.mapQuestCard.innerHTML = `
+      <p class="section-kicker">지금 할 일</p>
+      <strong class="map-quest-title">${masterDone ? "🏆 도감 마스터 달성!" : "🏆 마지막 정리 탐험"}</strong>
+      <p>${masterDone ? "모든 배지를 모으고 모험을 완주했어요. 전체 도감을 둘러보며 동물의 특징을 비교해 봐요." : "배지는 모두 모았어요! 아직 못 모은 동물 카드를 찾아 도감을 완성해요."}</p>
+      <button class="primary-button map-continue" type="button" data-map-action="master">전체 도감 보기</button>
+    `;
+    return;
+  }
+
+  const filter = filters.find(item => item.id === nextMissionId) || filters[0];
+  const progress = getFilterProgress(filter.id);
+  const remaining = Math.max(0, progress.total - progress.collected);
+  const challengeReady = isRegionCollectionComplete(filter.id) && !hasRegionBadge(filter.id);
+  els.mapQuestCard.innerHTML = challengeReady
+    ? `
+      <p class="section-kicker">지금 할 일</p>
+      <strong class="map-quest-title">🏅 ${filter.label} 배지 도전!</strong>
+      <p>${filter.label} 동물을 모두 모았어요. 분류 도전에 성공하면 ${badgeCount + 1}번째 배지를 받아요.</p>
+      <button class="primary-button map-continue" type="button" data-map-action="challenge" data-region="${filter.id}">🏅 배지 도전 시작</button>
+    `
+    : `
+      <p class="section-kicker">지금 할 일</p>
+      <strong class="map-quest-title">${filter.icon} ${filter.label} 탐험</strong>
+      <p>${filter.label}에서 동물 ${remaining}마리를 더 관찰하고 퀴즈로 등록해요. <span class="map-quest-badges">배지 ${badgeCount} / ${badgeTotal}</span></p>
+      <button class="primary-button map-continue" type="button" data-map-action="travel" data-region="${filter.id}">▶ 탐험 계속하기</button>
+    `;
+}
+
+function travelToRegion(regionId) {
+  const filter = filters.find(item => item.id === regionId);
+  if (!filter) return;
+  playSound("select");
+  activateMissionRegion(regionId, { shouldRender: true, updateUrl: true });
+  setView("catalog");
+  showToast(`${filter.icon} ${filter.label}에 도착했어요! 동물 카드를 눌러 관찰을 시작해요.`);
+}
+
+function openMasterDex() {
+  playSound("select");
+  state.catalogMode = "all";
+  state.filter = "all";
+  renderMissionPanel();
+  renderFilters();
+  renderAnimals();
+  setView("catalog");
+}
+
+function getNextMissionFilter() {
+  const next = milestoneFilters.find(filter => !hasRegionBadge(filter.id));
   return next ? next.id : "all";
 }
 
 function getStageStatus(filter, nextMissionId) {
   if (filter.id === "all") {
-    const isComplete = getCollectedProgramCount() === getProgramTotal();
+    const isComplete = areAllBadgesEarned() && getCollectedProgramCount() === getProgramTotal();
     return { status: isComplete ? "complete" : "master", label: isComplete ? "완료" : "마스터" };
   }
 
-  const progress = getFilterProgress(filter.id);
-  if (progress.total > 0 && progress.collected === progress.total) {
-    return { status: "complete", label: "완료" };
+  if (hasRegionBadge(filter.id)) {
+    return { status: "complete", label: "배지 획득" };
+  }
+  if (isRegionCollectionComplete(filter.id)) {
+    return { status: "challenge", label: "배지 도전!" };
   }
 
   const currentIndex = milestoneFilters.findIndex(item => item.id === nextMissionId);
@@ -2788,13 +3209,10 @@ function getFilterProgress(filterId) {
 
 function getCompletedMilestones() {
   const completed = milestoneFilters
-    .filter(filter => {
-      const progress = getFilterProgress(filter.id);
-      return progress.total > 0 && progress.collected === progress.total;
-    })
+    .filter(filter => isRegionCollectionComplete(filter.id))
     .map(filter => filter.id);
 
-  if (getCollectedProgramCount() === getProgramTotal()) {
+  if (getCollectedProgramCount() === getProgramTotal() && areAllBadgesEarned()) {
     completed.push("all");
   }
 
@@ -2832,29 +3250,74 @@ function showReward(filterId) {
   els.rewardContent.innerHTML = isAll
     ? renderMasterReward(thumbnails)
     : renderRegionReward(filter, progress, thumbnails);
-  if (els.rewardNextRegion) els.rewardNextRegion.hidden = isAll;
+  if (els.rewardChallenge) {
+    els.rewardChallenge.hidden = isAll;
+    els.rewardChallenge.dataset.challengeRegion = isAll ? "" : filter.id;
+  }
+  if (els.rewardNextRegion) els.rewardNextRegion.hidden = true;
   if (els.rewardReset) els.rewardReset.hidden = !isAll;
   playSound(isAll ? "master" : "region");
   enterModalFocus(els.rewardModal);
 }
 
+// 지역 동물 수집 완료: 배지 도전(관장전)으로 안내하는 모달.
 function renderRegionReward(filter, progress, thumbnails) {
   return `
     <div class="reward-burst reward-burst-soft" aria-hidden="true">${Array.from({ length: 8 }, () => "<span></span>").join("")}</div>
-    <p class="section-kicker">지역 완성 보상</p>
-    <h2 id="rewardTitle">🎉 ${filter.label} 도감 완성!</h2>
+    <p class="section-kicker">지역 탐험 완료</p>
+    <h2 id="rewardTitle">🎉 ${filter.label} 동물을 모두 모았어요!</h2>
     <div class="region-reward-hero">
       ${renderUiSprite(uiSprites.owl.cheer, "", "reward-owl-cheer region-reward-owl")}
       <div class="region-reward-copy">
-        <p>${progress.total}마리를 모두 등록했어요.</p>
-        <div class="region-star-row">
-          ${renderUiSprite(uiSprites.icons.star, "", "region-star-icon")}
-          <p class="region-star-context"><strong>완성별이 1개 추가됐어요.</strong> 모은 완성별은 진행도에서 확인할 수 있어요.</p>
+        <p>${progress.total}마리를 모두 도감에 등록했어요.</p>
+        <div class="region-challenge-callout">
+          ${renderUiSprite(uiSprites.icons.shield, "", "region-challenge-icon")}
+          <p class="region-star-context"><strong>이제 배지 도전이 열렸어요!</strong> 관찰한 특징을 떠올리며 카드를 기준에 맞게 나누면 ${filter.label} 배지를 받아요.</p>
         </div>
       </div>
     </div>
     <div class="reward-collage" aria-label="등록한 동물 미리보기">
       ${thumbnails.map(animal => `<span>${animal.name}</span>`).join("")}
+    </div>
+  `;
+}
+
+// 배지 도전 성공: 지역 배지 획득 모달.
+function showBadgeReward(regionId) {
+  if (!els.rewardModal || !els.rewardContent) return;
+  const filter = filters.find(item => item.id === regionId) || filters[0];
+  const rewardCard = els.rewardContent.closest(".reward-card");
+  if (rewardCard) rewardCard.classList.remove("master-reward-card");
+  els.rewardContent.innerHTML = renderBadgeReward(filter);
+  if (els.rewardChallenge) els.rewardChallenge.hidden = true;
+  if (els.rewardNextRegion) {
+    els.rewardNextRegion.hidden = false;
+    els.rewardNextRegion.textContent = getNextMissionFilter() === "all" ? "🗺️ 모험 지도 보기" : "🧭 다음 지역으로 출발";
+  }
+  if (els.rewardReset) els.rewardReset.hidden = true;
+  playSound("region");
+  enterModalFocus(els.rewardModal);
+}
+
+function renderBadgeReward(filter) {
+  const regionSprite = uiSprites.regions[filter.id];
+  return `
+    <div class="reward-burst reward-burst-soft" aria-hidden="true">${Array.from({ length: 10 }, () => "<span></span>").join("")}</div>
+    <p class="section-kicker">배지 도전 성공</p>
+    <h2 id="rewardTitle">🏅 ${filter.label} 배지 획득!</h2>
+    <div class="badge-reward-medal" aria-hidden="true">
+      ${renderUiSprite(uiSprites.icons.shield, "", "badge-reward-shield")}
+      ${regionSprite ? renderUiSprite(regionSprite, "", "badge-reward-region") : `<span class="badge-reward-emoji">${filter.icon}</span>`}
+    </div>
+    <div class="region-reward-hero badge-reward-hero">
+      ${renderUiSprite(uiSprites.owl.cheer, "", "reward-owl-cheer badge-reward-owl")}
+      <div class="region-reward-copy">
+        <p>${filter.label} 동물의 특징을 기준에 따라 정확히 분류했어요.</p>
+        <div class="region-star-row">
+          ${renderUiSprite(uiSprites.icons.star, "", "region-star-icon")}
+          <p class="region-star-context"><strong>배지와 함께 완성별이 1개 추가됐어요.</strong> 모은 배지는 모험 지도의 배지 케이스에서 볼 수 있어요.</p>
+        </div>
+      </div>
     </div>
   `;
 }
@@ -2866,12 +3329,12 @@ function renderMasterReward(thumbnails) {
       ${renderUiSprite(uiSprites.icons.chest, "", "master-reward-chest-sprite")}
     </div>
     <p class="section-kicker">최종 보상</p>
-    <h2 id="rewardTitle">도감 마스터 달성!</h2>
+    <h2 id="rewardTitle">🏆 도감 마스터 달성!</h2>
     <p class="master-reward-count">${getCollectedProgramCount()} / ${getProgramTotal()}</p>
-    <p>모든 동물 카드를 등록했어요. 이제 전체 도감을 다시 둘러보며 특징을 비교해 볼 수 있습니다.</p>
+    <p>모든 지역의 동물을 모으고 배지 도전까지 완수했어요. 부엉이 탐험대의 모험을 완주했습니다. 이제 전체 도감을 다시 둘러보며 특징을 비교해 볼 수 있어요.</p>
     <div class="reward-meaning-badges master-meaning-badges" aria-label="도감 마스터 의미 배지">
       <span>${renderUiSprite(uiSprites.icons.gem, "", "reward-meaning-icon")}<strong>도감 마스터 보석</strong></span>
-      <span>${renderUiSprite(uiSprites.icons.star, "", "reward-meaning-icon")}<strong>모든 지역 완성</strong></span>
+      <span>${renderUiSprite(uiSprites.icons.star, "", "reward-meaning-icon")}<strong>배지 ${getCompletedRegionCount()}개 완성</strong></span>
     </div>
     ${renderUiSprite(uiSprites.owl.cheer, "", "reward-owl-cheer master-owl-cheer")}
     <div class="reward-collage master-collage" aria-label="등록한 동물 미리보기">
@@ -2890,20 +3353,24 @@ function goToNextRewardRegion() {
   const nextMissionId = getNextMissionFilter();
   closeReward();
   if (nextMissionId === "all") {
-    state.catalogMode = "all";
-    state.filter = "all";
-  } else {
-    activateMissionRegion(nextMissionId, { shouldRender: false, updateUrl: true });
+    setView("map");
+    renderMissionPanel();
+    renderFilters();
+    return;
   }
+  activateMissionRegion(nextMissionId, { shouldRender: false, updateUrl: true });
   setView("catalog");
   renderMissionPanel();
   renderFilters();
   renderAnimals();
+  const filter = filters.find(item => item.id === nextMissionId);
+  if (filter) showToast(`${filter.icon} ${filter.label}에 도착했어요! 동물 카드를 눌러 관찰을 시작해요.`);
 }
 
 function resetProgressFromReward() {
   closeReward();
   resetProgress(true);
+  setView("map");
 }
 
 function saveCompletedMilestones() {
@@ -2916,9 +3383,11 @@ function resetProgress(skipConfirm = false) {
   state.collected.clear();
   state.completedMilestones.clear();
   state.observationReady.clear();
+  state.badges.clear();
   saveCollected();
   saveCompletedMilestones();
   safeRemoveStorage(observationReadyKey);
+  safeRemoveStorage(badgesKey);
   updateProgress();
   returnToCurrentMission(false);
   renderMissionPanel();

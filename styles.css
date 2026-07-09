@@ -4249,3 +4249,646 @@ p.game-source-help {
   padding: 12px !important;
   box-shadow: inset 0 0 12px rgba(79, 70, 229, 0.3) !important;
 }
+
+/* ════════════════════════════════════════════════════════════
+   모험 지도 (Adventure Map) — 포켓몬식 여정 화면
+   ════════════════════════════════════════════════════════════ */
+
+.map-view {
+  display: none;
+  flex-direction: column;
+  align-items: center;
+  flex: 1;
+  gap: 16px;
+  padding: 22px 24px 40px;
+  overflow-y: auto;
+  min-width: 0;
+}
+
+.map-view > * {
+  width: 100%;
+  max-width: 880px;
+}
+
+.map-header {
+  display: flex;
+  gap: 16px;
+  align-items: stretch;
+  flex-wrap: wrap;
+}
+
+.map-header-copy {
+  flex: 1 1 320px;
+  min-width: 0;
+}
+
+.map-header-copy h2 {
+  margin: 4px 0 8px;
+  font-size: 1.5rem;
+  color: var(--ink);
+}
+
+.map-lede {
+  margin: 0;
+  color: var(--muted);
+  max-width: 60ch;
+}
+
+.map-quest-card {
+  flex: 0 1 320px;
+  min-width: 260px;
+  background: var(--panel);
+  border: 2px solid rgba(245, 188, 68, 0.65);
+  border-radius: var(--radius);
+  box-shadow: var(--shadow-md);
+  padding: 14px 16px 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.map-quest-card p {
+  margin: 0;
+  font-size: 0.95rem;
+}
+
+.map-quest-title {
+  font-size: 1.15rem;
+  color: var(--ink);
+}
+
+.map-quest-badges {
+  display: inline-block;
+  padding: 1px 8px;
+  border-radius: 999px;
+  background: rgba(245, 188, 68, 0.22);
+  font-weight: 700;
+  font-size: 0.85rem;
+}
+
+.map-continue {
+  margin-top: 6px;
+  align-self: flex-start;
+}
+
+/* ── 배지 케이스 ── */
+
+.badge-case {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  flex-wrap: wrap;
+  background: linear-gradient(120deg, rgba(45, 27, 14, 0.92), rgba(58, 36, 21, 0.92));
+  border: 2px solid rgba(245, 188, 68, 0.5);
+  border-radius: var(--radius);
+  box-shadow: var(--shadow-sm);
+  padding: 10px 16px;
+}
+
+.badge-case-title {
+  color: #ffe08a;
+  font-weight: 800;
+  font-size: 0.95rem;
+  letter-spacing: 0.04em;
+}
+
+.badge-case-slots {
+  display: flex;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+
+.badge-slot {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 3px;
+  min-width: 52px;
+}
+
+.badge-slot-face {
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
+  display: grid;
+  place-items: center;
+  background: rgba(255, 241, 214, 0.12);
+  border: 2px dashed rgba(255, 224, 138, 0.45);
+  overflow: hidden;
+}
+
+.badge-slot-sprite {
+  width: 34px;
+  height: 34px;
+  object-fit: contain;
+}
+
+.badge-slot-emoji {
+  font-size: 22px;
+}
+
+.badge-slot-label {
+  color: rgba(255, 241, 214, 0.85);
+  font-size: 0.72rem;
+  font-weight: 700;
+}
+
+.badge-slot.is-empty .badge-slot-face {
+  filter: grayscale(1);
+  opacity: 0.55;
+}
+
+.badge-slot.is-earned .badge-slot-face {
+  border: 2px solid #f5bc44;
+  background: radial-gradient(circle, #fff4ca 0%, #f5bc44 100%);
+  box-shadow: 0 0 10px rgba(245, 188, 68, 0.65);
+}
+
+.badge-slot.is-earned .badge-slot-label {
+  color: #ffe08a;
+}
+
+/* ── 지도 본체 ── */
+
+.adventure-map {
+  position: relative;
+  min-height: 660px;
+  border-radius: 22px;
+  border: 4px solid rgba(180, 137, 52, 0.55);
+  box-shadow: var(--shadow-md), inset 0 0 60px rgba(86, 65, 24, 0.12);
+  background:
+    radial-gradient(circle at 18% 6%, rgba(255, 255, 255, 0.55), transparent 26%),
+    radial-gradient(circle at 82% 30%, rgba(255, 255, 255, 0.3), transparent 22%),
+    linear-gradient(180deg,
+      #d8f2c5 0%,
+      #c4e8a8 16%,
+      #a8d98a 28%,
+      #bfe6d8 38%,
+      #9fd8f2 48%,
+      #7ec3ea 62%,
+      #a6dcf5 72%,
+      #eef6fb 84%,
+      #ffffff 100%);
+  overflow: hidden;
+}
+
+.map-trail {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+}
+
+.map-trail .trail-seg {
+  fill: none;
+  stroke: rgba(122, 106, 82, 0.55);
+  stroke-width: 5px;
+  stroke-linecap: round;
+  stroke-dasharray: 0.5 4;
+  vector-effect: non-scaling-stroke;
+}
+
+.map-trail .trail-seg.is-cleared {
+  stroke: #f5bc44;
+  stroke-dasharray: none;
+  filter: drop-shadow(0 0 4px rgba(245, 188, 68, 0.7));
+}
+
+.map-decorations {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+}
+
+.map-deco {
+  position: absolute;
+  font-size: 26px;
+  opacity: 0.9;
+  text-shadow: 0 2px 6px rgba(86, 65, 24, 0.2);
+}
+
+.deco-cloud {
+  font-size: 30px;
+  opacity: 0.8;
+}
+
+.map-nodes {
+  position: absolute;
+  inset: 0;
+}
+
+/* ── 지도 노드 ── */
+
+.map-node {
+  position: absolute;
+  transform: translate(-50%, -50%);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 6px;
+  background: none;
+  border: none;
+  padding: 8px;
+  min-width: 110px;
+  min-height: var(--min-touch);
+  border-radius: 18px;
+  transition: transform 0.25s ease;
+}
+
+.map-node:hover,
+.map-node:focus-visible {
+  transform: translate(-50%, -50%) scale(1.06);
+}
+
+.map-node:focus-visible {
+  outline: 3px solid var(--focus);
+  outline-offset: 2px;
+}
+
+.map-node-face {
+  position: relative;
+  width: 74px;
+  height: 74px;
+  border-radius: 50%;
+  display: grid;
+  place-items: center;
+  background: radial-gradient(circle, #ffffff 0%, #fff4ca 100%);
+  border: 3px solid rgba(180, 137, 52, 0.65);
+  box-shadow: var(--shadow-md);
+}
+
+.map-node-sprite {
+  width: 56px;
+  height: 56px;
+  object-fit: contain;
+}
+
+.map-node-emoji {
+  font-size: 34px;
+}
+
+.map-node-step {
+  position: absolute;
+  top: 0;
+  left: 4px;
+  z-index: 2;
+  width: 24px;
+  height: 24px;
+  border-radius: 50%;
+  display: grid;
+  place-items: center;
+  background: #3a2415;
+  color: #ffe08a;
+  font-size: 0.8rem;
+  font-weight: 800;
+  border: 2px solid rgba(255, 224, 138, 0.7);
+}
+
+.map-node-medal {
+  position: absolute;
+  right: -6px;
+  bottom: -6px;
+  font-size: 24px;
+  filter: drop-shadow(0 2px 3px rgba(86, 65, 24, 0.4));
+}
+
+.map-node-label {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 2px;
+  background: rgba(255, 251, 242, 0.92);
+  border: 1.5px solid rgba(180, 137, 52, 0.4);
+  border-radius: 12px;
+  padding: 4px 10px;
+  box-shadow: var(--shadow-sm);
+}
+
+.map-node-label strong {
+  color: var(--ink);
+  font-size: 0.95rem;
+  line-height: 1.2;
+}
+
+.map-node-status {
+  font-size: 0.75rem;
+  font-weight: 800;
+  color: var(--teal-dark);
+}
+
+.map-node-progress {
+  font-size: 0.75rem;
+  color: var(--muted);
+  font-weight: 700;
+}
+
+/* 노드 상태별 표현 */
+
+.map-node.map-status-complete .map-node-face {
+  border-color: #5cb85c;
+  background: radial-gradient(circle, #ffffff 0%, #e2f4dd 100%);
+}
+
+.map-node.map-status-complete .map-node-status {
+  color: #2f7d32;
+}
+
+.map-node.map-status-challenge .map-node-face {
+  border-color: var(--coral);
+  box-shadow: 0 0 0 4px rgba(232, 93, 58, 0.25), var(--shadow-md);
+  animation: map-node-challenge-pulse 1.6s ease-in-out infinite;
+}
+
+.map-node.map-status-challenge .map-node-status {
+  color: var(--coral);
+}
+
+.map-node.is-current .map-node-face {
+  border-color: var(--sun);
+  box-shadow: var(--gold-glow);
+}
+
+.map-node.is-current .map-node-label {
+  border-color: rgba(245, 188, 68, 0.9);
+  background: #fff4ca;
+}
+
+.map-node.map-status-locked .map-node-face,
+.map-node.map-status-locked .map-node-sprite {
+  filter: grayscale(0.85);
+  opacity: 0.9;
+}
+
+.map-node.map-status-locked .map-node-label {
+  opacity: 0.85;
+}
+
+.map-node.map-node-master .map-node-face {
+  width: 84px;
+  height: 84px;
+  background: radial-gradient(circle, #fff9e3 0%, #ffe08a 100%);
+  border-color: #b48934;
+}
+
+.map-node.map-node-master.map-status-locked .map-node-face {
+  filter: grayscale(0.7);
+}
+
+@keyframes map-node-challenge-pulse {
+  0%, 100% { box-shadow: 0 0 0 3px rgba(232, 93, 58, 0.2), var(--shadow-md); }
+  50% { box-shadow: 0 0 0 9px rgba(232, 93, 58, 0.08), var(--shadow-md); }
+}
+
+/* ── 플레이어(부엉이) 마커 ── */
+
+.map-player {
+  position: absolute;
+  z-index: 3;
+  width: 56px;
+  height: 56px;
+  object-fit: contain;
+  transform: translate(-50%, -132%);
+  transition: left 0.7s cubic-bezier(0.45, 0, 0.25, 1), top 0.7s cubic-bezier(0.45, 0, 0.25, 1);
+  pointer-events: none;
+  filter: drop-shadow(0 6px 8px rgba(86, 65, 24, 0.35));
+  animation: map-player-bob 1.8s ease-in-out infinite;
+}
+
+@keyframes map-player-bob {
+  0%, 100% { margin-top: 0; }
+  50% { margin-top: -7px; }
+}
+
+/* ── 배지 도전(챌린지) 게임 모드 ── */
+
+.challenge-banner {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin: 14px 0 4px;
+  padding: 12px 16px;
+  border-radius: 14px;
+  background: linear-gradient(120deg, #2c1f10, #4d3312);
+  border: 2px solid #f5bc44;
+  color: #fff4ca;
+  box-shadow: 0 0 14px rgba(245, 188, 68, 0.35);
+}
+
+.challenge-banner[hidden] {
+  display: none;
+}
+
+.challenge-banner-icon {
+  width: 40px;
+  height: 40px;
+  object-fit: contain;
+  flex: 0 0 auto;
+}
+
+.challenge-banner strong {
+  color: #ffe08a;
+}
+
+.game-view.challenge-mode .game-score {
+  border-color: #f5bc44 !important;
+}
+
+/* 지역 탭의 배지 도전 상태 */
+
+.filter-button.stage-challenge {
+  background: rgba(232, 93, 58, 0.14);
+  border-color: rgba(232, 93, 58, 0.55);
+}
+
+.filter-button.stage-challenge .stage-status {
+  color: var(--coral);
+  font-weight: 800;
+}
+
+/* 미션 보드의 배지 도전 상태 */
+
+.mission-board.status-challenge {
+  background:
+    linear-gradient(135deg, rgba(0, 0, 0, 0.16), rgba(0, 0, 0, 0)),
+    linear-gradient(120deg, #6b3116, #a04a12 55%, #6b4d18);
+}
+
+/* ── 보상 모달: 배지/도전 요소 ── */
+
+.region-challenge-callout {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-top: 8px;
+  padding: 10px 12px;
+  border-radius: 12px;
+  background: rgba(232, 93, 58, 0.12);
+  border: 1.5px dashed rgba(232, 93, 58, 0.5);
+}
+
+.region-challenge-icon {
+  width: 38px;
+  height: 38px;
+  object-fit: contain;
+  flex: 0 0 auto;
+}
+
+.badge-reward-medal {
+  position: relative;
+  width: 110px;
+  height: 110px;
+  margin: 6px auto 2px;
+  display: grid;
+  place-items: center;
+  animation: badge-reward-pop 0.6s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+.badge-reward-shield {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  filter: drop-shadow(0 0 12px rgba(245, 188, 68, 0.75));
+}
+
+.badge-reward-region {
+  position: relative;
+  width: 54px;
+  height: 54px;
+  object-fit: contain;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.85);
+  padding: 4px;
+  box-shadow: 0 0 0 2px rgba(180, 137, 52, 0.6);
+}
+
+.badge-reward-emoji {
+  position: relative;
+  font-size: 40px;
+}
+
+@keyframes badge-reward-pop {
+  0% { transform: scale(0.3); opacity: 0; }
+  70% { transform: scale(1.12); opacity: 1; }
+  100% { transform: scale(1); }
+}
+
+/* ── 반응형 ── */
+
+@media (max-width: 1080px) {
+  .adventure-map {
+    min-height: 620px;
+  }
+}
+
+@media (max-width: 680px) {
+  .map-view {
+    padding: 16px 14px 32px;
+  }
+
+  .map-header-copy h2 {
+    font-size: 1.25rem;
+  }
+
+  .map-quest-card {
+    flex: 1 1 100%;
+    min-width: 0;
+  }
+
+  .map-continue {
+    align-self: stretch;
+    text-align: center;
+  }
+
+  .badge-case {
+    gap: 8px;
+    padding: 10px 12px;
+  }
+
+  .badge-case-slots {
+    gap: 8px;
+  }
+
+  .badge-slot {
+    min-width: 44px;
+  }
+
+  .badge-slot-face {
+    width: 38px;
+    height: 38px;
+  }
+
+  .badge-slot-sprite {
+    width: 28px;
+    height: 28px;
+  }
+
+  .adventure-map {
+    min-height: 600px;
+  }
+
+  .map-node {
+    min-width: 88px;
+    padding: 6px;
+  }
+
+  .map-node-face {
+    width: 60px;
+    height: 60px;
+  }
+
+  .map-node-sprite {
+    width: 44px;
+    height: 44px;
+  }
+
+  .map-node.map-node-master .map-node-face {
+    width: 68px;
+    height: 68px;
+  }
+
+  .map-node-label strong {
+    font-size: 0.85rem;
+  }
+
+  .map-node-progress {
+    font-size: 0.7rem;
+  }
+
+  .map-player {
+    width: 46px;
+    height: 46px;
+  }
+
+  .map-deco {
+    font-size: 20px;
+  }
+
+  .challenge-banner {
+    flex-direction: column;
+    text-align: center;
+    gap: 8px;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .map-player {
+    animation: none;
+    transition: none;
+  }
+
+  .map-node.map-status-challenge .map-node-face {
+    animation: none;
+  }
+
+  .badge-reward-medal {
+    animation: none;
+  }
+
+  .map-node,
+  .map-node:hover,
+  .map-node:focus-visible {
+    transition: none;
+  }
+}
