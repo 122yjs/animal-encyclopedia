@@ -18,3 +18,4 @@ graphify-out/.graphify*
 .gemini/
 docs/ai-sessions/
 /*.png
+.cursor/

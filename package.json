@@ -1,13 +1,20 @@
 {
   "name": "animal-encyclopedia",
-  "version": "1.0.0",
+  "version": "2.0.0",
   "private": true,
+  "type": "module",
   "scripts": {
-    "build:internal": "node scripts/build.js --mode=internal",
-    "build:distribution": "node scripts/build.js --mode=distribution",
-    "record:demo": "node scripts/record-demo.mjs"
+    "dev": "vite",
+    "build": "vite build",
+    "preview": "vite preview",
+    "build:internal": "node legacy/scripts/build.js --mode=internal",
+    "build:distribution": "node legacy/scripts/build.js --mode=distribution"
+  },
+  "dependencies": {
+    "phaser": "^3.88.2"
   },
   "devDependencies": {
-    "playwright-core": "^1.59.1"
+    "playwright-core": "^1.59.1",
+    "vite": "^6.3.5"
   }
 }

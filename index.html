@@ -1,341 +1,38 @@
 <!DOCTYPE html>
 <html lang="ko">
-
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>🦉 부엉이 동물도감 탐험대</title>
-  <meta name="description" content="초등학교 3학년 과학 동물의 생활 수업에서 지역별 동물을 관찰하고 퀴즈로 도감을 완성하는 교실용 동물도감입니다.">
-  <meta property="og:type" content="website">
-  <meta property="og:title" content="부엉이 동물도감 탐험대">
-  <meta property="og:description" content="지역별 동물을 관찰하고 퀴즈로 도감을 완성하는 초등 과학 수업용 동물도감입니다.">
-  <meta property="og:image" content="https://122yjs.github.io/animal-encyclopedia/assets/sprites/owl-mascot.png">
-  <meta property="og:url" content="https://122yjs.github.io/animal-encyclopedia/">
-  <meta name="twitter:card" content="summary">
-  <meta name="theme-color" content="#0f6f68">
-  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='14' fill='%230f6f68'/%3E%3Ctext x='50%25' y='55%25' text-anchor='middle' font-size='38'%3E%F0%9F%A6%89%3C/text%3E%3C/svg%3E">
-  <link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin>
-  <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/variable/pretendardvariable-dynamic-subset.min.css">
-  <link rel="stylesheet" href="./styles.css?v=20260519-uncollected-photo-hint">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+  <title>부엉이 동물도감 탐험대 | Phaser RPG</title>
+  <link rel="icon" href="data:," />
+  <style>
+    /* Sprout Lands 느낌의 따뜻한 풀밭 톤 */
+    html, body {
+      margin: 0;
+      padding: 0;
+      width: 100%;
+      height: 100%;
+      overflow: hidden;
+      background: linear-gradient(180deg, #7ec850 0%, #4a8f3a 45%, #2f6b2f 100%);
+      font-family: "Malgun Gothic", "Apple SD Gothic Neo", sans-serif;
+    }
+    #game-container {
+      width: 100%;
+      height: 100%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    #game-container canvas {
+      image-rendering: pixelated;
+      image-rendering: crisp-edges;
+      max-width: 100%;
+      max-height: 100%;
+    }
+  </style>
 </head>
-
 <body>
-  <div class="sticky-progress" id="stickyProgress" aria-live="polite">
-    <span id="stickyProgressLabel">🐾 0 / 0</span>
-    <span class="sticky-progress-track" aria-hidden="true"><span id="stickyProgressFill"></span></span>
-    <span class="sticky-star-status" id="stickyStarStatus" aria-label="완성별 0 / 5"></span>
-    <button id="soundToggle" class="sound-toggle" type="button" aria-pressed="false" aria-label="효과음 켜짐">🔊</button>
-  </div>
-
-  <div class="app-layout">
-    <aside class="sidebar">
-      <div class="sidebar-header">
-        <div class="sidebar-brand-row">
-          <img class="sidebar-owl" src="./assets/sprites/extracted/owl-wave.png" alt="부엉이 가이드">
-          <div>
-            <p class="eyebrow">초등 3학년 과학 2. 동물의 생활</p>
-            <h1>🐾 동물 도감 마스터<br><small>탐험 카드 모으기</small></h1>
-          </div>
-        </div>
-        <div class="quest-board">
-          <p class="sidebar-lede">동물을 관찰하고 퀴즈 배지를 모아 <span class="sidebar-total-count">0</span>마리의 카드를 완성해 보세요! 과연 누가 가장 먼저 도감 마스터가 될까요?</p>
-        </div>
-      </div>
-
-      <div class="sidebar-section">
-        <h2 class="sidebar-section-title">모드</h2>
-        <div class="mode-buttons">
-          <button class="mode-button active" type="button" data-view="catalog">🔍 도감 모드</button>
-          <button class="mode-button" type="button" data-view="game">🎮 분류 미션</button>
-        </div>
-      </div>
-
-      <!-- no-question:remove:start sidebar-settings -->
-      <div class="sidebar-section sidebar-settings-section">
-        <button id="openSettings" class="settings-button" type="button">⚙️ 교사용 설정</button>
-        <p class="sidebar-settings-hint">AI 질문방과 지역별 동물 범위를 조정하려면 여기를 누르세요.</p>
-      </div>
-      <!-- no-question:remove:end sidebar-settings -->
-      <!-- no-question:replace open-settings-compat -->
-
-      <div class="sidebar-section">
-        <h2 class="sidebar-section-title">지역 미션</h2>
-        <nav class="sidebar-nav" id="filterTabs" role="tablist" aria-label="지역 미션"></nav>
-      </div>
-
-    </aside>
-
-    <section class="center-area" id="catalogView">
-      <div class="center-header">
-        <details class="safety-strip" aria-label="도감 보기 약속">
-          <summary>도감 보기 약속</summary>
-          <ul>
-            <li>화면 속 동물의 생김새와 사는 모습을 차분히 살펴봐요.</li>
-            <li>동물의 특징에 먼저 집중해요.</li>
-            <li>태블릿이나 컴퓨터는 손으로 살살 다루고, 화면은 깨끗하게 써요.</li>
-          </ul>
-        </details>
-
-        <section id="missionPanel" class="mission-panel" aria-live="polite"></section>
-
-        <div class="progress-panel" aria-live="polite">
-          <span class="progress-label">🏆 내 도감 완성도</span>
-          <strong><span id="collectedCount">0</span> / <span id="totalCount">0</span></strong>
-          <div class="progress-track" aria-hidden="true">
-            <span id="progressFill"></span>
-          </div>
-          <div class="completion-star-status" id="completionStarStatus" aria-label="완성별 0 / 5"></div>
-        </div>
-
-        <div class="toolbar">
-          <p id="resultCount" class="result-count"></p>
-          <label class="search-field">
-            <span class="search-icon" aria-hidden="true">&#128269;</span>
-            <input id="searchInput" type="search" placeholder="전체 도감 검색: 개, 거미, 바다, 다리" autocomplete="off">
-          </label>
-        </div>
-      </div>
-
-      <section class="catalog-area">
-        <div id="animalGrid" class="animal-grid" aria-live="polite"></div>
-      </section>
-    </section>
-
-    <section class="game-view" id="gameView">
-      <div class="game-header">
-        <div>
-          <button id="backToCatalog" class="back-to-catalog" type="button">← 도감으로 돌아가기</button>
-          <p class="section-kicker" style="margin-top:12px">분류 게임</p>
-          <h2>카드를 기준에 따라 나누기 미션</h2>
-          <p class="game-description">분류 기준을 보고 동물 카드를 직접 옮겨서 미션을 완료하세요. 채점하면 어떤 동물의 특징을 다시 살펴봐야 하는지 알려 줍니다.</p>
-        </div>
-        <div class="game-score" id="gameScore">0 / 8</div>
-      </div>
-
-      <section class="game-controls" aria-label="분류 게임 설정">
-        <label class="select-field" for="gameCriterion">
-          <span>분류 기준</span>
-          <select id="gameCriterion"></select>
-        </label>
-        <button id="newRound" class="primary-button" type="button">새 카드 받기</button>
-        <button id="checkGame" class="primary-button secondary" type="button">채점하기</button>
-      </section>
-
-      <section class="game-board" aria-label="분류 게임">
-        <div class="game-source" data-answer="pool">
-          <h3>카드 더미</h3>
-          <p class="game-source-help">카드를 눌러 고른 뒤 알맞은 칸을 누르거나, 직접 끌어서 놓아 보세요. 다시 더미로 돌릴 때도 이 칸을 누르면 돼요.</p>
-          <div id="gamePool" class="token-zone source-zone"></div>
-        </div>
-        <div class="drop-zone" data-answer="yes">
-          <h3>맞는 카드</h3>
-          <p id="yesHint">기준에 맞는 동물</p>
-          <div id="gameYes" class="token-zone answer-zone"></div>
-        </div>
-        <div class="drop-zone" data-answer="no">
-          <h3>다른 카드</h3>
-          <p id="noHint">기준과 다른 동물</p>
-          <div id="gameNo" class="token-zone answer-zone"></div>
-        </div>
-      </section>
-
-      <div id="gameFeedback" class="game-feedback" aria-live="polite"></div>
-    </section>
-  </div>
-
-  <div id="detailModal" class="detail-modal" hidden>
-    <div class="detail-sheet" role="dialog" aria-modal="true" aria-labelledby="modalTitle">
-      <button id="closeDetail" class="close-detail" type="button" aria-label="도감으로 뒤로가기">← 뒤로가기</button>
-      <div class="detail-photo" id="detailPhoto">
-        <img id="detailImage" alt="">
-      </div>
-      <div id="detailBody" class="detail-body"></div>
-    </div>
-  </div>
-
-  <!-- no-question:remove:start settings-modal -->
-  <div id="settingsModal" class="modal" hidden>
-    <div class="settings-sheet" role="dialog" aria-modal="true" aria-labelledby="settingsTitle">
-      <button id="closeSettings" class="close-button" type="button" aria-label="닫기">닫기</button>
-      <div class="teacher-banner" id="teacherBanner">👩‍🏫 선생님용 설정 화면입니다</div>
-      <div class="settings-body">
-        <p class="section-kicker">교사용 설정</p>
-        <h2 id="settingsTitle">첫 실행: 지역별 동물 범위 설정</h2>
-        <p class="settings-intro">수업에 쓸 지역별 동물 범위와 AI 질문방 연결 여부를 정하세요.</p>
-        <p class="settings-warning">학생에게는 맨 아래의 학생용 링크나 QR만 보내면 됩니다.</p>
-
-        <ol class="settings-steps">
-          <li>지역별로 보여줄 동물을 고르세요.</li>
-          <li>AI 질문방을 쓸 때만 학생용 참여 링크를 붙여 넣으세요.</li>
-          <li>맨 아래 링크나 QR을 학생에게 보내세요.</li>
-        </ol>
-
-        <section class="teacher-checklist" aria-label="수업 전 5분 확인">
-          <h3>수업 전 5분 확인</h3>
-          <ul>
-            <li>동물 범위를 바꿀 지역이 있는지 확인</li>
-            <li>AI 질문방을 쓸지 안 쓸지 선택</li>
-            <li>학생용 링크/QR을 복사하거나 저장</li>
-          </ul>
-        </section>
-
-        <section class="mission-setting-panel" aria-label="오늘의 지역 미션 설정">
-          <div>
-            <p class="section-kicker">지역 미션 설정</p>
-            <h3>지역별로 학생들이 볼 동물을 먼저 고르세요</h3>
-            <p>학생이 사이드메뉴에서 다른 지역 미션을 눌러도, 여기서 고른 그 지역의 동물 카드만 보입니다.</p>
-          </div>
-          <label class="select-field" for="missionRegionSelect">
-            <span>오늘의 지역</span>
-            <select id="missionRegionSelect"></select>
-          </label>
-          <div id="missionAnimalOptions" class="mission-animal-options" aria-live="polite"></div>
-          <p id="missionAnimalCount" class="field-hint">0마리 선택됨</p>
-        </section>
-
-        <form id="questionSettingsForm" class="settings-form">
-          <p class="section-kicker">AI 질문방 설정</p>
-          <p class="field-hint">AI 질문방은 선택 사항입니다. 사용하지 않으면 AI 질문방 사용 안 함을 누르세요.</p>
-          <a id="roomTemplateLink" class="template-link"
-            href="https://app.magicschool.ai/magic-student/rooms?room-sharing-id=1a3dc4fb-2391-4d7b-9e77-dfaacddf7a35"
-            target="_blank" rel="noopener noreferrer">
-            AI교사 템플릿 열기
-          </a>
-          <label for="questionUrlInput">
-            <span>학생용 MagicSchool 참여 링크 <button type="button" class="guide-toggle" id="openGuide" aria-label="안내 보기">?</button></span>
-            <input id="questionUrlInput" type="url" placeholder="https://student.magicschool.ai/s/join?joinCode=..."
-              autocomplete="off">
-          </label>
-          <p class="field-hint">MagicSchool 학생용 참여 링크를 붙여 넣으면 질문방 연결 버전으로 바뀝니다.</p>
-          <div class="settings-actions">
-            <button id="connectQuestionUrl" class="question-choice-button is-on" type="submit" aria-pressed="false">AI 질문방 연결하기</button>
-            <button id="clearQuestionUrl" class="question-choice-button is-off" type="button" aria-pressed="true">AI 질문방 사용 안 함</button>
-          </div>
-        </form>
-
-        <div id="shareLinkPanel" class="share-link-panel" hidden>
-          <div class="qr-share-box">
-            <div id="qrCode" class="qr-code" role="button" tabindex="0" aria-label="QR 코드 크게 보기 (클릭하면 확대됩니다)" style="cursor:pointer"></div>
-            <div>
-              <p class="section-kicker" id="shareLinkMode">학생용 링크</p>
-              <h3 id="shareLinkTitle">학생용 QR</h3>
-              <p id="shareLinkDescription">이 QR에는 학생에게 보낼 수업용 도감 링크가 들어 있어요.</p>
-            </div>
-          </div>
-          <label for="shareLinkOutput">
-            <span>학생에게 보낼 수업용 도감 링크</span>
-            <input id="shareLinkOutput" type="text" readonly>
-          </label>
-          <div class="share-actions">
-            <button id="copyShareLink" class="primary-button secondary" type="button">링크 복사</button>
-            <button id="downloadQr" class="primary-button secondary" type="button">QR 이미지 저장</button>
-          </div>
-        </div>
-
-        <p id="settingsMessage" class="settings-message" aria-live="polite"></p>
-      </div>
-    </div>
-  </div>
-  <!-- no-question:remove:end settings-modal -->
-
-  <!-- no-question:remove:start guide-modal -->
-  <div id="guideModal" class="guide-modal" hidden>
-    <div class="guide-content">
-      <button type="button" class="close-button guide-close-btn" id="closeGuide" aria-label="닫기">닫기</button>
-      <h3>📋 MagicSchool 질문방 링크 복사 방법</h3>
-      <div class="guide-step">
-        <span class="guide-step-number">1</span>
-        <p class="guide-step-text"><strong>AI교사 템플릿 열기</strong> 버튼을 눌러 MagicSchool에서 방을 만들어요.</p>
-      </div>
-      <div class="guide-step">
-        <span class="guide-step-number">2</span>
-        <p class="guide-step-text">방이 만들어지면, 화면 위쪽의 <strong>'학생용 참여 링크'</strong> 버튼을 찾아요.</p>
-      </div>
-      <div class="guide-step">
-        <span class="guide-step-number">3</span>
-        <p class="guide-step-text">이 링크를 복사해서 아래 <strong>'학생용 MagicSchool 참여 링크'</strong> 칸에 붙여 넣어요. <strong>QR 코드가 아닌 링크</strong>를 넣어야 해요.</p>
-      </div>
-      <div class="guide-step">
-        <span class="guide-step-number">4</span>
-        <p class="guide-step-text"><strong>'AI 질문방 연결하기'</strong>를 누르면 질문방이 연결돼요. 아래 QR이나 수업용 도감 링크를 학생에게 공유해요.</p>
-      </div>
-    </div>
-  </div>
-  <!-- no-question:remove:end guide-modal -->
-
-  <!-- no-question:remove:start qr-expand-modal -->
-  <div id="qrExpandModal" class="qr-expand-modal" hidden>
-    <div class="qr-expand-content">
-      <button type="button" class="qr-expand-close" id="closeQrExpand" aria-label="닫기">✕</button>
-      <h3>📱 학생에게 보낼 QR</h3>
-      <div id="qrExpandImage" class="qr-expand-image"></div>
-      <div class="qr-expand-actions">
-        <button class="primary-button secondary" type="button" id="downloadQrExpand">💾 QR 이미지 저장</button>
-      </div>
-    </div>
-  </div>
-  <!-- no-question:remove:end qr-expand-modal -->
-
-  <!-- no-question:remove:start question-confirm-modal -->
-  <div id="confirmPopup" class="confirm-popup" hidden>
-    <div class="confirm-popup-content">
-      <h3>🐾 질문방으로 이동할까요?</h3>
-      <p>선생님이 만든 질문방으로 이동해요. 새 창이 열려요!</p>
-      <div class="confirm-popup-actions">
-        <button class="primary-button" type="button" id="confirmYes">이동하기</button>
-        <button class="cancel-button" type="button" id="confirmNo">괜찮아요</button>
-      </div>
-    </div>
-  </div>
-  <!-- no-question:remove:end question-confirm-modal -->
-
-  <div id="sourceConfirmModal" class="confirm-popup" hidden>
-    <div class="confirm-popup-content">
-      <h3>🌐 사진 출처를 볼까요?</h3>
-      <p>위키백과가 새 창에서 열려요. 도감으로 돌아오려면 새 창을 닫으면 됩니다.</p>
-      <div class="confirm-popup-actions">
-        <button class="primary-button" type="button" id="sourceContinue">계속 보기</button>
-        <button class="cancel-button" type="button" id="sourceCancel">도감에 있을래요</button>
-      </div>
-    </div>
-  </div>
-
-  <div id="onboardingModal" class="onboarding-modal" hidden>
-    <div class="onboarding-card" role="dialog" aria-modal="true" aria-labelledby="onboardingTitle">
-      <p class="section-kicker" id="onboardingStepLabel">첫 방문 안내</p>
-      <div id="onboardingContent"></div>
-      <div class="onboarding-actions">
-        <button id="skipOnboarding" class="text-button" type="button">다시 보지 않기</button>
-        <button id="nextOnboarding" class="primary-button" type="button">다음</button>
-      </div>
-    </div>
-  </div>
-
-  <div id="rewardModal" class="reward-modal" hidden>
-    <div class="reward-card" role="dialog" aria-modal="true" aria-labelledby="rewardTitle">
-      <div id="rewardContent"></div>
-      <div class="reward-actions">
-        <button id="rewardNextRegion" class="primary-button" type="button">다음 미션 시작</button>
-        <button id="rewardClose" class="primary-button secondary" type="button">계속 둘러보기</button>
-        <button id="rewardReset" class="text-button" type="button" hidden>처음부터 다시 시작</button>
-      </div>
-    </div>
-  </div>
-
-  <div id="appToast" class="app-toast" role="status" aria-live="polite" hidden></div>
-
-  <footer class="footer-note">
-    <p>자료: 미래엔 초등 과학 3-1, 2단원 동물의 생활 34-51쪽과 비상교육 실감형 과학관 동물 AR 자료를 바탕으로 구성했어요.</p>
-    <p>사진: 위키백과와 위키미디어 공용에서 제공하는 공개 라이선스 자료를 사용했어요. <a class="footer-link" href="./credits.html" target="_blank" rel="noopener noreferrer">사진 출처 모음</a></p>
-    <button id="resetProgress" class="text-button" type="button">수업 기록 초기화</button>
-  </footer>
-
-  <script src="./app-config.js?v=20260430-teacher-share"></script>
-  <!-- no-question:replace disabled-question-config -->
-  <!-- no-question:remove:start qrcode-script -->
-  <script src="./vendor/qrcode.js?v=20260430-teacher-share"></script>
-  <!-- no-question:remove:end qrcode-script -->
-  <script src="./app.js?v=20260519-question-placeholder"></script>
+  <div id="game-container"></div>
+  <script type="module" src="/src/main.js"></script>
 </body>
-
 </html>

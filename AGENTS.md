@@ -2,47 +2,41 @@
 
 ## Project
 
-Korean elementary-school animal encyclopedia — static vanilla HTML/CSS/JS site (no framework, no bundler, no npm dependencies beyond Node for the build script).
+Korean elementary-school animal encyclopedia — **Phaser 3 collectathon RPG** (Vite + npm). Vertical slice: walk the overworld, quiz-battle animals, register in the dex.
+
+Legacy static HTML/JS (teacher QR, no-question) lives under `legacy/` and is out of scope for `feature/phaser-collectathon-rpg`.
 
 ## Build commands
 
 ```bash
-npm run build:distribution          # Teacher-facing build (no question link by default)
-npm run build:distribution -- --questionUrl="https://..."  # With embedded question link
-npm run build:internal               # Personal build, reads config/internal.local.json
+npm install
+npm run dev      # Vite dev server (http://localhost:5173)
+npm run build    # production build → dist/
+npm run preview  # preview dist/
 ```
 
-The build script (`scripts/build.js`) copies `index.html`, `no-question.html`, `styles.css`, `app.js`, and `vendor/` into `dist/`, then writes a generated `dist/app-config.js`. There is no dev server — open `index.html` directly or serve `dist/` statically.
+Legacy teacher builds (optional, from `legacy/`):
 
-## Two HTML entry points
-
-- `index.html` — full version with question-tool settings UI (source of truth)
-- `no-question.html` — stripped version where question tool is completely disabled; auto-generated from `index.html` via `scripts/generate-no-question.js`
-
-## Build-time config
-
-`app-config.js` is overwritten at build time by `scripts/build.js`. The source version in the repo is the default fallback. Never edit `dist/app-config.js` directly.
-
-- `config/internal.local.json` — gitignored; holds a personal MagicSchool question link for internal builds
-- `QUESTION_URL` env var or `--questionUrl` CLI flag — injects a question link into distribution builds
-
-## Deployment
-
-Pushing to `main` triggers GitHub Actions (`.github/workflows/deploy-pages.yml`) which runs `build:distribution` and deploys `dist/` to GitHub Pages.
+```bash
+npm run build:distribution
+npm run build:internal
+```
 
 ## Key runtime details
 
-- Animal images load from Wikimedia at runtime (no local image assets)
-- `app.js` reads `window.APP_CONFIG` at load time to enable/disable the question tool
-- Student progress is stored in `localStorage` under `animal-encyclopedia-collected-v1`
-- Question tool URLs are shared via URL query param `?questionUrl=...` at runtime
+- Entry: `index.html` → `src/main.js` (Phaser)
+- Animal data / quiz: `src/data/animals.js`, `src/systems/QuizBuilder.js` (ported from legacy `app.js`)
+- Progress: `localStorage` key `animal-encyclopedia-collected-v1`
+- Sprout Lands assets: `public/assets/sprout-lands/` — credit **Cup Nooble** in README / credits.html
+- Animal portraits: Wikimedia URLs at runtime
 
 ## What not to do
 
-- Don't add npm dependencies without understanding this is a zero-dep static site
-- Don't commit `config/internal.local.json` (it's gitignored and contains personal links)
-- Don't edit `dist/` files directly — they are build artifacts
-- Don't assume there are test/lint/typecheck commands — none are configured
+- Don't add heavy npm deps beyond Phaser/Vite without need
+- Don't commit `config/internal.local.json`
+- Don't edit the plan file under `.cursor/plans/`
+- Don't touch `feature/adventure-map-progression` work in this branch
+- Teacher QR / no-question / settings are out of scope here
 
 ## graphify
 
