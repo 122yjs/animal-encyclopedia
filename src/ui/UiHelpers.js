@@ -43,9 +43,7 @@ export function createWoodButton(scene, x, y, label, onClick, {
     wordWrap: { width: width - 20 }
   }).setOrigin(0.5);
 
-  let pressed = false;
   const setPressed = (value) => {
-    pressed = value;
     container.setScale(value ? 0.96 : 1);
     if (bg.setTint) {
       if (value) bg.setTint(0xd9b98a);
@@ -56,8 +54,8 @@ export function createWoodButton(scene, x, y, label, onClick, {
 
   bg.on("pointerdown", () => setPressed(true));
   bg.on("pointerout", () => setPressed(false));
+  // 어린이 태블릿 배려: 누른 채 살짝 움직여도 버튼 위에서 떼면 실행
   bg.on("pointerup", () => {
-    if (!pressed) return;
     setPressed(false);
     if (typeof onClick === "function") onClick();
   });

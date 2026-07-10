@@ -11,6 +11,11 @@ export function subjectParticle(value) {
   return hasFinalConsonant(value) ? "이" : "가";
 }
 
+/** 조사(와/과) */
+export function withParticle(value) {
+  return hasFinalConsonant(value) ? "과" : "와";
+}
+
 /** 조사(으로/로) — 받침이 없거나 ㄹ 받침이면 "로" */
 export function directionParticle(value) {
   const trimmed = String(value).trim();

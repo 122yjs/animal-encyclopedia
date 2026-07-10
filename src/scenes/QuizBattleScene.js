@@ -10,9 +10,11 @@ import {
   buildObservationDetails,
   buildQuickFacts,
   getHintSection,
-  getQuestionTypeLabel
+  getQuestionTypeLabel,
+  withParticle
 } from "../systems/ObservationBuilder.js";
 import { collectAnimal, isCollected, regionStatus } from "../systems/ProgressStore.js";
+import { ensureAnimalTexture, ensureBallTexture } from "../world/AnimalSprites.js";
 import {
   KOREAN_FONT,
   createWoodButton,
@@ -93,9 +95,13 @@ export default class QuizBattleScene extends Phaser.Scene {
     this.enemyRoot = this.add.container(486, 104);
     const card = createWoodPanel(this, 0, 0, 134, 134);
     this.enemyPhotoHolder = this.add.container(0, 0);
-    this.enemyEmojiText = this.add.text(0, -4, emoji, {
-      fontSize: "52px", fontFamily: KOREAN_FONT
-    }).setOrigin(0.5);
+    // 사진이 오기 전까지는 자체 제작 미니 스프라이트(없으면 이모지)로 표시
+    const miniKey = ensureAnimalTexture(this, this.animal.id);
+    this.enemyEmojiText = miniKey
+      ? this.add.image(0, -2, miniKey).setScale(8)
+      : this.add.text(0, -4, emoji, {
+        fontSize: "52px", fontFamily: KOREAN_FONT
+      }).setOrigin(0.5);
     this.enemyPhotoHolder.add(this.enemyEmojiText);
     const plate = createWoodPanel(this, 0, 82, 160, 28, { tint: 0xffe9bd });
     const nameText = this.add.text(0, 81, `${emoji} ${this.animal.name}`, {
@@ -104,7 +110,7 @@ export default class QuizBattleScene extends Phaser.Scene {
     this.enemyRoot.add([card, this.enemyPhotoHolder, plate, nameText]);
 
     // 동물 기력(집중력) 게이지
-    this.add.text(414, 200, "기력", {
+    this.enemyGaugeLabel = this.add.text(414, 200, "기력", {
       fontFamily: KOREAN_FONT, fontSize: "11px", color: "#2d4a28", fontStyle: "bold"
     }).setOrigin(0, 0.5).setDepth(1002);
     this.enemyHearts = createHeartRow(this, 448, 200, this.enemyGauge, { size: 22, gap: 3 });
@@ -125,8 +131,8 @@ export default class QuizBattleScene extends Phaser.Scene {
       fontFamily: KOREAN_FONT, fontSize: "13px", color: "#3d2410", fontStyle: "bold"
     }).setOrigin(0.5).setDepth(1002);
 
-    // 도망 버튼
-    createWoodButton(this, width - 44, 20, "🏃 도망", () => {
+    // 도망 버튼 (승리 후에는 숨김)
+    this.fleeButton = createWoodButton(this, width - 44, 20, "🏃 도망", () => {
       if (this.phase === "victory") return;
       this.returnToOverworld();
     }, { width: 76, height: 28, fontSize: "12px" });
@@ -478,47 +484,189 @@ export default class QuizBattleScene extends Phaser.Scene {
 
   // ─── 승리 · 후퇴 ────────────────────────────────────────
 
+  // ─── 포획: 도감볼 던지기 ─────────────────────────────────
+
   onVictory() {
     this.phase = "victory";
-    collectAnimal(this.animal.id);
     this.clearDynamicUi();
-    this.setTurnLabel("배틀 승리!");
+    this.setTurnLabel("지금이 기회!");
+    this.fleeButton?.setVisible(false);
 
-    // 포획 연출: 카드가 하트와 함께 폴짝
-    playEmote(this, this.enemyRoot.x, this.enemyRoot.y - 76, "love", { depth: 1100 });
+    playEmote(this, this.enemyRoot.x, this.enemyRoot.y - 76, "surprise", { depth: 1100 });
     this.tweens.add({
       targets: this.enemyRoot,
-      scale: { from: 1, to: 1.12 },
       angle: { from: -3, to: 3 },
-      duration: 160,
+      duration: 140,
       yoyo: true,
       repeat: 2
     });
 
     const { width, height } = this.cameras.main;
+    this.narrate(`${this.animal.name}의 기력이 다 빠졌어요!\n도감볼을 던져 친구로 맞이해요!`, { height: 74 });
+    this.track(createWoodButton(this, width / 2, height * 0.32, "🎯 도감볼 던지기!", () => this.throwBall(), {
+      width: 250,
+      height: 46,
+      fontSize: "17px",
+      tint: 0xffe08a
+    }));
+  }
+
+  throwBall() {
+    if (this.phase !== "victory" || this.ballThrown) return;
+    this.ballThrown = true;
+    this.clearDynamicUi();
+    this.setTurnLabel("도감볼 던지기!");
+    this.narrate("도감볼을 힘껏 던졌다…!", { height: 56 });
+
+    ensureBallTexture(this);
+    const startX = this.playerSprite.x + 26;
+    const startY = this.playerSprite.y - 52;
+    const targetX = this.enemyRoot.x;
+    const targetY = this.enemyRoot.y;
+    const ball = this.add.image(startX, startY, "dex-ball").setScale(0).setDepth(1200);
+
+    // 던지는 모션: 플레이어가 살짝 앞으로
+    this.tweens.add({
+      targets: this.playerSprite,
+      x: "+=18",
+      duration: 150,
+      yoyo: true,
+      ease: "Cubic.easeOut"
+    });
+    this.tweens.add({ targets: ball, scale: 2.4, duration: 140, ease: "Back.easeOut" });
+
+    // 포물선 비행 (2차 베지어) + 회전
+    const peakX = (startX + targetX) / 2;
+    const peakY = Math.min(startY, targetY) - 120;
+    this.tweens.addCounter({
+      from: 0,
+      to: 1,
+      duration: 640,
+      delay: 140,
+      ease: "Sine.easeIn",
+      onUpdate: (tw) => {
+        const u = tw.getValue();
+        const inv = 1 - u;
+        ball.x = inv * inv * startX + 2 * inv * u * peakX + u * u * targetX;
+        ball.y = inv * inv * startY + 2 * inv * u * peakY + u * u * targetY;
+        ball.rotation = u * 9;
+      },
+      onComplete: () => this.absorbIntoBall(ball, targetX, targetY)
+    });
+  }
+
+  absorbIntoBall(ball, x, y) {
+    this.cameras.main.flash(150, 255, 240, 190);
+    this.flashEnemy();
+    this.enemyHearts.container.setVisible(false);
+    this.enemyGaugeLabel?.setVisible(false);
+
+    // 동물이 볼 속으로 쏙 빨려 들어감
+    this.tweens.add({
+      targets: this.enemyRoot,
+      scale: 0,
+      x,
+      y: y - 4,
+      angle: 24,
+      duration: 330,
+      ease: "Cubic.easeIn",
+      onComplete: () => {
+        this.enemyRoot.setVisible(false);
+        // 볼이 발판으로 톡 떨어짐
+        this.tweens.add({
+          targets: ball,
+          y: 172,
+          scale: 2.7,
+          duration: 300,
+          ease: "Bounce.easeOut",
+          onComplete: () => this.wobbleBall(ball, 0)
+        });
+      }
+    });
+  }
+
+  wobbleBall(ball, count) {
+    if (count >= 3) {
+      this.catchSuccess(ball);
+      return;
+    }
+    const tick = this.add.text(ball.x, ball.y - 34, "딸깍…", {
+      fontFamily: KOREAN_FONT,
+      fontSize: "12px",
+      color: "#fff8e7",
+      stroke: "#3a2a18",
+      strokeThickness: 3
+    }).setOrigin(0.5).setDepth(1201);
+    this.tweens.add({
+      targets: tick,
+      y: tick.y - 9,
+      alpha: 0,
+      duration: 540,
+      onComplete: () => tick.destroy()
+    });
+    this.tweens.add({
+      targets: ball,
+      angle: { from: -16, to: 16 },
+      duration: 130,
+      yoyo: true,
+      repeat: 1,
+      ease: "Sine.easeInOut",
+      onComplete: () => {
+        ball.setAngle(0);
+        this.time.delayedCall(200, () => this.wobbleBall(ball, count + 1));
+      }
+    });
+  }
+
+  catchSuccess(ball) {
+    collectAnimal(this.animal.id);
+    this.cameras.main.flash(240, 255, 236, 160);
+    playEmote(this, ball.x, ball.y - 46, "love", { depth: 1300 });
+    playEmote(this, ball.x - 36, ball.y - 22, "happy", { depth: 1300 });
+    this.tweens.add({ targets: ball, scale: 3.1, duration: 150, yoyo: true, repeat: 1 });
+
+    const flashText = this.add.text(ball.x, ball.y - 66, "찰칵! ✨", {
+      fontFamily: KOREAN_FONT,
+      fontSize: "17px",
+      color: "#ffd84d",
+      fontStyle: "bold",
+      stroke: "#3a2a18",
+      strokeThickness: 4
+    }).setOrigin(0.5).setDepth(1301);
+
+    this.time.delayedCall(800, () => {
+      flashText.destroy();
+      this.showCatchResult();
+    });
+  }
+
+  showCatchResult() {
+    this.clearDynamicUi();
+    this.setTurnLabel("배틀 승리!");
+
+    const { width, height } = this.cameras.main;
     const emoji = animalEmoji[this.animal.id] || "";
+    const name = this.animal.name;
     const status = this.regionId ? regionStatus(this.regionId) : null;
     const extra = status && status.complete
       ? "\n🎖 이 지역 동물을 모두 만났어요! 맵으로 돌아가면 배지를 받아요!"
       : "";
 
-    this.time.delayedCall(650, () => {
-      this.narrate(
-        `${emoji} ${this.animal.name}와(과) 친구가 되었어요! 도감에 등록!\n${this.observation.habitatLink}${extra}`,
-        { height: 108 }
-      );
-      this.track(createWoodButton(this, width / 2 - 92, height * 0.30, "📖 도감 보기", () => {
-        this.scene.start("DexScene", {
-          from: "OverworldScene",
-          returnPos: this.returnPos,
-          highlightId: this.animal.id,
-          regionId: this.regionId
-        });
-      }, { width: 150, height: 36, fontSize: "14px" }));
-      this.track(createWoodButton(this, width / 2 + 92, height * 0.30, "🗺️ 모험 계속!", () => {
-        this.returnToOverworld();
-      }, { width: 150, height: 36, fontSize: "14px", tint: 0xffe08a }));
-    });
+    this.narrate(
+      `${emoji} ${name}${withParticle(name)} 친구가 되었어요! 도감에 등록!\n${this.observation.habitatLink}${extra}`,
+      { height: 108 }
+    );
+    this.track(createWoodButton(this, width / 2 - 92, height * 0.30, "📖 도감 보기", () => {
+      this.scene.start("DexScene", {
+        from: "OverworldScene",
+        returnPos: this.returnPos,
+        highlightId: this.animal.id,
+        regionId: this.regionId
+      });
+    }, { width: 150, height: 36, fontSize: "14px" }));
+    this.track(createWoodButton(this, width / 2 + 92, height * 0.30, "🗺️ 모험 계속!", () => {
+      this.returnToOverworld();
+    }, { width: 150, height: 36, fontSize: "14px", tint: 0xffe08a }));
   }
 
   onRetreat() {

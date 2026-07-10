@@ -24,9 +24,14 @@ npm run build:internal
 
 ## Key runtime details
 
-- Entry: `index.html` → `src/main.js` (Phaser)
+- Entry: `index.html` → `src/main.js` (Phaser, 640×360 FIT, 5 scenes: Boot/Title/Overworld/QuizBattle/Dex)
 - Animal data / quiz: `src/data/animals.js`, `src/systems/QuizBuilder.js` (ported from legacy `app.js`)
-- Progress: `localStorage` key `animal-encyclopedia-collected-v1`
+- Regions & spawns: `src/data/regions.js` — 5 regions × 8 spawns on one 120×34-tile world; gates between regions unlock via badges
+- Terrain: `src/world/WorldMap.js` bakes tiles into one RenderTexture (RT `draw`/`stamp` ignores tint — ice zone uses a translucent `fill` overlay instead)
+- Mini pixel sprites (overworld markers, dex silhouettes, dex-ball): generated at runtime from pixel maps in `src/world/AnimalSprites.js` — original art, no license constraints
+- Battle flow: observe (3 checks) → turn-based quiz (hearts 3 / gauge 3) → dex-ball throw catch sequence; retreat on 0 hearts is penalty-free
+- Encounter zones start un-armed and arm only after the player moves >58px away — prevents instant re-battle when fleeing back onto a marker
+- Progress: `localStorage` keys `animal-encyclopedia-collected-v1` (collection), `animal-encyclopedia-region-clear-v1` (badges)
 - Sprout Lands assets: `public/assets/sprout-lands/` — credit **Cup Nooble** in README / credits.html
 - Animal portraits: Wikimedia URLs at runtime
 

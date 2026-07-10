@@ -13,6 +13,7 @@ import {
   isGateOpen
 } from "../systems/ProgressStore.js";
 import WorldMap from "../world/WorldMap.js";
+import { ensureAnimalTexture, isFlying } from "../world/AnimalSprites.js";
 import {
   KOREAN_FONT,
   createWoodButton,
@@ -38,6 +39,7 @@ export default class OverworldScene extends Phaser.Scene {
     this.encounterLocked = false;
     this.gateToastAt = 0;
     this.createdAt = this.time.now;
+    this.encounterZones = [];
 
     try {
       this.world = new WorldMap(this, { isGateOpen });
@@ -140,16 +142,32 @@ export default class OverworldScene extends Phaser.Scene {
 
   buildMarker(region, spawn, collected) {
     const { x, y } = this.world.tileCenter(spawn.tx, spawn.ty);
-    const emoji = animalEmoji[spawn.id] || "❓";
+    const flying = isFlying(spawn.id);
+    const texKey = ensureAnimalTexture(this, spawn.id);
 
     const parts = [];
-    parts.push(this.add.ellipse(0, 12, 30, 12, 0x2d1b0e, 0.18));
-    parts.push(this.add.circle(0, 0, 14, collected ? 0xd4e8c2 : 0xfff8e7, 0.97)
-      .setStrokeStyle(2, collected ? 0x3d7a34 : 0x6b4226));
-    parts.push(this.add.text(0, 0, emoji, {
-      fontSize: "14px", fontFamily: KOREAN_FONT
-    }).setOrigin(0.5));
-    parts.push(this.add.text(0, 24, collected ? `${spawn.id} ✓` : spawn.id, {
+    parts.push(this.add.ellipse(0, 11, 26, 9, 0x2d1b0e, 0.2));
+
+    let body;
+    if (texKey) {
+      body = this.add.image(0, flying ? -8 : -2, texKey).setScale(2.2);
+      if (spawn.tx % 2 === 0) body.setFlipX(true);
+      parts.push(body);
+    } else {
+      body = this.add.text(0, -2, animalEmoji[spawn.id] || "❓", {
+        fontSize: "16px", fontFamily: KOREAN_FONT
+      }).setOrigin(0.5);
+      parts.push(body);
+    }
+
+    if (collected) {
+      parts.push(this.add.circle(11, -12, 7, 0xd4e8c2, 0.95).setStrokeStyle(1.5, 0x3d7a34));
+      parts.push(this.add.text(11, -12, "✓", {
+        fontSize: "9px", color: "#2d5a28", fontStyle: "bold"
+      }).setOrigin(0.5));
+    }
+
+    parts.push(this.add.text(0, 22, collected ? `${spawn.id} ✓` : spawn.id, {
       fontFamily: KOREAN_FONT,
       fontSize: "10px",
       color: collected ? "#2d5a28" : "#3d2410",
@@ -158,7 +176,18 @@ export default class OverworldScene extends Phaser.Scene {
     }).setOrigin(0.5));
 
     const marker = this.add.container(x, y, parts).setDepth(10);
-    marker.setAlpha(collected ? 0.85 : 1);
+    marker.setAlpha(collected ? 0.9 : 1);
+
+    // 살아있는 느낌 — 둥실(나는 동물) / 콩콩(그 외)
+    this.tweens.add({
+      targets: body,
+      y: body.y - (flying ? 4 : 2),
+      duration: flying ? 900 : 650,
+      yoyo: true,
+      repeat: -1,
+      ease: "Sine.easeInOut",
+      delay: (spawn.tx * 137) % 600
+    });
 
     if (!collected) {
       const ring = this.add.circle(x, y, 15, 0xe8a838, 0)
@@ -179,6 +208,10 @@ export default class OverworldScene extends Phaser.Scene {
 
       const zone = this.add.zone(x, y, 42, 42);
       this.physics.add.existing(zone, true);
+      // 도망/후퇴 직후 같은 자리에서 곧바로 다시 배틀에 빨려들지 않도록,
+      // 플레이어가 마커에서 한 번 떨어진 뒤에만 조우가 무장됩니다.
+      zone.setData("armed", false);
+      this.encounterZones.push(zone);
       this.physics.add.overlap(this.player, zone, () => {
         this.tryEncounter(spawn.id, region.id, zone, marker);
       });
@@ -187,6 +220,7 @@ export default class OverworldScene extends Phaser.Scene {
 
   tryEncounter(animalId, regionId, zone, marker) {
     if (this.encounterLocked) return;
+    if (!zone.getData("armed")) return;
     // 씬 생성 직후 잠깐은 조우 금지 (전환 직후 오작동 방지)
     if (this.time.now - (this.createdAt ?? 0) < 500) return;
     this.encounterLocked = true;
@@ -437,6 +471,14 @@ export default class OverworldScene extends Phaser.Scene {
         this.lastDir = vy < 0 ? "up" : "down";
       }
       this.player.anims.play(`walk-${this.lastDir}`, true);
+    }
+
+    // 조우 무장 — 마커에서 한 번 떨어져야 다시 조우할 수 있음
+    for (const zone of this.encounterZones) {
+      if (!zone.active || zone.getData("armed")) continue;
+      if (Phaser.Math.Distance.Between(this.player.x, this.player.y, zone.x, zone.y) > 58) {
+        zone.setData("armed", true);
+      }
     }
 
     // 지역 감지

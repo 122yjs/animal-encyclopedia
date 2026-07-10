@@ -3,6 +3,7 @@ import Phaser from "phaser";
 import { regions, regionById, animalEmoji } from "../data/regions.js";
 import { animalById } from "../data/animals.js";
 import { readCollected, regionStatus, masterStatus, hasBadge } from "../systems/ProgressStore.js";
+import { ensureAnimalTexture } from "../world/AnimalSprites.js";
 import { KOREAN_FONT, createWoodButton, createWoodPanel } from "../ui/UiHelpers.js";
 
 export default class DexScene extends Phaser.Scene {
@@ -137,11 +138,27 @@ export default class DexScene extends Phaser.Scene {
           this.load.start();
         }
       } else {
-        const circle = this.add.circle(0, -14, 26, 0x6b5844, got ? 0.25 : 0.75);
-        const mark = this.add.text(0, -14, got ? animalEmoji[spawn.id] || "?" : "?", {
-          fontSize: "22px", fontFamily: KOREAN_FONT, color: "#fff8e7"
-        }).setOrigin(0.5);
-        root.add([circle, mark]);
+        // 미수집: 자체 제작 픽셀 실루엣 (모양 힌트) — 없으면 ? 표시
+        const miniKey = ensureAnimalTexture(this, spawn.id);
+        if (miniKey) {
+          const silhouette = this.add.image(0, -14, miniKey).setScale(4);
+          if (!got) {
+            silhouette.setTintFill(0x6b5844);
+            silhouette.setAlpha(0.85);
+          }
+          root.add(silhouette);
+          if (!got) {
+            root.add(this.add.text(16, -28, "?", {
+              fontSize: "15px", fontFamily: KOREAN_FONT, color: "#8a6a4a", fontStyle: "bold"
+            }).setOrigin(0.5));
+          }
+        } else {
+          const circle = this.add.circle(0, -14, 26, 0x6b5844, got ? 0.25 : 0.75);
+          const mark = this.add.text(0, -14, "?", {
+            fontSize: "22px", fontFamily: KOREAN_FONT, color: "#fff8e7"
+          }).setOrigin(0.5);
+          root.add([circle, mark]);
+        }
       }
 
       const title = got ? `${animalEmoji[spawn.id] || ""} ${animal.name}` : "???";
