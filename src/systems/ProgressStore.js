@@ -1,10 +1,10 @@
-// localStorage에 수집한 동물을 저장·불러오는 진행 관리자
+// localStorage에 수집 동물·지역 배지를 저장하는 진행 관리자
 import { animals, collectedIdAliases } from "../data/animals.js";
-import { aroundMission } from "../data/missions.js";
+import { regions, regionById, REGION_ORDER, totalSpawnCount } from "../data/regions.js";
 
-/** 구버전과 같은 키를 써서 진행도를 이어받을 수 있습니다 */
+/** 구버전(레거시 도감)과 같은 키를 써서 수집 진행도를 이어받습니다 */
 export const STORAGE_KEY = "animal-encyclopedia-collected-v1";
-export const REGION_CLEAR_KEY = "animal-encyclopedia-region-clear-v1";
+export const BADGE_KEY = "animal-encyclopedia-region-clear-v1";
 
 const validIds = new Set(animals.map((a) => a.id));
 
@@ -40,12 +40,11 @@ function safeSet(key, value) {
   }
 }
 
-/** 수집한 동물 id 목록을 읽습니다 */
+/** 수집한 동물 id 목록 */
 export function readCollected() {
   return safeParseIds(safeGetItem(STORAGE_KEY));
 }
 
-/** 수집 목록을 저장합니다 */
 export function saveCollected(ids) {
   const unique = [...new Set(ids)].filter((id) => validIds.has(id));
   safeSet(STORAGE_KEY, JSON.stringify(unique));
@@ -59,58 +58,77 @@ export function collectAnimal(animalId) {
   return saveCollected([...current]);
 }
 
-/** 이미 수집했는지 확인합니다 */
 export function isCollected(animalId) {
   return readCollected().includes(animalId);
 }
 
-/** around 지역 클리어 여부 */
-export function isRegionCleared(regionId = aroundMission.id) {
+// ─── 지역 배지 ────────────────────────────────────────────
+
+function readBadgeMap() {
   try {
-    const data = JSON.parse(safeGetItem(REGION_CLEAR_KEY) || "{}");
-    return Boolean(data[regionId]);
+    const data = JSON.parse(safeGetItem(BADGE_KEY) || "{}");
+    return data && typeof data === "object" ? data : {};
   } catch {
-    return false;
+    return {};
   }
 }
 
-/** 지역 클리어 표시를 저장합니다 */
-export function markRegionCleared(regionId = aroundMission.id) {
-  try {
-    const data = JSON.parse(safeGetItem(REGION_CLEAR_KEY) || "{}");
-    data[regionId] = true;
-    safeSet(REGION_CLEAR_KEY, JSON.stringify(data));
-  } catch {
-    safeSet(REGION_CLEAR_KEY, JSON.stringify({ [regionId]: true }));
-  }
+export function hasBadge(regionId) {
+  return Boolean(readBadgeMap()[regionId]);
+}
+
+export function awardBadge(regionId) {
+  const data = readBadgeMap();
+  data[regionId] = true;
+  safeSet(BADGE_KEY, JSON.stringify(data));
+}
+
+export function badgeCount() {
+  return REGION_ORDER.filter((id) => hasBadge(id)).length;
+}
+
+/** 지역 수집 현황 { count, target, complete } */
+export function regionStatus(regionId) {
+  const region = regionById[regionId];
+  if (!region) return { count: 0, target: 0, complete: false };
+  const collected = new Set(readCollected());
+  const count = region.spawns.filter((s) => collected.has(s.id)).length;
+  const target = region.spawns.length;
+  return { count, target, complete: count >= target };
 }
 
 /**
- * 스폰 목표(4마리)를 모두 모았는지 확인합니다.
- * 클리어 연출은 한 번만 보여 주기 위해 저장 플래그와 함께 씁니다.
+ * 배지를 받을 자격이 생겼지만 아직 배지가 없는 지역을 찾습니다.
+ * (오버월드로 돌아올 때 축하 연출 + 문 열기에 사용)
  */
-export function checkAroundClear() {
+export function findNewBadgeRegion() {
+  for (const region of regions) {
+    if (!hasBadge(region.id) && regionStatus(region.id).complete) {
+      return region.id;
+    }
+  }
+  return null;
+}
+
+/** 문이 열려 있는지 — 문의 from 지역 배지가 있으면 통과 가능 */
+export function isGateOpen(fromRegionId) {
+  return hasBadge(fromRegionId);
+}
+
+/** 전체 도감 진행 (마스터 판정) */
+export function masterStatus() {
   const collected = new Set(readCollected());
-  const got = aroundMission.spawnAnimalIds.filter((id) => collected.has(id));
-  const complete = got.length >= aroundMission.clearTarget;
-  const alreadyShown = isRegionCleared(aroundMission.id);
+  const spawnIds = regions.flatMap((r) => r.spawns.map((s) => s.id));
+  const count = spawnIds.filter((id) => collected.has(id)).length;
   return {
-    complete,
-    count: got.length,
-    target: aroundMission.clearTarget,
-    shouldCelebrate: complete && !alreadyShown
+    count,
+    target: totalSpawnCount(),
+    complete: count >= totalSpawnCount() && REGION_ORDER.every((id) => hasBadge(id))
   };
 }
 
-export const ProgressStore = {
-  STORAGE_KEY,
-  readCollected,
-  saveCollected,
-  collectAnimal,
-  isCollected,
-  isRegionCleared,
-  markRegionCleared,
-  checkAroundClear
-};
-
-export default ProgressStore;
+/** 처음부터 다시 시작 */
+export function resetAll() {
+  saveCollected([]);
+  safeSet(BADGE_KEY, "{}");
+}

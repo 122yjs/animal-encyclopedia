@@ -13,6 +13,7 @@ const config = {
   height: 360,
   backgroundColor: "#5a9e3f",
   pixelArt: true,
+  roundPixels: true,
   physics: {
     default: "arcade",
     arcade: {

@@ -1,9 +1,9 @@
-// 도감 화면 — 수집/미수집 목록
+// 도감 — 지역 탭 + 카드 그리드 (수집: 사진, 미수집: 실루엣 ?)
 import Phaser from "phaser";
-import { aroundMission } from "../data/missions.js";
+import { regions, regionById, animalEmoji } from "../data/regions.js";
 import { animalById } from "../data/animals.js";
-import { readCollected, checkAroundClear } from "../systems/ProgressStore.js";
-import { createTextButton } from "../ui/UiHelpers.js";
+import { readCollected, regionStatus, masterStatus, hasBadge } from "../systems/ProgressStore.js";
+import { KOREAN_FONT, createWoodButton, createWoodPanel } from "../ui/UiHelpers.js";
 
 export default class DexScene extends Phaser.Scene {
   constructor() {
@@ -14,49 +14,120 @@ export default class DexScene extends Phaser.Scene {
     this.from = data.from || "TitleScene";
     this.returnPos = data.returnPos || null;
     this.highlightId = data.highlightId || null;
+    this.regionId = data.regionId || this.findRegionOf(this.highlightId) || "around";
+  }
+
+  findRegionOf(animalId) {
+    if (!animalId) return null;
+    const region = regions.find((r) => r.spawns.some((s) => s.id === animalId));
+    return region?.id || null;
   }
 
   create() {
     const { width, height } = this.cameras.main;
+    this.add.rectangle(width / 2, height / 2, width, height, 0xf3ebd2);
+    this.add.rectangle(width / 2, 26, width, 52, 0x8fc47a, 0.4);
+
+    const master = masterStatus();
+    this.add.text(16, 14, "📖 동물 도감", {
+      fontFamily: KOREAN_FONT, fontSize: "20px", color: "#0f6f68", fontStyle: "bold"
+    });
+    this.add.text(16, 38, `전체 ${master.count} / ${master.target}${master.complete ? " · 🏆 도감 마스터!" : ""}`, {
+      fontFamily: KOREAN_FONT, fontSize: "12px", color: "#5d4a38"
+    });
+
+    createWoodButton(this, width - 60, 26, "← 돌아가기", () => {
+      if (this.from === "OverworldScene") {
+        this.scene.start("OverworldScene", { returnPos: this.returnPos });
+      } else {
+        this.scene.start("TitleScene");
+      }
+    }, { width: 104, height: 32, fontSize: "13px" });
+
+    this.buildTabs();
+    this.cardNodes = [];
+    this.renderRegion();
+  }
+
+  buildTabs() {
+    const { width } = this.cameras.main;
+    const tabW = (width - 24) / regions.length;
+    this.tabButtons = regions.map((region, i) => {
+      const status = regionStatus(region.id);
+      const badge = hasBadge(region.id) ? "🎖" : "";
+      const label = `${region.emoji} ${region.short} ${status.count}/${status.target}${badge}`;
+      const btn = createWoodButton(
+        this,
+        12 + tabW / 2 + i * tabW,
+        72,
+        label,
+        () => {
+          this.regionId = region.id;
+          this.refreshTabs();
+          this.renderRegion();
+        },
+        { width: tabW - 6, height: 30, fontSize: "11px" }
+      );
+      btn.regionId = region.id;
+      return btn;
+    });
+    this.refreshTabs();
+  }
+
+  refreshTabs() {
+    this.tabButtons.forEach((btn) => {
+      const active = btn.regionId === this.regionId;
+      btn.buttonBg.setTint?.(active ? 0xffe08a : 0xd9c8a8);
+      btn.setAlpha(active ? 1 : 0.85);
+    });
+  }
+
+  renderRegion() {
+    this.cardNodes.forEach((n) => n.destroy(true));
+    this.cardNodes = [];
+
+    const { width } = this.cameras.main;
+    const region = regionById[this.regionId];
     const collected = new Set(readCollected());
-    const status = checkAroundClear();
 
-    this.add.rectangle(width / 2, height / 2, width, height, 0xf8f3df);
-
-    this.add.text(width / 2, 28, "동물 도감 · 우리 주변", {
-      fontFamily: "Malgun Gothic, Apple SD Gothic Neo, sans-serif",
-      fontSize: "22px",
-      color: "#0f6f68",
-      fontStyle: "bold"
+    const intro = this.add.text(width / 2, 96, `${region.emoji} ${region.name} — ${region.intro}`, {
+      fontFamily: KOREAN_FONT, fontSize: "11px", color: "#5d4a38"
     }).setOrigin(0.5);
+    this.cardNodes.push(intro);
 
-    this.add.text(width / 2, 56, `수집 ${status.count} / ${status.target}  (전체 저장 ${collected.size}마리)`, {
-      fontFamily: "Malgun Gothic, Apple SD Gothic Neo, sans-serif",
-      fontSize: "13px",
-      color: "#5d4a38"
-    }).setOrigin(0.5);
+    const cols = 4;
+    const cardW = 148;
+    const cardH = 116;
+    const startX = width / 2 - ((cols - 1) * cardW) / 2;
+    const startY = 168;
 
-    // 스폰 대상 4마리 + 미션 목록 나머지
-    const ids = aroundMission.animalIds;
-    const startY = 90;
-    const rowH = 52;
-
-    ids.forEach((id, index) => {
-      const animal = animalById[id];
+    region.spawns.forEach((spawn, index) => {
+      const animal = animalById[spawn.id];
       if (!animal) return;
-      const got = collected.has(id);
-      const y = startY + index * rowH;
-      const isSpawn = aroundMission.spawnAnimalIds.includes(id);
+      const got = collected.has(spawn.id);
+      const cx = startX + (index % cols) * cardW;
+      const cy = startY + Math.floor(index / cols) * cardH;
 
-      const bg = this.add.rectangle(width / 2, y, width - 40, rowH - 8, got ? 0xe7f5ef : 0xe8e0d0)
-        .setStrokeStyle(2, this.highlightId === id ? 0xe8a838 : 0x6b422633);
+      const root = this.add.container(cx, cy);
+      this.cardNodes.push(root);
 
-      // 실루엣/초상
+      const panel = createWoodPanel(this, 0, 2, cardW - 10, cardH - 2, {
+        tint: got ? null : 0xcfc4ae
+      });
+      if (this.highlightId === spawn.id) {
+        const glow = this.add.rectangle(0, 0, cardW - 4, cardH - 2, 0xffd84d, 0.25);
+        root.add(glow);
+      }
+      root.add(panel);
+
+      // 사진 or 실루엣
       if (got && animal.image) {
-        const key = `dex-${id}`;
+        const key = `dex-${spawn.id}`;
+        const holder = this.add.container(0, -14);
+        root.add(holder);
         const drawThumb = () => {
-          if (!this.textures.exists(key)) return;
-          this.add.image(48, y, key).setDisplaySize(36, 36);
+          if (!this.textures.exists(key) || !this.scene.isActive()) return;
+          holder.add(this.add.image(0, 0, key).setDisplaySize(58, 58));
         };
         if (this.textures.exists(key)) {
           drawThumb();
@@ -66,47 +137,21 @@ export default class DexScene extends Phaser.Scene {
           this.load.start();
         }
       } else {
-        this.add.circle(48, y, 16, 0x6b4226, got ? 0.2 : 0.55);
-        this.add.text(48, y, "?", {
-          fontSize: "16px",
-          color: "#fff8e7"
+        const circle = this.add.circle(0, -14, 26, 0x6b5844, got ? 0.25 : 0.75);
+        const mark = this.add.text(0, -14, got ? animalEmoji[spawn.id] || "?" : "?", {
+          fontSize: "22px", fontFamily: KOREAN_FONT, color: "#fff8e7"
         }).setOrigin(0.5);
+        root.add([circle, mark]);
       }
 
-      const title = got ? animal.name : "???";
-      const sub = got
-        ? animal.habitat
-        : (isSpawn ? "맵에서 만나 퀴즈로 등록하세요" : "이번 슬라이스 스폰 외 동물");
-
-      this.add.text(78, y - 10, title, {
-        fontFamily: "Malgun Gothic, Apple SD Gothic Neo, sans-serif",
-        fontSize: "15px",
-        color: "#2d1b0e",
-        fontStyle: "bold"
-      });
-      this.add.text(78, y + 8, sub, {
-        fontFamily: "Malgun Gothic, Apple SD Gothic Neo, sans-serif",
-        fontSize: "11px",
-        color: "#5d4a38"
-      });
-
-      if (got) {
-        this.add.text(width - 52, y, "✓", {
-          fontSize: "18px",
-          color: "#0f6f68"
-        }).setOrigin(0.5);
-      }
-
-      // bg는 레이아웃용
-      void bg;
+      const title = got ? `${animalEmoji[spawn.id] || ""} ${animal.name}` : "???";
+      root.add(this.add.text(0, 20, title, {
+        fontFamily: KOREAN_FONT, fontSize: "13px", color: "#3d2410", fontStyle: "bold"
+      }).setOrigin(0.5));
+      root.add(this.add.text(0, 38, got ? animal.habitat : `${spawn.zone}에서 만나요`, {
+        fontFamily: KOREAN_FONT, fontSize: "9px", color: "#6b5a44",
+        align: "center", wordWrap: { width: cardW - 30 }
+      }).setOrigin(0.5));
     });
-
-    createTextButton(this, width / 2, height - 36, "돌아가기", () => {
-      if (this.from === "OverworldScene") {
-        this.scene.start("OverworldScene", { returnPos: this.returnPos });
-      } else {
-        this.scene.start("TitleScene");
-      }
-    }, { width: 160, height: 40, fontSize: "16px" });
   }
 }

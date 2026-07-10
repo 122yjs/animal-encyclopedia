@@ -1,28 +1,207 @@
-// Phaser UI 헬퍼 — 다이얼로그·버튼·텍스트 패널
+// Phaser UI 헬퍼 — Sprout Lands 나무 패널·버튼·하트·이모트
 import Phaser from "phaser";
 
+export const KOREAN_FONT = "Malgun Gothic, 'Segoe UI Emoji', Apple SD Gothic Neo, sans-serif";
+
 /**
- * 화면 하단에 대화창 스타일 패널을 그립니다.
- * @returns {{ panel: Phaser.GameObjects.Container, setText: Function, destroy: Function }}
+ * Sprout Lands 나무 패널 (dialog box 나인슬라이스).
+ * 텍스처가 없으면 사각형으로 대체합니다.
+ */
+export function createWoodPanel(scene, x, y, width, height, { tint, alpha = 1 } = {}) {
+  let panel;
+  if (scene.textures.exists("ui-dialog")) {
+    panel = scene.add.nineslice(x, y, "ui-dialog", 0, width, height, 14, 14, 14, 14);
+    if (tint) panel.setTint(tint);
+  } else {
+    panel = scene.add.rectangle(x, y, width, height, 0xf0d9a0).setStrokeStyle(3, 0x6b4226);
+  }
+  panel.setAlpha(alpha);
+  return panel;
+}
+
+/**
+ * 나무 질감 버튼. 터치 친화(눌렀다 떼면 실행, 밖으로 나가면 취소).
+ */
+export function createWoodButton(scene, x, y, label, onClick, {
+  width = 180,
+  height = 40,
+  fontSize = "15px",
+  textColor = "#3d2410",
+  tint = null,
+  depth = 1001
+} = {}) {
+  const container = scene.add.container(x, y).setDepth(depth).setScrollFactor(0);
+  const bg = createWoodPanel(scene, 0, 0, width, height, { tint });
+  bg.setInteractive({ useHandCursor: true });
+
+  const text = scene.add.text(0, -1, label, {
+    fontFamily: KOREAN_FONT,
+    fontSize,
+    color: textColor,
+    fontStyle: "bold",
+    align: "center",
+    wordWrap: { width: width - 20 }
+  }).setOrigin(0.5);
+
+  let pressed = false;
+  const setPressed = (value) => {
+    pressed = value;
+    container.setScale(value ? 0.96 : 1);
+    if (bg.setTint) {
+      if (value) bg.setTint(0xd9b98a);
+      else if (tint) bg.setTint(tint);
+      else bg.clearTint();
+    }
+  };
+
+  bg.on("pointerdown", () => setPressed(true));
+  bg.on("pointerout", () => setPressed(false));
+  bg.on("pointerup", () => {
+    if (!pressed) return;
+    setPressed(false);
+    if (typeof onClick === "function") onClick();
+  });
+
+  container.add([bg, text]);
+  container.buttonBg = bg;
+  container.buttonText = text;
+  container.setButtonEnabled = (enabled) => {
+    if (enabled) {
+      bg.setInteractive({ useHandCursor: true });
+      container.setAlpha(1);
+    } else {
+      bg.disableInteractive();
+      container.setAlpha(0.55);
+    }
+  };
+  return container;
+}
+
+/** (구버전 호환) 단색 텍스트 버튼 — 새 코드는 createWoodButton을 쓰세요 */
+export const createTextButton = (scene, x, y, label, onClick, opts = {}) =>
+  createWoodButton(scene, x, y, label, onClick, opts);
+
+/**
+ * 하트 게이지 줄. set(n)으로 남은 하트 수를 반영합니다.
+ * Sprout Lands 하트 시트: frame 0 = 가득, 5 = 빈 하트.
+ */
+export function createHeartRow(scene, x, y, max, {
+  size = 26,
+  gap = 4,
+  tint = null,
+  depth = 1002
+} = {}) {
+  const container = scene.add.container(x, y).setDepth(depth).setScrollFactor(0);
+  const hearts = [];
+  const hasSheet = scene.textures.exists("ui-hearts");
+
+  for (let i = 0; i < max; i += 1) {
+    const hx = i * (size + gap);
+    let heart;
+    if (hasSheet) {
+      heart = scene.add.image(hx, 0, "ui-hearts", 0).setDisplaySize(size, size);
+      if (tint) heart.setTint(tint);
+    } else {
+      heart = scene.add.text(hx, 0, "❤", { fontSize: `${size}px` }).setOrigin(0.5);
+    }
+    hearts.push(heart);
+    container.add(heart);
+  }
+
+  let current = max;
+  return {
+    container,
+    get value() {
+      return current;
+    },
+    set(n, { animate = true } = {}) {
+      const next = Phaser.Math.Clamp(n, 0, max);
+      hearts.forEach((heart, i) => {
+        const full = i < next;
+        if (hasSheet) heart.setFrame(full ? 0 : 5);
+        else heart.setText(full ? "❤" : "🖤");
+        if (animate && !full && i === next && current > next) {
+          scene.tweens.add({
+            targets: heart,
+            scale: { from: heart.scale * 1.6, to: heart.scale },
+            duration: 260,
+            ease: "Back.easeOut"
+          });
+        }
+      });
+      current = next;
+    },
+    destroy() {
+      container.destroy(true);
+    }
+  };
+}
+
+/** 이모트 종류 → Teemo 이모트 시트 프레임 */
+const EMOTE_FRAMES = {
+  surprise: { frames: [10, 11, 12, 13, 14], rate: 12, repeat: 0 },
+  happy: { frames: [35, 36], rate: 6, repeat: 2 },
+  sad: { frames: [55, 56], rate: 5, repeat: 2 },
+  love: { frames: [20, 21], rate: 6, repeat: 2 },
+  angry: { frames: [45, 46], rate: 6, repeat: 2 },
+  zzz: { frames: [65, 66, 67], rate: 4, repeat: 1 }
+};
+
+/** 머리 위 말풍선 이모트 — 잠깐 보여주고 사라집니다 */
+export function playEmote(scene, x, y, kind = "surprise", { depth = 900, scale = 1, scrollFactor } = {}) {
+  if (!scene.textures.exists("ui-emotes")) return null;
+  const spec = EMOTE_FRAMES[kind] || EMOTE_FRAMES.surprise;
+  const animKey = `emote-${kind}`;
+
+  if (!scene.anims.exists(animKey)) {
+    scene.anims.create({
+      key: animKey,
+      frames: spec.frames.map((frame) => ({ key: "ui-emotes", frame })),
+      frameRate: spec.rate,
+      repeat: spec.repeat
+    });
+  }
+
+  const emote = scene.add.sprite(x, y, "ui-emotes", spec.frames[0])
+    .setDepth(depth)
+    .setScale(scale);
+  if (scrollFactor !== undefined) emote.setScrollFactor(scrollFactor);
+
+  emote.play(animKey);
+  emote.once(Phaser.Animations.Events.ANIMATION_COMPLETE, () => {
+    scene.tweens.add({
+      targets: emote,
+      alpha: 0,
+      y: emote.y - 6,
+      duration: 180,
+      onComplete: () => emote.destroy()
+    });
+  });
+  return emote;
+}
+
+/**
+ * 화면 하단 내레이션 대화창 (Sprout Lands premade 다이얼로그).
  */
 export function createDialogPanel(scene, {
   text = "",
   width = 560,
   height = 110,
-  y
+  y,
+  depth = 1000
 } = {}) {
   const cam = scene.cameras.main;
-  const panelY = y ?? cam.height - height / 2 - 16;
-  const container = scene.add.container(cam.width / 2, panelY).setDepth(1000).setScrollFactor(0);
+  const panelY = y ?? cam.height - height / 2 - 12;
+  const container = scene.add.container(cam.width / 2, panelY).setDepth(depth).setScrollFactor(0);
 
-  const bg = scene.add.rectangle(0, 0, width, height, 0xfff8e7, 0.96)
-    .setStrokeStyle(3, 0x6b4226);
+  const bg = createWoodPanel(scene, 0, 0, width, height);
   const label = scene.add.text(0, 0, text, {
-    fontFamily: "Malgun Gothic, Apple SD Gothic Neo, sans-serif",
-    fontSize: "16px",
-    color: "#2d1b0e",
+    fontFamily: KOREAN_FONT,
+    fontSize: "15px",
+    color: "#3d2410",
     align: "center",
-    wordWrap: { width: width - 32 }
+    lineSpacing: 4,
+    wordWrap: { width: width - 40 }
   }).setOrigin(0.5);
 
   container.add([bg, label]);
@@ -39,54 +218,22 @@ export function createDialogPanel(scene, {
 }
 
 /**
- * 클릭 가능한 텍스트 버튼을 만듭니다.
- */
-export function createTextButton(scene, x, y, label, onClick, {
-  width = 180,
-  height = 44,
-  fontSize = "18px",
-  fill = 0xf0d9a0,
-  stroke = 0x6b4226
-} = {}) {
-  const container = scene.add.container(x, y).setDepth(1001).setScrollFactor(0);
-  const bg = scene.add.rectangle(0, 0, width, height, fill)
-    .setStrokeStyle(3, stroke)
-    .setInteractive({ useHandCursor: true });
-  const text = scene.add.text(0, 0, label, {
-    fontFamily: "Malgun Gothic, Apple SD Gothic Neo, sans-serif",
-    fontSize,
-    color: "#2d1b0e",
-    fontStyle: "bold"
-  }).setOrigin(0.5);
-
-  bg.on("pointerover", () => bg.setFillStyle(0xffe8b8));
-  bg.on("pointerout", () => bg.setFillStyle(fill));
-  bg.on("pointerdown", () => {
-    if (typeof onClick === "function") onClick();
-  });
-
-  container.add([bg, text]);
-  return container;
-}
-
-/**
  * 모바일용 가상 방향 패드 (왼쪽 하단)
- * @returns {{ getVector: () => {x:number,y:number}, destroy: Function }}
  */
 export function createVirtualPad(scene) {
   const cam = scene.cameras.main;
-  const baseX = 90;
-  const baseY = cam.height - 90;
+  const baseX = 84;
+  const baseY = cam.height - 84;
   const keys = { up: false, down: false, left: false, right: false };
 
-  const root = scene.add.container(baseX, baseY).setDepth(2000).setScrollFactor(0).setAlpha(0.85);
+  const root = scene.add.container(baseX, baseY).setDepth(2000).setScrollFactor(0).setAlpha(0.82);
 
   const makeDir = (dx, dy, label, ox, oy) => {
-    const btn = scene.add.circle(ox, oy, 22, 0x3d5c34, 0.75)
-      .setStrokeStyle(2, 0xfff8e7)
+    const btn = scene.add.circle(ox, oy, 21, 0x3d2410, 0.72)
+      .setStrokeStyle(2, 0xf0d9a0)
       .setInteractive({ useHandCursor: true });
     const t = scene.add.text(ox, oy, label, {
-      fontSize: "14px",
+      fontSize: "13px",
       color: "#fff8e7"
     }).setOrigin(0.5);
     const press = (v) => {
@@ -101,13 +248,18 @@ export function createVirtualPad(scene) {
     root.add([btn, t]);
   };
 
-  makeDir(0, -1, "▲", 0, -40);
-  makeDir(0, 1, "▼", 0, 40);
-  makeDir(-1, 0, "◀", -40, 0);
-  makeDir(1, 0, "▶", 40, 0);
+  makeDir(0, -1, "▲", 0, -38);
+  makeDir(0, 1, "▼", 0, 38);
+  makeDir(-1, 0, "◀", -38, 0);
+  makeDir(1, 0, "▶", 38, 0);
 
   return {
     getVector() {
+      // 안전장치: 눌린 포인터가 하나도 없으면 고착된 패드 상태를 해제
+      const anyPointerDown = scene.input.manager.pointers.some((p) => p.isDown);
+      if (!anyPointerDown && (keys.left || keys.right || keys.up || keys.down)) {
+        keys.left = keys.right = keys.up = keys.down = false;
+      }
       let x = 0;
       let y = 0;
       if (keys.left) x -= 1;

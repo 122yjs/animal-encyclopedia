@@ -11,6 +11,15 @@ export function subjectParticle(value) {
   return hasFinalConsonant(value) ? "이" : "가";
 }
 
+/** 조사(으로/로) — 받침이 없거나 ㄹ 받침이면 "로" */
+export function directionParticle(value) {
+  const trimmed = String(value).trim();
+  const last = trimmed.charCodeAt(trimmed.length - 1);
+  if (last < 0xac00 || last > 0xd7a3) return "로";
+  const jong = (last - 0xac00) % 28;
+  return jong === 0 || jong === 8 ? "로" : "으로";
+}
+
 function hasFinalConsonant(value) {
   const last = String(value).trim().charCodeAt(String(value).trim().length - 1);
   if (last < 0xac00 || last > 0xd7a3) return false;
