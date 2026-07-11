@@ -344,6 +344,9 @@ const els = {
   sourceConfirmModal: document.querySelector("#sourceConfirmModal"),
   sourceContinue: document.querySelector("#sourceContinue"),
   sourceCancel: document.querySelector("#sourceCancel"),
+  regionLockedPopup: document.querySelector("#regionLockedPopup"),
+  regionLockedYes: document.querySelector("#regionLockedYes"),
+  regionLockedNo: document.querySelector("#regionLockedNo"),
   onboardingModal: document.querySelector("#onboardingModal"),
   onboardingContent: document.querySelector("#onboardingContent"),
   onboardingStepLabel: document.querySelector("#onboardingStepLabel"),
@@ -522,6 +525,7 @@ function init() {
       }
       if (els.sourceConfirmModal && !els.sourceConfirmModal.hidden) closeSourceConfirm();
       if (els.confirmPopup && !els.confirmPopup.hidden) closeConfirmPopup();
+      if (els.regionLockedPopup && !els.regionLockedPopup.hidden) closeRegionLockedPopup();
     }
     handleModalKeydown(event);
   });
@@ -569,6 +573,13 @@ function init() {
   if (els.sourceConfirmModal) {
     els.sourceConfirmModal.addEventListener("click", event => {
       if (event.target === els.sourceConfirmModal) closeSourceConfirm();
+    });
+  }
+  if (els.regionLockedYes) els.regionLockedYes.addEventListener("click", confirmLockedRegionTravel);
+  if (els.regionLockedNo) els.regionLockedNo.addEventListener("click", closeRegionLockedPopup);
+  if (els.regionLockedPopup) {
+    els.regionLockedPopup.addEventListener("click", event => {
+      if (event.target === els.regionLockedPopup) closeRegionLockedPopup();
     });
   }
   if (els.nextOnboarding) els.nextOnboarding.addEventListener("click", nextOnboardingStep);
@@ -2991,7 +3002,13 @@ function bindAdventureMap() {
         return;
       }
       const regionId = node.dataset.mapRegion;
-      if (regionId) travelToRegion(regionId);
+      if (regionId) {
+        if (node.classList.contains("map-status-locked")) {
+          openRegionLockedPopup(regionId);
+        } else {
+          travelToRegion(regionId);
+        }
+      }
     });
   }
   if (els.mapQuestCard) {
@@ -3600,6 +3617,7 @@ function escapeAttribute(value) {
 
 let pendingQuestionUrl = null;
 let pendingSourceUrl = null;
+let pendingLockedRegionId = null;
 
 function openGuideModal() {
   if (els.guideModal) enterModalFocus(els.guideModal);
@@ -3672,6 +3690,26 @@ function confirmNavigateToSource() {
 function closeSourceConfirm() {
   if (els.sourceConfirmModal) els.sourceConfirmModal.hidden = true;
   pendingSourceUrl = null;
+}
+
+function openRegionLockedPopup(regionId) {
+  pendingLockedRegionId = regionId;
+  if (els.regionLockedPopup) {
+    els.regionLockedPopup.hidden = false;
+  }
+}
+
+function confirmLockedRegionTravel() {
+  if (els.regionLockedPopup) els.regionLockedPopup.hidden = true;
+  if (pendingLockedRegionId) {
+    travelToRegion(pendingLockedRegionId);
+    pendingLockedRegionId = null;
+  }
+}
+
+function closeRegionLockedPopup() {
+  if (els.regionLockedPopup) els.regionLockedPopup.hidden = true;
+  pendingLockedRegionId = null;
 }
 
 init();
