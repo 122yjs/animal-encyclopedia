@@ -620,11 +620,13 @@ function init() {
   });
 
   setView("map");
-  openFirstRunTeacherWorkflow();
   updateSidebarLede();
 
-  if (!readBoolean(onboardingSeenKey, false)) {
+  const onboardingSeen = readBoolean(onboardingSeenKey, false);
+  if (!onboardingSeen) {
     window.setTimeout(openOnboarding, 700);
+  } else {
+    openFirstRunTeacherWorkflow();
   }
 }
 
@@ -1064,6 +1066,7 @@ function completeOnboarding() {
   if (els.onboardingModal && !els.onboardingModal.hidden) {
     exitModalFocus(els.onboardingModal);
   }
+  openFirstRunTeacherWorkflow();
 }
 
 function clearOnboardingHighlights() {
