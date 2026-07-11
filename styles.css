@@ -4022,15 +4022,15 @@ body[data-view="game"] .sticky-progress {
 
 
 
-/* 분류미션 드롭다운 라벨 가독성 보장 */
-.select-field span {
+/* 분류미션 드롭다운 라벨/선택창 — 게임 화면(.game-view)에만 적용
+   (설정 모달에도 .select-field가 있어 전역 지정 시 밝은 테마가 깨짐) */
+.game-view .select-field span {
   color: #fff8df !important;
   font-size: 1.05rem !important;
   text-shadow: 0 2px 4px rgba(0,0,0,0.5) !important;
 }
 
-/* 분류미션 선택창(select) 스타일 커스터마이징 */
-.select-field select {
+.game-view .select-field select {
   color: #fff8e8 !important;
   background: #252538 !important;
   border: 2px solid #3c3c5c !important;
