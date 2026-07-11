@@ -18,3 +18,7 @@ graphify-out/.graphify*
 .gemini/
 docs/ai-sessions/
 /*.png
+
+# Local archive notes (not for repo)
+docs/archive/2026-04-development-notes/learnings/
+docs/archive/2026-04-development-notes/ux-analysis.md
