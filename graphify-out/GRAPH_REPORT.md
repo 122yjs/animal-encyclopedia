@@ -1,7 +1,7 @@
 # Graph Report - animal-encyclopedia  (2026-07-12)
 
 ## Corpus Check
-- 13 files · ~497,196 words
+- 13 files · ~497,401 words
 - Verdict: corpus is large enough that graph structure adds value.
 
 ## Summary
@@ -10,7 +10,7 @@
 - Token cost: 0 input · 0 output
 
 ## Graph Freshness
-- Built from commit: `ea31d16a`
+- Built from commit: `a51c3345`
 - Run `git rev-parse HEAD` and compare to check if the graph is stale.
 - Run `graphify update .` after code changes (no API cost).
 
@@ -117,20 +117,20 @@ Cohesion: 0.13
 Nodes (18): achievement_badge, animal_encyclopedia, capture_functionality, collectible_item, gamification_element, capture_ball, treasure_chest, gem_item (+10 more)
 
 ### Community 12 - "Community 12"
-Cohesion: 0.14
-Nodes (16): clearOnboardingHighlights(), closeGuideModal(), closeQrExpand(), closeReward(), closeSettings(), completeOnboarding(), enterModalFocus(), exitModalFocus() (+8 more)
+Cohesion: 0.13
+Nodes (17): clearOnboardingHighlights(), closeDetail(), closeGuideModal(), closeQrExpand(), closeReward(), closeSettings(), completeOnboarding(), enterModalFocus() (+9 more)
 
 ### Community 13 - "Community 13"
 Cohesion: 0.15
 Nodes (15): buildObservationDetails(), escapeAttribute(), lifeBrief(), lifestyleExplanation(), readObservationReady(), renderAnimalEnvironmentNote(), renderAnimalInfo(), renderAnimalRegionBadges() (+7 more)
 
 ### Community 14 - "Community 14"
-Cohesion: 0.18
-Nodes (15): buildDistinctiveFeatureQuestion(), buildQuestions(), buildSpecialEnvironmentQuestion(), getHabitatDistractors(), getMovementKey(), hasFinalConsonant(), makeDistinctiveFeatureOptions(), makeHabitatOptions() (+7 more)
-
-### Community 15 - "Community 15"
 Cohesion: 0.16
 Nodes (15): decodeCompactMissionAnimalMask(), encodeCompactMissionAnimalMask(), getDefaultMissionAnimalIds(), getMissionAnimalIdsFromPageUrl(), getMissionAnimalsParam(), getMissionCandidateAnimals(), getMissionRegionFromCompactCode(), getMissionRegionFromPageUrl() (+7 more)
+
+### Community 15 - "Community 15"
+Cohesion: 0.2
+Nodes (14): buildDistinctiveFeatureQuestion(), buildQuestions(), buildSpecialEnvironmentQuestion(), getHabitatDistractors(), getMovementKey(), hasFinalConsonant(), makeDistinctiveFeatureOptions(), makeHabitatOptions() (+6 more)
 
 ### Community 16 - "Community 16"
 Cohesion: 0.18
@@ -141,8 +141,8 @@ Cohesion: 0.29
 Nodes (11): download(), downloadLocalImages(), downloadWithFallback(), getExtension(), lookupWikipediaImage(), parseAnimals(), parseImageSources(), parseWiki() (+3 more)
 
 ### Community 18 - "Community 18"
-Cohesion: 0.2
-Nodes (12): answerQuestion(), clearHintHighlight(), closeDetail(), escapeHTML(), finishQuiz(), nextQuestion(), renderFeedback(), renderObservationSummary() (+4 more)
+Cohesion: 0.21
+Nodes (12): answerQuestion(), clearHintHighlight(), escapeHTML(), finishQuiz(), nextQuestion(), renderFeedback(), renderObservationSummary(), renderQuickFacts() (+4 more)
 
 ### Community 19 - "Community 19"
 Cohesion: 0.22
