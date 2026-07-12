@@ -262,6 +262,8 @@ const state = {
 
 let audioContext = null;
 let toastTimer = 0;
+let pendingMapTravel = null;
+const MAP_TRAVEL_DURATION_MS = 1400;
 
 const els = {
   modeButtons: document.querySelectorAll("[data-view]"),
@@ -2963,6 +2965,7 @@ function migrateLegacyBadges() {
 function awardRegionBadge(regionId) {
   if (!getMissionPreset(regionId) || hasRegionBadge(regionId)) return;
   state.badges.add(regionId);
+  pendingMapTravel = { from: regionId, to: getNextMissionFilter() };
   saveBadges();
   if (!state.completedMilestones.has(regionId)) {
     state.completedMilestones.add(regionId);
@@ -3046,7 +3049,13 @@ function renderAdventureMap() {
   journeyStops.forEach((stop, index) => {
     els.mapNodes.append(createMapNode(stop, index, activeQuestId));
   });
-  positionMapPlayer(activeQuestId);
+  if (state.view === "map" && pendingMapTravel) {
+    const travel = pendingMapTravel;
+    pendingMapTravel = null;
+    animateMapPlayer(travel.from, travel.to);
+  } else {
+    positionMapPlayer(activeQuestId);
+  }
 }
 
 function createMapNode(stop, index, nextMissionId) {
@@ -3119,6 +3128,37 @@ function positionMapPlayer(nextMissionId) {
   els.mapPlayer.style.top = `${stop.y}%`;
 }
 
+function animateMapPlayer(fromId, toId) {
+  if (!els.mapPlayer) return;
+  const targetId = toId === "all" ? "master" : toId;
+  const from = journeyStops.find(item => item.id === fromId);
+  const to = journeyStops.find(item => item.id === targetId);
+  const reduceMotion = typeof window.matchMedia === "function"
+    && window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+  if (!from || !to || reduceMotion) {
+    positionMapPlayer(toId);
+    return;
+  }
+
+  els.mapPlayer.classList.add("is-traveling");
+  els.mapPlayer.style.transition = "none";
+  els.mapPlayer.style.left = `${from.x}%`;
+  els.mapPlayer.style.top = `${from.y}%`;
+  void els.mapPlayer.offsetWidth;
+  els.mapPlayer.style.removeProperty("transition");
+  window.requestAnimationFrame(() => {
+    els.mapPlayer.style.left = `${to.x}%`;
+    els.mapPlayer.style.top = `${to.y}%`;
+  });
+  window.setTimeout(() => els.mapPlayer.classList.remove("is-traveling"), MAP_TRAVEL_DURATION_MS);
+}
+
+function queueMapPlayerTravel(fromRegionId, toRegionId) {
+  if (state.view !== "map" || !fromRegionId || fromRegionId === toRegionId) return false;
+  pendingMapTravel = { from: fromRegionId, to: toRegionId };
+  return true;
+}
+
 function renderBadgeCase() {
   if (!els.badgeCase) return;
   const slots = milestoneFilters.map(filter => {
@@ -3179,10 +3219,19 @@ function renderMapQuestCard(nextMissionId) {
 function travelToRegion(regionId) {
   const filter = filters.find(item => item.id === regionId);
   if (!filter) return;
+  const fromRegion = getActiveQuestRegion();
+  const shouldAnimateTravel = queueMapPlayerTravel(fromRegion, regionId);
   playSound("select");
   activateMissionRegion(regionId, { shouldRender: true, updateUrl: true });
-  setView("catalog");
-  showToast(`${filter.icon} ${filter.label}에 도착했어요! 동물 카드를 눌러 관찰을 시작해요.`);
+  const finishTravel = () => {
+    setView("catalog");
+    showToast(`${filter.icon} ${filter.label}에 도착했어요! 동물 카드를 눌러 관찰을 시작해요.`);
+  };
+  if (shouldAnimateTravel) {
+    window.setTimeout(finishTravel, MAP_TRAVEL_DURATION_MS);
+    return;
+  }
+  finishTravel();
 }
 
 function requestRegionTravel(regionId) {
@@ -3385,19 +3434,13 @@ function closeReward() {
 function goToNextRewardRegion() {
   const nextMissionId = getNextMissionFilter();
   closeReward();
-  if (nextMissionId === "all") {
-    setView("map");
-    renderMissionPanel();
-    renderFilters();
-    return;
+  if (nextMissionId !== "all") {
+    activateMissionRegion(nextMissionId, { shouldRender: false, updateUrl: true });
   }
-  activateMissionRegion(nextMissionId, { shouldRender: false, updateUrl: true });
-  setView("catalog");
+  setView("map");
   renderMissionPanel();
   renderFilters();
   renderAnimals();
-  const filter = filters.find(item => item.id === nextMissionId);
-  if (filter) showToast(`${filter.icon} ${filter.label}에 도착했어요! 동물 카드를 눌러 관찰을 시작해요.`);
 }
 
 function resetProgressFromReward() {
@@ -3413,6 +3456,7 @@ function saveCompletedMilestones() {
 function resetProgress(skipConfirm = false) {
   const ok = skipConfirm || confirm("공용 태블릿의 등록 기록을 모두 지울까요? 다음 반 수업을 위해 도감 진행도와 지역 보상을 초기화합니다.");
   if (!ok) return;
+  pendingMapTravel = null;
   state.collected.clear();
   state.completedMilestones.clear();
   state.observationReady.clear();

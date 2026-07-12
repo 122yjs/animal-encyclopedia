@@ -201,3 +201,48 @@ test("adventure map region art stays uncolored until its badge is earned", () =>
     "the colored player marker should sit beside the current region art instead of covering it"
   );
 });
+
+test("map player travels once from a newly earned badge to the next mission", () => {
+  const appJs = read("app.js");
+  const styles = read("styles.css");
+
+  for (const needle of [
+    "let pendingMapTravel = null",
+    "pendingMapTravel = { from: regionId, to: getNextMissionFilter() }",
+    'state.view === "map" && pendingMapTravel',
+    "function animateMapPlayer(fromId, toId)",
+    'els.mapPlayer.classList.add("is-traveling")',
+    'window.matchMedia("(prefers-reduced-motion: reduce)")'
+  ]) {
+    assert.ok(appJs.includes(needle), `app.js should include ${needle}`);
+  }
+
+  const travelRule = styles.match(/\.map-player\.is-traveling \{[\s\S]*?\n\}/)?.[0] ?? "";
+  assert.ok(travelRule.includes("animation: none"), "traveling should pause the idle bob animation");
+  assert.ok(travelRule.includes("transition-duration"), "traveling should use a visible one-time transition");
+
+  const nextRegionStart = appJs.indexOf("function goToNextRewardRegion()");
+  const nextRegionEnd = appJs.indexOf("function resetProgressFromReward()", nextRegionStart);
+  const nextRegionCode = appJs.slice(nextRegionStart, nextRegionEnd);
+  assert.ok(nextRegionCode.includes('setView("map")'), "the badge reward action should reveal the map journey");
+
+  const resetStart = appJs.indexOf("function resetProgress(skipConfirm = false)");
+  const resetEnd = appJs.indexOf("function readObservationReady", resetStart);
+  assert.ok(appJs.slice(resetStart, resetEnd).includes("pendingMapTravel = null"), "reset should discard a queued journey");
+});
+
+test("map player also travels when a student jumps to another region from the map", () => {
+  const appJs = read("app.js");
+  const travelStart = appJs.indexOf("function travelToRegion(regionId)");
+  const travelEnd = appJs.indexOf("function requestRegionTravel(regionId)", travelStart);
+  const travelCode = appJs.slice(travelStart, travelEnd);
+
+  assert.ok(appJs.includes("function queueMapPlayerTravel(fromRegionId, toRegionId)"), "app.js should queue map travel from map clicks");
+  for (const needle of [
+    "const fromRegion = getActiveQuestRegion()",
+    "queueMapPlayerTravel(fromRegion, regionId)",
+    "window.setTimeout(finishTravel, MAP_TRAVEL_DURATION_MS)"
+  ]) {
+    assert.ok(travelCode.includes(needle), `travelToRegion should include ${needle}`);
+  }
+});
