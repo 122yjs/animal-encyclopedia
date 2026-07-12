@@ -1,254 +1,670 @@
 {
-  "/Users/junier/Documents/Develop/science-animal/scratch.py": {
-    "mtime": 1777880756.9089973,
+  "/Users/junier/Projects/animal-encyclopedia/scratch.py": {
+    "mtime": 1783802215.9742177,
     "hash": "2b9fa02322bf4d471f639b20f4690496"
   },
-  "/Users/junier/Documents/Develop/science-animal/app-config.js": {
-    "mtime": 1776490443.5312588,
+  "/Users/junier/Projects/animal-encyclopedia/app-config.js": {
+    "mtime": 1783802215.8848794,
     "hash": "a9b166bbfcc425c8ffd975c9197240ce"
   },
-  "/Users/junier/Documents/Develop/science-animal/app.js": {
-    "mtime": 1777880756.8930469,
-    "hash": "e310ffb0e71cc2259b38613677dcc290"
+  "/Users/junier/Projects/animal-encyclopedia/app.js": {
+    "mtime": 1783819019.6859918,
+    "hash": "ee835710f779e080768e6f88687ade43"
   },
-  "/Users/junier/Documents/Develop/science-animal/gamified-animal-encyclopedia-webapp/vite.config.ts": {
-    "mtime": 1777255608.0,
-    "hash": "2ae197243ce8bb3a3f1fe6474ec7bd68"
-  },
-  "/Users/junier/Documents/Develop/science-animal/gamified-animal-encyclopedia-webapp/src/App.tsx": {
-    "mtime": 1777255608.0,
-    "hash": "9450f550897816218e112327bbec6be8"
-  },
-  "/Users/junier/Documents/Develop/science-animal/gamified-animal-encyclopedia-webapp/src/main.tsx": {
-    "mtime": 1777255608.0,
-    "hash": "447c8ceb74e5081b004ef36157813957"
-  },
-  "/Users/junier/Documents/Develop/science-animal/gamified-animal-encyclopedia-webapp/src/utils/cn.ts": {
-    "mtime": 1777255608.0,
-    "hash": "d9837f38cc05303254571985e3164050"
-  },
-  "/Users/junier/Documents/Develop/science-animal/scripts/record-demo.mjs": {
-    "mtime": 1776484557.0472136,
+  "/Users/junier/Projects/animal-encyclopedia/scripts/record-demo.mjs": {
+    "mtime": 1783802215.9761896,
     "hash": "fc24c5f172f260343dc0249e61098c54"
   },
-  "/Users/junier/Documents/Develop/science-animal/scripts/generate-credits.js": {
-    "mtime": 1777464817.0686553,
+  "/Users/junier/Projects/animal-encyclopedia/scripts/generate-credits.js": {
+    "mtime": 1783802215.9751663,
     "hash": "638b45781bbca568cf2172e8ac9b652e"
   },
-  "/Users/junier/Documents/Develop/science-animal/scripts/phase1-mission-contract.test.mjs": {
-    "mtime": 1777880756.9101543,
-    "hash": "f5cbde6e4038a85854eedda25e4d721d"
+  "/Users/junier/Projects/animal-encyclopedia/scripts/phase1-mission-contract.test.mjs": {
+    "mtime": 1783802215.9755764,
+    "hash": "d89dbf511c59163710d1f67f2243b15c"
   },
-  "/Users/junier/Documents/Develop/science-animal/scripts/download-local-images.js": {
-    "mtime": 1777464817.0680196,
+  "/Users/junier/Projects/animal-encyclopedia/scripts/download-local-images.js": {
+    "mtime": 1783802215.9750745,
     "hash": "56d4fb4e3848c9bbde929f5f17e1a95e"
   },
-  "/Users/junier/Documents/Develop/science-animal/scripts/phase2-contract.test.mjs": {
-    "mtime": 1777880756.9105432,
+  "/Users/junier/Projects/animal-encyclopedia/scripts/phase2-contract.test.mjs": {
+    "mtime": 1783802215.9756682,
     "hash": "79ead0930ad8dfaca1e74e61a5a1323b"
   },
-  "/Users/junier/Documents/Develop/science-animal/scripts/build.js": {
-    "mtime": 1777535995.3935993,
+  "/Users/junier/Projects/animal-encyclopedia/scripts/build.js": {
+    "mtime": 1783802215.9749677,
     "hash": "21c0bac590b922d6bd9320bcf6bfa4c1"
   },
-  "/Users/junier/Documents/Develop/science-animal/scripts/phase3-contract.test.mjs": {
-    "mtime": 1777880756.910844,
-    "hash": "09a615a1f9b411eb37e96a8b824a2417"
+  "/Users/junier/Projects/animal-encyclopedia/scripts/phase3-contract.test.mjs": {
+    "mtime": 1783802215.9758687,
+    "hash": "5c73910aae6fa45e1001679735c61d6f"
   },
-  "/Users/junier/Documents/Develop/science-animal/scripts/generate-no-question.js": {
-    "mtime": 1777880756.9093785,
+  "/Users/junier/Projects/animal-encyclopedia/scripts/generate-no-question.js": {
+    "mtime": 1783802215.9752483,
     "hash": "390d9cbbbeb38baa357987f62be5237d"
   },
-  "/Users/junier/Documents/Develop/science-animal/scripts/phase0-ux-contract.test.mjs": {
-    "mtime": 1777880756.90978,
-    "hash": "893c640ae4d351e4cf86354de4a081d5"
+  "/Users/junier/Projects/animal-encyclopedia/scripts/phase0-ux-contract.test.mjs": {
+    "mtime": 1783802215.9754868,
+    "hash": "756355813a68e6b9adc95def26e5fa2a"
   },
-  "/Users/junier/Documents/Develop/science-animal/vendor/qrcode.js": {
-    "mtime": 1776345760.7645397,
+  "/Users/junier/Projects/animal-encyclopedia/vendor/qrcode.js": {
+    "mtime": 1776417429.8434937,
     "hash": "6e6189e2b177b3d014321edad68fd73c"
   },
-  "/Users/junier/Documents/Develop/science-animal/index.html": {
-    "mtime": 1777880756.9080756,
-    "hash": "2cd0bdab5a90a05365621a3c27f6a20a"
+  "/Users/junier/Projects/animal-encyclopedia/index.html": {
+    "mtime": 1783809103.3049557,
+    "hash": "3e284a97fc7daa8cd421ce789f05885e"
   },
-  "/Users/junier/Documents/Develop/science-animal/CHANGELOG.md": {
-    "mtime": 1777534549.1407804,
-    "hash": "81da9c51762f2e376d02868594311b14"
+  "/Users/junier/Projects/animal-encyclopedia/CHANGELOG.md": {
+    "mtime": 1783802215.884322,
+    "hash": "49a1e9cd842af115152c3056e7f575dc"
   },
-  "/Users/junier/Documents/Develop/science-animal/README.md": {
-    "mtime": 1777534549.1472998,
-    "hash": "b7118971f7406607affba11e0e026e51"
+  "/Users/junier/Projects/animal-encyclopedia/README.md": {
+    "mtime": 1783802215.8844874,
+    "hash": "33244edd95112be74a51d26158c51c69"
   },
-  "/Users/junier/Documents/Develop/science-animal/no-question.html": {
-    "mtime": 1777880756.9085205,
-    "hash": "9fe2fb6b956ec0a04f1eb36f7e8d9e46"
+  "/Users/junier/Projects/animal-encyclopedia/no-question.html": {
+    "mtime": 1783819103.0661042,
+    "hash": "12c305f9a9fa6ec72c7d362354a2be6d"
   },
-  "/Users/junier/Documents/Develop/science-animal/GEMINI.md": {
-    "mtime": 1777902443.4233642,
-    "hash": "8ee39dcfe68a23b3797b02648930d699"
+  "/Users/junier/Projects/animal-encyclopedia/AGENTS.md": {
+    "mtime": 1783802215.884189,
+    "hash": "2706b34b6d84f73fcce58b8d8cec718d"
   },
-  "/Users/junier/Documents/Develop/science-animal/session-ses_268b.md": {
-    "mtime": 1776362889.7739995,
-    "hash": "8f16f754524df3b949b708ed032766df"
-  },
-  "/Users/junier/Documents/Develop/science-animal/AGENTS.md": {
-    "mtime": 1777901953.231405,
-    "hash": "260594790100d3ff15111e68e5013438"
-  },
-  "/Users/junier/Documents/Develop/science-animal/credits.html": {
-    "mtime": 1777880347.4464347,
+  "/Users/junier/Projects/animal-encyclopedia/credits.html": {
+    "mtime": 1783819103.051773,
     "hash": "859b4292cfc800534c5ba48b9317ee46"
   },
-  "/Users/junier/Documents/Develop/science-animal/docs/QA_CHECKLIST.md": {
-    "mtime": 1777534549.1508505,
+  "/Users/junier/Projects/animal-encyclopedia/devlog/_plan/260712_h5_status_text_contrast/00_plan.md": {
+    "mtime": 1783819094.4875746,
+    "hash": "08840b064c2b10bd7b88160dc6c0f06c"
+  },
+  "/Users/junier/Projects/animal-encyclopedia/devlog/_plan/260712_h4_game_theme/00_plan.md": {
+    "mtime": 1783819019.6869478,
+    "hash": "e8c61a6d1e5cf0b8286dc7b0454c5d57"
+  },
+  "/Users/junier/Projects/animal-encyclopedia/docs/QA_CHECKLIST.md": {
+    "mtime": 1783802215.919998,
     "hash": "5dc03728c9bd29701e9ac861e4803f3b"
   },
-  "/Users/junier/Documents/Develop/science-animal/docs/ROADMAP.md": {
-    "mtime": 1777880756.9059894,
+  "/Users/junier/Projects/animal-encyclopedia/docs/ROADMAP.md": {
+    "mtime": 1783802215.9200964,
     "hash": "f0bf32ee3f7325556890fb2625a53120"
   },
-  "/Users/junier/Documents/Develop/science-animal/docs/INDEX.md": {
-    "mtime": 1777534549.1505249,
+  "/Users/junier/Projects/animal-encyclopedia/docs/INDEX.md": {
+    "mtime": 1783802215.9199183,
     "hash": "fbc6ad3c08758b6c9bf93dbdfa2e77e5"
   },
-  "/Users/junier/Documents/Develop/science-animal/docs/archive/roadmap_p0_details_20260430.md": {
-    "mtime": 1777880756.9063532,
+  "/Users/junier/Projects/animal-encyclopedia/docs/archive/roadmap_p0_details_20260430.md": {
+    "mtime": 1783802215.9215121,
     "hash": "d4916b830178c09d1a4c3d9ef989603f"
   },
-  "/Users/junier/Documents/Develop/science-animal/docs/archive/2026-04-development-notes/ui_redesign_v2_changes.md": {
-    "mtime": 1777534550.9197907,
+  "/Users/junier/Projects/animal-encyclopedia/docs/archive/2026-04-development-notes/ui_redesign_v2_changes.md": {
+    "mtime": 1783802215.9210572,
     "hash": "5ae609e34a4f4e009f0177ffbbb779ad"
   },
-  "/Users/junier/Documents/Develop/science-animal/docs/archive/2026-04-development-notes/\ub3d9\ubb3c\ub3c4\uac1054_\ud1b5\ud569_\uac1c\ubc1c\uacc4\ud68d\uc11c.md": {
-    "mtime": 1777534550.9211223,
+  "/Users/junier/Projects/animal-encyclopedia/docs/archive/2026-04-development-notes/\ub3d9\ubb3c\ub3c4\uac1054_\ud1b5\ud569_\uac1c\ubc1c\uacc4\ud68d\uc11c.md": {
+    "mtime": 1783802215.9213977,
     "hash": "16cb4f49c2ea0bec142d72c3294740fb"
   },
-  "/Users/junier/Documents/Develop/science-animal/docs/archive/2026-04-development-notes/game-mobile-ux-draft.md": {
-    "mtime": 1777534550.9176335,
+  "/Users/junier/Projects/animal-encyclopedia/docs/archive/2026-04-development-notes/game-mobile-ux-draft.md": {
+    "mtime": 1783802215.920827,
     "hash": "f9a6866ab2ccc32e16ab70adbaef56b6"
   },
-  "/Users/junier/Documents/Develop/science-animal/docs/archive/2026-04-development-notes/2\ucc28_\uac1c\uc120\uacc4\ud68d.md": {
-    "mtime": 1777534549.1518993,
+  "/Users/junier/Projects/animal-encyclopedia/docs/archive/2026-04-development-notes/2\ucc28_\uac1c\uc120\uacc4\ud68d.md": {
+    "mtime": 1783802215.9204693,
     "hash": "1e896b4e21a220e1deb3753bb232202c"
   },
-  "/Users/junier/Documents/Develop/science-animal/docs/archive/2026-04-development-notes/README.md": {
-    "mtime": 1777534550.9160168,
+  "/Users/junier/Projects/animal-encyclopedia/docs/archive/2026-04-development-notes/README.md": {
+    "mtime": 1783802215.9207416,
     "hash": "5d3f1243a188daca1fd2f2b59d97ff70"
   },
-  "/Users/junier/Documents/Develop/science-animal/docs/archive/2026-04-development-notes/3\ucc28_\ubcf4\uace0\uc11c.md": {
-    "mtime": 1777534549.152295,
+  "/Users/junier/Projects/animal-encyclopedia/docs/archive/2026-04-development-notes/3\ucc28_\ubcf4\uace0\uc11c.md": {
+    "mtime": 1783802215.9206634,
     "hash": "f21097fded3fd1c27bffe9f7b8ecc2fd"
   },
-  "/Users/junier/Documents/Develop/science-animal/docs/archive/2026-04-development-notes/improvement-plan.md": {
-    "mtime": 1777534550.9191678,
+  "/Users/junier/Projects/animal-encyclopedia/docs/archive/2026-04-development-notes/improvement-plan.md": {
+    "mtime": 1783802215.9209466,
     "hash": "c3f1cc4019ce12bf25724e7eb0e81bae"
   },
-  "/Users/junier/Documents/Develop/science-animal/docs/archive/2026-04-development-notes/ux-evaluation-and-improvement-plan.md": {
-    "mtime": 1777534550.9203362,
+  "/Users/junier/Projects/animal-encyclopedia/docs/archive/2026-04-development-notes/ux-evaluation-and-improvement-plan.md": {
+    "mtime": 1783802215.92115,
     "hash": "e48b9c0fb3ddf7410382c53a761a2936"
   },
-  "/Users/junier/Documents/Develop/science-animal/docs/archive/2026-04-development-notes/ux-evaluation.md": {
-    "mtime": 1777534550.9207706,
+  "/Users/junier/Projects/animal-encyclopedia/docs/archive/2026-04-development-notes/ux-evaluation.md": {
+    "mtime": 1783802215.92125,
     "hash": "f9f47caf2b8a1b854498c6b600757415"
   },
-  "/Users/junier/Documents/Develop/science-animal/docs/ai-sessions/2026-05-04-\uc9c0\uc5ed\ubcf4\uc0c1-\uba38\uc9c0\ubc30\ud3ec.md": {
-    "mtime": 1777901528.0666556,
-    "hash": "f0b3f641eabbb8a77aeab59868c33164"
+  "/Users/junier/Projects/animal-encyclopedia/docs/archive/2026-04-development-notes/ux-analysis.md": {
+    "mtime": 1777466788.5758462,
+    "hash": "5c05de2f68acb554b0172aec4c9a9038"
   },
-  "/Users/junier/Documents/Develop/science-animal/gamified-animal-encyclopedia-webapp/index.html": {
-    "mtime": 1777255608.0,
-    "hash": "4dcf0b5c85d7940dced36b01c99ad8ed"
+  "/Users/junier/Projects/animal-encyclopedia/docs/archive/2026-04-development-notes/learnings/ERRORS.md": {
+    "mtime": 1776433693.5625904,
+    "hash": "81f9143f2ec3b6711f8d280ceb7959ee"
   },
-  "/Users/junier/Documents/Develop/science-animal/region-reward-verification.png": {
-    "mtime": 1777880790.4137619,
-    "hash": "54d90abd41171b6da0ecf7d01cb90902"
+  "/Users/junier/Projects/animal-encyclopedia/docs/archive/2026-04-development-notes/learnings/LEARNINGS.md": {
+    "mtime": 1776433704.285292,
+    "hash": "c583459a997e74dde96a3bf7cebf831b"
   },
-  "/Users/junier/Documents/Develop/science-animal/completion-stars-aligned.png": {
-    "mtime": 1777880790.4124558,
-    "hash": "7a11e47d2ce207c9214e61dce2a59af4"
+  "/Users/junier/Projects/animal-encyclopedia/images/thumbs/\uc0ac\ub9c9\uc5ec\uc6b0.jpg": {
+    "mtime": 1783802215.969687,
+    "hash": "7446d4941288be3fda7fa6a71fd57a23"
   },
-  "/Users/junier/Documents/Develop/science-animal/docs/assets/final-mission-preview.png": {
-    "mtime": 1777038181.9411185,
+  "/Users/junier/Projects/animal-encyclopedia/images/thumbs/\ud574\ub9c8.jpg": {
+    "mtime": 1783802215.9723017,
+    "hash": "96ef704b2c77b380497bed49f52e9465"
+  },
+  "/Users/junier/Projects/animal-encyclopedia/images/thumbs/\ub098\ube44.jpg": {
+    "mtime": 1783802215.9655056,
+    "hash": "97ee94db63c7f131059b4578a8b72a44"
+  },
+  "/Users/junier/Projects/animal-encyclopedia/images/thumbs/\ub2e4\uc2ac\uae30.jpg": {
+    "mtime": 1783802215.9661007,
+    "hash": "bfb1bd2744d03bac3d269a8d61449eb9"
+  },
+  "/Users/junier/Projects/animal-encyclopedia/images/thumbs/\ubc15\uc0c8.jpg": {
+    "mtime": 1783802215.9682324,
+    "hash": "675450536ea7ba42321904a754a678c2"
+  },
+  "/Users/junier/Projects/animal-encyclopedia/images/thumbs/\ubd81\uadf9\uc5ec\uc6b0.jpg": {
+    "mtime": 1783802215.9691613,
+    "hash": "54af8d8ec8b19b7884b694990a41ace3"
+  },
+  "/Users/junier/Projects/animal-encyclopedia/images/thumbs/\ud638\ub791\uc774.jpg": {
+    "mtime": 1783802215.9725668,
+    "hash": "826dd9b72560d19ec3d54c48c6a8065b"
+  },
+  "/Users/junier/Projects/animal-encyclopedia/images/thumbs/\uc0ac\ub9c9 \ubc40.jpg": {
+    "mtime": 1783802215.9695733,
+    "hash": "6e6df8c5a4035235d3b2c83863ffa770"
+  },
+  "/Users/junier/Projects/animal-encyclopedia/images/thumbs/\ubb34\ub2f9\ubc8c\ub808.jpg": {
+    "mtime": 1783802215.9675505,
+    "hash": "db7d6bf8d60ab247614470991134f180"
+  },
+  "/Users/junier/Projects/animal-encyclopedia/images/thumbs/\ub450\ub354\uc9c0.jpg": {
+    "mtime": 1783802215.9666903,
+    "hash": "5834af7d792f7aa87a832d1a8f780110"
+  },
+  "/Users/junier/Projects/animal-encyclopedia/images/thumbs/\uc0ac\ub9c9 \ub531\uc815\ubc8c\ub808.jpg": {
+    "mtime": 1783802215.9694476,
+    "hash": "4b40778cb1b747860e265fc348955059"
+  },
+  "/Users/junier/Projects/animal-encyclopedia/images/thumbs/\uacf5\ubc8c\ub808.jpg": {
+    "mtime": 1783802215.9652853,
+    "hash": "7005c0b37e2d1d8601a24368c8280695"
+  },
+  "/Users/junier/Projects/animal-encyclopedia/images/thumbs/\ucc38\uc0c8.jpg": {
+    "mtime": 1783802215.9717386,
+    "hash": "817bb9e32298a2c609b0f258ca4fdf46"
+  },
+  "/Users/junier/Projects/animal-encyclopedia/images/thumbs/\ubc40.jpg": {
+    "mtime": 1783802215.9685497,
+    "hash": "c3ef944c2089a569d73b616944535b7b"
+  },
+  "/Users/junier/Projects/animal-encyclopedia/images/thumbs/\uc218\ub2ec.jpg": {
+    "mtime": 1783802215.9702964,
+    "hash": "534e2448789a15405ad72453eab612cc"
+  },
+  "/Users/junier/Projects/animal-encyclopedia/images/thumbs/\uac70\ubbf8.jpg": {
+    "mtime": 1783802215.9639442,
+    "hash": "de60ceb05ed8b4bb35fadb5351bb57eb"
+  },
+  "/Users/junier/Projects/animal-encyclopedia/images/thumbs/\ubd81\uadf9\uacf0.jpg": {
+    "mtime": 1783802215.9690213,
+    "hash": "f1237846dd4ff94793ecc497aef9ee11"
+  },
+  "/Users/junier/Projects/animal-encyclopedia/images/thumbs/\ub3cc\ub3d4.jpg": {
+    "mtime": 1783802215.966568,
+    "hash": "1aafb0632a59a579264da721ae0cd5b9"
+  },
+  "/Users/junier/Projects/animal-encyclopedia/images/thumbs/\uac1c\ubbf8.jpg": {
+    "mtime": 1783802215.9637659,
+    "hash": "d75afc2a18469b60d8fb1deb96248416"
+  },
+  "/Users/junier/Projects/animal-encyclopedia/images/thumbs/\uc0b0\uc591.jpg": {
+    "mtime": 1783802215.9698074,
+    "hash": "703efca1bfc1511f7e618b6805f1d90e"
+  },
+  "/Users/junier/Projects/animal-encyclopedia/images/thumbs/\uc624\uc9d5\uc5b4.jpg": {
+    "mtime": 1783802215.9706397,
+    "hash": "89e53394aaa75cc2f29fd402f44ee263"
+  },
+  "/Users/junier/Projects/animal-encyclopedia/images/thumbs/\uc65c\uac00\ub9ac.jpg": {
+    "mtime": 1783802215.9709399,
+    "hash": "ca8f5ea09491ff3f4aef0554bd2ea776"
+  },
+  "/Users/junier/Projects/animal-encyclopedia/images/thumbs/\uba54\uae30.jpg": {
+    "mtime": 1783802215.9669917,
+    "hash": "c021d497a8df0d72bb4ef790fbfd3d1a"
+  },
+  "/Users/junier/Projects/animal-encyclopedia/images/thumbs/\uc18c\uae08\uc7c1\uc774.jpg": {
+    "mtime": 1783802215.969928,
+    "hash": "39ae8876fc5863bd25ef4d4e4e2f0a3e"
+  },
+  "/Users/junier/Projects/animal-encyclopedia/images/thumbs/\uc1a1\uc0ac\ub9ac.jpg": {
+    "mtime": 1783802215.970165,
+    "hash": "c297d4b6cc2df9044040c1b578d3a338"
+  },
+  "/Users/junier/Projects/animal-encyclopedia/images/thumbs/\uace0\ub77c\ub2c8.jpg": {
+    "mtime": 1783802215.96473,
+    "hash": "67dcf93be5c0d2b263f5e2eee019f90d"
+  },
+  "/Users/junier/Projects/animal-encyclopedia/images/thumbs/\ubd80\uc5c9\uc774.jpg": {
+    "mtime": 1783802215.9688623,
+    "hash": "af34225ea8fe5af6ca8b978a4dfae17f"
+  },
+  "/Users/junier/Projects/animal-encyclopedia/images/thumbs/\ub531\ub530\uad6c\ub9ac.jpg": {
+    "mtime": 1783802215.9668112,
+    "hash": "51362e34a66831f6b130060473e0aa70"
+  },
+  "/Users/junier/Projects/animal-encyclopedia/images/thumbs/\uac08\ub9e4\uae30.jpg": {
+    "mtime": 1783802215.9630618,
+    "hash": "2caf0e1c07daf4fa36be56b234776c1d"
+  },
+  "/Users/junier/Projects/animal-encyclopedia/images/thumbs/\uc870\uac1c.jpg": {
+    "mtime": 1783802215.9711945,
+    "hash": "dd91e6847cc68f63ef9bac2dde7d56e0"
+  },
+  "/Users/junier/Projects/animal-encyclopedia/images/thumbs/\ub3cc\uace0\ub798.jpg": {
+    "mtime": 1783802215.9664538,
+    "hash": "46e79ccc7cebca6fe1b51e074ba8ba37"
+  },
+  "/Users/junier/Projects/animal-encyclopedia/images/thumbs/\ud574\uc0bc.jpg": {
+    "mtime": 1783802215.972426,
+    "hash": "bd812bfbc10d5776ac110c05f867dea1"
+  },
+  "/Users/junier/Projects/animal-encyclopedia/images/thumbs/\uafc0\ubc8c.jpg": {
+    "mtime": 1783802215.96539,
+    "hash": "487fe0181d423338c31fe0ebba0c5285"
+  },
+  "/Users/junier/Projects/animal-encyclopedia/images/thumbs/\uccad\ub465\uc624\ub9ac.jpg": {
+    "mtime": 1783802215.9718583,
+    "hash": "4bed99f71e4e3927f4515a53776809d4"
+  },
+  "/Users/junier/Projects/animal-encyclopedia/images/thumbs/\ubc14\ub2e4\uac70\ubd81.jpg": {
+    "mtime": 1783802215.9680572,
+    "hash": "00d72ba748bf60177844dd54fbff493f"
+  },
+  "/Users/junier/Projects/animal-encyclopedia/images/thumbs/\ub3c4\ub8e8\ubb35\ub3c4\ub9c8\ubc40.jpg": {
+    "mtime": 1783802215.966344,
+    "hash": "27e5a7374002576448c13d39329a225e"
+  },
+  "/Users/junier/Projects/animal-encyclopedia/images/thumbs/\uace0\ub4f1\uc5b4.png": {
+    "mtime": 1783802215.964379,
+    "hash": "79ba8dffd690adbd32f19b13cbfacf16"
+  },
+  "/Users/junier/Projects/animal-encyclopedia/images/thumbs/\uac8c.jpg": {
+    "mtime": 1783802215.9642498,
+    "hash": "096fbd2c6a0b30fae1a3bfe2f2dad648"
+  },
+  "/Users/junier/Projects/animal-encyclopedia/images/thumbs/\ud1a0\ub07c.jpg": {
+    "mtime": 1783802215.9719713,
+    "hash": "8ebaf33d07e5785ba918379fa2909702"
+  },
+  "/Users/junier/Projects/animal-encyclopedia/images/thumbs/\ud3ad\uadc4.jpg": {
+    "mtime": 1783802215.9720962,
+    "hash": "e1242563a9db4c57d5820e528b9c9ece"
+  },
+  "/Users/junier/Projects/animal-encyclopedia/images/thumbs/\uace0\uc591\uc774.jpg": {
+    "mtime": 1783802215.9649951,
+    "hash": "e26f717a5668a7198ef8763ff7a55223"
+  },
+  "/Users/junier/Projects/animal-encyclopedia/images/thumbs/\ubb3c\ubc29\uac1c.jpg": {
+    "mtime": 1783802215.9678335,
+    "hash": "659d12151201bd5aa1915716db918af0"
+  },
+  "/Users/junier/Projects/animal-encyclopedia/images/thumbs/\uc9c0\ub801\uc774.jpg": {
+    "mtime": 1783802215.971318,
+    "hash": "9a4f51df7635cb5eec772ef2e5878934"
+  },
+  "/Users/junier/Projects/animal-encyclopedia/images/thumbs/\ub2e4\ub78c\uc950.jpg": {
+    "mtime": 1783802215.9659863,
+    "hash": "3fd3c87db965b2d123db143cc63cf586"
+  },
+  "/Users/junier/Projects/animal-encyclopedia/images/thumbs/\uc18c\ub77c.jpg": {
+    "mtime": 1783802215.970043,
+    "hash": "46b5efaa22f8d2837e42dff8c221fc03"
+  },
+  "/Users/junier/Projects/animal-encyclopedia/images/thumbs/\uac1c\uad6c\ub9ac.jpg": {
+    "mtime": 1783802215.9636278,
+    "hash": "5bbd821f62c92ebb2fe173715451e891"
+  },
+  "/Users/junier/Projects/animal-encyclopedia/images/thumbs/\uc804\ubcf5.jpg": {
+    "mtime": 1783802215.971069,
+    "hash": "616495f4b2164ba17ef4ce1b22c1c754"
+  },
+  "/Users/junier/Projects/animal-encyclopedia/images/thumbs/\ud53c\ub77c\ubbf8.jpg": {
+    "mtime": 1783802215.9721968,
+    "hash": "5f6088c15ba49c183ccd80c871473ecc"
+  },
+  "/Users/junier/Projects/animal-encyclopedia/images/thumbs/\ub108\uad6c\ub9ac.jpg": {
+    "mtime": 1783802215.9657612,
+    "hash": "a8bd4edac61fd92da038becbf4f391a2"
+  },
+  "/Users/junier/Projects/animal-encyclopedia/images/thumbs/\ubd95\uc5b4.jpg": {
+    "mtime": 1783802215.9692779,
+    "hash": "896410ad4d1822e5a7cc8a77340b9adc"
+  },
+  "/Users/junier/Projects/animal-encyclopedia/images/thumbs/\ub2ec\ud33d\uc774.jpg": {
+    "mtime": 1783802215.9662125,
+    "hash": "c0131e92851c9627e516fb236e1e355d"
+  },
+  "/Users/junier/Projects/animal-encyclopedia/images/thumbs/\ub178\ub8e8.jpg": {
+    "mtime": 1783802215.9658735,
+    "hash": "054ba508343d1d7198077de08c31af50"
+  },
+  "/Users/junier/Projects/animal-encyclopedia/images/thumbs/\ub099\ud0c0.jpg": {
+    "mtime": 1783802215.9656289,
+    "hash": "4eac09dc5491e3f9b250d1b707600c55"
+  },
+  "/Users/junier/Projects/animal-encyclopedia/images/thumbs/\uac1c.jpg": {
+    "mtime": 1783802215.9631975,
+    "hash": "9fdb12385266f05177b4d9c1bdb56c25"
+  },
+  "/Users/junier/Projects/animal-encyclopedia/images/details/\uc0ac\ub9c9\uc5ec\uc6b0.jpg": {
+    "mtime": 1783802215.9558692,
+    "hash": "7446d4941288be3fda7fa6a71fd57a23"
+  },
+  "/Users/junier/Projects/animal-encyclopedia/images/details/\ud574\ub9c8.jpg": {
+    "mtime": 1783802215.9611154,
+    "hash": "96ef704b2c77b380497bed49f52e9465"
+  },
+  "/Users/junier/Projects/animal-encyclopedia/images/details/\ub098\ube44.jpg": {
+    "mtime": 1783802215.9490213,
+    "hash": "97ee94db63c7f131059b4578a8b72a44"
+  },
+  "/Users/junier/Projects/animal-encyclopedia/images/details/\ub2e4\uc2ac\uae30.jpg": {
+    "mtime": 1783802215.9498677,
+    "hash": "bfb1bd2744d03bac3d269a8d61449eb9"
+  },
+  "/Users/junier/Projects/animal-encyclopedia/images/details/\ubc15\uc0c8.jpg": {
+    "mtime": 1783802215.9535193,
+    "hash": "675450536ea7ba42321904a754a678c2"
+  },
+  "/Users/junier/Projects/animal-encyclopedia/images/details/\ubd81\uadf9\uc5ec\uc6b0.jpg": {
+    "mtime": 1783802215.9548206,
+    "hash": "54af8d8ec8b19b7884b694990a41ace3"
+  },
+  "/Users/junier/Projects/animal-encyclopedia/images/details/\ud638\ub791\uc774.jpg": {
+    "mtime": 1783802215.9627914,
+    "hash": "826dd9b72560d19ec3d54c48c6a8065b"
+  },
+  "/Users/junier/Projects/animal-encyclopedia/images/details/\uc0ac\ub9c9 \ubc40.jpg": {
+    "mtime": 1783802215.9556885,
+    "hash": "6e6df8c5a4035235d3b2c83863ffa770"
+  },
+  "/Users/junier/Projects/animal-encyclopedia/images/details/\ubb34\ub2f9\ubc8c\ub808.jpg": {
+    "mtime": 1783802215.953024,
+    "hash": "db7d6bf8d60ab247614470991134f180"
+  },
+  "/Users/junier/Projects/animal-encyclopedia/images/details/\ub450\ub354\uc9c0.jpg": {
+    "mtime": 1783802215.9513583,
+    "hash": "5834af7d792f7aa87a832d1a8f780110"
+  },
+  "/Users/junier/Projects/animal-encyclopedia/images/details/\uc0ac\ub9c9 \ub531\uc815\ubc8c\ub808.jpg": {
+    "mtime": 1783802215.9552183,
+    "hash": "4b40778cb1b747860e265fc348955059"
+  },
+  "/Users/junier/Projects/animal-encyclopedia/images/details/\uacf5\ubc8c\ub808.jpg": {
+    "mtime": 1783802215.9487076,
+    "hash": "7005c0b37e2d1d8601a24368c8280695"
+  },
+  "/Users/junier/Projects/animal-encyclopedia/images/details/\ucc38\uc0c8.jpg": {
+    "mtime": 1783802215.9592435,
+    "hash": "817bb9e32298a2c609b0f258ca4fdf46"
+  },
+  "/Users/junier/Projects/animal-encyclopedia/images/details/\ubc40.jpg": {
+    "mtime": 1783802215.9539893,
+    "hash": "c3ef944c2089a569d73b616944535b7b"
+  },
+  "/Users/junier/Projects/animal-encyclopedia/images/details/\uc218\ub2ec.jpg": {
+    "mtime": 1783802215.9568186,
+    "hash": "534e2448789a15405ad72453eab612cc"
+  },
+  "/Users/junier/Projects/animal-encyclopedia/images/details/\uac70\ubbf8.jpg": {
+    "mtime": 1783802215.9475212,
+    "hash": "de60ceb05ed8b4bb35fadb5351bb57eb"
+  },
+  "/Users/junier/Projects/animal-encyclopedia/images/details/\ubd81\uadf9\uacf0.jpg": {
+    "mtime": 1783802215.9546196,
+    "hash": "f1237846dd4ff94793ecc497aef9ee11"
+  },
+  "/Users/junier/Projects/animal-encyclopedia/images/details/\ub3cc\ub3d4.jpg": {
+    "mtime": 1783802215.9505758,
+    "hash": "1aafb0632a59a579264da721ae0cd5b9"
+  },
+  "/Users/junier/Projects/animal-encyclopedia/images/details/\uac1c\ubbf8.jpg": {
+    "mtime": 1783802215.94721,
+    "hash": "d75afc2a18469b60d8fb1deb96248416"
+  },
+  "/Users/junier/Projects/animal-encyclopedia/images/details/\uc0b0\uc591.jpg": {
+    "mtime": 1783802215.9561949,
+    "hash": "703efca1bfc1511f7e618b6805f1d90e"
+  },
+  "/Users/junier/Projects/animal-encyclopedia/images/details/\uc624\uc9d5\uc5b4.jpg": {
+    "mtime": 1783802215.9572675,
+    "hash": "89e53394aaa75cc2f29fd402f44ee263"
+  },
+  "/Users/junier/Projects/animal-encyclopedia/images/details/\uc65c\uac00\ub9ac.jpg": {
+    "mtime": 1783802215.9574442,
+    "hash": "ca8f5ea09491ff3f4aef0554bd2ea776"
+  },
+  "/Users/junier/Projects/animal-encyclopedia/images/details/\uba54\uae30.jpg": {
+    "mtime": 1783802215.9526951,
+    "hash": "c021d497a8df0d72bb4ef790fbfd3d1a"
+  },
+  "/Users/junier/Projects/animal-encyclopedia/images/details/\uc18c\uae08\uc7c1\uc774.jpg": {
+    "mtime": 1783802215.9563556,
+    "hash": "39ae8876fc5863bd25ef4d4e4e2f0a3e"
+  },
+  "/Users/junier/Projects/animal-encyclopedia/images/details/\uc1a1\uc0ac\ub9ac.jpg": {
+    "mtime": 1783802215.9566507,
+    "hash": "c297d4b6cc2df9044040c1b578d3a338"
+  },
+  "/Users/junier/Projects/animal-encyclopedia/images/details/\uace0\ub77c\ub2c8.jpg": {
+    "mtime": 1783802215.9480197,
+    "hash": "67dcf93be5c0d2b263f5e2eee019f90d"
+  },
+  "/Users/junier/Projects/animal-encyclopedia/images/details/\ubd80\uc5c9\uc774.jpg": {
+    "mtime": 1783802215.9543743,
+    "hash": "af34225ea8fe5af6ca8b978a4dfae17f"
+  },
+  "/Users/junier/Projects/animal-encyclopedia/images/details/\ub531\ub530\uad6c\ub9ac.jpg": {
+    "mtime": 1783802215.952171,
+    "hash": "51362e34a66831f6b130060473e0aa70"
+  },
+  "/Users/junier/Projects/animal-encyclopedia/images/details/\uac08\ub9e4\uae30.jpg": {
+    "mtime": 1783802215.9458656,
+    "hash": "2caf0e1c07daf4fa36be56b234776c1d"
+  },
+  "/Users/junier/Projects/animal-encyclopedia/images/details/\uc870\uac1c.jpg": {
+    "mtime": 1783802215.957995,
+    "hash": "dd91e6847cc68f63ef9bac2dde7d56e0"
+  },
+  "/Users/junier/Projects/animal-encyclopedia/images/details/\ub3cc\uace0\ub798.jpg": {
+    "mtime": 1783802215.9503286,
+    "hash": "46e79ccc7cebca6fe1b51e074ba8ba37"
+  },
+  "/Users/junier/Projects/animal-encyclopedia/images/details/\ud574\uc0bc.jpg": {
+    "mtime": 1783802215.9613643,
+    "hash": "bd812bfbc10d5776ac110c05f867dea1"
+  },
+  "/Users/junier/Projects/animal-encyclopedia/images/details/\uafc0\ubc8c.jpg": {
+    "mtime": 1783802215.9488702,
+    "hash": "487fe0181d423338c31fe0ebba0c5285"
+  },
+  "/Users/junier/Projects/animal-encyclopedia/images/details/\uccad\ub465\uc624\ub9ac.jpg": {
+    "mtime": 1783802215.9593928,
+    "hash": "4bed99f71e4e3927f4515a53776809d4"
+  },
+  "/Users/junier/Projects/animal-encyclopedia/images/details/\ubc14\ub2e4\uac70\ubd81.jpg": {
+    "mtime": 1783802215.9533646,
+    "hash": "00d72ba748bf60177844dd54fbff493f"
+  },
+  "/Users/junier/Projects/animal-encyclopedia/images/details/\ub3c4\ub8e8\ubb35\ub3c4\ub9c8\ubc40.jpg": {
+    "mtime": 1783802215.9501953,
+    "hash": "27e5a7374002576448c13d39329a225e"
+  },
+  "/Users/junier/Projects/animal-encyclopedia/images/details/\uace0\ub4f1\uc5b4.png": {
+    "mtime": 1783802215.9478748,
+    "hash": "79ba8dffd690adbd32f19b13cbfacf16"
+  },
+  "/Users/junier/Projects/animal-encyclopedia/images/details/\uac8c.jpg": {
+    "mtime": 1783802215.9477084,
+    "hash": "096fbd2c6a0b30fae1a3bfe2f2dad648"
+  },
+  "/Users/junier/Projects/animal-encyclopedia/images/details/\ud1a0\ub07c.jpg": {
+    "mtime": 1783802215.9595487,
+    "hash": "8ebaf33d07e5785ba918379fa2909702"
+  },
+  "/Users/junier/Projects/animal-encyclopedia/images/details/\ud3ad\uadc4.jpg": {
+    "mtime": 1783802215.9599595,
+    "hash": "e1242563a9db4c57d5820e528b9c9ece"
+  },
+  "/Users/junier/Projects/animal-encyclopedia/images/details/\uace0\uc591\uc774.jpg": {
+    "mtime": 1783802215.9485886,
+    "hash": "e26f717a5668a7198ef8763ff7a55223"
+  },
+  "/Users/junier/Projects/animal-encyclopedia/images/details/\ubb3c\ubc29\uac1c.jpg": {
+    "mtime": 1783802215.9531848,
+    "hash": "659d12151201bd5aa1915716db918af0"
+  },
+  "/Users/junier/Projects/animal-encyclopedia/images/details/\uc9c0\ub801\uc774.jpg": {
+    "mtime": 1783802215.9590158,
+    "hash": "9a4f51df7635cb5eec772ef2e5878934"
+  },
+  "/Users/junier/Projects/animal-encyclopedia/images/details/\ub2e4\ub78c\uc950.jpg": {
+    "mtime": 1783802215.949711,
+    "hash": "3fd3c87db965b2d123db143cc63cf586"
+  },
+  "/Users/junier/Projects/animal-encyclopedia/images/details/\uc18c\ub77c.jpg": {
+    "mtime": 1783802215.9565027,
+    "hash": "46b5efaa22f8d2837e42dff8c221fc03"
+  },
+  "/Users/junier/Projects/animal-encyclopedia/images/details/\uac1c\uad6c\ub9ac.jpg": {
+    "mtime": 1783802215.9470882,
+    "hash": "5bbd821f62c92ebb2fe173715451e891"
+  },
+  "/Users/junier/Projects/animal-encyclopedia/images/details/\uc804\ubcf5.jpg": {
+    "mtime": 1783802215.9577708,
+    "hash": "616495f4b2164ba17ef4ce1b22c1c754"
+  },
+  "/Users/junier/Projects/animal-encyclopedia/images/details/\ud53c\ub77c\ubbf8.jpg": {
+    "mtime": 1783802215.9604568,
+    "hash": "5f6088c15ba49c183ccd80c871473ecc"
+  },
+  "/Users/junier/Projects/animal-encyclopedia/images/details/\ub108\uad6c\ub9ac.jpg": {
+    "mtime": 1783802215.9493601,
+    "hash": "a8bd4edac61fd92da038becbf4f391a2"
+  },
+  "/Users/junier/Projects/animal-encyclopedia/images/details/\ubd95\uc5b4.jpg": {
+    "mtime": 1783802215.9549725,
+    "hash": "896410ad4d1822e5a7cc8a77340b9adc"
+  },
+  "/Users/junier/Projects/animal-encyclopedia/images/details/\ub2ec\ud33d\uc774.jpg": {
+    "mtime": 1783802215.9500408,
+    "hash": "c0131e92851c9627e516fb236e1e355d"
+  },
+  "/Users/junier/Projects/animal-encyclopedia/images/details/\ub178\ub8e8.jpg": {
+    "mtime": 1783802215.9495547,
+    "hash": "054ba508343d1d7198077de08c31af50"
+  },
+  "/Users/junier/Projects/animal-encyclopedia/images/details/\ub099\ud0c0.jpg": {
+    "mtime": 1783802215.9492044,
+    "hash": "4eac09dc5491e3f9b250d1b707600c55"
+  },
+  "/Users/junier/Projects/animal-encyclopedia/images/details/\uac1c.jpg": {
+    "mtime": 1783802215.9463315,
+    "hash": "9fdb12385266f05177b4d9c1bdb56c25"
+  },
+  "/Users/junier/Projects/animal-encyclopedia/docs/assets/final-mission-preview.png": {
+    "mtime": 1783802215.9252868,
     "hash": "4f3eb9f5557f2ecfa7087d2d109697af"
   },
-  "/Users/junier/Documents/Develop/science-animal/docs/assets/image-creator-20260424-212526.png": {
-    "mtime": 1777033524.664095,
+  "/Users/junier/Projects/animal-encyclopedia/docs/assets/image-creator-20260424-212526.png": {
+    "mtime": 1783802215.9371629,
     "hash": "45658d78205a287a4864e56099fdaa6a"
   },
-  "/Users/junier/Documents/Develop/science-animal/docs/assets/final-mission-preview-latest.png": {
-    "mtime": 1777041014.4523244,
+  "/Users/junier/Projects/animal-encyclopedia/docs/assets/final-mission-preview-latest.png": {
+    "mtime": 1783802215.922763,
     "hash": "b307195a5be13ed68468da3d4776cc31"
   },
-  "/Users/junier/Documents/Develop/science-animal/assets/sprites/forest-bg.png": {
-    "mtime": 1777377962.65267,
+  "/Users/junier/Projects/animal-encyclopedia/assets/sprites/forest-bg.png": {
+    "mtime": 1783802215.907207,
     "hash": "81c81ff8f6b52476e5891d7c8e1a858c"
   },
-  "/Users/junier/Documents/Develop/science-animal/assets/sprites/game-icons.png": {
-    "mtime": 1777377962.6560302,
+  "/Users/junier/Projects/animal-encyclopedia/assets/sprites/game-icons.png": {
+    "mtime": 1783802215.9116938,
     "hash": "841cd1aaea4f5bd7fde2847f9ef157b2"
   },
-  "/Users/junier/Documents/Develop/science-animal/assets/sprites/owl-mascot.png": {
-    "mtime": 1777377962.659314,
+  "/Users/junier/Projects/animal-encyclopedia/assets/sprites/owl-mascot.png": {
+    "mtime": 1783802215.9152708,
     "hash": "7298caa5ef21f0a2c9783a531b04059d"
   },
-  "/Users/junier/Documents/Develop/science-animal/assets/sprites/regions.png": {
-    "mtime": 1777377962.6618397,
+  "/Users/junier/Projects/animal-encyclopedia/assets/sprites/regions.png": {
+    "mtime": 1783802215.9191668,
     "hash": "edd6062cc62aa4f66ee563c81c4e2902"
   },
-  "/Users/junier/Documents/Develop/science-animal/assets/sprites/extracted/owl-search.png": {
-    "mtime": 1777880756.8991644,
+  "/Users/junier/Projects/animal-encyclopedia/assets/sprites/extracted/owl-search.png": {
+    "mtime": 1783802215.8915083,
     "hash": "3e53a898f81aa8f8a6c6fe40c6461aa5"
   },
-  "/Users/junier/Documents/Develop/science-animal/assets/sprites/extracted/owl-wave.png": {
-    "mtime": 1777880756.9013414,
+  "/Users/junier/Projects/animal-encyclopedia/assets/sprites/extracted/owl-wave.png": {
+    "mtime": 1783802215.894934,
     "hash": "bc64165942a5d6f77a63600de60a0cf9"
   },
-  "/Users/junier/Documents/Develop/science-animal/assets/sprites/extracted/region-special.png": {
-    "mtime": 1777880756.9048295,
+  "/Users/junier/Projects/animal-encyclopedia/assets/sprites/extracted/region-special.png": {
+    "mtime": 1783802215.8990862,
     "hash": "52b30bd23c34873f5bc03f1b55afe491"
   },
-  "/Users/junier/Documents/Develop/science-animal/assets/sprites/extracted/region-water.png": {
-    "mtime": 1777880756.9055068,
+  "/Users/junier/Projects/animal-encyclopedia/assets/sprites/extracted/region-water.png": {
+    "mtime": 1783802215.899726,
     "hash": "0ab7cf92977dbb4731e6ffe2ea370bd3"
   },
-  "/Users/junier/Documents/Develop/science-animal/assets/sprites/extracted/region-forest.png": {
-    "mtime": 1777880756.90383,
+  "/Users/junier/Projects/animal-encyclopedia/assets/sprites/extracted/region-forest.png": {
+    "mtime": 1783802215.8971448,
     "hash": "cffdf984979ff58bc86c6bd312d90f3c"
   },
-  "/Users/junier/Documents/Develop/science-animal/assets/sprites/extracted/owl-cheer.png": {
-    "mtime": 1777880756.8984315,
+  "/Users/junier/Projects/animal-encyclopedia/assets/sprites/extracted/owl-cheer.png": {
+    "mtime": 1783802215.8905623,
     "hash": "4297b8b7112f2c52aec67acce9681f4b"
   },
-  "/Users/junier/Documents/Develop/science-animal/assets/sprites/extracted/owl-think.png": {
-    "mtime": 1777880756.9001517,
+  "/Users/junier/Projects/animal-encyclopedia/assets/sprites/extracted/owl-think.png": {
+    "mtime": 1783802215.8925185,
     "hash": "c8ee9db95781fe42d14b794eead15296"
   },
-  "/Users/junier/Documents/Develop/science-animal/assets/sprites/extracted/icon-shield.png": {
-    "mtime": 1777880756.896135,
+  "/Users/junier/Projects/animal-encyclopedia/assets/sprites/extracted/icon-shield.png": {
+    "mtime": 1783802215.8892505,
     "hash": "ebd408c2933e56a8ed4a3caab5a7308c"
   },
-  "/Users/junier/Documents/Develop/science-animal/assets/sprites/extracted/icon-gem.png": {
-    "mtime": 1777880756.8953981,
+  "/Users/junier/Projects/animal-encyclopedia/assets/sprites/extracted/icon-gem.png": {
+    "mtime": 1783802215.8889797,
     "hash": "ff0d28c213d05e83bad6573d3ba99c81"
   },
-  "/Users/junier/Documents/Develop/science-animal/assets/sprites/extracted/icon-star.png": {
-    "mtime": 1777880756.897223,
+  "/Users/junier/Projects/animal-encyclopedia/assets/sprites/extracted/icon-star.png": {
+    "mtime": 1783802215.8894784,
     "hash": "93a67903cacc8f9d13571df6cf083ea9"
   },
-  "/Users/junier/Documents/Develop/science-animal/assets/sprites/extracted/icon-chest.png": {
-    "mtime": 1777880756.8947372,
+  "/Users/junier/Projects/animal-encyclopedia/assets/sprites/extracted/icon-chest.png": {
+    "mtime": 1783802215.8887389,
     "hash": "67f13bb05e99054ae3ffa49e9eb5c7ea"
   },
-  "/Users/junier/Documents/Develop/science-animal/assets/sprites/extracted/region-sea.png": {
-    "mtime": 1777880756.904325,
+  "/Users/junier/Projects/animal-encyclopedia/assets/sprites/extracted/region-sea.png": {
+    "mtime": 1783802215.8986497,
     "hash": "59a49348a1fc90d87fb1deb85107e1c9"
   },
-  "/Users/junier/Documents/Develop/science-animal/assets/sprites/extracted/region-around.png": {
-    "mtime": 1777880756.9026253,
+  "/Users/junier/Projects/animal-encyclopedia/assets/sprites/extracted/region-around.png": {
+    "mtime": 1783802215.8964183,
     "hash": "6ac2a6237c608710d183718d61c590c3"
   },
-  "/Users/junier/Documents/Develop/science-animal/assets/sprites/extracted/icon-catch-ball.png": {
-    "mtime": 1777880756.8938425,
+  "/Users/junier/Projects/animal-encyclopedia/assets/sprites/extracted/icon-catch-ball.png": {
+    "mtime": 1783802215.8881063,
     "hash": "147ab7402d2aebe5ee70d0877c4fb7f6"
+  },
+  "/Users/junier/Projects/animal-encyclopedia/docs/media/pokeball-catch.webm": {
+    "mtime": 1783802215.9411645,
+    "hash": "ae481df00f7eb6a281cdf2ba03df28fb"
   }
 }
