@@ -186,8 +186,8 @@ test("detail modal keeps observation checks under explanations and summary under
     "<h3>${question.text}</h3>",
     "renderObservationSummary(quiz.animal)",
     '<details class="observation-summary">',
-    "<summary>관찰 요약 열기</summary>",
-    "renderQuickFacts(animal, \"관찰 요약\")"
+    "<summary>💡 힌트 보기!</summary>",
+    "renderQuickFacts(animal, \"관찰 단서\")"
   ]) {
     assert.ok(appJs.includes(needle), `app.js should include ${needle}`);
   }

@@ -1261,6 +1261,10 @@ button:focus-visible {
   border-radius: 0;
 }
 
+.observation-summary .quick-facts h3 {
+  color: var(--teal-dark) !important;
+}
+
 .observation-checkitem {
   display: flex;
   align-items: center;

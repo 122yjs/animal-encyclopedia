@@ -1497,8 +1497,8 @@ function renderQuickFacts(animal, title = "관찰 단서") {
 function renderObservationSummary(animal) {
   return `
     <details class="observation-summary">
-      <summary>관찰 요약 열기</summary>
-      ${renderQuickFacts(animal, "관찰 요약")}
+      <summary>💡 힌트 보기!</summary>
+      ${renderQuickFacts(animal, "관찰 단서")}
     </details>
   `;
 }
