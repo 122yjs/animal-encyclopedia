@@ -5,7 +5,7 @@ const { generateNoQuestion } = require("./generate-no-question");
 
 const root = path.resolve(__dirname, "..");
 const dist = path.join(root, "dist");
-const filesToCopy = ["index.html", "no-question.html", "credits.html", "styles.css", "app.js"];
+const filesToCopy = ["index.html", "no-question.html", "credits.html", "styles.css", "game-styles.css", "app.js"];
 const directoriesToCopy = ["vendor", "images", "sounds", "assets"];
 
 const defaultQuestionTool = {

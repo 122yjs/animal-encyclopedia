@@ -1,0 +1,1345 @@
+/* ==========================================================================
+   🎮 부엉이 동물도감 탐험대 게이미피케이션 (Gamification) 확장 스타일
+   ========================================================================== */
+
+:root {
+  /* 게임/네온 테마 */
+  --game-primary: #b48934;     /* 브론즈 골드 */
+  --game-secondary: #f5bc44;   /* 선셋 골드 */
+  --game-accent: #d4940a;      /* 골드 옐로우 */
+  --game-neon-gold: #ffc300;   /* 밝은 골드 */
+  --game-dark-panel: #3a2415;  /* 어두운 게임기 캔버스 */
+  --game-card-shadow: 0 8px 24px rgba(86, 65, 24, 0.16);
+
+  /* EXP 젤리 그라데이션 */
+  --exp-gradient: linear-gradient(90deg, #f5bc44 0%, #d4940a 100%);
+  --exp-glow: 0 0 15px rgba(245, 188, 68, 0.55);
+  --exp-jelly-shine: linear-gradient(180deg, rgba(255,255,255,0.4) 0%, rgba(255,255,255,0) 50%);
+}
+
+/* ❶ 포켓몬 도감 스타일(Pokedex) 카드 연출 */
+
+/* 미획득 동물 카드 */
+.animal-card:not(.collected) {
+  border: 2.5px dashed rgba(180, 137, 52, 0.35) !important;
+  box-shadow: none !important;
+  position: relative;
+  overflow: hidden;
+}
+
+.animal-card:not(.collected) .card-photo-frame {
+  background: #273042 !important;
+  position: relative;
+}
+
+.animal-card:not(.collected) .card-photo-frame::after {
+  content: "?" !important;
+  position: absolute;
+  inset: 50% auto auto 50%;
+  transform: translate(-50%, -50%);
+  width: 2.75rem;
+  height: 2.75rem;
+  display: grid;
+  place-items: center;
+  border-radius: 999px;
+  background: rgba(255, 248, 225, 0.78);
+  border: 2px solid rgba(180, 137, 52, 0.55);
+  color: rgba(85, 63, 28, 0.9);
+  font-size: 1.8rem;
+  font-weight: 900;
+  line-height: 1;
+  text-shadow: 0 1px 0 rgba(255, 255, 255, 0.6);
+  box-shadow: 0 8px 20px rgba(52, 37, 13, 0.18);
+  pointer-events: none;
+}
+
+
+
+/* 미획득 카드 마우스 오버(Hover) 시 들썩이는 애니메이션 */
+.animal-card:not(.collected):hover {
+  transform: translateY(-5px) scale(1.02);
+  border-color: var(--game-secondary) !important;
+  box-shadow: 0 8px 20px rgba(180, 137, 52, 0.22) !important;
+  animation: game-card-bounce 0.4s ease-out;
+}
+
+@keyframes game-card-bounce {
+  0% { transform: translateY(0); }
+  50% { transform: translateY(-8px) rotate(2deg); }
+  100% { transform: translateY(-5px) rotate(0); }
+}
+
+@keyframes silhouette-pulse {
+  0%, 100% { opacity: 0.4; transform: scale(0.95); }
+  50% { opacity: 0.85; transform: scale(1.05); }
+}
+
+/* 획득 완료(Collected) 카드 - 골드빛 네온 테두리 & 반짝이(Shine) 광원 효과 */
+.animal-card.collected {
+  border: 2.5px solid var(--game-neon-gold) !important;
+  background: var(--card-bg) !important;
+  box-shadow: var(--gold-glow) !important;
+  position: relative;
+  overflow: hidden;
+}
+
+/* 반짝이 훑기 광원 */
+.animal-card.collected::after {
+  content: "";
+  position: absolute;
+  top: -50%;
+  left: -60%;
+  width: 30%;
+  height: 200%;
+  background: linear-gradient(
+    to right,
+    rgba(255, 255, 255, 0) 0%,
+    rgba(255, 255, 255, 0.4) 30%,
+    rgba(255, 255, 255, 0.7) 50%,
+    rgba(255, 255, 255, 0.4) 70%,
+    rgba(255, 255, 255, 0) 100%
+  );
+  transform: rotate(30deg);
+  pointer-events: none;
+  animation: card-shine 6s ease-in-out infinite;
+}
+
+@keyframes card-shine {
+  0% { left: -60%; }
+  15%, 100% { left: 150%; }
+}
+
+
+/* ❷ RPG 스타일 경험치(EXP) 및 레벨 업 시스템 */
+
+/* 경험치 레벨 배지 */
+.exp-level-container {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 6px;
+}
+
+.exp-level-badge {
+  flex-shrink: 0;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 4px 10px;
+  background: linear-gradient(135deg, #f5bc44, #b48934);
+  color: #3f2a0e;
+  border: 2px solid #fff4ca;
+  border-radius: 999px;
+  font-size: 0.82rem;
+  font-weight: 900;
+  box-shadow: 0 4px 8px rgba(86, 65, 24, 0.18), inset 0 2px 2px rgba(255,255,255,0.45);
+  text-shadow: 0 1px 0 rgba(255,255,255,0.35);
+  animation: level-pulse 2s ease-in-out infinite;
+}
+
+@keyframes level-pulse {
+  0%, 100% { transform: scale(1); }
+  50% { transform: scale(1.05); }
+}
+
+/* EXP 바 개편 */
+.progress-panel {
+  background: radial-gradient(circle at top left, #fffdf8, #fff8e8) !important;
+  border: 3.5px solid var(--game-neon-gold) !important;
+  box-shadow: var(--game-card-shadow) !important;
+}
+
+.progress-track {
+  background: #3a2415 !important;
+  border: 2.5px solid #7a6a52;
+  box-shadow: inset 0 2px 5px rgba(63, 42, 14, 0.45);
+  position: relative;
+  overflow: hidden;
+}
+
+/* 젤리 광원 EXP */
+.progress-track span {
+  background: var(--exp-gradient) !important;
+  box-shadow: var(--exp-glow);
+  position: relative;
+}
+
+.progress-track span::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 40%;
+  background: rgba(255, 255, 255, 0.35);
+  border-radius: inherit;
+  pointer-events: none;
+}
+
+.progress-track span::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(90deg, rgba(255,255,255,0) 0%, rgba(255,255,255,0.4) 50%, rgba(255,255,255,0) 100%);
+  animation: jelly-glow-sweep 2.5s linear infinite;
+}
+
+@keyframes jelly-glow-sweep {
+  0% { transform: translateX(-100%); }
+  100% { transform: translateX(200%); }
+}
+
+/* 플로팅 EXP 텍스트 */
+.floating-exp-text {
+  position: fixed;
+  z-index: 1000;
+  color: #f5bc44;
+  font-size: 1.8rem;
+  font-weight: 900;
+  text-shadow:
+    -2px -2px 0 #000,
+     2px -2px 0 #000,
+    -2px  2px 0 #000,
+     2px  2px 0 #000,
+     0 0 10px rgba(245, 188, 68, 0.65);
+  pointer-events: none;
+  animation: float-up-fade-exp 1.6s cubic-bezier(0.25, 1, 0.5, 1) forwards;
+}
+
+.floating-exp-text.level-up {
+  color: #ffae00;
+  font-size: 2.4rem;
+  text-shadow:
+    -2px -2px 0 #000,
+     2px -2px 0 #000,
+    -2px  2px 0 #000,
+     2px  2px 0 #000,
+     0 0 20px rgba(255, 174, 0, 0.9);
+  animation: float-up-fade-levelup 2s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards;
+}
+
+@keyframes float-up-fade-exp {
+  0% { opacity: 0; transform: translate(-50%, 0) scale(0.6); }
+  15% { opacity: 1; transform: translate(-50%, -40px) scale(1.1); }
+  100% { opacity: 0; transform: translate(-50%, -180px) scale(0.8); }
+}
+
+@keyframes float-up-fade-levelup {
+  0% { opacity: 0; transform: translate(-50%, 40px) scale(0.5) rotate(-10deg); }
+  20% { opacity: 1; transform: translate(-50%, -30px) scale(1.2) rotate(5deg); }
+  40% { transform: translate(-50%, -40px) scale(1) rotate(-3deg); }
+  100% { opacity: 0; transform: translate(-50%, -150px) scale(0.8) rotate(0deg); }
+}
+
+
+/* ❸ 몬스터볼 포획 인터랙션 및 시각 효과 극대화 */
+
+/* 포획 씬 격자 펄스 섀도우 */
+.catch-overlay {
+  background: rgba(58, 36, 21, 0.94) !important;
+}
+
+.catch-overlay::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background-image:
+    linear-gradient(rgba(255,255,255,0.03) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(255,255,255,0.03) 1px, transparent 1px);
+  background-size: 24px 24px;
+  pointer-events: none;
+}
+
+/* 흡수될 때의 번개 펄스 링 (Show-off!) */
+.catch-overlay.is-absorbing::before {
+  animation: lightning-grid 0.4s linear infinite;
+  background-color: rgba(245, 188, 68, 0.08);
+}
+
+@keyframes lightning-grid {
+  0%, 100% { opacity: 0.3; }
+  50% { opacity: 0.8; }
+}
+
+/* 흔들릴 때의 번개 펄스 충격파 */
+.catch-ball::before {
+  content: "";
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 100px;
+  height: 100px;
+  margin-top: -50px;
+  margin-left: -50px;
+  background: radial-gradient(circle, rgba(255, 174, 0, 0.4) 0%, rgba(255, 174, 0, 0) 70%);
+  border-radius: 50%;
+  transform: scale(0);
+  pointer-events: none;
+  z-index: -1;
+  transition: transform 0.3s ease;
+}
+
+.catch-overlay.is-shaking .catch-ball::before {
+  animation: shockwave-pulse 0.9s ease-out infinite;
+}
+
+@keyframes shockwave-pulse {
+  0% { transform: scale(0.4); opacity: 1; }
+  50% { transform: scale(1.6); opacity: 0.5; border: 2px solid rgba(255, 174, 0, 0.6); }
+  100% { transform: scale(2.4); opacity: 0; }
+}
+
+/* 무지개색 확산 파티클 효과 */
+.catch-sparkles span {
+  position: absolute;
+  display: block;
+  width: 14px;
+  height: 14px;
+  border-radius: 50%;
+  opacity: 0;
+  pointer-events: none;
+}
+
+.catch-overlay.is-success .catch-sparkles span {
+  animation: rainbow-particle 1.2s cubic-bezier(0.1, 0.8, 0.3, 1) forwards;
+}
+
+.catch-sparkles span:nth-child(1) { background: #f5bc44; --dx: -130px; --dy: -130px; }
+.catch-sparkles span:nth-child(2) { background: #fff4ca; --dx: 130px; --dy: -130px; }
+.catch-sparkles span:nth-child(3) { background: #d4940a; --dx: -150px; --dy: 20px; }
+.catch-sparkles span:nth-child(4) { background: #b48934; --dx: 150px; --dy: 20px; }
+.catch-sparkles span:nth-child(5) { background: #5cb85c; --dx: -80px; --dy: 120px; }
+.catch-sparkles span:nth-child(6) { background: #e85d3a; --dx: 80px; --dy: 120px; }
+
+@keyframes rainbow-particle {
+  0% { opacity: 1; transform: translate(-50%, -50%) scale(0.2) rotate(0deg); }
+  50% { opacity: 0.8; }
+  100% { opacity: 0; transform: translate(calc(-50% + var(--dx)), calc(-50% + var(--dy))) scale(1.5) rotate(360deg); }
+}
+
+
+/* ❹ 분류 게임 '미션 도전' 리뉴얼 */
+
+/* 닌텐도 스위치 게임기 스타일의 아케이드 프레임 */
+.game-view {
+  background: radial-gradient(circle at center, #fffbee 0%, #f5ecd3 58%, #e5cf9b 100%) !important;
+  border: 6px solid #3a2415 !important;
+  border-radius: 24px !important;
+  box-shadow:
+    0 15px 35px rgba(63, 42, 14, 0.28),
+    0 0 0 10px rgba(180, 137, 52, 0.22),
+    inset 0 0 40px rgba(245, 188, 68, 0.16) !important;
+  color: #3f2a0e !important;
+  padding: 24px !important;
+}
+
+.game-header h2 {
+  color: #fff4ca !important;
+  text-shadow: 0 2px 4px rgba(63, 42, 14, 0.5) !important;
+}
+
+.game-description {
+  color: #fff4ca !important;
+}
+
+/* 분류 미션 카테고리 헤더 */
+.game-source h3,
+.drop-zone h3 {
+  font-size: 1.15rem;
+  font-weight: 900;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  padding: 8px 14px;
+  border-radius: 8px;
+  text-shadow: none;
+}
+
+.game-source h3 {
+  background: #fff4ca;
+  color: #3f2a0e;
+  border: 1px solid #b48934;
+}
+
+.drop-zone[data-answer="yes"] h3 {
+  background: rgba(245, 188, 68, 0.2);
+  color: #3f2a0e;
+  border: 1.5px solid #b48934;
+}
+
+.drop-zone[data-answer="no"] h3 {
+  background: rgba(122, 106, 82, 0.18);
+  color: #3f2a0e;
+  border: 1.5px solid #7a6a52;
+}
+
+/* 아케이드 게임존 카드 배치 */
+.token-zone {
+  background: rgba(255, 244, 202, 0.42) !important;
+  border: 2px dashed rgba(180, 137, 52, 0.4) !important;
+  border-radius: 12px;
+}
+
+.game-token {
+  background: #fffbee !important;
+  border: 2.5px solid rgba(180, 137, 52, 0.45) !important;
+  color: #3f2a0e !important;
+  box-shadow: 0 4px 8px rgba(86, 65, 24, 0.16) !important;
+  transition: all 0.2s cubic-bezier(0.175, 0.885, 0.32, 1.275) !important;
+}
+
+/* 정답/오답 기쁘게 점핑 & 흔들림 */
+.game-token.bounce-success {
+  animation: token-bounce 0.6s ease 2 alternate;
+  border-color: #ffc300 !important;
+  box-shadow: var(--gold-glow), 0 0 16px rgba(255, 195, 0, 0.5) !important;
+}
+
+.game-token.shake-failed {
+  animation: token-shake 0.4s ease;
+  border-color: #ff8b70 !important;
+  box-shadow: 0 0 15px rgba(232, 93, 58, 0.6) !important;
+}
+
+@keyframes token-bounce {
+  0% { transform: translateY(0); }
+  100% { transform: translateY(-16px); }
+}
+
+@keyframes token-shake {
+  0%, 100% { transform: translateX(0); }
+  20%, 60% { transform: translateX(-8px); }
+  40%, 80% { transform: translateX(8px); }
+}
+
+/* 퀴즈 문제박스 게이밍 리스타일 */
+.quiz-box {
+  background: linear-gradient(135deg, #3a2415, #3f2a0e) !important;
+  border: 3px solid #b48934 !important;
+  box-shadow: 0 12px 30px rgba(63, 42, 14, 0.28), inset 0 0 20px rgba(255, 195, 0, 0.1) !important;
+  border-radius: 16px;
+  color: #fffbee;
+  padding: 24px;
+}
+
+.quiz-box h3 {
+  color: #fff4ca !important;
+  font-size: 1.3rem;
+  line-height: 1.4;
+  margin-top: 0;
+  text-shadow: 0 2px 4px rgba(0,0,0,0.4);
+}
+
+.answer-button {
+  background: rgba(255, 251, 238, 0.12) !important;
+  border: 2px solid rgba(245, 188, 68, 0.32) !important;
+  color: #fffbee !important;
+  font-weight: 800 !important;
+  text-shadow: none !important;
+  transition: all 0.18s ease !important;
+}
+
+.answer-button:hover:not(:disabled) {
+  background: #f5bc44 !important;
+  color: #3f2a0e !important;
+  border-color: #fff4ca !important;
+  transform: scale(1.03);
+  box-shadow: 0 0 15px rgba(245, 188, 68, 0.42);
+}
+
+.answer-button.correct {
+  background: var(--game-neon-gold) !important;
+  color: #3f2a0e !important;
+  border-color: #5d3b12 !important;
+  box-shadow: var(--gold-glow) !important;
+}
+
+.answer-button.wrong {
+  background: #5a1f16 !important;
+  color: #fff1ee !important;
+  border-color: #b53b24 !important;
+  box-shadow: 0 0 0 3px rgba(181, 59, 36, 0.16) !important;
+}
+
+/* ───────────────────────────────────────────
+   💡 수집도감 게이미피케이션 레이아웃 & 시각 보강
+   ─────────────────────────────────────────── */
+
+/* 1. 미수집 카드 썸네일 이미지 실루엣/블러 필터 처리 */
+.animal-card:not(.collected) img {
+  filter: brightness(0.42) blur(3px) grayscale(0.75) contrast(1.08);
+  pointer-events: none;
+  transition: filter 0.4s ease;
+}
+
+
+
+/* 분류미션 드롭다운 라벨/선택창 — 게임 화면(.game-view)에만 적용
+   (설정 모달에도 .select-field가 있어 전역 지정 시 밝은 테마가 깨짐) */
+.game-view .select-field span {
+  color: #fff8df !important;
+  font-size: 1.05rem !important;
+  text-shadow: 0 2px 4px rgba(0,0,0,0.5) !important;
+}
+
+.game-view .select-field select {
+  color: #3f2a0e !important;
+  background: #fffbee !important;
+  border: 2px solid #b48934 !important;
+}
+
+/* 분류 미션 카드 더미와 맞는 카드/다른 카드 영역의 H3 헤더의 시인성을 다크 게이밍 테마에 맞게 100% 선명하게 보정 */
+.game-source h3 {
+  background: #fff4ca !important;
+  color: #3f2a0e !important;
+  border: 2px solid #b48934 !important;
+  font-size: 1.25rem !important;
+  font-weight: 900 !important;
+  text-align: center !important;
+}
+
+.drop-zone[data-answer="yes"] h3 {
+  background: rgba(245, 188, 68, 0.24) !important;
+  color: #3f2a0e !important;
+  border: 2px solid #b48934 !important;
+  font-size: 1.25rem !important;
+  font-weight: 900 !important;
+  text-align: center !important;
+}
+
+.drop-zone[data-answer="no"] h3 {
+  background: rgba(122, 106, 82, 0.2) !important;
+  color: #3f2a0e !important;
+  border: 2px solid #7a6a52 !important;
+  font-size: 1.25rem !important;
+  font-weight: 900 !important;
+  text-align: center !important;
+}
+
+/* 분류 게임 안내 멘트 및 힌트 텍스트들을 고가독성 짙은 어두운 텍스트와 골드 크림 칠판 배경판 형태로 전격 개선 */
+.game-source p.game-source-help,
+.drop-zone p.game-source-help,
+#yesHint,
+#noHint,
+p.game-source-help {
+  color: #111122 !important; /* 가독성 100% 보장하는 깊고 짙은 차콜 다크 네이비 */
+  font-weight: 850 !important;
+  font-size: 0.95rem !important;
+  line-height: 1.55 !important;
+  text-shadow: none !important; /* 텍스트 섀도우 번짐을 제거하여 시인성 최상 보장 */
+  background: #fff9e6 !important; /* 따스하고 부드러운 밝은 골드 밀크 크림 칠판 배경판 */
+  border: 2px solid #b48934 !important; /* 세련된 청동 골드 경계선 */
+  padding: 12px 16px !important;
+  border-radius: 12px !important;
+  display: block !important;
+  width: auto !important;
+  margin: 12px 0 !important;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.15) !important;
+  text-align: center !important;
+}
+
+/* 2-1. 모바일 및 좁은 화면(800px 이하)에서 미니 프로그레스 캡슐을 우하단으로 안전하게 강제 이동하여 헤더 글자 겹침 완벽 방지 */
+@media (max-width: 800px) {
+  .sticky-progress {
+    top: auto !important;
+    bottom: 16px !important;
+    right: 16px !important;
+    box-shadow: 0 8px 24px rgba(45, 27, 14, 0.4), 0 0 15px rgba(245, 188, 68, 0.2) !important;
+    border-color: rgba(245, 188, 68, 0.7) !important;
+  }
+}
+
+.game-feedback,
+#gameFeedback {
+  color: #fff4ca !important;
+  font-weight: 900 !important;
+  font-size: 1.05rem !important;
+  text-shadow: 0 2px 4px rgba(63, 42, 14, 0.55) !important;
+  background: rgba(58, 36, 21, 0.9) !important;
+  border: 1px solid rgba(245, 188, 68, 0.45) !important;
+  border-radius: 8px;
+  padding: 10px 14px !important;
+  margin-top: 14px;
+}
+
+/* 3. 진행상황 패널 글자 및 뱃지 뒤틀림 방지 반응형 Flexbox 최적화 */
+.progress-panel {
+  display: flex !important;
+  flex-direction: row !important;
+  flex-wrap: wrap !important;
+  align-items: center !important;
+  justify-content: space-between !important;
+  gap: 12px 16px !important;
+  padding: 18px 22px !important;
+}
+
+/* 내 도감 완성도 글씨 */
+.progress-panel .progress-label {
+  margin: 0 !important;
+  font-size: 1.05rem !important;
+  font-weight: 900 !important;
+  white-space: nowrap !important;
+}
+
+/* 레벨 뱃지 */
+.progress-panel .exp-level-badge {
+  margin: 0 10px !important; /* 양 옆에 확실한 마진을 주어 다른 글자들과의 겹침/밀착 방지 */
+  font-size: 0.85rem !important;
+  font-weight: 900 !important;
+  white-space: nowrap !important;
+  display: inline-flex !important;
+  align-items: center;
+}
+
+/* 분할 수치 (예: 2 / 40) */
+.progress-panel strong {
+  margin-left: auto !important;
+  font-size: 1.25rem !important;
+  font-weight: 1000 !important;
+  white-space: nowrap !important;
+  color: var(--teal-dark) !important;
+}
+
+/* 전체 경험치 트랙 바 너비 강제 적용 */
+.progress-panel .progress-track {
+  width: 100% !important;
+  margin-top: 4px !important;
+  margin-bottom: 2px !important;
+}
+
+/* 완성별 스택 */
+.progress-panel .completion-star-status {
+  width: 100% !important;
+  display: flex !important;
+  justify-content: flex-end !important;
+  margin-top: 2px !important;
+}
+
+/* 반응형 미디어 쿼리 튜닝 (소형 모바일 기기 대응) */
+@media (max-width: 600px) {
+  .progress-panel {
+    flex-direction: column !important;
+    align-items: flex-start !important;
+    gap: 8px !important;
+  }
+  .progress-panel strong {
+    margin-left: 0 !important;
+    align-self: flex-end !important;
+  }
+  .progress-panel .completion-star-status {
+    justify-content: flex-start !important;
+  }
+}
+
+/* ==========================================
+   🎮 분류 미션 상단 게임 헤더 및 버튼 비주얼 개선
+   (흰 배경/흰 글씨 가독성 붕괴 현상 완치)
+   ========================================== */
+
+/* 1. 게임 헤더 박스: 칙칙한 흰 배경을 걷어내고 세련된 반투명 다크 아케이드 패널로 고정 */
+.game-header {
+  background: linear-gradient(135deg, #3a2415, #3f2a0e) !important;
+  border: 2px solid rgba(245, 188, 68, 0.55) !important;
+  box-shadow: 0 8px 32px rgba(63, 42, 14, 0.28) !important;
+  padding: 24px !important;
+  border-radius: 16px !important;
+  color: #fff4ca !important;
+}
+
+/* 2. 타이틀 '카드를 기준에 따라 나누기 미션' */
+.game-header h2 {
+  color: #fff4ca !important; /* 선명하고 고급스러운 크림 골드 */
+  font-size: 1.6rem !important;
+  font-weight: 900 !important;
+  text-shadow: 0 2px 4px rgba(0, 0, 0, 0.5) !important;
+  margin-top: 8px !important;
+  margin-bottom: 8px !important;
+}
+
+/* 3. 상단 소제목 '분류 게임' */
+.game-header .section-kicker {
+  color: #f5bc44 !important; /* 화사한 네온 연보라 */
+  font-size: 0.95rem !important;
+  font-weight: 800 !important;
+  text-shadow: 0 1px 3px rgba(63, 42, 14, 0.45) !important;
+}
+
+/* 4. 본문 설명 '분류 기준을 보고 동물 카드를 직접 옮겨서 미션을 완료하세요...' */
+.game-header .game-description {
+  color: #fff4ca !important; /* 고대비 밝은 실버그레이 */
+  font-size: 1.05rem !important;
+  line-height: 1.6 !important;
+  font-weight: 500 !important;
+}
+
+/* 5. 도감으로 돌아가기 버튼: 노란 배경에 흰글씨로 묻히던 최악의 가독성 완벽 개선 */
+.back-to-catalog {
+  background: #3a2415 !important; /* 어두운 다크 퍼플 네이비 */
+  border: 2.5px solid #b48934 !important; /* 고급스러운 청동 골드 테두리 */
+  color: #fff4ca !important; /* 선명한 리얼 골드 옐로우 텍스트 */
+  box-shadow: 0 4px 12px rgba(63, 42, 14, 0.24) !important;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1) !important;
+}
+
+.back-to-catalog:hover {
+  background: #b48934 !important; /* 골드로 채워짐 */
+  color: #3f2a0e !important; /* 텍스트는 화이트로 반전 */
+  border-color: #fff4ca !important;
+  box-shadow: 0 4px 12px rgba(63, 42, 14, 0.24) !important;
+  transform: translateY(-2px) !important;
+}
+
+/* 6. 게임 점수 표시기 (오른쪽 0 / 8) 가독성 극대화 */
+.game-score {
+  background: #fff4ca !important;
+  border: 2px solid #b48934 !important;
+  color: #3f2a0e !important; /* 골드 네온 */
+  font-size: 2rem !important;
+  font-weight: 900 !important;
+  text-shadow: 0 1px 0 rgba(255, 255, 255, 0.5) !important;
+  border-radius: 12px !important;
+  padding: 12px !important;
+  box-shadow: inset 0 0 12px rgba(180, 137, 52, 0.18) !important;
+}
+
+/* ════════════════════════════════════════════════════════════
+   모험 지도 (Adventure Map) — 포켓몬식 여정 화면
+   ════════════════════════════════════════════════════════════ */
+
+.map-view {
+  display: none;
+  flex-direction: column;
+  align-items: center;
+  flex: 1;
+  gap: 16px;
+  padding: 22px 24px 40px;
+  overflow-y: auto;
+  min-width: 0;
+}
+
+.map-view > * {
+  width: 100%;
+  max-width: 880px;
+}
+
+.map-header {
+  display: flex;
+  gap: 16px;
+  align-items: stretch;
+  flex-wrap: wrap;
+}
+
+.map-header-copy {
+  flex: 1 1 320px;
+  min-width: 0;
+}
+
+.map-header-copy h2 {
+  margin: 4px 0 8px;
+  font-size: 1.5rem;
+  color: var(--ink);
+}
+
+.map-lede {
+  margin: 0;
+  color: var(--muted);
+  max-width: 60ch;
+}
+
+.map-quest-card {
+  flex: 0 1 320px;
+  min-width: 260px;
+  background: var(--panel);
+  border: 2px solid rgba(245, 188, 68, 0.65);
+  border-radius: var(--radius);
+  box-shadow: var(--shadow-md);
+  padding: 14px 16px 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.map-quest-card p {
+  margin: 0;
+  font-size: 0.95rem;
+}
+
+.map-quest-title {
+  font-size: 1.15rem;
+  color: var(--ink);
+}
+
+.map-quest-badges {
+  display: inline-block;
+  padding: 1px 8px;
+  border-radius: 999px;
+  background: rgba(245, 188, 68, 0.22);
+  font-weight: 700;
+  font-size: 0.85rem;
+}
+
+.map-continue {
+  margin-top: 6px;
+  align-self: flex-start;
+}
+
+/* ── 배지 케이스 ── */
+
+.badge-case {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  flex-wrap: wrap;
+  background: linear-gradient(120deg, rgba(45, 27, 14, 0.92), rgba(58, 36, 21, 0.92));
+  border: 2px solid rgba(245, 188, 68, 0.5);
+  border-radius: var(--radius);
+  box-shadow: var(--shadow-sm);
+  padding: 10px 16px;
+}
+
+.badge-case-title {
+  color: #ffe08a;
+  font-weight: 800;
+  font-size: 0.95rem;
+  letter-spacing: 0.04em;
+}
+
+.badge-case-slots {
+  display: flex;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+
+.badge-slot {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 3px;
+  min-width: 52px;
+}
+
+.badge-slot-face {
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
+  display: grid;
+  place-items: center;
+  background: rgba(255, 241, 214, 0.12);
+  border: 2px dashed rgba(255, 224, 138, 0.45);
+  overflow: hidden;
+}
+
+.badge-slot-sprite {
+  width: 34px;
+  height: 34px;
+  object-fit: contain;
+}
+
+.badge-slot-emoji {
+  font-size: 22px;
+}
+
+.badge-slot-label {
+  color: rgba(255, 241, 214, 0.85);
+  font-size: 0.72rem;
+  font-weight: 700;
+}
+
+.badge-slot.is-empty .badge-slot-face {
+  filter: grayscale(1);
+  opacity: 0.55;
+}
+
+.badge-slot.is-earned .badge-slot-face {
+  border: 2px solid #f5bc44;
+  background: radial-gradient(circle, #fff4ca 0%, #f5bc44 100%);
+  box-shadow: 0 0 10px rgba(245, 188, 68, 0.65);
+}
+
+.badge-slot.is-earned .badge-slot-label {
+  color: #ffe08a;
+}
+
+/* ── 지도 본체 ── */
+
+.adventure-map {
+  position: relative;
+  min-height: 660px;
+  border-radius: 22px;
+  border: 4px solid rgba(180, 137, 52, 0.55);
+  box-shadow: var(--shadow-md), inset 0 0 60px rgba(86, 65, 24, 0.12);
+  background:
+    radial-gradient(circle at 18% 6%, rgba(255, 255, 255, 0.55), transparent 26%),
+    radial-gradient(circle at 82% 30%, rgba(255, 255, 255, 0.3), transparent 22%),
+    linear-gradient(180deg,
+      #d8f2c5 0%,
+      #c4e8a8 16%,
+      #a8d98a 28%,
+      #bfe6d8 38%,
+      #9fd8f2 48%,
+      #7ec3ea 62%,
+      #a6dcf5 72%,
+      #eef6fb 84%,
+      #ffffff 100%);
+  overflow: hidden;
+}
+
+.map-trail {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+}
+
+.map-trail .trail-seg {
+  fill: none;
+  stroke: rgba(122, 106, 82, 0.55);
+  stroke-width: 5px;
+  stroke-linecap: round;
+  stroke-dasharray: 0.5 4;
+  vector-effect: non-scaling-stroke;
+}
+
+.map-trail .trail-seg.is-cleared {
+  stroke: #f5bc44;
+  stroke-dasharray: none;
+  filter: drop-shadow(0 0 4px rgba(245, 188, 68, 0.7));
+}
+
+.map-decorations {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+}
+
+.map-deco {
+  position: absolute;
+  font-size: 26px;
+  opacity: 0.9;
+  text-shadow: 0 2px 6px rgba(86, 65, 24, 0.2);
+}
+
+.deco-cloud {
+  font-size: 30px;
+  opacity: 0.8;
+}
+
+.map-nodes {
+  position: absolute;
+  inset: 0;
+}
+
+/* ── 지도 노드 ── */
+
+.map-node {
+  position: absolute;
+  transform: translate(-50%, -50%);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 6px;
+  background: none;
+  border: none;
+  padding: 8px;
+  min-width: 110px;
+  min-height: var(--min-touch);
+  border-radius: 18px;
+  transition: transform 0.25s ease;
+}
+
+.map-node:hover,
+.map-node:focus-visible {
+  transform: translate(-50%, -50%) scale(1.06);
+}
+
+.map-node:focus-visible {
+  outline: 3px solid var(--focus);
+  outline-offset: 2px;
+}
+
+.map-node-face {
+  position: relative;
+  width: 74px;
+  height: 74px;
+  border-radius: 50%;
+  display: grid;
+  place-items: center;
+  background: radial-gradient(circle, #ffffff 0%, #fff4ca 100%);
+  border: 3px solid rgba(180, 137, 52, 0.65);
+  box-shadow: var(--shadow-md);
+}
+
+.map-node-sprite {
+  width: 56px;
+  height: 56px;
+  object-fit: contain;
+}
+
+.map-node-emoji {
+  font-size: 34px;
+}
+
+.map-node-step {
+  position: absolute;
+  top: 0;
+  left: 4px;
+  z-index: 2;
+  width: 24px;
+  height: 24px;
+  border-radius: 50%;
+  display: grid;
+  place-items: center;
+  background: #3a2415;
+  color: #ffe08a;
+  font-size: 0.8rem;
+  font-weight: 800;
+  border: 2px solid rgba(255, 224, 138, 0.7);
+}
+
+.map-node-medal {
+  position: absolute;
+  right: -6px;
+  bottom: -6px;
+  font-size: 24px;
+  filter: drop-shadow(0 2px 3px rgba(86, 65, 24, 0.4));
+}
+
+.map-node-label {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 2px;
+  background: rgba(255, 251, 242, 0.92);
+  border: 1.5px solid rgba(180, 137, 52, 0.4);
+  border-radius: 12px;
+  padding: 4px 10px;
+  box-shadow: var(--shadow-sm);
+}
+
+.map-node-label strong {
+  color: var(--ink);
+  font-size: 0.95rem;
+  line-height: 1.2;
+}
+
+.map-node-status {
+  font-size: 0.75rem;
+  font-weight: 800;
+  color: var(--teal-dark);
+}
+
+.map-node-progress {
+  font-size: 0.75rem;
+  color: var(--muted);
+  font-weight: 700;
+}
+
+/* 노드 상태별 표현 */
+
+.map-node.map-status-complete .map-node-face {
+  border-color: #5cb85c;
+  background: radial-gradient(circle, #ffffff 0%, #e2f4dd 100%);
+}
+
+.map-node.map-status-complete .map-node-status {
+  color: #2f7d32;
+}
+
+.map-node.map-status-challenge .map-node-face {
+  border-color: var(--coral);
+  box-shadow: 0 0 0 4px rgba(232, 93, 58, 0.25), var(--shadow-md);
+  animation: map-node-challenge-pulse 1.6s ease-in-out infinite;
+}
+
+.map-node.map-status-challenge .map-node-status {
+  color: var(--coral);
+}
+
+.map-node.is-current .map-node-face {
+  border-color: var(--sun);
+  box-shadow: var(--gold-glow);
+}
+
+.map-node.is-current .map-node-label {
+  border-color: rgba(245, 188, 68, 0.9);
+  background: #fff4ca;
+}
+
+.map-node.map-status-locked .map-node-face,
+.map-node.map-status-locked .map-node-sprite {
+  filter: grayscale(0.85);
+  opacity: 0.9;
+}
+
+.map-node.map-status-locked .map-node-label {
+  opacity: 0.85;
+}
+
+.map-node.map-node-master .map-node-face {
+  width: 84px;
+  height: 84px;
+  background: radial-gradient(circle, #fff9e3 0%, #ffe08a 100%);
+  border-color: #b48934;
+}
+
+.map-node.map-node-master.map-status-locked .map-node-face {
+  filter: grayscale(0.7);
+}
+
+@keyframes map-node-challenge-pulse {
+  0%, 100% { box-shadow: 0 0 0 3px rgba(232, 93, 58, 0.2), var(--shadow-md); }
+  50% { box-shadow: 0 0 0 9px rgba(232, 93, 58, 0.08), var(--shadow-md); }
+}
+
+/* ── 플레이어(부엉이) 마커 ── */
+
+.map-player {
+  position: absolute;
+  z-index: 3;
+  width: 56px;
+  height: 56px;
+  object-fit: contain;
+  transform: translate(-50%, -132%);
+  transition: left 0.7s cubic-bezier(0.45, 0, 0.25, 1), top 0.7s cubic-bezier(0.45, 0, 0.25, 1);
+  pointer-events: none;
+  filter: drop-shadow(0 6px 8px rgba(86, 65, 24, 0.35));
+  animation: map-player-bob 1.8s ease-in-out infinite;
+}
+
+@keyframes map-player-bob {
+  0%, 100% { margin-top: 0; }
+  50% { margin-top: -7px; }
+}
+
+/* ── 배지 도전(챌린지) 게임 모드 ── */
+
+.challenge-banner {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin: 14px 0 4px;
+  padding: 12px 16px;
+  border-radius: 14px;
+  background: linear-gradient(120deg, #2c1f10, #4d3312);
+  border: 2px solid #f5bc44;
+  color: #fff4ca;
+  box-shadow: 0 0 14px rgba(245, 188, 68, 0.35);
+}
+
+.challenge-banner[hidden] {
+  display: none;
+}
+
+.challenge-banner-icon {
+  width: 40px;
+  height: 40px;
+  object-fit: contain;
+  flex: 0 0 auto;
+}
+
+.challenge-banner strong {
+  color: #ffe08a;
+}
+
+.game-view.challenge-mode .game-score {
+  border-color: #f5bc44 !important;
+}
+
+/* 지역 탭의 배지 도전 상태 */
+
+.filter-button.stage-challenge {
+  background: rgba(232, 93, 58, 0.14);
+  border-color: rgba(232, 93, 58, 0.55);
+}
+
+.filter-button.stage-challenge .stage-status {
+  color: var(--coral);
+  font-weight: 800;
+}
+
+/* 미션 보드의 배지 도전 상태 */
+
+.mission-board.status-challenge {
+  background:
+    linear-gradient(135deg, rgba(0, 0, 0, 0.16), rgba(0, 0, 0, 0)),
+    linear-gradient(120deg, #6b3116, #a04a12 55%, #6b4d18);
+}
+
+/* ── 보상 모달: 배지/도전 요소 ── */
+
+.region-challenge-callout {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-top: 8px;
+  padding: 10px 12px;
+  border-radius: 12px;
+  background: rgba(232, 93, 58, 0.12);
+  border: 1.5px dashed rgba(232, 93, 58, 0.5);
+}
+
+.region-challenge-icon {
+  width: 38px;
+  height: 38px;
+  object-fit: contain;
+  flex: 0 0 auto;
+}
+
+.badge-reward-medal {
+  position: relative;
+  width: 110px;
+  height: 110px;
+  margin: 6px auto 2px;
+  display: grid;
+  place-items: center;
+  animation: badge-reward-pop 0.6s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+.badge-reward-shield {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  filter: drop-shadow(0 0 12px rgba(245, 188, 68, 0.75));
+}
+
+.badge-reward-region {
+  position: relative;
+  width: 54px;
+  height: 54px;
+  object-fit: contain;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.85);
+  padding: 4px;
+  box-shadow: 0 0 0 2px rgba(180, 137, 52, 0.6);
+}
+
+.badge-reward-emoji {
+  position: relative;
+  font-size: 40px;
+}
+
+@keyframes badge-reward-pop {
+  0% { transform: scale(0.3); opacity: 0; }
+  70% { transform: scale(1.12); opacity: 1; }
+  100% { transform: scale(1); }
+}
+
+/* ── 반응형 ── */
+
+@media (max-width: 1080px) {
+  .adventure-map {
+    min-height: 620px;
+  }
+}
+
+@media (max-width: 680px) {
+  .map-view {
+    padding: 16px 14px 32px;
+  }
+
+  .map-header-copy h2 {
+    font-size: 1.25rem;
+  }
+
+  .map-quest-card {
+    flex: 1 1 100%;
+    min-width: 0;
+  }
+
+  .map-continue {
+    align-self: stretch;
+    text-align: center;
+  }
+
+  .badge-case {
+    gap: 8px;
+    padding: 10px 12px;
+  }
+
+  .badge-case-slots {
+    gap: 8px;
+  }
+
+  .badge-slot {
+    min-width: 44px;
+  }
+
+  .badge-slot-face {
+    width: 38px;
+    height: 38px;
+  }
+
+  .badge-slot-sprite {
+    width: 28px;
+    height: 28px;
+  }
+
+  .adventure-map {
+    min-height: 600px;
+  }
+
+  .map-node {
+    min-width: 88px;
+    padding: 6px;
+  }
+
+  .map-node-face {
+    width: 60px;
+    height: 60px;
+  }
+
+  .map-node-sprite {
+    width: 44px;
+    height: 44px;
+  }
+
+  .map-node.map-node-master .map-node-face {
+    width: 68px;
+    height: 68px;
+  }
+
+  .map-node-label strong {
+    font-size: 0.85rem;
+  }
+
+  .map-node-progress {
+    font-size: 0.7rem;
+  }
+
+  .map-player {
+    width: 46px;
+    height: 46px;
+  }
+
+  .map-deco {
+    font-size: 20px;
+  }
+
+  .challenge-banner {
+    flex-direction: column;
+    text-align: center;
+    gap: 8px;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .map-player {
+    animation: none;
+    transition: none;
+  }
+
+  .map-node.map-status-challenge .map-node-face {
+    animation: none;
+  }
+
+  .badge-reward-medal {
+    animation: none;
+  }
+
+  .map-node,
+  .map-node:hover,
+  .map-node:focus-visible {
+    transition: none;
+  }
+}
