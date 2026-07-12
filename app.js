@@ -2669,7 +2669,7 @@ function checkGame() {
   tokens.forEach(token => {
     if (token.classList.contains("correct-token")) {
       token.classList.add("bounce-success");
-      setTimeout(() => token.classList.remove("bounce-success"), 1000);
+      setTimeout(() => token.classList.remove("bounce-success"), 1200);
     } else if (token.classList.contains("wrong-token")) {
       token.classList.add("shake-failed");
       setTimeout(() => token.classList.remove("shake-failed"), 1000);

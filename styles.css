@@ -1874,16 +1874,16 @@ button:focus-visible {
   align-items: center;
   margin-bottom: 18px;
   padding: 22px;
-  background: #18182b !important; /* 다크 게이밍 테마로 강제 고정하여 흰 배경/흰 글씨 가독성 차단 버그 전면 박멸 */
-  border: 2px solid #3c3c5c !important;
+  background: linear-gradient(135deg, #3a2415, #3f2a0e) !important; /* 다크 게이밍 테마로 강제 고정하여 흰 배경/흰 글씨 가독성 차단 버그 전면 박멸 */
+  border: 2px solid rgba(245, 188, 68, 0.55) !important;
   border-radius: var(--radius);
-  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4) !important;
+  box-shadow: 0 8px 32px rgba(63, 42, 14, 0.28) !important;
 }
 
 .game-header p {
   max-width: 760px;
   margin: 8px 0 0;
-  color: #e5e7eb !important; /* 고대비 밝은 실버그레이로 변경 */
+  color: #fff4ca !important; /* 고대비 밝은 실버그레이로 변경 */
   font-weight: 700;
 }
 
@@ -1964,8 +1964,9 @@ button:focus-visible {
 }
 
 .drop-zone.correct-zone {
-  border-color: var(--leaf);
-  background: #effaf3;
+  border-color: var(--game-neon-gold);
+  background: rgba(255, 244, 202, 0.96);
+  box-shadow: var(--gold-glow);
 }
 
 .drop-zone.needs-work {
@@ -2016,11 +2017,11 @@ button:focus-visible {
   height: 66px;
   object-fit: cover;
   border-radius: 6px;
-  background: #d8eef3;
+  background: #f5ecd3;
 }
 
 .game-token.correct-token {
-  border-color: var(--leaf);
+  border-color: var(--game-neon-gold);
 }
 
 .game-token.wrong-token {
@@ -3560,16 +3561,16 @@ body[data-view="game"] .sticky-progress {
 
 :root {
   /* 게임/네온 테마 */
-  --game-primary: #ff007f;     /* 네온 핑크 */
-  --game-secondary: #00f0ff;   /* 네온 사이언 */
-  --game-accent: #ffae00;      /* 골드 옐로우 */
+  --game-primary: #b48934;     /* 브론즈 골드 */
+  --game-secondary: #f5bc44;   /* 선셋 골드 */
+  --game-accent: #d4940a;      /* 골드 옐로우 */
   --game-neon-gold: #ffc300;   /* 밝은 골드 */
-  --game-dark-panel: #1e1e2f;  /* 어두운 게임기 캔버스 */
-  --game-card-shadow: 0 8px 24px rgba(245, 188, 68, 0.15);
+  --game-dark-panel: #3a2415;  /* 어두운 게임기 캔버스 */
+  --game-card-shadow: 0 8px 24px rgba(86, 65, 24, 0.16);
   
   /* EXP 젤리 그라데이션 */
-  --exp-gradient: linear-gradient(90deg, #00f0ff 0%, #7000ff 100%);
-  --exp-glow: 0 0 15px rgba(0, 240, 255, 0.7);
+  --exp-gradient: linear-gradient(90deg, #f5bc44 0%, #d4940a 100%);
+  --exp-glow: 0 0 15px rgba(245, 188, 68, 0.55);
   --exp-jelly-shine: linear-gradient(180deg, rgba(255,255,255,0.4) 0%, rgba(255,255,255,0) 50%);
 }
 
@@ -3615,7 +3616,7 @@ body[data-view="game"] .sticky-progress {
 .animal-card:not(.collected):hover {
   transform: translateY(-5px) scale(1.02);
   border-color: var(--game-secondary) !important;
-  box-shadow: 0 8px 20px rgba(0, 240, 255, 0.2) !important;
+  box-shadow: 0 8px 20px rgba(180, 137, 52, 0.22) !important;
   animation: game-card-bounce 0.4s ease-out;
 }
 
@@ -3682,14 +3683,14 @@ body[data-view="game"] .sticky-progress {
   align-items: center;
   justify-content: center;
   padding: 4px 10px;
-  background: linear-gradient(135deg, #7000ff, #00f0ff);
-  color: #ffffff;
-  border: 2px solid #ffffff;
+  background: linear-gradient(135deg, #f5bc44, #b48934);
+  color: #3f2a0e;
+  border: 2px solid #fff4ca;
   border-radius: 999px;
   font-size: 0.82rem;
   font-weight: 900;
-  box-shadow: 0 4px 8px rgba(112, 0, 255, 0.3), inset 0 2px 2px rgba(255,255,255,0.4);
-  text-shadow: 0 1px 2px rgba(0,0,0,0.4);
+  box-shadow: 0 4px 8px rgba(86, 65, 24, 0.18), inset 0 2px 2px rgba(255,255,255,0.45);
+  text-shadow: 0 1px 0 rgba(255,255,255,0.35);
   animation: level-pulse 2s ease-in-out infinite;
 }
 
@@ -3706,9 +3707,9 @@ body[data-view="game"] .sticky-progress {
 }
 
 .progress-track {
-  background: #242438 !important;
-  border: 2.5px solid #1a1a2e;
-  box-shadow: inset 0 2px 5px rgba(0,0,0,0.5);
+  background: #3a2415 !important;
+  border: 2.5px solid #7a6a52;
+  box-shadow: inset 0 2px 5px rgba(63, 42, 14, 0.45);
   position: relative;
   overflow: hidden;
 }
@@ -3749,7 +3750,7 @@ body[data-view="game"] .sticky-progress {
 .floating-exp-text {
   position: fixed;
   z-index: 1000;
-  color: #00f0ff;
+  color: #f5bc44;
   font-size: 1.8rem;
   font-weight: 900;
   text-shadow: 
@@ -3757,7 +3758,7 @@ body[data-view="game"] .sticky-progress {
      2px -2px 0 #000,
     -2px  2px 0 #000,
      2px  2px 0 #000,
-     0 0 10px rgba(0, 240, 255, 0.8);
+     0 0 10px rgba(245, 188, 68, 0.65);
   pointer-events: none;
   animation: float-up-fade-exp 1.6s cubic-bezier(0.25, 1, 0.5, 1) forwards;
 }
@@ -3792,7 +3793,7 @@ body[data-view="game"] .sticky-progress {
 
 /* 포획 씬 격자 펄스 섀도우 */
 .catch-overlay {
-  background: rgba(18, 18, 30, 0.94) !important;
+  background: rgba(58, 36, 21, 0.94) !important;
 }
 
 .catch-overlay::before {
@@ -3809,7 +3810,7 @@ body[data-view="game"] .sticky-progress {
 /* 흡수될 때의 번개 펄스 링 (Show-off!) */
 .catch-overlay.is-absorbing::before {
   animation: lightning-grid 0.4s linear infinite;
-  background-color: rgba(0, 240, 255, 0.05);
+  background-color: rgba(245, 188, 68, 0.08);
 }
 
 @keyframes lightning-grid {
@@ -3860,12 +3861,12 @@ body[data-view="game"] .sticky-progress {
   animation: rainbow-particle 1.2s cubic-bezier(0.1, 0.8, 0.3, 1) forwards;
 }
 
-.catch-sparkles span:nth-child(1) { background: #ff007f; --dx: -130px; --dy: -130px; }
-.catch-sparkles span:nth-child(2) { background: #00f0ff; --dx: 130px; --dy: -130px; }
-.catch-sparkles span:nth-child(3) { background: #ffae00; --dx: -150px; --dy: 20px; }
-.catch-sparkles span:nth-child(4) { background: #7000ff; --dx: 150px; --dy: 20px; }
-.catch-sparkles span:nth-child(5) { background: #00ff66; --dx: -80px; --dy: 120px; }
-.catch-sparkles span:nth-child(6) { background: #ff3300; --dx: 80px; --dy: 120px; }
+.catch-sparkles span:nth-child(1) { background: #f5bc44; --dx: -130px; --dy: -130px; }
+.catch-sparkles span:nth-child(2) { background: #fff4ca; --dx: 130px; --dy: -130px; }
+.catch-sparkles span:nth-child(3) { background: #d4940a; --dx: -150px; --dy: 20px; }
+.catch-sparkles span:nth-child(4) { background: #b48934; --dx: 150px; --dy: 20px; }
+.catch-sparkles span:nth-child(5) { background: #5cb85c; --dx: -80px; --dy: 120px; }
+.catch-sparkles span:nth-child(6) { background: #e85d3a; --dx: 80px; --dy: 120px; }
 
 @keyframes rainbow-particle {
   0% { opacity: 1; transform: translate(-50%, -50%) scale(0.2) rotate(0deg); }
@@ -3878,24 +3879,24 @@ body[data-view="game"] .sticky-progress {
 
 /* 닌텐도 스위치 게임기 스타일의 아케이드 프레임 */
 .game-view {
-  background: radial-gradient(circle at center, #1c1c30 0%, #0d0d18 100%) !important;
-  border: 6px solid #2f2f4f !important;
+  background: radial-gradient(circle at center, #fffbee 0%, #f5ecd3 58%, #e5cf9b 100%) !important;
+  border: 6px solid #3a2415 !important;
   border-radius: 24px !important;
   box-shadow: 
-    0 15px 35px rgba(0, 0, 0, 0.6), 
-    0 0 0 10px rgba(47, 47, 79, 0.4),
-    inset 0 0 40px rgba(0, 240, 255, 0.15) !important;
-  color: #fff4ca !important;
+    0 15px 35px rgba(63, 42, 14, 0.28),
+    0 0 0 10px rgba(180, 137, 52, 0.22),
+    inset 0 0 40px rgba(245, 188, 68, 0.16) !important;
+  color: #3f2a0e !important;
   padding: 24px !important;
 }
 
 .game-header h2 {
-  color: #ffffff !important;
-  text-shadow: 0 0 10px rgba(0, 240, 255, 0.5) !important;
+  color: #fff4ca !important;
+  text-shadow: 0 2px 4px rgba(63, 42, 14, 0.5) !important;
 }
 
 .game-description {
-  color: rgba(255, 244, 202, 0.7) !important;
+  color: #fff4ca !important;
 }
 
 /* 분류 미션 카테고리 헤더 */
@@ -3907,47 +3908,47 @@ body[data-view="game"] .sticky-progress {
   letter-spacing: 0.05em;
   padding: 8px 14px;
   border-radius: 8px;
-  text-shadow: 0 2px 4px rgba(0,0,0,0.3);
+  text-shadow: none;
 }
 
 .game-source h3 {
-  background: #32325d;
-  color: #a5b4fc;
-  border: 1px solid #4338ca;
+  background: #fff4ca;
+  color: #3f2a0e;
+  border: 1px solid #b48934;
 }
 
 .drop-zone[data-answer="yes"] h3 {
-  background: rgba(92, 184, 92, 0.2);
-  color: #8fd66d;
-  border: 1.5px solid #2f7f3b;
+  background: rgba(245, 188, 68, 0.2);
+  color: #3f2a0e;
+  border: 1.5px solid #b48934;
 }
 
 .drop-zone[data-answer="no"] h3 {
-  background: rgba(232, 93, 58, 0.2);
-  color: #ff8b70;
-  border: 1.5px solid #b93c1d;
+  background: rgba(122, 106, 82, 0.18);
+  color: #3f2a0e;
+  border: 1.5px solid #7a6a52;
 }
 
 /* 아케이드 게임존 카드 배치 */
 .token-zone {
-  background: rgba(0,0,0,0.3) !important;
-  border: 2px dashed rgba(255,255,255,0.1) !important;
+  background: rgba(255, 244, 202, 0.42) !important;
+  border: 2px dashed rgba(180, 137, 52, 0.4) !important;
   border-radius: 12px;
 }
 
 .game-token {
-  background: #252538 !important;
-  border: 2.5px solid #3c3c5c !important;
-  color: #fff8e8 !important;
-  box-shadow: 0 4px 8px rgba(0,0,0,0.3) !important;
+  background: #fffbee !important;
+  border: 2.5px solid rgba(180, 137, 52, 0.45) !important;
+  color: #3f2a0e !important;
+  box-shadow: 0 4px 8px rgba(86, 65, 24, 0.16) !important;
   transition: all 0.2s cubic-bezier(0.175, 0.885, 0.32, 1.275) !important;
 }
 
 /* 정답/오답 기쁘게 점핑 & 흔들림 */
 .game-token.bounce-success {
-  animation: token-bounce 0.6s ease infinite alternate;
-  border-color: #8fd66d !important;
-  box-shadow: 0 0 15px rgba(92, 184, 92, 0.6) !important;
+  animation: token-bounce 0.6s ease 2 alternate;
+  border-color: #ffc300 !important;
+  box-shadow: var(--gold-glow), 0 0 16px rgba(255, 195, 0, 0.5) !important;
 }
 
 .game-token.shake-failed {
@@ -3969,16 +3970,16 @@ body[data-view="game"] .sticky-progress {
 
 /* 퀴즈 문제박스 게이밍 리스타일 */
 .quiz-box {
-  background: var(--game-dark-panel) !important;
-  border: 3px solid var(--game-neon-gold) !important;
-  box-shadow: 0 12px 30px rgba(0,0,0,0.4), inset 0 0 20px rgba(255, 195, 0, 0.1) !important;
+  background: linear-gradient(135deg, #3a2415, #3f2a0e) !important;
+  border: 3px solid #b48934 !important;
+  box-shadow: 0 12px 30px rgba(63, 42, 14, 0.28), inset 0 0 20px rgba(255, 195, 0, 0.1) !important;
   border-radius: 16px;
-  color: #ffffff;
+  color: #fffbee;
   padding: 24px;
 }
 
 .quiz-box h3 {
-  color: #fff8df !important;
+  color: #fff4ca !important;
   font-size: 1.3rem;
   line-height: 1.4;
   margin-top: 0;
@@ -3986,26 +3987,26 @@ body[data-view="game"] .sticky-progress {
 }
 
 .answer-button {
-  background: rgba(255, 255, 255, 0.06) !important;
-  border: 2px solid rgba(255, 255, 255, 0.15) !important;
-  color: #e2e8f0 !important;
+  background: rgba(255, 251, 238, 0.12) !important;
+  border: 2px solid rgba(245, 188, 68, 0.32) !important;
+  color: #fffbee !important;
   font-weight: 800 !important;
   text-shadow: none !important;
   transition: all 0.18s ease !important;
 }
 
 .answer-button:hover:not(:disabled) {
-  background: var(--game-secondary) !important;
-  color: #12121e !important;
-  border-color: #ffffff !important;
+  background: #f5bc44 !important;
+  color: #3f2a0e !important;
+  border-color: #fff4ca !important;
   transform: scale(1.03);
-  box-shadow: 0 0 15px rgba(0, 240, 255, 0.5);
+  box-shadow: 0 0 15px rgba(245, 188, 68, 0.42);
 }
 
 .answer-button.correct {
   background: var(--game-neon-gold) !important;
   color: #3f2a0e !important;
-  border-color: #ffffff !important;
+  border-color: #5d3b12 !important;
   box-shadow: var(--gold-glow) !important;
 }
 
@@ -4031,34 +4032,34 @@ body[data-view="game"] .sticky-progress {
 }
 
 .game-view .select-field select {
-  color: #fff8e8 !important;
-  background: #252538 !important;
-  border: 2px solid #3c3c5c !important;
+  color: #3f2a0e !important;
+  background: #fffbee !important;
+  border: 2px solid #b48934 !important;
 }
 
 /* 분류 미션 카드 더미와 맞는 카드/다른 카드 영역의 H3 헤더의 시인성을 다크 게이밍 테마에 맞게 100% 선명하게 보정 */
 .game-source h3 {
-  background: #24243e !important;
-  color: #a5b4fc !important;
-  border: 2px solid #4f46e5 !important;
+  background: #fff4ca !important;
+  color: #3f2a0e !important;
+  border: 2px solid #b48934 !important;
   font-size: 1.25rem !important;
   font-weight: 900 !important;
   text-align: center !important;
 }
 
 .drop-zone[data-answer="yes"] h3 {
-  background: rgba(46, 125, 50, 0.45) !important;
-  color: #a7f3d0 !important;
-  border: 2px solid #059669 !important;
+  background: rgba(245, 188, 68, 0.24) !important;
+  color: #3f2a0e !important;
+  border: 2px solid #b48934 !important;
   font-size: 1.25rem !important;
   font-weight: 900 !important;
   text-align: center !important;
 }
 
 .drop-zone[data-answer="no"] h3 {
-  background: rgba(198, 40, 40, 0.45) !important;
-  color: #fecaca !important;
-  border: 2px solid #dc2626 !important;
+  background: rgba(122, 106, 82, 0.2) !important;
+  color: #3f2a0e !important;
+  border: 2px solid #7a6a52 !important;
   font-size: 1.25rem !important;
   font-weight: 900 !important;
   text-align: center !important;
@@ -4099,12 +4100,12 @@ p.game-source-help {
 
 .game-feedback,
 #gameFeedback {
-  color: #00f0ff !important;
+  color: #fff4ca !important;
   font-weight: 900 !important;
   font-size: 1.05rem !important;
-  text-shadow: 0 0 10px rgba(0, 240, 255, 0.5) !important;
-  background: rgba(0, 0, 0, 0.25) !important;
-  border: 1px solid rgba(0, 240, 255, 0.2) !important;
+  text-shadow: 0 2px 4px rgba(63, 42, 14, 0.55) !important;
+  background: rgba(58, 36, 21, 0.9) !important;
+  border: 1px solid rgba(245, 188, 68, 0.45) !important;
   border-radius: 8px;
   padding: 10px 14px !important;
   margin-top: 14px;
@@ -4186,17 +4187,17 @@ p.game-source-help {
 
 /* 1. 게임 헤더 박스: 칙칙한 흰 배경을 걷어내고 세련된 반투명 다크 아케이드 패널로 고정 */
 .game-header {
-  background: #18182b !important;
-  border: 2px solid #3c3c5c !important;
-  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4) !important;
+  background: linear-gradient(135deg, #3a2415, #3f2a0e) !important;
+  border: 2px solid rgba(245, 188, 68, 0.55) !important;
+  box-shadow: 0 8px 32px rgba(63, 42, 14, 0.28) !important;
   padding: 24px !important;
   border-radius: 16px !important;
-  color: #ffffff !important;
+  color: #fff4ca !important;
 }
 
 /* 2. 타이틀 '카드를 기준에 따라 나누기 미션' */
 .game-header h2 {
-  color: #fff8df !important; /* 선명하고 고급스러운 크림 골드 */
+  color: #fff4ca !important; /* 선명하고 고급스러운 크림 골드 */
   font-size: 1.6rem !important;
   font-weight: 900 !important;
   text-shadow: 0 2px 4px rgba(0, 0, 0, 0.5) !important;
@@ -4206,15 +4207,15 @@ p.game-source-help {
 
 /* 3. 상단 소제목 '분류 게임' */
 .game-header .section-kicker {
-  color: #a5b4fc !important; /* 화사한 네온 연보라 */
+  color: #f5bc44 !important; /* 화사한 네온 연보라 */
   font-size: 0.95rem !important;
   font-weight: 800 !important;
-  text-shadow: 0 0 8px rgba(165, 180, 252, 0.3) !important;
+  text-shadow: 0 1px 3px rgba(63, 42, 14, 0.45) !important;
 }
 
 /* 4. 본문 설명 '분류 기준을 보고 동물 카드를 직접 옮겨서 미션을 완료하세요...' */
 .game-header .game-description {
-  color: #e5e7eb !important; /* 고대비 밝은 실버그레이 */
+  color: #fff4ca !important; /* 고대비 밝은 실버그레이 */
   font-size: 1.05rem !important;
   line-height: 1.6 !important;
   font-weight: 500 !important;
@@ -4222,32 +4223,32 @@ p.game-source-help {
 
 /* 5. 도감으로 돌아가기 버튼: 노란 배경에 흰글씨로 묻히던 최악의 가독성 완벽 개선 */
 .back-to-catalog {
-  background: #111122 !important; /* 어두운 다크 퍼플 네이비 */
+  background: #3a2415 !important; /* 어두운 다크 퍼플 네이비 */
   border: 2.5px solid #b48934 !important; /* 고급스러운 청동 골드 테두리 */
-  color: #ffd700 !important; /* 선명한 리얼 골드 옐로우 텍스트 */
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3) !important;
+  color: #fff4ca !important; /* 선명한 리얼 골드 옐로우 텍스트 */
+  box-shadow: 0 4px 12px rgba(63, 42, 14, 0.24) !important;
   transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1) !important;
 }
 
 .back-to-catalog:hover {
   background: #b48934 !important; /* 골드로 채워짐 */
-  color: #ffffff !important; /* 텍스트는 화이트로 반전 */
-  border-color: #ffd700 !important;
-  box-shadow: 0 0 15px rgba(180, 137, 52, 0.6) !important;
+  color: #3f2a0e !important; /* 텍스트는 화이트로 반전 */
+  border-color: #fff4ca !important;
+  box-shadow: 0 4px 12px rgba(63, 42, 14, 0.24) !important;
   transform: translateY(-2px) !important;
 }
 
 /* 6. 게임 점수 표시기 (오른쪽 0 / 8) 가독성 극대화 */
 .game-score {
-  background: #25253d !important;
-  border: 2px solid #4f46e5 !important;
-  color: #ffd700 !important; /* 골드 네온 */
+  background: #fff4ca !important;
+  border: 2px solid #b48934 !important;
+  color: #3f2a0e !important; /* 골드 네온 */
   font-size: 2rem !important;
   font-weight: 900 !important;
-  text-shadow: 0 0 10px rgba(255, 215, 0, 0.3) !important;
+  text-shadow: 0 1px 0 rgba(255, 255, 255, 0.5) !important;
   border-radius: 12px !important;
   padding: 12px !important;
-  box-shadow: inset 0 0 12px rgba(79, 70, 229, 0.3) !important;
+  box-shadow: inset 0 0 12px rgba(180, 137, 52, 0.18) !important;
 }
 
 /* ════════════════════════════════════════════════════════════
