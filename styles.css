@@ -1464,6 +1464,9 @@ button:focus-visible {
   align-items: center;
   gap: 8px;
   margin: 0;
+  padding: 10px 12px;
+  border: 2px solid transparent;
+  border-radius: 12px;
   font-weight: 900;
 }
 
@@ -1490,11 +1493,15 @@ button:focus-visible {
 }
 
 .feedback.good {
-  color: var(--leaf);
+  color: #f0fff2;
+  background: #153d20;
+  border-color: #2d7a39;
 }
 
 .feedback.retry {
-  color: var(--coral);
+  color: #fff1ee;
+  background: #5a1f16;
+  border-color: #b53b24;
 }
 
 .hint-highlight {
@@ -2021,11 +2028,17 @@ button:focus-visible {
 }
 
 .game-token.correct-token {
-  border-color: var(--game-neon-gold);
+  color: #f0fff2 !important;
+  background: #153d20 !important;
+  border-color: #2d7a39 !important;
+  box-shadow: 0 0 0 3px rgba(45, 122, 57, 0.18) !important;
 }
 
 .game-token.wrong-token {
-  border-color: var(--coral);
+  color: #fff1ee !important;
+  background: #5a1f16 !important;
+  border-color: #b53b24 !important;
+  box-shadow: 0 0 0 3px rgba(181, 59, 36, 0.16) !important;
 }
 
 .game-feedback {
@@ -4008,6 +4021,13 @@ body[data-view="game"] .sticky-progress {
   color: #3f2a0e !important;
   border-color: #5d3b12 !important;
   box-shadow: var(--gold-glow) !important;
+}
+
+.answer-button.wrong {
+  background: #5a1f16 !important;
+  color: #fff1ee !important;
+  border-color: #b53b24 !important;
+  box-shadow: 0 0 0 3px rgba(181, 59, 36, 0.16) !important;
 }
 
 /* ───────────────────────────────────────────
