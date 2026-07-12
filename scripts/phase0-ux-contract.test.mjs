@@ -168,3 +168,36 @@ test("uncollected card photos keep recognizable silhouettes with question contex
   assert.ok(styles.includes("blur(3px)"));
   assert.ok(styles.includes("card-photo-frame::after"));
 });
+
+test("adventure map keeps the first and master nodes inside its clipped canvas", () => {
+  const appJs = read("app.js");
+  const stopMatches = [...appJs.matchAll(/\{ id: "([^"]+)", x: (\d+), y: (\d+) \}/g)];
+  const stops = Object.fromEntries(stopMatches.map(([, id, x, y]) => [id, { x: Number(x), y: Number(y) }]));
+
+  assert.ok(stops.around, "journeyStops should include the first region");
+  assert.ok(stops.master, "journeyStops should include the master destination");
+  assert.ok(stops.around.y >= 13, "the first node needs enough top clearance for its label and player marker");
+  assert.ok(stops.master.y <= 87, "the master node needs enough bottom clearance for its label");
+});
+
+test("adventure map region art stays uncolored until its badge is earned", () => {
+  const styles = read("styles.css");
+  const unearnedRule = styles.match(/\.map-node:not\(\.map-status-complete\) \.map-node-sprite \{[\s\S]*?\n\}/)?.[0] ?? "";
+  const earnedRule = styles.match(/\.map-node\.map-status-complete \.map-node-sprite \{[\s\S]*?\n\}/)?.[0] ?? "";
+  const playerRule = styles.match(/\.map-player \{[\s\S]*?\n\}/)?.[0] ?? "";
+
+  assert.ok(
+    styles.includes(".map-node:not(.map-status-complete) .map-node-sprite"),
+    "every unearned region sprite should share the muted treatment"
+  );
+  assert.ok(unearnedRule.includes("grayscale(1)"), "unearned region art should be fully grayscale");
+  assert.ok(
+    styles.includes(".map-node.map-status-complete .map-node-sprite"),
+    "earned region sprites should explicitly restore their color"
+  );
+  assert.ok(earnedRule.includes("filter: none"), "earned region art should restore its original color");
+  assert.ok(
+    playerRule.includes("translate(55%, -125%)"),
+    "the colored player marker should sit beside the current region art instead of covering it"
+  );
+});

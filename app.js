@@ -219,12 +219,12 @@ const milestoneFilters = filters.filter(filter => filter.id !== "all");
 // 모험 지도 여정: 지역을 순서대로 지나 최종 도감 마스터에 도착한다.
 // x, y는 지도 컨테이너 기준 퍼센트 좌표.
 const journeyStops = [
-  { id: "around", x: 22, y: 8 },
-  { id: "land", x: 68, y: 24 },
-  { id: "freshwater", x: 26, y: 41 },
+  { id: "around", x: 22, y: 14 },
+  { id: "land", x: 68, y: 28 },
+  { id: "freshwater", x: 26, y: 43 },
   { id: "sea", x: 70, y: 58 },
-  { id: "special", x: 28, y: 75 },
-  { id: "master", x: 62, y: 91 }
+  { id: "special", x: 28, y: 73 },
+  { id: "master", x: 62, y: 86 }
 ];
 const state = {
   view: "catalog",
@@ -345,6 +345,7 @@ const els = {
   sourceContinue: document.querySelector("#sourceContinue"),
   sourceCancel: document.querySelector("#sourceCancel"),
   regionLockedPopup: document.querySelector("#regionLockedPopup"),
+  regionLockedMessage: document.querySelector("#regionLockedMessage"),
   regionLockedYes: document.querySelector("#regionLockedYes"),
   regionLockedNo: document.querySelector("#regionLockedNo"),
   onboardingModal: document.querySelector("#onboardingModal"),
@@ -682,6 +683,10 @@ function bindMissionPanel() {
     playSound("select");
     if (action.dataset.catalogMode === "badge-challenge") {
       startBadgeChallenge(state.filter);
+      return;
+    }
+    if (action.dataset.catalogMode === "map") {
+      setView("map");
       return;
     }
     if (action.dataset.catalogMode === "all") {
@@ -1120,7 +1125,7 @@ function renderFilters() {
         renderAnimals();
         return;
       }
-      activateMissionRegion(filter.id, { shouldRender: true, updateUrl: true });
+      requestRegionTravel(filter.id);
     });
     els.filterTabs.append(button);
   });
@@ -1195,22 +1200,21 @@ function renderMissionPanel() {
           ? "전체 도감을 둘러보며 동물의 특징을 비교해 봐요."
           : isCurrentMission
             ? "카드를 눌러 관찰하고 체크한 뒤 퀴즈를 풀어요."
-            : "지금은 미리보기예요. 준비되면 현재 미션으로 돌아가요.";
+            : "지금은 미리보기예요. 전체 지도에서 탐험 순서를 확인해요.";
   const regionSprite = uiSprites.regions[panelFilter.id];
   const primaryAction = isChallengeReady
     ? `<button class="mission-toggle" type="button" data-catalog-mode="badge-challenge">🏅 배지 도전 시작</button>`
     : hasNextMission
       ? `<button class="mission-toggle" type="button" data-catalog-mode="next-mission">🧭 다음 지역으로 출발</button>`
-      : isBadgeEarned || (isAllMode && isFinished)
-        ? `<button class="mission-toggle" type="button" data-catalog-mode="all">전체 도감 보기</button>`
-        : isAllMode || !isCurrentMission
-          ? `<button class="mission-toggle" type="button" data-catalog-mode="mission">현재 미션으로 돌아가기</button>`
-          : `<button class="mission-toggle" type="button" data-catalog-mode="all">전체 도감 보기</button>`;
+      : isAllMode
+        ? `<button class="mission-toggle" type="button" data-catalog-mode="mission">현재 미션으로 돌아가기</button>`
+        : "";
   const secondaryAction = hasNextMission
     ? `<button class="mission-secondary-action" type="button" data-catalog-mode="mission">완료한 미션 다시 보기</button>`
     : isChallengeReady
       ? `<button class="mission-secondary-action" type="button" data-catalog-mode="mission">카드 다시 살펴보기</button>`
       : "";
+  const persistentActions = `<button class="mission-secondary-action" type="button" data-catalog-mode="all">📖 전체 도감 보기</button><button class="mission-secondary-action" type="button" data-catalog-mode="map">🗺️ 전체 지도로 돌아가기</button>`;
 
   els.missionPanel.innerHTML = `
     <div class="${boardClass}">
@@ -1230,6 +1234,7 @@ function renderMissionPanel() {
       <div class="mission-actions">
         ${primaryAction}
         ${secondaryAction}
+        ${persistentActions}
       </div>
     </div>
   `;
@@ -3003,11 +3008,7 @@ function bindAdventureMap() {
       }
       const regionId = node.dataset.mapRegion;
       if (regionId) {
-        if (node.classList.contains("map-status-locked")) {
-          openRegionLockedPopup(regionId);
-        } else {
-          travelToRegion(regionId);
-        }
+        requestRegionTravel(regionId);
       }
     });
   }
@@ -3182,6 +3183,18 @@ function travelToRegion(regionId) {
   activateMissionRegion(regionId, { shouldRender: true, updateUrl: true });
   setView("catalog");
   showToast(`${filter.icon} ${filter.label}에 도착했어요! 동물 카드를 눌러 관찰을 시작해요.`);
+}
+
+function requestRegionTravel(regionId) {
+  const filter = filters.find(item => item.id === regionId);
+  if (!filter) return;
+  const currentMissionId = getNextMissionFilter();
+  const isOutOfOrder = regionId !== currentMissionId && !hasRegionBadge(regionId);
+  if (isOutOfOrder) {
+    openRegionLockedPopup(regionId);
+    return;
+  }
+  travelToRegion(regionId);
 }
 
 function openMasterDex() {
@@ -3693,14 +3706,20 @@ function closeSourceConfirm() {
 }
 
 function openRegionLockedPopup(regionId) {
+  const targetRegion = filters.find(filter => filter.id === regionId);
+  const currentMission = filters.find(filter => filter.id === getNextMissionFilter());
+  if (!targetRegion || !currentMission) return;
   pendingLockedRegionId = regionId;
+  if (els.regionLockedMessage) {
+    els.regionLockedMessage.textContent = `${currentMission.icon} ${currentMission.label} 미션이 현재 순서예요. ${targetRegion.icon} ${targetRegion.label} 지역으로 먼저 이동할까요?`;
+  }
   if (els.regionLockedPopup) {
-    els.regionLockedPopup.hidden = false;
+    enterModalFocus(els.regionLockedPopup);
   }
 }
 
 function confirmLockedRegionTravel() {
-  if (els.regionLockedPopup) els.regionLockedPopup.hidden = true;
+  if (els.regionLockedPopup) exitModalFocus(els.regionLockedPopup);
   if (pendingLockedRegionId) {
     travelToRegion(pendingLockedRegionId);
     pendingLockedRegionId = null;
@@ -3708,7 +3727,7 @@ function confirmLockedRegionTravel() {
 }
 
 function closeRegionLockedPopup() {
-  if (els.regionLockedPopup) els.regionLockedPopup.hidden = true;
+  if (els.regionLockedPopup) exitModalFocus(els.regionLockedPopup);
   pendingLockedRegionId = null;
 }
 

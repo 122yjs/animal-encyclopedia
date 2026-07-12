@@ -4605,6 +4605,16 @@ p.game-source-help {
 
 /* 노드 상태별 표현 */
 
+.map-node:not(.map-status-complete) .map-node-sprite {
+  filter: grayscale(1);
+  opacity: 0.72;
+}
+
+.map-node.map-status-complete .map-node-sprite {
+  filter: none;
+  opacity: 1;
+}
+
 .map-node.map-status-complete .map-node-face {
   border-color: #5cb85c;
   background: radial-gradient(circle, #ffffff 0%, #e2f4dd 100%);
@@ -4634,8 +4644,7 @@ p.game-source-help {
   background: #fff4ca;
 }
 
-.map-node.map-status-locked .map-node-face,
-.map-node.map-status-locked .map-node-sprite {
+.map-node.map-status-locked .map-node-face {
   filter: grayscale(0.85);
   opacity: 0.9;
 }
@@ -4667,8 +4676,12 @@ p.game-source-help {
   z-index: 3;
   width: 56px;
   height: 56px;
+  padding: 3px;
   object-fit: contain;
-  transform: translate(-50%, -132%);
+  transform: translate(55%, -125%);
+  background: #fff4ca;
+  border: 2px solid var(--sun);
+  border-radius: 50%;
   transition: left 0.7s cubic-bezier(0.45, 0, 0.25, 1), top 0.7s cubic-bezier(0.45, 0, 0.25, 1);
   pointer-events: none;
   filter: drop-shadow(0 6px 8px rgba(86, 65, 24, 0.35));

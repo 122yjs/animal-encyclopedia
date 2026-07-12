@@ -16,7 +16,7 @@
   <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='14' fill='%230f6f68'/%3E%3Ctext x='50%25' y='55%25' text-anchor='middle' font-size='38'%3E%F0%9F%A6%89%3C/text%3E%3C/svg%3E">
   <link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin>
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/variable/pretendardvariable-dynamic-subset.min.css">
-  <link rel="stylesheet" href="./styles.css?v=20260709-adventure-map">
+  <link rel="stylesheet" href="./styles.css?v=20260712-region-navigation">
 </head>
 
 <body>
@@ -333,12 +333,12 @@
   </div>
 
   <div id="regionLockedPopup" class="confirm-popup" hidden>
-    <div class="confirm-popup-content">
-      <h3>🔒 아직 열리지 않았어요!</h3>
-      <p>이 지역은 아직 탐험할 수 없어요. 정말 먼저 푸시겠어요?</p>
+    <div class="confirm-popup-content" role="dialog" aria-modal="true" aria-labelledby="regionLockedTitle" aria-describedby="regionLockedMessage">
+      <h3 id="regionLockedTitle">🧭 탐험 순서를 바꿀까요?</h3>
+      <p id="regionLockedMessage">현재 미션보다 앞서 다른 지역으로 이동하려고 해요. 이동할까요?</p>
       <div class="confirm-popup-actions">
-        <button class="primary-button" type="button" id="regionLockedYes">이동하기</button>
-        <button class="cancel-button" type="button" id="regionLockedNo">괜찮아요</button>
+        <button class="primary-button" type="button" id="regionLockedYes">이 지역으로 이동</button>
+        <button class="cancel-button" type="button" id="regionLockedNo">현재 순서 유지</button>
       </div>
     </div>
   </div>
@@ -379,7 +379,7 @@
   <!-- no-question:remove:start qrcode-script -->
   <script src="./vendor/qrcode.js?v=20260430-teacher-share"></script>
   <!-- no-question:remove:end qrcode-script -->
-  <script src="./app.js?v=20260709-adventure-map"></script>
+  <script src="./app.js?v=20260712-region-navigation"></script>
 </body>
 
 </html>
