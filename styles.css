@@ -2391,7 +2391,7 @@ button:focus-visible {
   position: fixed;
   left: 50%;
   bottom: 22px;
-  z-index: 40;
+  z-index: 60;
   width: min(520px, calc(100% - 32px));
   padding: 12px 14px;
   color: #fff5d6;
@@ -2433,6 +2433,10 @@ button:focus-visible {
 @media (max-width: 1080px) {
   .sticky-progress {
     display: flex;
+  }
+
+  .app-toast {
+    bottom: 84px;
   }
 
   .app-layout {
@@ -3432,7 +3436,7 @@ body[data-view="game"] .sticky-progress {
 .confirm-popup {
   position: fixed;
   inset: 0;
-  z-index: 30;
+  z-index: 1100;
   display: grid;
   place-items: center;
   padding: 24px;
@@ -4692,6 +4696,11 @@ p.game-source-help {
   animation: map-player-bob 1.8s ease-in-out infinite;
 }
 
+.map-player.is-traveling {
+  animation: none;
+  transition-duration: 1.25s;
+}
+
 @keyframes map-player-bob {
   0%, 100% { margin-top: 0; }
   50% { margin-top: -7px; }
@@ -4821,8 +4830,17 @@ p.game-source-help {
 }
 
 @media (max-width: 680px) {
+  .app-layout {
+    overflow: visible;
+  }
+
   .map-view {
     padding: 16px 14px 32px;
+    overflow-y: visible;
+  }
+
+  .map-header {
+    display: contents;
   }
 
   .map-header-copy h2 {
@@ -4830,6 +4848,9 @@ p.game-source-help {
   }
 
   .map-quest-card {
+    position: sticky;
+    top: 8px;
+    z-index: 15;
     flex: 1 1 100%;
     min-width: 0;
   }

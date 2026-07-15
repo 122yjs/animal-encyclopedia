@@ -209,6 +209,7 @@ test("map player travels once from a newly earned badge to the next mission", ()
   for (const needle of [
     "let pendingMapTravel = null",
     "pendingMapTravel = { from: regionId, to: getNextMissionFilter() }",
+    "pendingMapTravel.autoOpenCatalog = true",
     'state.view === "map" && pendingMapTravel',
     "function animateMapPlayer(fromId, toId)",
     'els.mapPlayer.classList.add("is-traveling")',
@@ -241,8 +242,58 @@ test("map player also travels when a student jumps to another region from the ma
   for (const needle of [
     "const fromRegion = getActiveQuestRegion()",
     "queueMapPlayerTravel(fromRegion, regionId)",
-    "window.setTimeout(finishTravel, MAP_TRAVEL_DURATION_MS)"
+    "window.setTimeout(finishTravel, MAP_TRAVEL_DURATION_MS)",
+    "지역에 도착했어요!"
   ]) {
     assert.ok(travelCode.includes(needle), `travelToRegion should include ${needle}`);
   }
+
+  const animatedBranch = travelCode.indexOf("if (shouldAnimateTravel)");
+  const animatedReturn = travelCode.indexOf("return;", animatedBranch);
+  const finishTravelStart = travelCode.indexOf("const finishTravel");
+  const catalogSwitch = travelCode.indexOf('setView("catalog")');
+  assert.ok(
+    finishTravelStart >= 0 && catalogSwitch > finishTravelStart && catalogSwitch < animatedBranch
+      && animatedBranch >= 0 && animatedReturn > animatedBranch,
+    "forced map travel should open the destination catalog after the animation"
+  );
+  assert.ok(
+    travelCode.includes("동물 카드를 눌러 관찰을 시작해요."),
+    "arrival feedback should guide students into the destination catalog without another travel click"
+  );
+
+  const mapRenderStart = appJs.indexOf("function renderAdventureMap()");
+  const mapRenderEnd = appJs.indexOf("function createMapNode", mapRenderStart);
+  const mapRenderCode = appJs.slice(mapRenderStart, mapRenderEnd);
+  assert.ok(mapRenderCode.includes("travel.autoOpenCatalog"), "reward travel should carry the automatic catalog transition");
+  assert.ok(mapRenderCode.includes('setView("catalog")'), "reward travel should open the next region catalog after arrival");
+});
+
+test("travel feedback stays readable above fixed controls on small screens", () => {
+  const appJs = read("app.js");
+  const styles = read("styles.css");
+
+  assert.ok(appJs.includes("지역에 도착했어요!"), "travel feedback should name the region naturally");
+
+  const toastRule = styles.match(/\.app-toast \{[\s\S]*?\n\}/)?.[0] ?? "";
+  const popupRule = styles.match(/\.confirm-popup \{[\s\S]*?\n\}/)?.[0] ?? "";
+  const mobileRule = styles.match(/@media \(max-width: 1080px\) \{[\s\S]*?\.app-toast \{[\s\S]*?\n  \}[\s\S]*?\n\}/)?.[0] ?? "";
+
+  assert.ok(toastRule.includes("z-index: 60"), "arrival toast should sit above the sticky progress capsule");
+  assert.ok(popupRule.includes("z-index: 1100"), "travel confirmation should sit above fixed controls");
+  assert.ok(mobileRule.includes("bottom: 84px"), "mobile arrival toast should clear the bottom controls");
+});
+
+test("mobile map keeps the current exploration action visible while scrolling", () => {
+  const appJs = read("app.js");
+  const styles = read("styles.css");
+
+  assert.ok(
+    appJs.includes('>▶ ${filter.label} 탐험 계속하기</button>'),
+    "the map action should name the region it will open"
+  );
+  assert.ok(styles.includes(".map-header {\n    display: contents;"), "mobile map header should let the action card stick to the map scroll container");
+  assert.ok(styles.includes("overflow-y: visible;"), "mobile map should use the page scroll container for the sticky action");
+  assert.ok(styles.includes(".app-layout {\n    overflow: visible;"), "mobile app layout should not clip the page scroll used by the sticky action");
+  assert.ok(styles.includes("position: sticky;\n    top: 8px;\n    z-index: 15;"), "mobile map action card should stay visible above map nodes");
 });

@@ -9,7 +9,7 @@
       "source_file": "scratch.py",
       "source_location": "L1",
       "id": "scratch_py",
-      "community": 30,
+      "community": 34,
       "norm_label": "scratch.py"
     },
     {
@@ -18,7 +18,7 @@
       "source_file": "app-config.js",
       "source_location": "L1",
       "id": "app_config_js",
-      "community": 31,
+      "community": 35,
       "norm_label": "app-config.js"
     },
     {
@@ -27,7 +27,7 @@
       "source_file": "app.js",
       "source_location": "L1",
       "id": "app_js",
-      "community": 2,
+      "community": 1,
       "norm_label": "app.js"
     },
     {
@@ -43,61 +43,61 @@
       "label": "getFocusableElements()",
       "file_type": "code",
       "source_file": "app.js",
-      "source_location": "L368",
+      "source_location": "L371",
       "id": "animal_encyclopedia_app_getfocusableelements",
-      "community": 2,
+      "community": 1,
       "norm_label": "getfocusableelements()"
     },
     {
       "label": "handleModalKeydown()",
       "file_type": "code",
       "source_file": "app.js",
-      "source_location": "L373",
+      "source_location": "L376",
       "id": "animal_encyclopedia_app_handlemodalkeydown",
-      "community": 2,
+      "community": 1,
       "norm_label": "handlemodalkeydown()"
     },
     {
       "label": "setModalBackgroundDisabled()",
       "file_type": "code",
       "source_file": "app.js",
-      "source_location": "L389",
+      "source_location": "L392",
       "id": "animal_encyclopedia_app_setmodalbackgrounddisabled",
-      "community": 6,
+      "community": 11,
       "norm_label": "setmodalbackgrounddisabled()"
     },
     {
       "label": "enterModalFocus()",
       "file_type": "code",
       "source_file": "app.js",
-      "source_location": "L404",
+      "source_location": "L407",
       "id": "animal_encyclopedia_app_entermodalfocus",
-      "community": 6,
+      "community": 11,
       "norm_label": "entermodalfocus()"
     },
     {
       "label": "exitModalFocus()",
       "file_type": "code",
       "source_file": "app.js",
-      "source_location": "L422",
+      "source_location": "L425",
       "id": "animal_encyclopedia_app_exitmodalfocus",
-      "community": 6,
+      "community": 11,
       "norm_label": "exitmodalfocus()"
     },
     {
       "label": "makeAnimal()",
       "file_type": "code",
       "source_file": "app.js",
-      "source_location": "L439",
+      "source_location": "L442",
       "id": "animal_encyclopedia_app_makeanimal",
-      "community": 2,
+      "community": 1,
       "norm_label": "makeanimal()"
     },
     {
       "label": "init()",
       "file_type": "code",
       "source_file": "app.js",
-      "source_location": "L464",
+      "source_location": "L467",
       "id": "animal_encyclopedia_app_init",
       "community": 0,
       "norm_label": "init()"
@@ -106,16 +106,16 @@
       "label": "openFirstRunTeacherWorkflow()",
       "file_type": "code",
       "source_file": "app.js",
-      "source_location": "L645",
+      "source_location": "L648",
       "id": "animal_encyclopedia_app_openfirstrunteacherworkflow",
-      "community": 6,
+      "community": 11,
       "norm_label": "openfirstrunteacherworkflow()"
     },
     {
       "label": "updateSidebarLede()",
       "file_type": "code",
       "source_file": "app.js",
-      "source_location": "L651",
+      "source_location": "L654",
       "id": "animal_encyclopedia_app_updatesidebarlede",
       "community": 0,
       "norm_label": "updatesidebarlede()"
@@ -124,7 +124,7 @@
       "label": "bindViewTabs()",
       "file_type": "code",
       "source_file": "app.js",
-      "source_location": "L659",
+      "source_location": "L662",
       "id": "animal_encyclopedia_app_bindviewtabs",
       "community": 0,
       "norm_label": "bindviewtabs()"
@@ -133,7 +133,7 @@
       "label": "exitChallengeMode()",
       "file_type": "code",
       "source_file": "app.js",
-      "source_location": "L671",
+      "source_location": "L674",
       "id": "animal_encyclopedia_app_exitchallengemode",
       "community": 0,
       "norm_label": "exitchallengemode()"
@@ -142,7 +142,7 @@
       "label": "bindMissionPanel()",
       "file_type": "code",
       "source_file": "app.js",
-      "source_location": "L678",
+      "source_location": "L681",
       "id": "animal_encyclopedia_app_bindmissionpanel",
       "community": 0,
       "norm_label": "bindmissionpanel()"
@@ -151,7 +151,7 @@
       "label": "applyInitialMissionSettings()",
       "file_type": "code",
       "source_file": "app.js",
-      "source_location": "L707",
+      "source_location": "L710",
       "id": "animal_encyclopedia_app_applyinitialmissionsettings",
       "community": 0,
       "norm_label": "applyinitialmissionsettings()"
@@ -160,7 +160,7 @@
       "label": "getMissionRegionFromPageUrl()",
       "file_type": "code",
       "source_file": "app.js",
-      "source_location": "L716",
+      "source_location": "L719",
       "id": "animal_encyclopedia_app_getmissionregionfrompageurl",
       "community": 12,
       "norm_label": "getmissionregionfrompageurl()"
@@ -169,7 +169,7 @@
       "label": "getMissionAnimalIdsFromPageUrl()",
       "file_type": "code",
       "source_file": "app.js",
-      "source_location": "L721",
+      "source_location": "L724",
       "id": "animal_encyclopedia_app_getmissionanimalidsfrompageurl",
       "community": 12,
       "norm_label": "getmissionanimalidsfrompageurl()"
@@ -178,7 +178,7 @@
       "label": "getMissionSelectionsFromPageUrl()",
       "file_type": "code",
       "source_file": "app.js",
-      "source_location": "L735",
+      "source_location": "L738",
       "id": "animal_encyclopedia_app_getmissionselectionsfrompageurl",
       "community": 12,
       "norm_label": "getmissionselectionsfrompageurl()"
@@ -187,7 +187,7 @@
       "label": "getMissionAnimalsParam()",
       "file_type": "code",
       "source_file": "app.js",
-      "source_location": "L747",
+      "source_location": "L750",
       "id": "animal_encyclopedia_app_getmissionanimalsparam",
       "community": 12,
       "norm_label": "getmissionanimalsparam()"
@@ -196,7 +196,7 @@
       "label": "renderTeacherMissionPanel()",
       "file_type": "code",
       "source_file": "app.js",
-      "source_location": "L751",
+      "source_location": "L754",
       "id": "animal_encyclopedia_app_renderteachermissionpanel",
       "community": 12,
       "norm_label": "renderteachermissionpanel()"
@@ -205,7 +205,7 @@
       "label": "bindTeacherMissionControls()",
       "file_type": "code",
       "source_file": "app.js",
-      "source_location": "L764",
+      "source_location": "L767",
       "id": "animal_encyclopedia_app_bindteachermissioncontrols",
       "community": 0,
       "norm_label": "bindteachermissioncontrols()"
@@ -214,7 +214,7 @@
       "label": "renderTeacherMissionAnimals()",
       "file_type": "code",
       "source_file": "app.js",
-      "source_location": "L798",
+      "source_location": "L801",
       "id": "animal_encyclopedia_app_renderteachermissionanimals",
       "community": 12,
       "norm_label": "renderteachermissionanimals()"
@@ -223,7 +223,7 @@
       "label": "renderTeacherMissionCount()",
       "file_type": "code",
       "source_file": "app.js",
-      "source_location": "L810",
+      "source_location": "L813",
       "id": "animal_encyclopedia_app_renderteachermissioncount",
       "community": 12,
       "norm_label": "renderteachermissioncount()"
@@ -232,16 +232,16 @@
       "label": "updateMissionUrl()",
       "file_type": "code",
       "source_file": "app.js",
-      "source_location": "L816",
+      "source_location": "L819",
       "id": "animal_encyclopedia_app_updatemissionurl",
-      "community": 2,
+      "community": 1,
       "norm_label": "updatemissionurl()"
     },
     {
       "label": "activateMissionRegion()",
       "file_type": "code",
       "source_file": "app.js",
-      "source_location": "L824",
+      "source_location": "L827",
       "id": "animal_encyclopedia_app_activatemissionregion",
       "community": 0,
       "norm_label": "activatemissionregion()"
@@ -250,7 +250,7 @@
       "label": "getCurrentMissionPreset()",
       "file_type": "code",
       "source_file": "app.js",
-      "source_location": "L848",
+      "source_location": "L851",
       "id": "animal_encyclopedia_app_getcurrentmissionpreset",
       "community": 0,
       "norm_label": "getcurrentmissionpreset()"
@@ -259,7 +259,7 @@
       "label": "getMissionPreset()",
       "file_type": "code",
       "source_file": "app.js",
-      "source_location": "L852",
+      "source_location": "L855",
       "id": "animal_encyclopedia_app_getmissionpreset",
       "community": 0,
       "norm_label": "getmissionpreset()"
@@ -268,7 +268,7 @@
       "label": "normalizeMissionRegionId()",
       "file_type": "code",
       "source_file": "app.js",
-      "source_location": "L856",
+      "source_location": "L859",
       "id": "animal_encyclopedia_app_normalizemissionregionid",
       "community": 12,
       "norm_label": "normalizemissionregionid()"
@@ -277,7 +277,7 @@
       "label": "getDefaultMissionAnimalIds()",
       "file_type": "code",
       "source_file": "app.js",
-      "source_location": "L864",
+      "source_location": "L867",
       "id": "animal_encyclopedia_app_getdefaultmissionanimalids",
       "community": 12,
       "norm_label": "getdefaultmissionanimalids()"
@@ -286,7 +286,7 @@
       "label": "getSelectedMissionAnimalIds()",
       "file_type": "code",
       "source_file": "app.js",
-      "source_location": "L870",
+      "source_location": "L873",
       "id": "animal_encyclopedia_app_getselectedmissionanimalids",
       "community": 0,
       "norm_label": "getselectedmissionanimalids()"
@@ -295,7 +295,7 @@
       "label": "getMissionCandidateAnimals()",
       "file_type": "code",
       "source_file": "app.js",
-      "source_location": "L882",
+      "source_location": "L885",
       "id": "animal_encyclopedia_app_getmissioncandidateanimals",
       "community": 12,
       "norm_label": "getmissioncandidateanimals()"
@@ -304,7 +304,7 @@
       "label": "getProgramAnimals()",
       "file_type": "code",
       "source_file": "app.js",
-      "source_location": "L886",
+      "source_location": "L889",
       "id": "animal_encyclopedia_app_getprogramanimals",
       "community": 0,
       "norm_label": "getprogramanimals()"
@@ -313,7 +313,7 @@
       "label": "getProgramTotal()",
       "file_type": "code",
       "source_file": "app.js",
-      "source_location": "L894",
+      "source_location": "L897",
       "id": "animal_encyclopedia_app_getprogramtotal",
       "community": 0,
       "norm_label": "getprogramtotal()"
@@ -322,34 +322,34 @@
       "label": "writeMissionSelectionParams()",
       "file_type": "code",
       "source_file": "app.js",
-      "source_location": "L898",
+      "source_location": "L901",
       "id": "animal_encyclopedia_app_writemissionselectionparams",
-      "community": 2,
+      "community": 1,
       "norm_label": "writemissionselectionparams()"
     },
     {
       "label": "writeCompactMissionSelectionParams()",
       "file_type": "code",
       "source_file": "app.js",
-      "source_location": "L905",
+      "source_location": "L908",
       "id": "animal_encyclopedia_app_writecompactmissionselectionparams",
-      "community": 3,
+      "community": 1,
       "norm_label": "writecompactmissionselectionparams()"
     },
     {
       "label": "getCompactMissionSelectionEntries()",
       "file_type": "code",
       "source_file": "app.js",
-      "source_location": "L915",
+      "source_location": "L918",
       "id": "animal_encyclopedia_app_getcompactmissionselectionentries",
-      "community": 3,
+      "community": 1,
       "norm_label": "getcompactmissionselectionentries()"
     },
     {
       "label": "getMissionSelectionsFromCompactParam()",
       "file_type": "code",
       "source_file": "app.js",
-      "source_location": "L930",
+      "source_location": "L933",
       "id": "animal_encyclopedia_app_getmissionselectionsfromcompactparam",
       "community": 12,
       "norm_label": "getmissionselectionsfromcompactparam()"
@@ -358,7 +358,7 @@
       "label": "encodeCompactMissionAnimalMask()",
       "file_type": "code",
       "source_file": "app.js",
-      "source_location": "L947",
+      "source_location": "L950",
       "id": "animal_encyclopedia_app_encodecompactmissionanimalmask",
       "community": 12,
       "norm_label": "encodecompactmissionanimalmask()"
@@ -367,7 +367,7 @@
       "label": "decodeCompactMissionAnimalMask()",
       "file_type": "code",
       "source_file": "app.js",
-      "source_location": "L956",
+      "source_location": "L959",
       "id": "animal_encyclopedia_app_decodecompactmissionanimalmask",
       "community": 12,
       "norm_label": "decodecompactmissionanimalmask()"
@@ -376,16 +376,16 @@
       "label": "getCompactMissionRegionCode()",
       "file_type": "code",
       "source_file": "app.js",
-      "source_location": "L965",
+      "source_location": "L968",
       "id": "animal_encyclopedia_app_getcompactmissionregioncode",
-      "community": 3,
+      "community": 4,
       "norm_label": "getcompactmissionregioncode()"
     },
     {
       "label": "getMissionRegionFromCompactCode()",
       "file_type": "code",
       "source_file": "app.js",
-      "source_location": "L970",
+      "source_location": "L973",
       "id": "animal_encyclopedia_app_getmissionregionfromcompactcode",
       "community": 12,
       "norm_label": "getmissionregionfromcompactcode()"
@@ -394,7 +394,7 @@
       "label": "parseCompactBase36Code()",
       "file_type": "code",
       "source_file": "app.js",
-      "source_location": "L975",
+      "source_location": "L978",
       "id": "animal_encyclopedia_app_parsecompactbase36code",
       "community": 12,
       "norm_label": "parsecompactbase36code()"
@@ -403,7 +403,7 @@
       "label": "setView()",
       "file_type": "code",
       "source_file": "app.js",
-      "source_location": "L981",
+      "source_location": "L984",
       "id": "animal_encyclopedia_app_setview",
       "community": 0,
       "norm_label": "setview()"
@@ -412,52 +412,52 @@
       "label": "openOnboarding()",
       "file_type": "code",
       "source_file": "app.js",
-      "source_location": "L1030",
+      "source_location": "L1037",
       "id": "animal_encyclopedia_app_openonboarding",
-      "community": 6,
+      "community": 11,
       "norm_label": "openonboarding()"
     },
     {
       "label": "renderOnboarding()",
       "file_type": "code",
       "source_file": "app.js",
-      "source_location": "L1038",
+      "source_location": "L1045",
       "id": "animal_encyclopedia_app_renderonboarding",
-      "community": 6,
+      "community": 11,
       "norm_label": "renderonboarding()"
     },
     {
       "label": "nextOnboardingStep()",
       "file_type": "code",
       "source_file": "app.js",
-      "source_location": "L1069",
+      "source_location": "L1076",
       "id": "animal_encyclopedia_app_nextonboardingstep",
-      "community": 6,
+      "community": 11,
       "norm_label": "nextonboardingstep()"
     },
     {
       "label": "completeOnboarding()",
       "file_type": "code",
       "source_file": "app.js",
-      "source_location": "L1079",
+      "source_location": "L1086",
       "id": "animal_encyclopedia_app_completeonboarding",
-      "community": 6,
+      "community": 11,
       "norm_label": "completeonboarding()"
     },
     {
       "label": "clearOnboardingHighlights()",
       "file_type": "code",
       "source_file": "app.js",
-      "source_location": "L1088",
+      "source_location": "L1095",
       "id": "animal_encyclopedia_app_clearonboardinghighlights",
-      "community": 6,
+      "community": 11,
       "norm_label": "clearonboardinghighlights()"
     },
     {
       "label": "renderFilters()",
       "file_type": "code",
       "source_file": "app.js",
-      "source_location": "L1094",
+      "source_location": "L1101",
       "id": "animal_encyclopedia_app_renderfilters",
       "community": 0,
       "norm_label": "renderfilters()"
@@ -466,7 +466,7 @@
       "label": "renderMissionPanel()",
       "file_type": "code",
       "source_file": "app.js",
-      "source_location": "L1134",
+      "source_location": "L1141",
       "id": "animal_encyclopedia_app_rendermissionpanel",
       "community": 0,
       "norm_label": "rendermissionpanel()"
@@ -475,7 +475,7 @@
       "label": "renderGameCriterionOptions()",
       "file_type": "code",
       "source_file": "app.js",
-      "source_location": "L1243",
+      "source_location": "L1250",
       "id": "animal_encyclopedia_app_rendergamecriterionoptions",
       "community": 0,
       "norm_label": "rendergamecriterionoptions()"
@@ -484,7 +484,7 @@
       "label": "renderAnimals()",
       "file_type": "code",
       "source_file": "app.js",
-      "source_location": "L1253",
+      "source_location": "L1260",
       "id": "animal_encyclopedia_app_renderanimals",
       "community": 0,
       "norm_label": "renderanimals()"
@@ -493,7 +493,7 @@
       "label": "getVisibleAnimals()",
       "file_type": "code",
       "source_file": "app.js",
-      "source_location": "L1310",
+      "source_location": "L1317",
       "id": "animal_encyclopedia_app_getvisibleanimals",
       "community": 0,
       "norm_label": "getvisibleanimals()"
@@ -502,16 +502,16 @@
       "label": "getRepresentativeCategory()",
       "file_type": "code",
       "source_file": "app.js",
-      "source_location": "L1333",
+      "source_location": "L1340",
       "id": "animal_encyclopedia_app_getrepresentativecategory",
-      "community": 2,
+      "community": 1,
       "norm_label": "getrepresentativecategory()"
     },
     {
       "label": "getAnimalsForFilter()",
       "file_type": "code",
       "source_file": "app.js",
-      "source_location": "L1337",
+      "source_location": "L1344",
       "id": "animal_encyclopedia_app_getanimalsforfilter",
       "community": 0,
       "norm_label": "getanimalsforfilter()"
@@ -520,25 +520,25 @@
       "label": "renderAnimalRegionBadges()",
       "file_type": "code",
       "source_file": "app.js",
-      "source_location": "L1344",
+      "source_location": "L1351",
       "id": "animal_encyclopedia_app_renderanimalregionbadges",
-      "community": 2,
+      "community": 16,
       "norm_label": "renderanimalregionbadges()"
     },
     {
       "label": "renderAnimalEnvironmentNote()",
       "file_type": "code",
       "source_file": "app.js",
-      "source_location": "L1359",
+      "source_location": "L1366",
       "id": "animal_encyclopedia_app_renderanimalenvironmentnote",
-      "community": 2,
+      "community": 16,
       "norm_label": "renderanimalenvironmentnote()"
     },
     {
       "label": "openAnimal()",
       "file_type": "code",
       "source_file": "app.js",
-      "source_location": "L1376",
+      "source_location": "L1383",
       "id": "animal_encyclopedia_app_openanimal",
       "community": 0,
       "norm_label": "openanimal()"
@@ -547,7 +547,7 @@
       "label": "closeDetail()",
       "file_type": "code",
       "source_file": "app.js",
-      "source_location": "L1390",
+      "source_location": "L1397",
       "id": "animal_encyclopedia_app_closedetail",
       "community": 0,
       "norm_label": "closedetail()"
@@ -556,628 +556,628 @@
       "label": "renderAnimalInfo()",
       "file_type": "code",
       "source_file": "app.js",
-      "source_location": "L1398",
+      "source_location": "L1405",
       "id": "animal_encyclopedia_app_renderanimalinfo",
-      "community": 2,
+      "community": 16,
       "norm_label": "renderanimalinfo()"
     },
     {
       "label": "renderCollectedAction()",
       "file_type": "code",
       "source_file": "app.js",
-      "source_location": "L1469",
+      "source_location": "L1476",
       "id": "animal_encyclopedia_app_rendercollectedaction",
-      "community": 2,
+      "community": 16,
       "norm_label": "rendercollectedaction()"
     },
     {
       "label": "renderQuickFacts()",
       "file_type": "code",
       "source_file": "app.js",
-      "source_location": "L1484",
+      "source_location": "L1491",
       "id": "animal_encyclopedia_app_renderquickfacts",
-      "community": 19,
+      "community": 22,
       "norm_label": "renderquickfacts()"
     },
     {
       "label": "renderObservationSummary()",
       "file_type": "code",
       "source_file": "app.js",
-      "source_location": "L1497",
+      "source_location": "L1504",
       "id": "animal_encyclopedia_app_renderobservationsummary",
-      "community": 19,
+      "community": 22,
       "norm_label": "renderobservationsummary()"
     },
     {
       "label": "renderObservationCheckItem()",
       "file_type": "code",
       "source_file": "app.js",
-      "source_location": "L1506",
+      "source_location": "L1513",
       "id": "animal_encyclopedia_app_renderobservationcheckitem",
-      "community": 2,
+      "community": 16,
       "norm_label": "renderobservationcheckitem()"
     },
     {
       "label": "updateQuizStartGate()",
       "file_type": "code",
       "source_file": "app.js",
-      "source_location": "L1516",
+      "source_location": "L1523",
       "id": "animal_encyclopedia_app_updatequizstartgate",
-      "community": 2,
+      "community": 25,
       "norm_label": "updatequizstartgate()"
     },
     {
       "label": "renderQuizRetryPanel()",
       "file_type": "code",
       "source_file": "app.js",
-      "source_location": "L1534",
+      "source_location": "L1541",
       "id": "animal_encyclopedia_app_renderquizretrypanel",
-      "community": 2,
+      "community": 16,
       "norm_label": "renderquizretrypanel()"
     },
     {
       "label": "renderQuestionTool()",
       "file_type": "code",
       "source_file": "app.js",
-      "source_location": "L1546",
+      "source_location": "L1553",
       "id": "animal_encyclopedia_app_renderquestiontool",
-      "community": 2,
+      "community": 16,
       "norm_label": "renderquestiontool()"
     },
     {
       "label": "hydrateQuestionToolConfig()",
       "file_type": "code",
       "source_file": "app.js",
-      "source_location": "L1578",
+      "source_location": "L1585",
       "id": "animal_encyclopedia_app_hydratequestiontoolconfig",
-      "community": 3,
+      "community": 4,
       "norm_label": "hydratequestiontoolconfig()"
     },
     {
       "label": "applyQuestionToolMode()",
       "file_type": "code",
       "source_file": "app.js",
-      "source_location": "L1597",
+      "source_location": "L1604",
       "id": "animal_encyclopedia_app_applyquestiontoolmode",
-      "community": 3,
+      "community": 4,
       "norm_label": "applyquestiontoolmode()"
     },
     {
       "label": "canOpenQuestionSettings()",
       "file_type": "code",
       "source_file": "app.js",
-      "source_location": "L1604",
+      "source_location": "L1611",
       "id": "animal_encyclopedia_app_canopenquestionsettings",
-      "community": 3,
+      "community": 4,
       "norm_label": "canopenquestionsettings()"
     },
     {
       "label": "isSharedStudentView()",
       "file_type": "code",
       "source_file": "app.js",
-      "source_location": "L1611",
+      "source_location": "L1618",
       "id": "animal_encyclopedia_app_issharedstudentview",
-      "community": 3,
+      "community": 4,
       "norm_label": "issharedstudentview()"
     },
     {
       "label": "openSettings()",
       "file_type": "code",
       "source_file": "app.js",
-      "source_location": "L1616",
+      "source_location": "L1623",
       "id": "animal_encyclopedia_app_opensettings",
-      "community": 3,
+      "community": 4,
       "norm_label": "opensettings()"
     },
     {
       "label": "closeSettings()",
       "file_type": "code",
       "source_file": "app.js",
-      "source_location": "L1629",
+      "source_location": "L1636",
       "id": "animal_encyclopedia_app_closesettings",
-      "community": 6,
+      "community": 25,
       "norm_label": "closesettings()"
     },
     {
       "label": "hasSeenSettingsModal()",
       "file_type": "code",
       "source_file": "app.js",
-      "source_location": "L1638",
+      "source_location": "L1645",
       "id": "animal_encyclopedia_app_hasseensettingsmodal",
-      "community": 6,
+      "community": 11,
       "norm_label": "hasseensettingsmodal()"
     },
     {
       "label": "markSettingsModalSeen()",
       "file_type": "code",
       "source_file": "app.js",
-      "source_location": "L1646",
+      "source_location": "L1653",
       "id": "animal_encyclopedia_app_marksettingsmodalseen",
-      "community": 6,
+      "community": 25,
       "norm_label": "marksettingsmodalseen()"
     },
     {
       "label": "saveQuestionSettings()",
       "file_type": "code",
       "source_file": "app.js",
-      "source_location": "L1650",
+      "source_location": "L1657",
       "id": "animal_encyclopedia_app_savequestionsettings",
-      "community": 3,
+      "community": 4,
       "norm_label": "savequestionsettings()"
     },
     {
       "label": "clearQuestionSettings()",
       "file_type": "code",
       "source_file": "app.js",
-      "source_location": "L1675",
+      "source_location": "L1682",
       "id": "animal_encyclopedia_app_clearquestionsettings",
-      "community": 3,
+      "community": 4,
       "norm_label": "clearquestionsettings()"
     },
     {
       "label": "rememberQuestionUrlPlaceholder()",
       "file_type": "code",
       "source_file": "app.js",
-      "source_location": "L1695",
+      "source_location": "L1702",
       "id": "animal_encyclopedia_app_rememberquestionurlplaceholder",
-      "community": 3,
+      "community": 4,
       "norm_label": "rememberquestionurlplaceholder()"
     },
     {
       "label": "getQuestionUrlPlaceholder()",
       "file_type": "code",
       "source_file": "app.js",
-      "source_location": "L1700",
+      "source_location": "L1707",
       "id": "animal_encyclopedia_app_getquestionurlplaceholder",
-      "community": 3,
+      "community": 4,
       "norm_label": "getquestionurlplaceholder()"
     },
     {
       "label": "getDefaultQuestionUrlPlaceholder()",
       "file_type": "code",
       "source_file": "app.js",
-      "source_location": "L1704",
+      "source_location": "L1711",
       "id": "animal_encyclopedia_app_getdefaultquestionurlplaceholder",
-      "community": 3,
+      "community": 4,
       "norm_label": "getdefaultquestionurlplaceholder()"
     },
     {
       "label": "renderShareLinkPanel()",
       "file_type": "code",
       "source_file": "app.js",
-      "source_location": "L1711",
+      "source_location": "L1718",
       "id": "animal_encyclopedia_app_rendersharelinkpanel",
-      "community": 3,
+      "community": 4,
       "norm_label": "rendersharelinkpanel()"
     },
     {
       "label": "updateQuestionChoiceButtons()",
       "file_type": "code",
       "source_file": "app.js",
-      "source_location": "L1725",
+      "source_location": "L1732",
       "id": "animal_encyclopedia_app_updatequestionchoicebuttons",
-      "community": 3,
+      "community": 4,
       "norm_label": "updatequestionchoicebuttons()"
     },
     {
       "label": "getShareLinkCopy()",
       "file_type": "code",
       "source_file": "app.js",
-      "source_location": "L1737",
+      "source_location": "L1744",
       "id": "animal_encyclopedia_app_getsharelinkcopy",
-      "community": 3,
+      "community": 4,
       "norm_label": "getsharelinkcopy()"
     },
     {
       "label": "copyShareLink()",
       "file_type": "code",
       "source_file": "app.js",
-      "source_location": "L1772",
+      "source_location": "L1779",
       "id": "animal_encyclopedia_app_copysharelink",
-      "community": 2,
+      "community": 1,
       "norm_label": "copysharelink()"
     },
     {
       "label": "renderQrCode()",
       "file_type": "code",
       "source_file": "app.js",
-      "source_location": "L1787",
+      "source_location": "L1794",
       "id": "animal_encyclopedia_app_renderqrcode",
-      "community": 3,
+      "community": 4,
       "norm_label": "renderqrcode()"
     },
     {
       "label": "downloadQrImage()",
       "file_type": "code",
       "source_file": "app.js",
-      "source_location": "L1806",
+      "source_location": "L1813",
       "id": "animal_encyclopedia_app_downloadqrimage",
-      "community": 2,
+      "community": 1,
       "norm_label": "downloadqrimage()"
     },
     {
       "label": "buildShareLink()",
       "file_type": "code",
       "source_file": "app.js",
-      "source_location": "L1822",
+      "source_location": "L1829",
       "id": "animal_encyclopedia_app_buildsharelink",
-      "community": 3,
+      "community": 4,
       "norm_label": "buildsharelink()"
     },
     {
       "label": "getShareLinkTargetPath()",
       "file_type": "code",
       "source_file": "app.js",
-      "source_location": "L1840",
+      "source_location": "L1847",
       "id": "animal_encyclopedia_app_getsharelinktargetpath",
-      "community": 3,
+      "community": 4,
       "norm_label": "getsharelinktargetpath()"
     },
     {
       "label": "shouldIncludeMissionSelectionsInShareLink()",
       "file_type": "code",
       "source_file": "app.js",
-      "source_location": "L1845",
+      "source_location": "L1852",
       "id": "animal_encyclopedia_app_shouldincludemissionselectionsinsharelink",
-      "community": 3,
+      "community": 4,
       "norm_label": "shouldincludemissionselectionsinsharelink()"
     },
     {
       "label": "hasCustomMissionSelections()",
       "file_type": "code",
       "source_file": "app.js",
-      "source_location": "L1849",
+      "source_location": "L1856",
       "id": "animal_encyclopedia_app_hascustommissionselections",
-      "community": 3,
+      "community": 4,
       "norm_label": "hascustommissionselections()"
     },
     {
       "label": "getQuestionUrlFromPageUrl()",
       "file_type": "code",
       "source_file": "app.js",
-      "source_location": "L1857",
+      "source_location": "L1864",
       "id": "animal_encyclopedia_app_getquestionurlfrompageurl",
-      "community": 3,
+      "community": 4,
       "norm_label": "getquestionurlfrompageurl()"
     },
     {
       "label": "getCompactQuestionRoomCode()",
       "file_type": "code",
       "source_file": "app.js",
-      "source_location": "L1863",
+      "source_location": "L1870",
       "id": "animal_encyclopedia_app_getcompactquestionroomcode",
-      "community": 3,
+      "community": 4,
       "norm_label": "getcompactquestionroomcode()"
     },
     {
       "label": "buildQuestionRoomUrlFromCode()",
       "file_type": "code",
       "source_file": "app.js",
-      "source_location": "L1876",
+      "source_location": "L1883",
       "id": "animal_encyclopedia_app_buildquestionroomurlfromcode",
-      "community": 3,
+      "community": 4,
       "norm_label": "buildquestionroomurlfromcode()"
     },
     {
       "label": "normalizeQuestionRoomCode()",
       "file_type": "code",
       "source_file": "app.js",
-      "source_location": "L1882",
+      "source_location": "L1889",
       "id": "animal_encyclopedia_app_normalizequestionroomcode",
-      "community": 3,
+      "community": 4,
       "norm_label": "normalizequestionroomcode()"
     },
     {
       "label": "readQuestionToolUrl()",
       "file_type": "code",
       "source_file": "app.js",
-      "source_location": "L1888",
+      "source_location": "L1895",
       "id": "animal_encyclopedia_app_readquestiontoolurl",
-      "community": 3,
+      "community": 4,
       "norm_label": "readquestiontoolurl()"
     },
     {
       "label": "saveQuestionToolUrl()",
       "file_type": "code",
       "source_file": "app.js",
-      "source_location": "L1896",
+      "source_location": "L1903",
       "id": "animal_encyclopedia_app_savequestiontoolurl",
-      "community": 6,
+      "community": 25,
       "norm_label": "savequestiontoolurl()"
     },
     {
       "label": "buildObservationDetails()",
       "file_type": "code",
       "source_file": "app.js",
-      "source_location": "L1900",
+      "source_location": "L1907",
       "id": "animal_encyclopedia_app_buildobservationdetails",
-      "community": 2,
+      "community": 16,
       "norm_label": "buildobservationdetails()"
     },
     {
       "label": "lifeBrief()",
       "file_type": "code",
       "source_file": "app.js",
-      "source_location": "L1912",
+      "source_location": "L1919",
       "id": "animal_encyclopedia_app_lifebrief",
-      "community": 2,
+      "community": 16,
       "norm_label": "lifebrief()"
     },
     {
       "label": "lifestyleExplanation()",
       "file_type": "code",
       "source_file": "app.js",
-      "source_location": "L1921",
+      "source_location": "L1928",
       "id": "animal_encyclopedia_app_lifestyleexplanation",
-      "community": 2,
+      "community": 16,
       "norm_label": "lifestyleexplanation()"
     },
     {
       "label": "startQuiz()",
       "file_type": "code",
       "source_file": "app.js",
-      "source_location": "L1943",
+      "source_location": "L1950",
       "id": "animal_encyclopedia_app_startquiz",
-      "community": 19,
+      "community": 22,
       "norm_label": "startquiz()"
     },
     {
       "label": "buildQuestions()",
       "file_type": "code",
       "source_file": "app.js",
-      "source_location": "L1956",
+      "source_location": "L1963",
       "id": "animal_encyclopedia_app_buildquestions",
-      "community": 14,
+      "community": 6,
       "norm_label": "buildquestions()"
     },
     {
       "label": "makeHabitatOptions()",
       "file_type": "code",
       "source_file": "app.js",
-      "source_location": "L2044",
+      "source_location": "L2051",
       "id": "animal_encyclopedia_app_makehabitatoptions",
-      "community": 14,
+      "community": 6,
       "norm_label": "makehabitatoptions()"
     },
     {
       "label": "getHabitatDistractors()",
       "file_type": "code",
       "source_file": "app.js",
-      "source_location": "L2049",
+      "source_location": "L2056",
       "id": "animal_encyclopedia_app_gethabitatdistractors",
-      "community": 14,
+      "community": 6,
       "norm_label": "gethabitatdistractors()"
     },
     {
       "label": "getMovementKey()",
       "file_type": "code",
       "source_file": "app.js",
-      "source_location": "L2092",
+      "source_location": "L2099",
       "id": "animal_encyclopedia_app_getmovementkey",
-      "community": 14,
+      "community": 6,
       "norm_label": "getmovementkey()"
     },
     {
       "label": "makeMovementOptions()",
       "file_type": "code",
       "source_file": "app.js",
-      "source_location": "L2107",
+      "source_location": "L2114",
       "id": "animal_encyclopedia_app_makemovementoptions",
-      "community": 14,
+      "community": 6,
       "norm_label": "makemovementoptions()"
     },
     {
       "label": "buildSpecialEnvironmentQuestion()",
       "file_type": "code",
       "source_file": "app.js",
-      "source_location": "L2134",
+      "source_location": "L2141",
       "id": "animal_encyclopedia_app_buildspecialenvironmentquestion",
-      "community": 14,
+      "community": 6,
       "norm_label": "buildspecialenvironmentquestion()"
     },
     {
       "label": "makeSpecialEnvironmentOptions()",
       "file_type": "code",
       "source_file": "app.js",
-      "source_location": "L2144",
+      "source_location": "L2151",
       "id": "animal_encyclopedia_app_makespecialenvironmentoptions",
-      "community": 14,
+      "community": 6,
       "norm_label": "makespecialenvironmentoptions()"
     },
     {
       "label": "buildDistinctiveFeatureQuestion()",
       "file_type": "code",
       "source_file": "app.js",
-      "source_location": "L2151",
+      "source_location": "L2158",
       "id": "animal_encyclopedia_app_builddistinctivefeaturequestion",
-      "community": 14,
+      "community": 6,
       "norm_label": "builddistinctivefeaturequestion()"
     },
     {
       "label": "makeDistinctiveFeatureOptions()",
       "file_type": "code",
       "source_file": "app.js",
-      "source_location": "L2161",
+      "source_location": "L2168",
       "id": "animal_encyclopedia_app_makedistinctivefeatureoptions",
-      "community": 14,
+      "community": 6,
       "norm_label": "makedistinctivefeatureoptions()"
     },
     {
       "label": "makeDistinctiveFeatureOption()",
       "file_type": "code",
       "source_file": "app.js",
-      "source_location": "L2182",
+      "source_location": "L2189",
       "id": "animal_encyclopedia_app_makedistinctivefeatureoption",
-      "community": 24,
+      "community": 6,
       "norm_label": "makedistinctivefeatureoption()"
     },
     {
       "label": "getFeatureDistractorScore()",
       "file_type": "code",
       "source_file": "app.js",
-      "source_location": "L2186",
+      "source_location": "L2193",
       "id": "animal_encyclopedia_app_getfeaturedistractorscore",
-      "community": 24,
+      "community": 6,
       "norm_label": "getfeaturedistractorscore()"
     },
     {
       "label": "getFeatureComparisonText()",
       "file_type": "code",
       "source_file": "app.js",
-      "source_location": "L2206",
+      "source_location": "L2213",
       "id": "animal_encyclopedia_app_getfeaturecomparisontext",
-      "community": 24,
+      "community": 6,
       "norm_label": "getfeaturecomparisontext()"
     },
     {
       "label": "getMeaningfulTokenOverlap()",
       "file_type": "code",
       "source_file": "app.js",
-      "source_location": "L2210",
+      "source_location": "L2217",
       "id": "animal_encyclopedia_app_getmeaningfultokenoverlap",
-      "community": 24,
+      "community": 6,
       "norm_label": "getmeaningfultokenoverlap()"
     },
     {
       "label": "getMeaningfulTokens()",
       "file_type": "code",
       "source_file": "app.js",
-      "source_location": "L2222",
+      "source_location": "L2229",
       "id": "animal_encyclopedia_app_getmeaningfultokens",
-      "community": 24,
+      "community": 6,
       "norm_label": "getmeaningfultokens()"
     },
     {
       "label": "makeOptions()",
       "file_type": "code",
       "source_file": "app.js",
-      "source_location": "L2231",
+      "source_location": "L2238",
       "id": "animal_encyclopedia_app_makeoptions",
-      "community": 14,
+      "community": 6,
       "norm_label": "makeoptions()"
     },
     {
       "label": "subjectParticle()",
       "file_type": "code",
       "source_file": "app.js",
-      "source_location": "L2241",
+      "source_location": "L2248",
       "id": "animal_encyclopedia_app_subjectparticle",
-      "community": 14,
+      "community": 6,
       "norm_label": "subjectparticle()"
     },
     {
       "label": "topicParticle()",
       "file_type": "code",
       "source_file": "app.js",
-      "source_location": "L2245",
+      "source_location": "L2252",
       "id": "animal_encyclopedia_app_topicparticle",
-      "community": 14,
+      "community": 6,
       "norm_label": "topicparticle()"
     },
     {
       "label": "hasFinalConsonant()",
       "file_type": "code",
       "source_file": "app.js",
-      "source_location": "L2249",
+      "source_location": "L2256",
       "id": "animal_encyclopedia_app_hasfinalconsonant",
-      "community": 14,
+      "community": 6,
       "norm_label": "hasfinalconsonant()"
     },
     {
       "label": "renderQuiz()",
       "file_type": "code",
       "source_file": "app.js",
-      "source_location": "L2255",
+      "source_location": "L2262",
       "id": "animal_encyclopedia_app_renderquiz",
-      "community": 19,
+      "community": 22,
       "norm_label": "renderquiz()"
     },
     {
       "label": "renderFeedback()",
       "file_type": "code",
       "source_file": "app.js",
-      "source_location": "L2297",
+      "source_location": "L2304",
       "id": "animal_encyclopedia_app_renderfeedback",
-      "community": 19,
+      "community": 22,
       "norm_label": "renderfeedback()"
     },
     {
       "label": "answerQuestion()",
       "file_type": "code",
       "source_file": "app.js",
-      "source_location": "L2310",
+      "source_location": "L2317",
       "id": "animal_encyclopedia_app_answerquestion",
-      "community": 19,
+      "community": 22,
       "norm_label": "answerquestion()"
     },
     {
       "label": "resumeQuiz()",
       "file_type": "code",
       "source_file": "app.js",
-      "source_location": "L2331",
+      "source_location": "L2338",
       "id": "animal_encyclopedia_app_resumequiz",
-      "community": 19,
+      "community": 22,
       "norm_label": "resumequiz()"
     },
     {
       "label": "scheduleRetryButtonUnlock()",
       "file_type": "code",
       "source_file": "app.js",
-      "source_location": "L2341",
+      "source_location": "L2348",
       "id": "animal_encyclopedia_app_scheduleretrybuttonunlock",
-      "community": 2,
+      "community": 16,
       "norm_label": "scheduleretrybuttonunlock()"
     },
     {
       "label": "showHintAndScroll()",
       "file_type": "code",
       "source_file": "app.js",
-      "source_location": "L2349",
+      "source_location": "L2356",
       "id": "animal_encyclopedia_app_showhintandscroll",
-      "community": 19,
+      "community": 22,
       "norm_label": "showhintandscroll()"
     },
     {
       "label": "clearHintHighlight()",
       "file_type": "code",
       "source_file": "app.js",
-      "source_location": "L2363",
+      "source_location": "L2370",
       "id": "animal_encyclopedia_app_clearhinthighlight",
-      "community": 19,
+      "community": 22,
       "norm_label": "clearhinthighlight()"
     },
     {
       "label": "nextQuestion()",
       "file_type": "code",
       "source_file": "app.js",
-      "source_location": "L2369",
+      "source_location": "L2376",
       "id": "animal_encyclopedia_app_nextquestion",
-      "community": 19,
+      "community": 22,
       "norm_label": "nextquestion()"
     },
     {
       "label": "showCatchAnimation()",
       "file_type": "code",
       "source_file": "app.js",
-      "source_location": "L2381",
+      "source_location": "L2388",
       "id": "animal_encyclopedia_app_showcatchanimation",
-      "community": 19,
+      "community": 22,
       "norm_label": "showcatchanimation()"
     },
     {
       "label": "finishQuiz()",
       "file_type": "code",
       "source_file": "app.js",
-      "source_location": "L2474",
+      "source_location": "L2481",
       "id": "animal_encyclopedia_app_finishquiz",
-      "community": 19,
+      "community": 22,
       "norm_label": "finishquiz()"
     },
     {
       "label": "startNewRound()",
       "file_type": "code",
       "source_file": "app.js",
-      "source_location": "L2507",
+      "source_location": "L2514",
       "id": "animal_encyclopedia_app_startnewround",
       "community": 0,
       "norm_label": "startnewround()"
@@ -1186,7 +1186,7 @@
       "label": "dealRound()",
       "file_type": "code",
       "source_file": "app.js",
-      "source_location": "L2518",
+      "source_location": "L2525",
       "id": "animal_encyclopedia_app_dealround",
       "community": 0,
       "norm_label": "dealround()"
@@ -1195,7 +1195,7 @@
       "label": "pickChallengeCriterion()",
       "file_type": "code",
       "source_file": "app.js",
-      "source_location": "L2534",
+      "source_location": "L2541",
       "id": "animal_encyclopedia_app_pickchallengecriterion",
       "community": 0,
       "norm_label": "pickchallengecriterion()"
@@ -1204,7 +1204,7 @@
       "label": "startBadgeChallenge()",
       "file_type": "code",
       "source_file": "app.js",
-      "source_location": "L2548",
+      "source_location": "L2555",
       "id": "animal_encyclopedia_app_startbadgechallenge",
       "community": 0,
       "norm_label": "startbadgechallenge()"
@@ -1213,7 +1213,7 @@
       "label": "updateChallengeUi()",
       "file_type": "code",
       "source_file": "app.js",
-      "source_location": "L2564",
+      "source_location": "L2571",
       "id": "animal_encyclopedia_app_updatechallengeui",
       "community": 0,
       "norm_label": "updatechallengeui()"
@@ -1222,7 +1222,7 @@
       "label": "updateGameHints()",
       "file_type": "code",
       "source_file": "app.js",
-      "source_location": "L2593",
+      "source_location": "L2600",
       "id": "animal_encyclopedia_app_updategamehints",
       "community": 0,
       "norm_label": "updategamehints()"
@@ -1231,7 +1231,7 @@
       "label": "renderGameBoard()",
       "file_type": "code",
       "source_file": "app.js",
-      "source_location": "L2599",
+      "source_location": "L2606",
       "id": "animal_encyclopedia_app_rendergameboard",
       "community": 0,
       "norm_label": "rendergameboard()"
@@ -1240,16 +1240,16 @@
       "label": "createGameToken()",
       "file_type": "code",
       "source_file": "app.js",
-      "source_location": "L2622",
+      "source_location": "L2629",
       "id": "animal_encyclopedia_app_creategametoken",
-      "community": 20,
+      "community": 24,
       "norm_label": "creategametoken()"
     },
     {
       "label": "moveGameToken()",
       "file_type": "code",
       "source_file": "app.js",
-      "source_location": "L2656",
+      "source_location": "L2663",
       "id": "animal_encyclopedia_app_movegametoken",
       "community": 0,
       "norm_label": "movegametoken()"
@@ -1258,7 +1258,7 @@
       "label": "checkGame()",
       "file_type": "code",
       "source_file": "app.js",
-      "source_location": "L2666",
+      "source_location": "L2673",
       "id": "animal_encyclopedia_app_checkgame",
       "community": 0,
       "norm_label": "checkgame()"
@@ -1267,16 +1267,16 @@
       "label": "isGamePlacementCorrect()",
       "file_type": "code",
       "source_file": "app.js",
-      "source_location": "L2718",
+      "source_location": "L2725",
       "id": "animal_encyclopedia_app_isgameplacementcorrect",
-      "community": 20,
+      "community": 24,
       "norm_label": "isgameplacementcorrect()"
     },
     {
       "label": "updateGameScore()",
       "file_type": "code",
       "source_file": "app.js",
-      "source_location": "L2724",
+      "source_location": "L2731",
       "id": "animal_encyclopedia_app_updategamescore",
       "community": 0,
       "norm_label": "updategamescore()"
@@ -1285,97 +1285,97 @@
       "label": "setImage()",
       "file_type": "code",
       "source_file": "app.js",
-      "source_location": "L2730",
+      "source_location": "L2737",
       "id": "animal_encyclopedia_app_setimage",
-      "community": 20,
+      "community": 24,
       "norm_label": "setimage()"
     },
     {
       "label": "setStandaloneImage()",
       "file_type": "code",
       "source_file": "app.js",
-      "source_location": "L2751",
+      "source_location": "L2758",
       "id": "animal_encyclopedia_app_setstandaloneimage",
-      "community": 20,
+      "community": 24,
       "norm_label": "setstandaloneimage()"
     },
     {
       "label": "applyImageFallback()",
       "file_type": "code",
       "source_file": "app.js",
-      "source_location": "L2765",
+      "source_location": "L2772",
       "id": "animal_encyclopedia_app_applyimagefallback",
-      "community": 20,
+      "community": 24,
       "norm_label": "applyimagefallback()"
     },
     {
       "label": "applyResolvedImage()",
       "file_type": "code",
       "source_file": "app.js",
-      "source_location": "L2779",
+      "source_location": "L2786",
       "id": "animal_encyclopedia_app_applyresolvedimage",
-      "community": 2,
+      "community": 1,
       "norm_label": "applyresolvedimage()"
     },
     {
       "label": "setImagePlaceholder()",
       "file_type": "code",
       "source_file": "app.js",
-      "source_location": "L2788",
+      "source_location": "L2795",
       "id": "animal_encyclopedia_app_setimageplaceholder",
-      "community": 20,
+      "community": 24,
       "norm_label": "setimageplaceholder()"
     },
     {
       "label": "createImagePlaceholder()",
       "file_type": "code",
       "source_file": "app.js",
-      "source_location": "L2794",
+      "source_location": "L2801",
       "id": "animal_encyclopedia_app_createimageplaceholder",
-      "community": 20,
+      "community": 24,
       "norm_label": "createimageplaceholder()"
     },
     {
       "label": "escapeSvgText()",
       "file_type": "code",
       "source_file": "app.js",
-      "source_location": "L2804",
+      "source_location": "L2811",
       "id": "animal_encyclopedia_app_escapesvgtext",
-      "community": 20,
+      "community": 24,
       "norm_label": "escapesvgtext()"
     },
     {
       "label": "getImageSources()",
       "file_type": "code",
       "source_file": "app.js",
-      "source_location": "L2813",
+      "source_location": "L2820",
       "id": "animal_encyclopedia_app_getimagesources",
-      "community": 20,
+      "community": 24,
       "norm_label": "getimagesources()"
     },
     {
       "label": "getLocalImagePath()",
       "file_type": "code",
       "source_file": "app.js",
-      "source_location": "L2836",
+      "source_location": "L2843",
       "id": "animal_encyclopedia_app_getlocalimagepath",
-      "community": 20,
+      "community": 24,
       "norm_label": "getlocalimagepath()"
     },
     {
       "label": "dedupeSources()",
       "file_type": "code",
       "source_file": "app.js",
-      "source_location": "L2843",
+      "source_location": "L2850",
       "id": "animal_encyclopedia_app_dedupesources",
-      "community": 20,
+      "community": 24,
       "norm_label": "dedupesources()"
     },
     {
       "label": "getExplorerLevel()",
       "file_type": "code",
       "source_file": "app.js",
-      "source_location": "L2847",
+      "source_location": "L2854",
       "id": "animal_encyclopedia_app_getexplorerlevel",
       "community": 0,
       "norm_label": "getexplorerlevel()"
@@ -1384,7 +1384,7 @@
       "label": "spawnFloatingText()",
       "file_type": "code",
       "source_file": "app.js",
-      "source_location": "L2855",
+      "source_location": "L2862",
       "id": "animal_encyclopedia_app_spawnfloatingtext",
       "community": 0,
       "norm_label": "spawnfloatingtext()"
@@ -1393,7 +1393,7 @@
       "label": "updateProgress()",
       "file_type": "code",
       "source_file": "app.js",
-      "source_location": "L2865",
+      "source_location": "L2872",
       "id": "animal_encyclopedia_app_updateprogress",
       "community": 0,
       "norm_label": "updateprogress()"
@@ -1402,7 +1402,7 @@
       "label": "getCompletedRegionCount()",
       "file_type": "code",
       "source_file": "app.js",
-      "source_location": "L2929",
+      "source_location": "L2936",
       "id": "animal_encyclopedia_app_getcompletedregioncount",
       "community": 0,
       "norm_label": "getcompletedregioncount()"
@@ -1411,7 +1411,7 @@
       "label": "hasRegionBadge()",
       "file_type": "code",
       "source_file": "app.js",
-      "source_location": "L2933",
+      "source_location": "L2940",
       "id": "animal_encyclopedia_app_hasregionbadge",
       "community": 0,
       "norm_label": "hasregionbadge()"
@@ -1420,7 +1420,7 @@
       "label": "isRegionCollectionComplete()",
       "file_type": "code",
       "source_file": "app.js",
-      "source_location": "L2937",
+      "source_location": "L2944",
       "id": "animal_encyclopedia_app_isregioncollectioncomplete",
       "community": 0,
       "norm_label": "isregioncollectioncomplete()"
@@ -1429,7 +1429,7 @@
       "label": "areAllBadgesEarned()",
       "file_type": "code",
       "source_file": "app.js",
-      "source_location": "L2942",
+      "source_location": "L2949",
       "id": "animal_encyclopedia_app_areallbadgesearned",
       "community": 0,
       "norm_label": "areallbadgesearned()"
@@ -1438,25 +1438,25 @@
       "label": "saveBadges()",
       "file_type": "code",
       "source_file": "app.js",
-      "source_location": "L2946",
+      "source_location": "L2953",
       "id": "animal_encyclopedia_app_savebadges",
-      "community": 6,
+      "community": 25,
       "norm_label": "savebadges()"
     },
     {
       "label": "migrateLegacyBadges()",
       "file_type": "code",
       "source_file": "app.js",
-      "source_location": "L2952",
+      "source_location": "L2959",
       "id": "animal_encyclopedia_app_migratelegacybadges",
-      "community": 6,
+      "community": 25,
       "norm_label": "migratelegacybadges()"
     },
     {
       "label": "awardRegionBadge()",
       "file_type": "code",
       "source_file": "app.js",
-      "source_location": "L2963",
+      "source_location": "L2970",
       "id": "animal_encyclopedia_app_awardregionbadge",
       "community": 0,
       "norm_label": "awardregionbadge()"
@@ -1465,7 +1465,7 @@
       "label": "renderCompletionStars()",
       "file_type": "code",
       "source_file": "app.js",
-      "source_location": "L2981",
+      "source_location": "L2990",
       "id": "animal_encyclopedia_app_rendercompletionstars",
       "community": 0,
       "norm_label": "rendercompletionstars()"
@@ -1474,7 +1474,7 @@
       "label": "returnToCurrentMission()",
       "file_type": "code",
       "source_file": "app.js",
-      "source_location": "L2989",
+      "source_location": "L2998",
       "id": "animal_encyclopedia_app_returntocurrentmission",
       "community": 0,
       "norm_label": "returntocurrentmission()"
@@ -1483,7 +1483,7 @@
       "label": "bindAdventureMap()",
       "file_type": "code",
       "source_file": "app.js",
-      "source_location": "L2995",
+      "source_location": "L3004",
       "id": "animal_encyclopedia_app_bindadventuremap",
       "community": 0,
       "norm_label": "bindadventuremap()"
@@ -1492,7 +1492,7 @@
       "label": "getActiveQuestRegion()",
       "file_type": "code",
       "source_file": "app.js",
-      "source_location": "L3033",
+      "source_location": "L3042",
       "id": "animal_encyclopedia_app_getactivequestregion",
       "community": 0,
       "norm_label": "getactivequestregion()"
@@ -1501,7 +1501,7 @@
       "label": "renderAdventureMap()",
       "file_type": "code",
       "source_file": "app.js",
-      "source_location": "L3039",
+      "source_location": "L3048",
       "id": "animal_encyclopedia_app_renderadventuremap",
       "community": 0,
       "norm_label": "renderadventuremap()"
@@ -1510,7 +1510,7 @@
       "label": "createMapNode()",
       "file_type": "code",
       "source_file": "app.js",
-      "source_location": "L3052",
+      "source_location": "L3079",
       "id": "animal_encyclopedia_app_createmapnode",
       "community": 0,
       "norm_label": "createmapnode()"
@@ -1519,7 +1519,7 @@
       "label": "renderMapTrail()",
       "file_type": "code",
       "source_file": "app.js",
-      "source_location": "L3099",
+      "source_location": "L3126",
       "id": "animal_encyclopedia_app_rendermaptrail",
       "community": 0,
       "norm_label": "rendermaptrail()"
@@ -1528,16 +1528,34 @@
       "label": "positionMapPlayer()",
       "file_type": "code",
       "source_file": "app.js",
-      "source_location": "L3114",
+      "source_location": "L3141",
       "id": "animal_encyclopedia_app_positionmapplayer",
       "community": 0,
       "norm_label": "positionmapplayer()"
     },
     {
+      "label": "animateMapPlayer()",
+      "file_type": "code",
+      "source_file": "app.js",
+      "source_location": "L3149",
+      "id": "animal_encyclopedia_app_animatemapplayer",
+      "community": 0,
+      "norm_label": "animatemapplayer()"
+    },
+    {
+      "label": "queueMapPlayerTravel()",
+      "file_type": "code",
+      "source_file": "app.js",
+      "source_location": "L3174",
+      "id": "animal_encyclopedia_app_queuemapplayertravel",
+      "community": 0,
+      "norm_label": "queuemapplayertravel()"
+    },
+    {
       "label": "renderBadgeCase()",
       "file_type": "code",
       "source_file": "app.js",
-      "source_location": "L3122",
+      "source_location": "L3180",
       "id": "animal_encyclopedia_app_renderbadgecase",
       "community": 0,
       "norm_label": "renderbadgecase()"
@@ -1546,7 +1564,7 @@
       "label": "renderMapQuestCard()",
       "file_type": "code",
       "source_file": "app.js",
-      "source_location": "L3144",
+      "source_location": "L3202",
       "id": "animal_encyclopedia_app_rendermapquestcard",
       "community": 0,
       "norm_label": "rendermapquestcard()"
@@ -1555,7 +1573,7 @@
       "label": "travelToRegion()",
       "file_type": "code",
       "source_file": "app.js",
-      "source_location": "L3179",
+      "source_location": "L3237",
       "id": "animal_encyclopedia_app_traveltoregion",
       "community": 0,
       "norm_label": "traveltoregion()"
@@ -1564,7 +1582,7 @@
       "label": "requestRegionTravel()",
       "file_type": "code",
       "source_file": "app.js",
-      "source_location": "L3188",
+      "source_location": "L3257",
       "id": "animal_encyclopedia_app_requestregiontravel",
       "community": 0,
       "norm_label": "requestregiontravel()"
@@ -1573,7 +1591,7 @@
       "label": "openMasterDex()",
       "file_type": "code",
       "source_file": "app.js",
-      "source_location": "L3200",
+      "source_location": "L3269",
       "id": "animal_encyclopedia_app_openmasterdex",
       "community": 0,
       "norm_label": "openmasterdex()"
@@ -1582,7 +1600,7 @@
       "label": "getNextMissionFilter()",
       "file_type": "code",
       "source_file": "app.js",
-      "source_location": "L3210",
+      "source_location": "L3279",
       "id": "animal_encyclopedia_app_getnextmissionfilter",
       "community": 0,
       "norm_label": "getnextmissionfilter()"
@@ -1591,7 +1609,7 @@
       "label": "getStageStatus()",
       "file_type": "code",
       "source_file": "app.js",
-      "source_location": "L3215",
+      "source_location": "L3284",
       "id": "animal_encyclopedia_app_getstagestatus",
       "community": 0,
       "norm_label": "getstagestatus()"
@@ -1600,7 +1618,7 @@
       "label": "getFilterProgress()",
       "file_type": "code",
       "source_file": "app.js",
-      "source_location": "L3237",
+      "source_location": "L3306",
       "id": "animal_encyclopedia_app_getfilterprogress",
       "community": 0,
       "norm_label": "getfilterprogress()"
@@ -1609,7 +1627,7 @@
       "label": "getCompletedMilestones()",
       "file_type": "code",
       "source_file": "app.js",
-      "source_location": "L3243",
+      "source_location": "L3312",
       "id": "animal_encyclopedia_app_getcompletedmilestones",
       "community": 0,
       "norm_label": "getcompletedmilestones()"
@@ -1618,7 +1636,7 @@
       "label": "getCollectedProgramCount()",
       "file_type": "code",
       "source_file": "app.js",
-      "source_location": "L3255",
+      "source_location": "L3324",
       "id": "animal_encyclopedia_app_getcollectedprogramcount",
       "community": 0,
       "norm_label": "getcollectedprogramcount()"
@@ -1627,7 +1645,7 @@
       "label": "showNewMilestoneRewards()",
       "file_type": "code",
       "source_file": "app.js",
-      "source_location": "L3259",
+      "source_location": "L3328",
       "id": "animal_encyclopedia_app_shownewmilestonerewards",
       "community": 0,
       "norm_label": "shownewmilestonerewards()"
@@ -1636,7 +1654,7 @@
       "label": "showReward()",
       "file_type": "code",
       "source_file": "app.js",
-      "source_location": "L3272",
+      "source_location": "L3341",
       "id": "animal_encyclopedia_app_showreward",
       "community": 0,
       "norm_label": "showreward()"
@@ -1645,7 +1663,7 @@
       "label": "renderRegionReward()",
       "file_type": "code",
       "source_file": "app.js",
-      "source_location": "L3297",
+      "source_location": "L3366",
       "id": "animal_encyclopedia_app_renderregionreward",
       "community": 0,
       "norm_label": "renderregionreward()"
@@ -1654,7 +1672,7 @@
       "label": "showBadgeReward()",
       "file_type": "code",
       "source_file": "app.js",
-      "source_location": "L3319",
+      "source_location": "L3388",
       "id": "animal_encyclopedia_app_showbadgereward",
       "community": 0,
       "norm_label": "showbadgereward()"
@@ -1663,7 +1681,7 @@
       "label": "renderBadgeReward()",
       "file_type": "code",
       "source_file": "app.js",
-      "source_location": "L3335",
+      "source_location": "L3404",
       "id": "animal_encyclopedia_app_renderbadgereward",
       "community": 0,
       "norm_label": "renderbadgereward()"
@@ -1672,7 +1690,7 @@
       "label": "renderMasterReward()",
       "file_type": "code",
       "source_file": "app.js",
-      "source_location": "L3358",
+      "source_location": "L3427",
       "id": "animal_encyclopedia_app_rendermasterreward",
       "community": 0,
       "norm_label": "rendermasterreward()"
@@ -1681,7 +1699,7 @@
       "label": "closeReward()",
       "file_type": "code",
       "source_file": "app.js",
-      "source_location": "L3379",
+      "source_location": "L3448",
       "id": "animal_encyclopedia_app_closereward",
       "community": 0,
       "norm_label": "closereward()"
@@ -1690,7 +1708,7 @@
       "label": "goToNextRewardRegion()",
       "file_type": "code",
       "source_file": "app.js",
-      "source_location": "L3385",
+      "source_location": "L3454",
       "id": "animal_encyclopedia_app_gotonextrewardregion",
       "community": 0,
       "norm_label": "gotonextrewardregion()"
@@ -1699,7 +1717,7 @@
       "label": "resetProgressFromReward()",
       "file_type": "code",
       "source_file": "app.js",
-      "source_location": "L3403",
+      "source_location": "L3466",
       "id": "animal_encyclopedia_app_resetprogressfromreward",
       "community": 0,
       "norm_label": "resetprogressfromreward()"
@@ -1708,7 +1726,7 @@
       "label": "saveCompletedMilestones()",
       "file_type": "code",
       "source_file": "app.js",
-      "source_location": "L3409",
+      "source_location": "L3472",
       "id": "animal_encyclopedia_app_savecompletedmilestones",
       "community": 0,
       "norm_label": "savecompletedmilestones()"
@@ -1717,7 +1735,7 @@
       "label": "resetProgress()",
       "file_type": "code",
       "source_file": "app.js",
-      "source_location": "L3413",
+      "source_location": "L3476",
       "id": "animal_encyclopedia_app_resetprogress",
       "community": 0,
       "norm_label": "resetprogress()"
@@ -1726,52 +1744,52 @@
       "label": "readObservationReady()",
       "file_type": "code",
       "source_file": "app.js",
-      "source_location": "L3431",
+      "source_location": "L3497",
       "id": "animal_encyclopedia_app_readobservationready",
-      "community": 2,
+      "community": 16,
       "norm_label": "readobservationready()"
     },
     {
       "label": "saveObservationReady()",
       "file_type": "code",
       "source_file": "app.js",
-      "source_location": "L3435",
+      "source_location": "L3501",
       "id": "animal_encyclopedia_app_saveobservationready",
-      "community": 2,
+      "community": 25,
       "norm_label": "saveobservationready()"
     },
     {
       "label": "readCollected()",
       "file_type": "code",
       "source_file": "app.js",
-      "source_location": "L3441",
+      "source_location": "L3507",
       "id": "animal_encyclopedia_app_readcollected",
-      "community": 2,
+      "community": 1,
       "norm_label": "readcollected()"
     },
     {
       "label": "saveCollected()",
       "file_type": "code",
       "source_file": "app.js",
-      "source_location": "L3447",
+      "source_location": "L3513",
       "id": "animal_encyclopedia_app_savecollected",
-      "community": 6,
+      "community": 25,
       "norm_label": "savecollected()"
     },
     {
       "label": "readStoredIds()",
       "file_type": "code",
       "source_file": "app.js",
-      "source_location": "L3451",
+      "source_location": "L3517",
       "id": "animal_encyclopedia_app_readstoredids",
-      "community": 2,
+      "community": 1,
       "norm_label": "readstoredids()"
     },
     {
       "label": "readBoolean()",
       "file_type": "code",
       "source_file": "app.js",
-      "source_location": "L3461",
+      "source_location": "L3527",
       "id": "animal_encyclopedia_app_readboolean",
       "community": 0,
       "norm_label": "readboolean()"
@@ -1780,16 +1798,16 @@
       "label": "safeSetStorage()",
       "file_type": "code",
       "source_file": "app.js",
-      "source_location": "L3471",
+      "source_location": "L3537",
       "id": "animal_encyclopedia_app_safesetstorage",
-      "community": 6,
+      "community": 25,
       "norm_label": "safesetstorage()"
     },
     {
       "label": "safeRemoveStorage()",
       "file_type": "code",
       "source_file": "app.js",
-      "source_location": "L3481",
+      "source_location": "L3547",
       "id": "animal_encyclopedia_app_saferemovestorage",
       "community": 0,
       "norm_label": "saferemovestorage()"
@@ -1798,7 +1816,7 @@
       "label": "showToast()",
       "file_type": "code",
       "source_file": "app.js",
-      "source_location": "L3491",
+      "source_location": "L3557",
       "id": "animal_encyclopedia_app_showtoast",
       "community": 0,
       "norm_label": "showtoast()"
@@ -1807,7 +1825,7 @@
       "label": "debounce()",
       "file_type": "code",
       "source_file": "app.js",
-      "source_location": "L3504",
+      "source_location": "L3570",
       "id": "animal_encyclopedia_app_debounce",
       "community": 0,
       "norm_label": "debounce()"
@@ -1816,25 +1834,25 @@
       "label": "toggleSound()",
       "file_type": "code",
       "source_file": "app.js",
-      "source_location": "L3512",
+      "source_location": "L3578",
       "id": "animal_encyclopedia_app_togglesound",
-      "community": 6,
+      "community": 25,
       "norm_label": "togglesound()"
     },
     {
       "label": "updateSoundToggle()",
       "file_type": "code",
       "source_file": "app.js",
-      "source_location": "L3519",
+      "source_location": "L3585",
       "id": "animal_encyclopedia_app_updatesoundtoggle",
-      "community": 6,
+      "community": 25,
       "norm_label": "updatesoundtoggle()"
     },
     {
       "label": "ensureAudioContext()",
       "file_type": "code",
       "source_file": "app.js",
-      "source_location": "L3527",
+      "source_location": "L3593",
       "id": "animal_encyclopedia_app_ensureaudiocontext",
       "community": 0,
       "norm_label": "ensureaudiocontext()"
@@ -1843,7 +1861,7 @@
       "label": "playSound()",
       "file_type": "code",
       "source_file": "app.js",
-      "source_location": "L3538",
+      "source_location": "L3604",
       "id": "animal_encyclopedia_app_playsound",
       "community": 0,
       "norm_label": "playsound()"
@@ -1852,171 +1870,171 @@
       "label": "shuffle()",
       "file_type": "code",
       "source_file": "app.js",
-      "source_location": "L3569",
+      "source_location": "L3635",
       "id": "animal_encyclopedia_app_shuffle",
-      "community": 14,
+      "community": 6,
       "norm_label": "shuffle()"
     },
     {
       "label": "wikiUrl()",
       "file_type": "code",
       "source_file": "app.js",
-      "source_location": "L3578",
+      "source_location": "L3644",
       "id": "animal_encyclopedia_app_wikiurl",
-      "community": 2,
+      "community": 1,
       "norm_label": "wikiurl()"
     },
     {
       "label": "normalizeAppConfig()",
       "file_type": "code",
       "source_file": "app.js",
-      "source_location": "L3582",
+      "source_location": "L3648",
       "id": "animal_encyclopedia_app_normalizeappconfig",
-      "community": 3,
+      "community": 4,
       "norm_label": "normalizeappconfig()"
     },
     {
       "label": "normalizeHttpUrl()",
       "file_type": "code",
       "source_file": "app.js",
-      "source_location": "L3606",
+      "source_location": "L3672",
       "id": "animal_encyclopedia_app_normalizehttpurl",
-      "community": 3,
+      "community": 4,
       "norm_label": "normalizehttpurl()"
     },
     {
       "label": "escapeHTML()",
       "file_type": "code",
       "source_file": "app.js",
-      "source_location": "L3618",
+      "source_location": "L3684",
       "id": "animal_encyclopedia_app_escapehtml",
-      "community": 2,
+      "community": 16,
       "norm_label": "escapehtml()"
     },
     {
       "label": "escapeAttribute()",
       "file_type": "code",
       "source_file": "app.js",
-      "source_location": "L3627",
+      "source_location": "L3693",
       "id": "animal_encyclopedia_app_escapeattribute",
-      "community": 2,
+      "community": 16,
       "norm_label": "escapeattribute()"
     },
     {
       "label": "openGuideModal()",
       "file_type": "code",
       "source_file": "app.js",
-      "source_location": "L3635",
+      "source_location": "L3701",
       "id": "animal_encyclopedia_app_openguidemodal",
-      "community": 6,
+      "community": 11,
       "norm_label": "openguidemodal()"
     },
     {
       "label": "closeGuideModal()",
       "file_type": "code",
       "source_file": "app.js",
-      "source_location": "L3639",
+      "source_location": "L3705",
       "id": "animal_encyclopedia_app_closeguidemodal",
-      "community": 6,
+      "community": 11,
       "norm_label": "closeguidemodal()"
     },
     {
       "label": "openQrExpand()",
       "file_type": "code",
       "source_file": "app.js",
-      "source_location": "L3643",
+      "source_location": "L3709",
       "id": "animal_encyclopedia_app_openqrexpand",
-      "community": 6,
+      "community": 11,
       "norm_label": "openqrexpand()"
     },
     {
       "label": "closeQrExpand()",
       "file_type": "code",
       "source_file": "app.js",
-      "source_location": "L3651",
+      "source_location": "L3717",
       "id": "animal_encyclopedia_app_closeqrexpand",
-      "community": 6,
+      "community": 11,
       "norm_label": "closeqrexpand()"
     },
     {
       "label": "downloadQrExpandImage()",
       "file_type": "code",
       "source_file": "app.js",
-      "source_location": "L3655",
+      "source_location": "L3721",
       "id": "animal_encyclopedia_app_downloadqrexpandimage",
-      "community": 2,
+      "community": 1,
       "norm_label": "downloadqrexpandimage()"
     },
     {
       "label": "confirmNavigateToQuestion()",
       "file_type": "code",
       "source_file": "app.js",
-      "source_location": "L3671",
+      "source_location": "L3737",
       "id": "animal_encyclopedia_app_confirmnavigatetoquestion",
-      "community": 2,
+      "community": 1,
       "norm_label": "confirmnavigatetoquestion()"
     },
     {
       "label": "closeConfirmPopup()",
       "file_type": "code",
       "source_file": "app.js",
-      "source_location": "L3679",
+      "source_location": "L3745",
       "id": "animal_encyclopedia_app_closeconfirmpopup",
-      "community": 2,
+      "community": 1,
       "norm_label": "closeconfirmpopup()"
     },
     {
       "label": "openSourceConfirm()",
       "file_type": "code",
       "source_file": "app.js",
-      "source_location": "L3684",
+      "source_location": "L3750",
       "id": "animal_encyclopedia_app_opensourceconfirm",
-      "community": 3,
+      "community": 4,
       "norm_label": "opensourceconfirm()"
     },
     {
       "label": "confirmNavigateToSource()",
       "file_type": "code",
       "source_file": "app.js",
-      "source_location": "L3695",
+      "source_location": "L3761",
       "id": "animal_encyclopedia_app_confirmnavigatetosource",
-      "community": 2,
+      "community": 1,
       "norm_label": "confirmnavigatetosource()"
     },
     {
       "label": "closeSourceConfirm()",
       "file_type": "code",
       "source_file": "app.js",
-      "source_location": "L3703",
+      "source_location": "L3769",
       "id": "animal_encyclopedia_app_closesourceconfirm",
-      "community": 2,
+      "community": 1,
       "norm_label": "closesourceconfirm()"
     },
     {
       "label": "openRegionLockedPopup()",
       "file_type": "code",
       "source_file": "app.js",
-      "source_location": "L3708",
+      "source_location": "L3774",
       "id": "animal_encyclopedia_app_openregionlockedpopup",
-      "community": 6,
+      "community": 11,
       "norm_label": "openregionlockedpopup()"
     },
     {
       "label": "confirmLockedRegionTravel()",
       "file_type": "code",
       "source_file": "app.js",
-      "source_location": "L3721",
+      "source_location": "L3787",
       "id": "animal_encyclopedia_app_confirmlockedregiontravel",
-      "community": 6,
+      "community": 11,
       "norm_label": "confirmlockedregiontravel()"
     },
     {
       "label": "closeRegionLockedPopup()",
       "file_type": "code",
       "source_file": "app.js",
-      "source_location": "L3729",
+      "source_location": "L3795",
       "id": "animal_encyclopedia_app_closeregionlockedpopup",
-      "community": 6,
+      "community": 11,
       "norm_label": "closeregionlockedpopup()"
     },
     {
@@ -2025,7 +2043,7 @@
       "source_file": "scripts/record-demo.mjs",
       "source_location": "L1",
       "id": "scripts_record_demo_mjs",
-      "community": 22,
+      "community": 28,
       "norm_label": "record-demo.mjs"
     },
     {
@@ -2034,7 +2052,7 @@
       "source_file": "scripts/record-demo.mjs",
       "source_location": "L36",
       "id": "scripts_record_demo_findchromium",
-      "community": 22,
+      "community": 28,
       "norm_label": "findchromium()"
     },
     {
@@ -2043,7 +2061,7 @@
       "source_file": "scripts/record-demo.mjs",
       "source_location": "L54",
       "id": "scripts_record_demo_startserver",
-      "community": 22,
+      "community": 28,
       "norm_label": "startserver()"
     },
     {
@@ -2052,7 +2070,7 @@
       "source_file": "scripts/record-demo.mjs",
       "source_location": "L67",
       "id": "scripts_record_demo_quietclick",
-      "community": 22,
+      "community": 28,
       "norm_label": "quietclick()"
     },
     {
@@ -2061,7 +2079,7 @@
       "source_file": "scripts/record-demo.mjs",
       "source_location": "L72",
       "id": "scripts_record_demo_preparefinalcatch",
-      "community": 22,
+      "community": 28,
       "norm_label": "preparefinalcatch()"
     },
     {
@@ -2070,7 +2088,7 @@
       "source_file": "scripts/record-demo.mjs",
       "source_location": "L95",
       "id": "scripts_record_demo_main",
-      "community": 22,
+      "community": 28,
       "norm_label": "main()"
     },
     {
@@ -2079,7 +2097,7 @@
       "source_file": "scripts/generate-credits.js",
       "source_location": "L1",
       "id": "scripts_generate_credits_js",
-      "community": 4,
+      "community": 2,
       "norm_label": "generate-credits.js"
     },
     {
@@ -2088,7 +2106,7 @@
       "source_file": "scripts/generate-credits.js",
       "source_location": "L10",
       "id": "scripts_generate_credits_escapehtml",
-      "community": 4,
+      "community": 2,
       "norm_label": "escapehtml()"
     },
     {
@@ -2097,7 +2115,7 @@
       "source_file": "scripts/generate-credits.js",
       "source_location": "L19",
       "id": "scripts_generate_credits_wikiurl",
-      "community": 4,
+      "community": 2,
       "norm_label": "wikiurl()"
     },
     {
@@ -2106,7 +2124,7 @@
       "source_file": "scripts/generate-credits.js",
       "source_location": "L23",
       "id": "scripts_generate_credits_parseimagesources",
-      "community": 4,
+      "community": 2,
       "norm_label": "parseimagesources()"
     },
     {
@@ -2115,7 +2133,7 @@
       "source_file": "scripts/generate-credits.js",
       "source_location": "L36",
       "id": "scripts_generate_credits_parsewiki",
-      "community": 4,
+      "community": 2,
       "norm_label": "parsewiki()"
     },
     {
@@ -2124,7 +2142,7 @@
       "source_file": "scripts/generate-credits.js",
       "source_location": "L47",
       "id": "scripts_generate_credits_parseanimals",
-      "community": 4,
+      "community": 2,
       "norm_label": "parseanimals()"
     },
     {
@@ -2133,7 +2151,7 @@
       "source_file": "scripts/generate-credits.js",
       "source_location": "L60",
       "id": "scripts_generate_credits_buildcreditshtml",
-      "community": 4,
+      "community": 2,
       "norm_label": "buildcreditshtml()"
     },
     {
@@ -2142,7 +2160,7 @@
       "source_file": "scripts/generate-credits.js",
       "source_location": "L120",
       "id": "scripts_generate_credits_generatecredits",
-      "community": 4,
+      "community": 2,
       "norm_label": "generatecredits()"
     },
     {
@@ -2151,7 +2169,7 @@
       "source_file": "scripts/phase1-mission-contract.test.mjs",
       "source_location": "L1",
       "id": "scripts_phase1_mission_contract_test_mjs",
-      "community": 29,
+      "community": 33,
       "norm_label": "phase1-mission-contract.test.mjs"
     },
     {
@@ -2160,7 +2178,7 @@
       "source_file": "scripts/phase1-mission-contract.test.mjs",
       "source_location": "L8",
       "id": "scripts_phase1_mission_contract_test_read",
-      "community": 29,
+      "community": 33,
       "norm_label": "read()"
     },
     {
@@ -2169,7 +2187,7 @@
       "source_file": "scripts/download-local-images.js",
       "source_location": "L1",
       "id": "scripts_download_local_images_js",
-      "community": 17,
+      "community": 18,
       "norm_label": "download-local-images.js"
     },
     {
@@ -2178,7 +2196,7 @@
       "source_file": "scripts/download-local-images.js",
       "source_location": "L20",
       "id": "scripts_download_local_images_parseimagesources",
-      "community": 17,
+      "community": 18,
       "norm_label": "parseimagesources()"
     },
     {
@@ -2187,7 +2205,7 @@
       "source_file": "scripts/download-local-images.js",
       "source_location": "L33",
       "id": "scripts_download_local_images_parsewiki",
-      "community": 17,
+      "community": 18,
       "norm_label": "parsewiki()"
     },
     {
@@ -2196,7 +2214,7 @@
       "source_file": "scripts/download-local-images.js",
       "source_location": "L44",
       "id": "scripts_download_local_images_parseanimals",
-      "community": 17,
+      "community": 18,
       "norm_label": "parseanimals()"
     },
     {
@@ -2205,7 +2223,7 @@
       "source_file": "scripts/download-local-images.js",
       "source_location": "L62",
       "id": "scripts_download_local_images_getextension",
-      "community": 17,
+      "community": 18,
       "norm_label": "getextension()"
     },
     {
@@ -2214,7 +2232,7 @@
       "source_file": "scripts/download-local-images.js",
       "source_location": "L74",
       "id": "scripts_download_local_images_sleep",
-      "community": 17,
+      "community": 18,
       "norm_label": "sleep()"
     },
     {
@@ -2223,7 +2241,7 @@
       "source_file": "scripts/download-local-images.js",
       "source_location": "L78",
       "id": "scripts_download_local_images_resizewikimediaimageurl",
-      "community": 17,
+      "community": 18,
       "norm_label": "resizewikimediaimageurl()"
     },
     {
@@ -2232,7 +2250,7 @@
       "source_file": "scripts/download-local-images.js",
       "source_location": "L93",
       "id": "scripts_download_local_images_lookupwikipediaimage",
-      "community": 17,
+      "community": 18,
       "norm_label": "lookupwikipediaimage()"
     },
     {
@@ -2241,7 +2259,7 @@
       "source_file": "scripts/download-local-images.js",
       "source_location": "L101",
       "id": "scripts_download_local_images_download",
-      "community": 17,
+      "community": 18,
       "norm_label": "download()"
     },
     {
@@ -2250,7 +2268,7 @@
       "source_file": "scripts/download-local-images.js",
       "source_location": "L119",
       "id": "scripts_download_local_images_downloadwithfallback",
-      "community": 17,
+      "community": 18,
       "norm_label": "downloadwithfallback()"
     },
     {
@@ -2259,7 +2277,7 @@
       "source_file": "scripts/download-local-images.js",
       "source_location": "L132",
       "id": "scripts_download_local_images_publicpath",
-      "community": 17,
+      "community": 18,
       "norm_label": "publicpath()"
     },
     {
@@ -2268,7 +2286,7 @@
       "source_file": "scripts/download-local-images.js",
       "source_location": "L136",
       "id": "scripts_download_local_images_downloadlocalimages",
-      "community": 17,
+      "community": 18,
       "norm_label": "downloadlocalimages()"
     },
     {
@@ -2277,7 +2295,7 @@
       "source_file": "scripts/download-local-images.js",
       "source_location": "L173",
       "id": "scripts_download_local_images_parseargs",
-      "community": 17,
+      "community": 18,
       "norm_label": "parseargs()"
     },
     {
@@ -2286,7 +2304,7 @@
       "source_file": "scripts/phase2-contract.test.mjs",
       "source_location": "L1",
       "id": "scripts_phase2_contract_test_mjs",
-      "community": 25,
+      "community": 29,
       "norm_label": "phase2-contract.test.mjs"
     },
     {
@@ -2295,7 +2313,7 @@
       "source_file": "scripts/phase2-contract.test.mjs",
       "source_location": "L11",
       "id": "scripts_phase2_contract_test_read",
-      "community": 25,
+      "community": 29,
       "norm_label": "read()"
     },
     {
@@ -2304,7 +2322,7 @@
       "source_file": "scripts/phase2-contract.test.mjs",
       "source_location": "L15",
       "id": "scripts_phase2_contract_test_countanimalrecords",
-      "community": 25,
+      "community": 29,
       "norm_label": "countanimalrecords()"
     },
     {
@@ -2313,7 +2331,7 @@
       "source_file": "scripts/phase2-contract.test.mjs",
       "source_location": "L150",
       "id": "scripts_phase2_contract_test_walk",
-      "community": 25,
+      "community": 29,
       "norm_label": "walk()"
     },
     {
@@ -2322,7 +2340,7 @@
       "source_file": "scripts/build.js",
       "source_location": "L1",
       "id": "scripts_build_js",
-      "community": 4,
+      "community": 2,
       "norm_label": "build.js"
     },
     {
@@ -2331,7 +2349,7 @@
       "source_file": "scripts/build.js",
       "source_location": "L26",
       "id": "scripts_build_haslocalimageassets",
-      "community": 4,
+      "community": 2,
       "norm_label": "haslocalimageassets()"
     },
     {
@@ -2340,7 +2358,7 @@
       "source_file": "scripts/build.js",
       "source_location": "L33",
       "id": "scripts_build_parseargs",
-      "community": 4,
+      "community": 2,
       "norm_label": "parseargs()"
     },
     {
@@ -2349,7 +2367,7 @@
       "source_file": "scripts/build.js",
       "source_location": "L56",
       "id": "scripts_build_readjson",
-      "community": 4,
+      "community": 2,
       "norm_label": "readjson()"
     },
     {
@@ -2358,7 +2376,7 @@
       "source_file": "scripts/build.js",
       "source_location": "L60",
       "id": "scripts_build_readlocalimagemanifest",
-      "community": 4,
+      "community": 2,
       "norm_label": "readlocalimagemanifest()"
     },
     {
@@ -2367,7 +2385,7 @@
       "source_file": "scripts/build.js",
       "source_location": "L65",
       "id": "scripts_build_asserthttpurl",
-      "community": 4,
+      "community": 2,
       "norm_label": "asserthttpurl()"
     },
     {
@@ -2376,7 +2394,7 @@
       "source_file": "scripts/build.js",
       "source_location": "L82",
       "id": "scripts_build_buildconfig",
-      "community": 4,
+      "community": 2,
       "norm_label": "buildconfig()"
     },
     {
@@ -2385,7 +2403,7 @@
       "source_file": "scripts/build.js",
       "source_location": "L125",
       "id": "scripts_build_writeappconfig",
-      "community": 4,
+      "community": 2,
       "norm_label": "writeappconfig()"
     },
     {
@@ -2394,7 +2412,7 @@
       "source_file": "scripts/build.js",
       "source_location": "L130",
       "id": "scripts_build_copystaticdirectory",
-      "community": 4,
+      "community": 2,
       "norm_label": "copystaticdirectory()"
     },
     {
@@ -2403,7 +2421,7 @@
       "source_file": "scripts/build.js",
       "source_location": "L145",
       "id": "scripts_build_copystaticfiles",
-      "community": 4,
+      "community": 2,
       "norm_label": "copystaticfiles()"
     },
     {
@@ -2412,7 +2430,7 @@
       "source_file": "scripts/build.js",
       "source_location": "L167",
       "id": "scripts_build_main",
-      "community": 4,
+      "community": 2,
       "norm_label": "main()"
     },
     {
@@ -2421,7 +2439,7 @@
       "source_file": "scripts/phase3-contract.test.mjs",
       "source_location": "L1",
       "id": "scripts_phase3_contract_test_mjs",
-      "community": 4,
+      "community": 2,
       "norm_label": "phase3-contract.test.mjs"
     },
     {
@@ -2430,7 +2448,7 @@
       "source_file": "scripts/phase3-contract.test.mjs",
       "source_location": "L31",
       "id": "scripts_phase3_contract_test_readhtml",
-      "community": 4,
+      "community": 2,
       "norm_label": "readhtml()"
     },
     {
@@ -2439,7 +2457,7 @@
       "source_file": "scripts/phase3-contract.test.mjs",
       "source_location": "L35",
       "id": "scripts_phase3_contract_test_countoccurrences",
-      "community": 4,
+      "community": 2,
       "norm_label": "countoccurrences()"
     },
     {
@@ -2448,7 +2466,7 @@
       "source_file": "scripts/phase3-contract.test.mjs",
       "source_location": "L39",
       "id": "scripts_phase3_contract_test_generatetotemp",
-      "community": 4,
+      "community": 2,
       "norm_label": "generatetotemp()"
     },
     {
@@ -2457,7 +2475,7 @@
       "source_file": "scripts/generate-no-question.js",
       "source_location": "L1",
       "id": "scripts_generate_no_question_js",
-      "community": 4,
+      "community": 2,
       "norm_label": "generate-no-question.js"
     },
     {
@@ -2466,7 +2484,7 @@
       "source_file": "scripts/generate-no-question.js",
       "source_location": "L42",
       "id": "scripts_generate_no_question_escaperegexp",
-      "community": 4,
+      "community": 2,
       "norm_label": "escaperegexp()"
     },
     {
@@ -2475,7 +2493,7 @@
       "source_file": "scripts/generate-no-question.js",
       "source_location": "L46",
       "id": "scripts_generate_no_question_replaceexactlyonce",
-      "community": 4,
+      "community": 2,
       "norm_label": "replaceexactlyonce()"
     },
     {
@@ -2484,7 +2502,7 @@
       "source_file": "scripts/generate-no-question.js",
       "source_location": "L54",
       "id": "scripts_generate_no_question_removemarkedblock",
-      "community": 4,
+      "community": 2,
       "norm_label": "removemarkedblock()"
     },
     {
@@ -2493,7 +2511,7 @@
       "source_file": "scripts/generate-no-question.js",
       "source_location": "L61",
       "id": "scripts_generate_no_question_insertreplacement",
-      "community": 4,
+      "community": 2,
       "norm_label": "insertreplacement()"
     },
     {
@@ -2502,7 +2520,7 @@
       "source_file": "scripts/generate-no-question.js",
       "source_location": "L67",
       "id": "scripts_generate_no_question_generatenoquestion",
-      "community": 4,
+      "community": 2,
       "norm_label": "generatenoquestion()"
     },
     {
@@ -2511,7 +2529,7 @@
       "source_file": "scripts/phase0-ux-contract.test.mjs",
       "source_location": "L1",
       "id": "scripts_phase0_ux_contract_test_mjs",
-      "community": 27,
+      "community": 31,
       "norm_label": "phase0-ux-contract.test.mjs"
     },
     {
@@ -2520,7 +2538,7 @@
       "source_file": "scripts/phase0-ux-contract.test.mjs",
       "source_location": "L8",
       "id": "scripts_phase0_ux_contract_test_read",
-      "community": 27,
+      "community": 31,
       "norm_label": "read()"
     },
     {
@@ -2529,7 +2547,7 @@
       "source_file": "scripts/phase0-ux-contract.test.mjs",
       "source_location": "L12",
       "id": "scripts_phase0_ux_contract_test_readpngsize",
-      "community": 27,
+      "community": 31,
       "norm_label": "readpngsize()"
     },
     {
@@ -2538,7 +2556,7 @@
       "source_file": "vendor/qrcode.js",
       "source_location": "L1",
       "id": "vendor_qrcode_js",
-      "community": 28,
+      "community": 32,
       "norm_label": "qrcode.js"
     },
     {
@@ -2547,7 +2565,7 @@
       "source_file": "vendor/qrcode.js",
       "source_location": "L1182",
       "id": "vendor_qrcode_qrpolynomial",
-      "community": 28,
+      "community": 32,
       "norm_label": "qrpolynomial()"
     },
     {
@@ -2556,7 +2574,7 @@
       "source_file": "vendor/qrcode.js",
       "source_location": "L2254",
       "id": "vendor_qrcode_toutf8array",
-      "community": 28,
+      "community": 32,
       "norm_label": "toutf8array()"
     },
     {
@@ -2564,7 +2582,7 @@
       "file_type": "code",
       "source_file": "app.js",
       "source_location": "L32",
-      "community": 1,
+      "community": 13,
       "norm_label": "renderuisprite()",
       "id": "science_animal_app_renderuisprite"
     },
@@ -2573,7 +2591,7 @@
       "file_type": "code",
       "source_file": "app.js",
       "source_location": "L334",
-      "community": 2,
+      "community": 1,
       "norm_label": "getfocusableelements()",
       "id": "science_animal_app_getfocusableelements"
     },
@@ -2582,7 +2600,7 @@
       "file_type": "code",
       "source_file": "app.js",
       "source_location": "L339",
-      "community": 2,
+      "community": 1,
       "norm_label": "handlemodalkeydown()",
       "id": "science_animal_app_handlemodalkeydown"
     },
@@ -2591,7 +2609,7 @@
       "file_type": "code",
       "source_file": "app.js",
       "source_location": "L355",
-      "community": 7,
+      "community": 20,
       "norm_label": "setmodalbackgrounddisabled()",
       "id": "science_animal_app_setmodalbackgrounddisabled"
     },
@@ -2600,7 +2618,7 @@
       "file_type": "code",
       "source_file": "app.js",
       "source_location": "L370",
-      "community": 7,
+      "community": 20,
       "norm_label": "entermodalfocus()",
       "id": "science_animal_app_entermodalfocus"
     },
@@ -2609,7 +2627,7 @@
       "file_type": "code",
       "source_file": "app.js",
       "source_location": "L388",
-      "community": 7,
+      "community": 20,
       "norm_label": "exitmodalfocus()",
       "id": "science_animal_app_exitmodalfocus"
     },
@@ -2618,7 +2636,7 @@
       "file_type": "code",
       "source_file": "app.js",
       "source_location": "L405",
-      "community": 2,
+      "community": 1,
       "norm_label": "makeanimal()",
       "id": "science_animal_app_makeanimal"
     },
@@ -2627,7 +2645,7 @@
       "file_type": "code",
       "source_file": "app.js",
       "source_location": "L430",
-      "community": 1,
+      "community": 14,
       "norm_label": "init()",
       "id": "science_animal_app_init"
     },
@@ -2636,7 +2654,7 @@
       "file_type": "code",
       "source_file": "app.js",
       "source_location": "L591",
-      "community": 1,
+      "community": 14,
       "norm_label": "openfirstrunteacherworkflow()",
       "id": "science_animal_app_openfirstrunteacherworkflow"
     },
@@ -2645,7 +2663,7 @@
       "file_type": "code",
       "source_file": "app.js",
       "source_location": "L597",
-      "community": 1,
+      "community": 13,
       "norm_label": "updatesidebarlede()",
       "id": "science_animal_app_updatesidebarlede"
     },
@@ -2654,7 +2672,7 @@
       "file_type": "code",
       "source_file": "app.js",
       "source_location": "L605",
-      "community": 1,
+      "community": 14,
       "norm_label": "bindviewtabs()",
       "id": "science_animal_app_bindviewtabs"
     },
@@ -2663,7 +2681,7 @@
       "file_type": "code",
       "source_file": "app.js",
       "source_location": "L611",
-      "community": 1,
+      "community": 14,
       "norm_label": "bindmissionpanel()",
       "id": "science_animal_app_bindmissionpanel"
     },
@@ -2672,7 +2690,7 @@
       "file_type": "code",
       "source_file": "app.js",
       "source_location": "L632",
-      "community": 1,
+      "community": 19,
       "norm_label": "applyinitialmissionsettings()",
       "id": "science_animal_app_applyinitialmissionsettings"
     },
@@ -2681,7 +2699,7 @@
       "file_type": "code",
       "source_file": "app.js",
       "source_location": "L641",
-      "community": 1,
+      "community": 19,
       "norm_label": "getmissionregionfrompageurl()",
       "id": "science_animal_app_getmissionregionfrompageurl"
     },
@@ -2690,7 +2708,7 @@
       "file_type": "code",
       "source_file": "app.js",
       "source_location": "L646",
-      "community": 1,
+      "community": 19,
       "norm_label": "getmissionanimalidsfrompageurl()",
       "id": "science_animal_app_getmissionanimalidsfrompageurl"
     },
@@ -2699,7 +2717,7 @@
       "file_type": "code",
       "source_file": "app.js",
       "source_location": "L657",
-      "community": 1,
+      "community": 19,
       "norm_label": "getmissionselectionsfrompageurl()",
       "id": "science_animal_app_getmissionselectionsfrompageurl"
     },
@@ -2708,7 +2726,7 @@
       "file_type": "code",
       "source_file": "app.js",
       "source_location": "L665",
-      "community": 1,
+      "community": 19,
       "norm_label": "getmissionanimalsparam()",
       "id": "science_animal_app_getmissionanimalsparam"
     },
@@ -2717,7 +2735,7 @@
       "file_type": "code",
       "source_file": "app.js",
       "source_location": "L669",
-      "community": 1,
+      "community": 14,
       "norm_label": "renderteachermissionpanel()",
       "id": "science_animal_app_renderteachermissionpanel"
     },
@@ -2726,7 +2744,7 @@
       "file_type": "code",
       "source_file": "app.js",
       "source_location": "L682",
-      "community": 1,
+      "community": 14,
       "norm_label": "bindteachermissioncontrols()",
       "id": "science_animal_app_bindteachermissioncontrols"
     },
@@ -2735,7 +2753,7 @@
       "file_type": "code",
       "source_file": "app.js",
       "source_location": "L716",
-      "community": 1,
+      "community": 19,
       "norm_label": "renderteachermissionanimals()",
       "id": "science_animal_app_renderteachermissionanimals"
     },
@@ -2744,7 +2762,7 @@
       "file_type": "code",
       "source_file": "app.js",
       "source_location": "L728",
-      "community": 1,
+      "community": 19,
       "norm_label": "renderteachermissioncount()",
       "id": "science_animal_app_renderteachermissioncount"
     },
@@ -2753,7 +2771,7 @@
       "file_type": "code",
       "source_file": "app.js",
       "source_location": "L734",
-      "community": 8,
+      "community": 5,
       "norm_label": "updatemissionurl()",
       "id": "science_animal_app_updatemissionurl"
     },
@@ -2762,7 +2780,7 @@
       "file_type": "code",
       "source_file": "app.js",
       "source_location": "L742",
-      "community": 1,
+      "community": 17,
       "norm_label": "activatemissionregion()",
       "id": "science_animal_app_activatemissionregion"
     },
@@ -2771,7 +2789,7 @@
       "file_type": "code",
       "source_file": "app.js",
       "source_location": "L766",
-      "community": 1,
+      "community": 19,
       "norm_label": "getcurrentmissionpreset()",
       "id": "science_animal_app_getcurrentmissionpreset"
     },
@@ -2780,7 +2798,7 @@
       "file_type": "code",
       "source_file": "app.js",
       "source_location": "L770",
-      "community": 1,
+      "community": 19,
       "norm_label": "getmissionpreset()",
       "id": "science_animal_app_getmissionpreset"
     },
@@ -2789,7 +2807,7 @@
       "file_type": "code",
       "source_file": "app.js",
       "source_location": "L774",
-      "community": 1,
+      "community": 19,
       "norm_label": "normalizemissionregionid()",
       "id": "science_animal_app_normalizemissionregionid"
     },
@@ -2798,7 +2816,7 @@
       "file_type": "code",
       "source_file": "app.js",
       "source_location": "L782",
-      "community": 1,
+      "community": 19,
       "norm_label": "getdefaultmissionanimalids()",
       "id": "science_animal_app_getdefaultmissionanimalids"
     },
@@ -2807,7 +2825,7 @@
       "file_type": "code",
       "source_file": "app.js",
       "source_location": "L788",
-      "community": 1,
+      "community": 19,
       "norm_label": "getselectedmissionanimalids()",
       "id": "science_animal_app_getselectedmissionanimalids"
     },
@@ -2816,7 +2834,7 @@
       "file_type": "code",
       "source_file": "app.js",
       "source_location": "L800",
-      "community": 1,
+      "community": 19,
       "norm_label": "getmissioncandidateanimals()",
       "id": "science_animal_app_getmissioncandidateanimals"
     },
@@ -2825,7 +2843,7 @@
       "file_type": "code",
       "source_file": "app.js",
       "source_location": "L804",
-      "community": 1,
+      "community": 13,
       "norm_label": "getprogramanimals()",
       "id": "science_animal_app_getprogramanimals"
     },
@@ -2834,7 +2852,7 @@
       "file_type": "code",
       "source_file": "app.js",
       "source_location": "L812",
-      "community": 1,
+      "community": 13,
       "norm_label": "getprogramtotal()",
       "id": "science_animal_app_getprogramtotal"
     },
@@ -2843,7 +2861,7 @@
       "file_type": "code",
       "source_file": "app.js",
       "source_location": "L816",
-      "community": 8,
+      "community": 5,
       "norm_label": "writemissionselectionparams()",
       "id": "science_animal_app_writemissionselectionparams"
     },
@@ -2852,7 +2870,7 @@
       "file_type": "code",
       "source_file": "app.js",
       "source_location": "L823",
-      "community": 1,
+      "community": 17,
       "norm_label": "setview()",
       "id": "science_animal_app_setview"
     },
@@ -2861,7 +2879,7 @@
       "file_type": "code",
       "source_file": "app.js",
       "source_location": "L866",
-      "community": 7,
+      "community": 20,
       "norm_label": "openonboarding()",
       "id": "science_animal_app_openonboarding"
     },
@@ -2870,7 +2888,7 @@
       "file_type": "code",
       "source_file": "app.js",
       "source_location": "L874",
-      "community": 7,
+      "community": 20,
       "norm_label": "renderonboarding()",
       "id": "science_animal_app_renderonboarding"
     },
@@ -2879,7 +2897,7 @@
       "file_type": "code",
       "source_file": "app.js",
       "source_location": "L905",
-      "community": 7,
+      "community": 20,
       "norm_label": "nextonboardingstep()",
       "id": "science_animal_app_nextonboardingstep"
     },
@@ -2888,7 +2906,7 @@
       "file_type": "code",
       "source_file": "app.js",
       "source_location": "L915",
-      "community": 7,
+      "community": 20,
       "norm_label": "completeonboarding()",
       "id": "science_animal_app_completeonboarding"
     },
@@ -2897,7 +2915,7 @@
       "file_type": "code",
       "source_file": "app.js",
       "source_location": "L923",
-      "community": 7,
+      "community": 20,
       "norm_label": "clearonboardinghighlights()",
       "id": "science_animal_app_clearonboardinghighlights"
     },
@@ -2906,7 +2924,7 @@
       "file_type": "code",
       "source_file": "app.js",
       "source_location": "L929",
-      "community": 1,
+      "community": 17,
       "norm_label": "renderfilters()",
       "id": "science_animal_app_renderfilters"
     },
@@ -2915,7 +2933,7 @@
       "file_type": "code",
       "source_file": "app.js",
       "source_location": "L969",
-      "community": 1,
+      "community": 17,
       "norm_label": "rendermissionpanel()",
       "id": "science_animal_app_rendermissionpanel"
     },
@@ -2924,7 +2942,7 @@
       "file_type": "code",
       "source_file": "app.js",
       "source_location": "L1049",
-      "community": 1,
+      "community": 14,
       "norm_label": "rendergamecriterionoptions()",
       "id": "science_animal_app_rendergamecriterionoptions"
     },
@@ -2933,7 +2951,7 @@
       "file_type": "code",
       "source_file": "app.js",
       "source_location": "L1059",
-      "community": 1,
+      "community": 17,
       "norm_label": "renderanimals()",
       "id": "science_animal_app_renderanimals"
     },
@@ -2942,7 +2960,7 @@
       "file_type": "code",
       "source_file": "app.js",
       "source_location": "L1115",
-      "community": 1,
+      "community": 13,
       "norm_label": "getvisibleanimals()",
       "id": "science_animal_app_getvisibleanimals"
     },
@@ -2951,7 +2969,7 @@
       "file_type": "code",
       "source_file": "app.js",
       "source_location": "L1138",
-      "community": 2,
+      "community": 1,
       "norm_label": "getrepresentativecategory()",
       "id": "science_animal_app_getrepresentativecategory"
     },
@@ -2960,7 +2978,7 @@
       "file_type": "code",
       "source_file": "app.js",
       "source_location": "L1142",
-      "community": 1,
+      "community": 13,
       "norm_label": "getanimalsforfilter()",
       "id": "science_animal_app_getanimalsforfilter"
     },
@@ -2987,7 +3005,7 @@
       "file_type": "code",
       "source_file": "app.js",
       "source_location": "L1181",
-      "community": 18,
+      "community": 21,
       "norm_label": "openanimal()",
       "id": "science_animal_app_openanimal"
     },
@@ -2996,7 +3014,7 @@
       "file_type": "code",
       "source_file": "app.js",
       "source_location": "L1195",
-      "community": 7,
+      "community": 20,
       "norm_label": "closedetail()",
       "id": "science_animal_app_closedetail"
     },
@@ -3023,7 +3041,7 @@
       "file_type": "code",
       "source_file": "app.js",
       "source_location": "L1289",
-      "community": 16,
+      "community": 23,
       "norm_label": "renderquickfacts()",
       "id": "science_animal_app_renderquickfacts"
     },
@@ -3032,7 +3050,7 @@
       "file_type": "code",
       "source_file": "app.js",
       "source_location": "L1302",
-      "community": 16,
+      "community": 23,
       "norm_label": "renderobservationsummary()",
       "id": "science_animal_app_renderobservationsummary"
     },
@@ -3050,7 +3068,7 @@
       "file_type": "code",
       "source_file": "app.js",
       "source_location": "L1321",
-      "community": 7,
+      "community": 26,
       "norm_label": "updatequizstartgate()",
       "id": "science_animal_app_updatequizstartgate"
     },
@@ -3077,7 +3095,7 @@
       "file_type": "code",
       "source_file": "app.js",
       "source_location": "L1383",
-      "community": 8,
+      "community": 5,
       "norm_label": "hydratequestiontoolconfig()",
       "id": "science_animal_app_hydratequestiontoolconfig"
     },
@@ -3086,7 +3104,7 @@
       "file_type": "code",
       "source_file": "app.js",
       "source_location": "L1402",
-      "community": 1,
+      "community": 14,
       "norm_label": "applyquestiontoolmode()",
       "id": "science_animal_app_applyquestiontoolmode"
     },
@@ -3095,7 +3113,7 @@
       "file_type": "code",
       "source_file": "app.js",
       "source_location": "L1409",
-      "community": 1,
+      "community": 14,
       "norm_label": "canopenquestionsettings()",
       "id": "science_animal_app_canopenquestionsettings"
     },
@@ -3104,7 +3122,7 @@
       "file_type": "code",
       "source_file": "app.js",
       "source_location": "L1416",
-      "community": 8,
+      "community": 5,
       "norm_label": "issharedstudentview()",
       "id": "science_animal_app_issharedstudentview"
     },
@@ -3113,7 +3131,7 @@
       "file_type": "code",
       "source_file": "app.js",
       "source_location": "L1421",
-      "community": 1,
+      "community": 14,
       "norm_label": "opensettings()",
       "id": "science_animal_app_opensettings"
     },
@@ -3122,7 +3140,7 @@
       "file_type": "code",
       "source_file": "app.js",
       "source_location": "L1433",
-      "community": 7,
+      "community": 26,
       "norm_label": "closesettings()",
       "id": "science_animal_app_closesettings"
     },
@@ -3131,7 +3149,7 @@
       "file_type": "code",
       "source_file": "app.js",
       "source_location": "L1442",
-      "community": 1,
+      "community": 14,
       "norm_label": "hasseensettingsmodal()",
       "id": "science_animal_app_hasseensettingsmodal"
     },
@@ -3140,7 +3158,7 @@
       "file_type": "code",
       "source_file": "app.js",
       "source_location": "L1450",
-      "community": 7,
+      "community": 26,
       "norm_label": "marksettingsmodalseen()",
       "id": "science_animal_app_marksettingsmodalseen"
     },
@@ -3149,7 +3167,7 @@
       "file_type": "code",
       "source_file": "app.js",
       "source_location": "L1454",
-      "community": 8,
+      "community": 5,
       "norm_label": "savequestionsettings()",
       "id": "science_animal_app_savequestionsettings"
     },
@@ -3158,7 +3176,7 @@
       "file_type": "code",
       "source_file": "app.js",
       "source_location": "L1478",
-      "community": 8,
+      "community": 5,
       "norm_label": "clearquestionsettings()",
       "id": "science_animal_app_clearquestionsettings"
     },
@@ -3167,7 +3185,7 @@
       "file_type": "code",
       "source_file": "app.js",
       "source_location": "L1495",
-      "community": 8,
+      "community": 5,
       "norm_label": "rendersharelinkpanel()",
       "id": "science_animal_app_rendersharelinkpanel"
     },
@@ -3176,7 +3194,7 @@
       "file_type": "code",
       "source_file": "app.js",
       "source_location": "L1509",
-      "community": 8,
+      "community": 5,
       "norm_label": "updatequestionchoicebuttons()",
       "id": "science_animal_app_updatequestionchoicebuttons"
     },
@@ -3185,7 +3203,7 @@
       "file_type": "code",
       "source_file": "app.js",
       "source_location": "L1521",
-      "community": 8,
+      "community": 5,
       "norm_label": "getsharelinkcopy()",
       "id": "science_animal_app_getsharelinkcopy"
     },
@@ -3194,7 +3212,7 @@
       "file_type": "code",
       "source_file": "app.js",
       "source_location": "L1556",
-      "community": 2,
+      "community": 1,
       "norm_label": "copysharelink()",
       "id": "science_animal_app_copysharelink"
     },
@@ -3203,7 +3221,7 @@
       "file_type": "code",
       "source_file": "app.js",
       "source_location": "L1571",
-      "community": 8,
+      "community": 5,
       "norm_label": "renderqrcode()",
       "id": "science_animal_app_renderqrcode"
     },
@@ -3212,7 +3230,7 @@
       "file_type": "code",
       "source_file": "app.js",
       "source_location": "L1590",
-      "community": 2,
+      "community": 1,
       "norm_label": "downloadqrimage()",
       "id": "science_animal_app_downloadqrimage"
     },
@@ -3221,7 +3239,7 @@
       "file_type": "code",
       "source_file": "app.js",
       "source_location": "L1606",
-      "community": 8,
+      "community": 5,
       "norm_label": "buildsharelink()",
       "id": "science_animal_app_buildsharelink"
     },
@@ -3230,7 +3248,7 @@
       "file_type": "code",
       "source_file": "app.js",
       "source_location": "L1623",
-      "community": 8,
+      "community": 5,
       "norm_label": "getsharelinktargetpath()",
       "id": "science_animal_app_getsharelinktargetpath"
     },
@@ -3239,7 +3257,7 @@
       "file_type": "code",
       "source_file": "app.js",
       "source_location": "L1628",
-      "community": 8,
+      "community": 5,
       "norm_label": "shouldincludemissionselectionsinsharelink()",
       "id": "science_animal_app_shouldincludemissionselectionsinsharelink"
     },
@@ -3248,7 +3266,7 @@
       "file_type": "code",
       "source_file": "app.js",
       "source_location": "L1632",
-      "community": 8,
+      "community": 5,
       "norm_label": "hascustommissionselections()",
       "id": "science_animal_app_hascustommissionselections"
     },
@@ -3257,7 +3275,7 @@
       "file_type": "code",
       "source_file": "app.js",
       "source_location": "L1640",
-      "community": 8,
+      "community": 5,
       "norm_label": "getquestionurlfrompageurl()",
       "id": "science_animal_app_getquestionurlfrompageurl"
     },
@@ -3266,7 +3284,7 @@
       "file_type": "code",
       "source_file": "app.js",
       "source_location": "L1645",
-      "community": 8,
+      "community": 5,
       "norm_label": "readquestiontoolurl()",
       "id": "science_animal_app_readquestiontoolurl"
     },
@@ -3275,7 +3293,7 @@
       "file_type": "code",
       "source_file": "app.js",
       "source_location": "L1653",
-      "community": 8,
+      "community": 5,
       "norm_label": "savequestiontoolurl()",
       "id": "science_animal_app_savequestiontoolurl"
     },
@@ -3311,7 +3329,7 @@
       "file_type": "code",
       "source_file": "app.js",
       "source_location": "L1700",
-      "community": 16,
+      "community": 23,
       "norm_label": "startquiz()",
       "id": "science_animal_app_startquiz"
     },
@@ -3320,7 +3338,7 @@
       "file_type": "code",
       "source_file": "app.js",
       "source_location": "L1713",
-      "community": 13,
+      "community": 7,
       "norm_label": "buildquestions()",
       "id": "science_animal_app_buildquestions"
     },
@@ -3329,7 +3347,7 @@
       "file_type": "code",
       "source_file": "app.js",
       "source_location": "L1801",
-      "community": 13,
+      "community": 7,
       "norm_label": "makehabitatoptions()",
       "id": "science_animal_app_makehabitatoptions"
     },
@@ -3338,7 +3356,7 @@
       "file_type": "code",
       "source_file": "app.js",
       "source_location": "L1806",
-      "community": 13,
+      "community": 7,
       "norm_label": "gethabitatdistractors()",
       "id": "science_animal_app_gethabitatdistractors"
     },
@@ -3347,7 +3365,7 @@
       "file_type": "code",
       "source_file": "app.js",
       "source_location": "L1849",
-      "community": 13,
+      "community": 7,
       "norm_label": "getmovementkey()",
       "id": "science_animal_app_getmovementkey"
     },
@@ -3356,7 +3374,7 @@
       "file_type": "code",
       "source_file": "app.js",
       "source_location": "L1864",
-      "community": 13,
+      "community": 7,
       "norm_label": "makemovementoptions()",
       "id": "science_animal_app_makemovementoptions"
     },
@@ -3365,7 +3383,7 @@
       "file_type": "code",
       "source_file": "app.js",
       "source_location": "L1891",
-      "community": 13,
+      "community": 7,
       "norm_label": "buildspecialenvironmentquestion()",
       "id": "science_animal_app_buildspecialenvironmentquestion"
     },
@@ -3374,7 +3392,7 @@
       "file_type": "code",
       "source_file": "app.js",
       "source_location": "L1901",
-      "community": 13,
+      "community": 7,
       "norm_label": "makespecialenvironmentoptions()",
       "id": "science_animal_app_makespecialenvironmentoptions"
     },
@@ -3383,7 +3401,7 @@
       "file_type": "code",
       "source_file": "app.js",
       "source_location": "L1908",
-      "community": 13,
+      "community": 7,
       "norm_label": "builddistinctivefeaturequestion()",
       "id": "science_animal_app_builddistinctivefeaturequestion"
     },
@@ -3392,7 +3410,7 @@
       "file_type": "code",
       "source_file": "app.js",
       "source_location": "L1918",
-      "community": 13,
+      "community": 7,
       "norm_label": "makedistinctivefeatureoptions()",
       "id": "science_animal_app_makedistinctivefeatureoptions"
     },
@@ -3401,7 +3419,7 @@
       "file_type": "code",
       "source_file": "app.js",
       "source_location": "L1939",
-      "community": 23,
+      "community": 7,
       "norm_label": "makedistinctivefeatureoption()",
       "id": "science_animal_app_makedistinctivefeatureoption"
     },
@@ -3410,7 +3428,7 @@
       "file_type": "code",
       "source_file": "app.js",
       "source_location": "L1943",
-      "community": 23,
+      "community": 7,
       "norm_label": "getfeaturedistractorscore()",
       "id": "science_animal_app_getfeaturedistractorscore"
     },
@@ -3419,7 +3437,7 @@
       "file_type": "code",
       "source_file": "app.js",
       "source_location": "L1963",
-      "community": 23,
+      "community": 7,
       "norm_label": "getfeaturecomparisontext()",
       "id": "science_animal_app_getfeaturecomparisontext"
     },
@@ -3428,7 +3446,7 @@
       "file_type": "code",
       "source_file": "app.js",
       "source_location": "L1967",
-      "community": 23,
+      "community": 7,
       "norm_label": "getmeaningfultokenoverlap()",
       "id": "science_animal_app_getmeaningfultokenoverlap"
     },
@@ -3437,7 +3455,7 @@
       "file_type": "code",
       "source_file": "app.js",
       "source_location": "L1979",
-      "community": 23,
+      "community": 7,
       "norm_label": "getmeaningfultokens()",
       "id": "science_animal_app_getmeaningfultokens"
     },
@@ -3446,7 +3464,7 @@
       "file_type": "code",
       "source_file": "app.js",
       "source_location": "L1988",
-      "community": 13,
+      "community": 7,
       "norm_label": "makeoptions()",
       "id": "science_animal_app_makeoptions"
     },
@@ -3455,7 +3473,7 @@
       "file_type": "code",
       "source_file": "app.js",
       "source_location": "L1998",
-      "community": 13,
+      "community": 7,
       "norm_label": "subjectparticle()",
       "id": "science_animal_app_subjectparticle"
     },
@@ -3464,7 +3482,7 @@
       "file_type": "code",
       "source_file": "app.js",
       "source_location": "L2002",
-      "community": 13,
+      "community": 7,
       "norm_label": "topicparticle()",
       "id": "science_animal_app_topicparticle"
     },
@@ -3473,7 +3491,7 @@
       "file_type": "code",
       "source_file": "app.js",
       "source_location": "L2006",
-      "community": 13,
+      "community": 7,
       "norm_label": "hasfinalconsonant()",
       "id": "science_animal_app_hasfinalconsonant"
     },
@@ -3482,7 +3500,7 @@
       "file_type": "code",
       "source_file": "app.js",
       "source_location": "L2012",
-      "community": 16,
+      "community": 23,
       "norm_label": "renderquiz()",
       "id": "science_animal_app_renderquiz"
     },
@@ -3491,7 +3509,7 @@
       "file_type": "code",
       "source_file": "app.js",
       "source_location": "L2054",
-      "community": 16,
+      "community": 23,
       "norm_label": "renderfeedback()",
       "id": "science_animal_app_renderfeedback"
     },
@@ -3500,7 +3518,7 @@
       "file_type": "code",
       "source_file": "app.js",
       "source_location": "L2067",
-      "community": 16,
+      "community": 23,
       "norm_label": "answerquestion()",
       "id": "science_animal_app_answerquestion"
     },
@@ -3509,7 +3527,7 @@
       "file_type": "code",
       "source_file": "app.js",
       "source_location": "L2088",
-      "community": 16,
+      "community": 23,
       "norm_label": "resumequiz()",
       "id": "science_animal_app_resumequiz"
     },
@@ -3527,7 +3545,7 @@
       "file_type": "code",
       "source_file": "app.js",
       "source_location": "L2106",
-      "community": 16,
+      "community": 23,
       "norm_label": "showhintandscroll()",
       "id": "science_animal_app_showhintandscroll"
     },
@@ -3536,7 +3554,7 @@
       "file_type": "code",
       "source_file": "app.js",
       "source_location": "L2120",
-      "community": 16,
+      "community": 23,
       "norm_label": "clearhinthighlight()",
       "id": "science_animal_app_clearhinthighlight"
     },
@@ -3545,7 +3563,7 @@
       "file_type": "code",
       "source_file": "app.js",
       "source_location": "L2126",
-      "community": 16,
+      "community": 23,
       "norm_label": "nextquestion()",
       "id": "science_animal_app_nextquestion"
     },
@@ -3554,7 +3572,7 @@
       "file_type": "code",
       "source_file": "app.js",
       "source_location": "L2138",
-      "community": 16,
+      "community": 23,
       "norm_label": "showcatchanimation()",
       "id": "science_animal_app_showcatchanimation"
     },
@@ -3563,7 +3581,7 @@
       "file_type": "code",
       "source_file": "app.js",
       "source_location": "L2231",
-      "community": 16,
+      "community": 23,
       "norm_label": "finishquiz()",
       "id": "science_animal_app_finishquiz"
     },
@@ -3572,7 +3590,7 @@
       "file_type": "code",
       "source_file": "app.js",
       "source_location": "L2261",
-      "community": 1,
+      "community": 14,
       "norm_label": "startnewround()",
       "id": "science_animal_app_startnewround"
     },
@@ -3581,7 +3599,7 @@
       "file_type": "code",
       "source_file": "app.js",
       "source_location": "L2277",
-      "community": 1,
+      "community": 14,
       "norm_label": "updategamehints()",
       "id": "science_animal_app_updategamehints"
     },
@@ -3590,7 +3608,7 @@
       "file_type": "code",
       "source_file": "app.js",
       "source_location": "L2283",
-      "community": 5,
+      "community": 3,
       "norm_label": "rendergameboard()",
       "id": "science_animal_app_rendergameboard"
     },
@@ -3599,7 +3617,7 @@
       "file_type": "code",
       "source_file": "app.js",
       "source_location": "L2306",
-      "community": 18,
+      "community": 21,
       "norm_label": "creategametoken()",
       "id": "science_animal_app_creategametoken"
     },
@@ -3608,7 +3626,7 @@
       "file_type": "code",
       "source_file": "app.js",
       "source_location": "L2340",
-      "community": 5,
+      "community": 3,
       "norm_label": "movegametoken()",
       "id": "science_animal_app_movegametoken"
     },
@@ -3617,7 +3635,7 @@
       "file_type": "code",
       "source_file": "app.js",
       "source_location": "L2350",
-      "community": 5,
+      "community": 3,
       "norm_label": "checkgame()",
       "id": "science_animal_app_checkgame"
     },
@@ -3626,7 +3644,7 @@
       "file_type": "code",
       "source_file": "app.js",
       "source_location": "L2376",
-      "community": 18,
+      "community": 21,
       "norm_label": "isgameplacementcorrect()",
       "id": "science_animal_app_isgameplacementcorrect"
     },
@@ -3635,7 +3653,7 @@
       "file_type": "code",
       "source_file": "app.js",
       "source_location": "L2382",
-      "community": 5,
+      "community": 3,
       "norm_label": "updategamescore()",
       "id": "science_animal_app_updategamescore"
     },
@@ -3644,7 +3662,7 @@
       "file_type": "code",
       "source_file": "app.js",
       "source_location": "L2388",
-      "community": 18,
+      "community": 21,
       "norm_label": "setimage()",
       "id": "science_animal_app_setimage"
     },
@@ -3653,7 +3671,7 @@
       "file_type": "code",
       "source_file": "app.js",
       "source_location": "L2409",
-      "community": 18,
+      "community": 21,
       "norm_label": "setstandaloneimage()",
       "id": "science_animal_app_setstandaloneimage"
     },
@@ -3662,7 +3680,7 @@
       "file_type": "code",
       "source_file": "app.js",
       "source_location": "L2423",
-      "community": 18,
+      "community": 21,
       "norm_label": "applyimagefallback()",
       "id": "science_animal_app_applyimagefallback"
     },
@@ -3671,7 +3689,7 @@
       "file_type": "code",
       "source_file": "app.js",
       "source_location": "L2437",
-      "community": 2,
+      "community": 1,
       "norm_label": "applyresolvedimage()",
       "id": "science_animal_app_applyresolvedimage"
     },
@@ -3680,7 +3698,7 @@
       "file_type": "code",
       "source_file": "app.js",
       "source_location": "L2446",
-      "community": 18,
+      "community": 21,
       "norm_label": "setimageplaceholder()",
       "id": "science_animal_app_setimageplaceholder"
     },
@@ -3689,7 +3707,7 @@
       "file_type": "code",
       "source_file": "app.js",
       "source_location": "L2452",
-      "community": 18,
+      "community": 21,
       "norm_label": "createimageplaceholder()",
       "id": "science_animal_app_createimageplaceholder"
     },
@@ -3698,7 +3716,7 @@
       "file_type": "code",
       "source_file": "app.js",
       "source_location": "L2462",
-      "community": 18,
+      "community": 21,
       "norm_label": "escapesvgtext()",
       "id": "science_animal_app_escapesvgtext"
     },
@@ -3707,7 +3725,7 @@
       "file_type": "code",
       "source_file": "app.js",
       "source_location": "L2471",
-      "community": 18,
+      "community": 21,
       "norm_label": "getimagesources()",
       "id": "science_animal_app_getimagesources"
     },
@@ -3716,7 +3734,7 @@
       "file_type": "code",
       "source_file": "app.js",
       "source_location": "L2494",
-      "community": 18,
+      "community": 21,
       "norm_label": "getlocalimagepath()",
       "id": "science_animal_app_getlocalimagepath"
     },
@@ -3725,7 +3743,7 @@
       "file_type": "code",
       "source_file": "app.js",
       "source_location": "L2501",
-      "community": 18,
+      "community": 21,
       "norm_label": "dedupesources()",
       "id": "science_animal_app_dedupesources"
     },
@@ -3734,7 +3752,7 @@
       "file_type": "code",
       "source_file": "app.js",
       "source_location": "L2505",
-      "community": 1,
+      "community": 17,
       "norm_label": "updateprogress()",
       "id": "science_animal_app_updateprogress"
     },
@@ -3743,7 +3761,7 @@
       "file_type": "code",
       "source_file": "app.js",
       "source_location": "L2537",
-      "community": 1,
+      "community": 17,
       "norm_label": "getcompletedregioncount()",
       "id": "science_animal_app_getcompletedregioncount"
     },
@@ -3752,7 +3770,7 @@
       "file_type": "code",
       "source_file": "app.js",
       "source_location": "L2544",
-      "community": 1,
+      "community": 17,
       "norm_label": "rendercompletionstars()",
       "id": "science_animal_app_rendercompletionstars"
     },
@@ -3761,7 +3779,7 @@
       "file_type": "code",
       "source_file": "app.js",
       "source_location": "L2552",
-      "community": 1,
+      "community": 17,
       "norm_label": "returntocurrentmission()",
       "id": "science_animal_app_returntocurrentmission"
     },
@@ -3770,7 +3788,7 @@
       "file_type": "code",
       "source_file": "app.js",
       "source_location": "L2556",
-      "community": 1,
+      "community": 17,
       "norm_label": "getnextmissionfilter()",
       "id": "science_animal_app_getnextmissionfilter"
     },
@@ -3779,7 +3797,7 @@
       "file_type": "code",
       "source_file": "app.js",
       "source_location": "L2564",
-      "community": 1,
+      "community": 13,
       "norm_label": "getstagestatus()",
       "id": "science_animal_app_getstagestatus"
     },
@@ -3788,7 +3806,7 @@
       "file_type": "code",
       "source_file": "app.js",
       "source_location": "L2584",
-      "community": 1,
+      "community": 13,
       "norm_label": "getfilterprogress()",
       "id": "science_animal_app_getfilterprogress"
     },
@@ -3797,7 +3815,7 @@
       "file_type": "code",
       "source_file": "app.js",
       "source_location": "L2590",
-      "community": 1,
+      "community": 13,
       "norm_label": "getcompletedmilestones()",
       "id": "science_animal_app_getcompletedmilestones"
     },
@@ -3806,7 +3824,7 @@
       "file_type": "code",
       "source_file": "app.js",
       "source_location": "L2605",
-      "community": 1,
+      "community": 13,
       "norm_label": "getcollectedprogramcount()",
       "id": "science_animal_app_getcollectedprogramcount"
     },
@@ -3815,7 +3833,7 @@
       "file_type": "code",
       "source_file": "app.js",
       "source_location": "L2609",
-      "community": 1,
+      "community": 13,
       "norm_label": "shownewmilestonerewards()",
       "id": "science_animal_app_shownewmilestonerewards"
     },
@@ -3824,7 +3842,7 @@
       "file_type": "code",
       "source_file": "app.js",
       "source_location": "L2622",
-      "community": 1,
+      "community": 13,
       "norm_label": "showreward()",
       "id": "science_animal_app_showreward"
     },
@@ -3833,7 +3851,7 @@
       "file_type": "code",
       "source_file": "app.js",
       "source_location": "L2642",
-      "community": 1,
+      "community": 13,
       "norm_label": "renderregionreward()",
       "id": "science_animal_app_renderregionreward"
     },
@@ -3842,7 +3860,7 @@
       "file_type": "code",
       "source_file": "app.js",
       "source_location": "L2663",
-      "community": 1,
+      "community": 13,
       "norm_label": "rendermasterreward()",
       "id": "science_animal_app_rendermasterreward"
     },
@@ -3851,7 +3869,7 @@
       "file_type": "code",
       "source_file": "app.js",
       "source_location": "L2684",
-      "community": 1,
+      "community": 17,
       "norm_label": "closereward()",
       "id": "science_animal_app_closereward"
     },
@@ -3860,7 +3878,7 @@
       "file_type": "code",
       "source_file": "app.js",
       "source_location": "L2690",
-      "community": 1,
+      "community": 17,
       "norm_label": "gotonextrewardregion()",
       "id": "science_animal_app_gotonextrewardregion"
     },
@@ -3869,7 +3887,7 @@
       "file_type": "code",
       "source_file": "app.js",
       "source_location": "L2705",
-      "community": 1,
+      "community": 17,
       "norm_label": "resetprogressfromreward()",
       "id": "science_animal_app_resetprogressfromreward"
     },
@@ -3878,7 +3896,7 @@
       "file_type": "code",
       "source_file": "app.js",
       "source_location": "L2710",
-      "community": 1,
+      "community": 13,
       "norm_label": "savecompletedmilestones()",
       "id": "science_animal_app_savecompletedmilestones"
     },
@@ -3887,7 +3905,7 @@
       "file_type": "code",
       "source_file": "app.js",
       "source_location": "L2714",
-      "community": 1,
+      "community": 17,
       "norm_label": "resetprogress()",
       "id": "science_animal_app_resetprogress"
     },
@@ -3905,7 +3923,7 @@
       "file_type": "code",
       "source_file": "app.js",
       "source_location": "L2734",
-      "community": 7,
+      "community": 26,
       "norm_label": "saveobservationready()",
       "id": "science_animal_app_saveobservationready"
     },
@@ -3914,7 +3932,7 @@
       "file_type": "code",
       "source_file": "app.js",
       "source_location": "L2740",
-      "community": 2,
+      "community": 1,
       "norm_label": "readcollected()",
       "id": "science_animal_app_readcollected"
     },
@@ -3923,7 +3941,7 @@
       "file_type": "code",
       "source_file": "app.js",
       "source_location": "L2746",
-      "community": 7,
+      "community": 26,
       "norm_label": "savecollected()",
       "id": "science_animal_app_savecollected"
     },
@@ -3932,7 +3950,7 @@
       "file_type": "code",
       "source_file": "app.js",
       "source_location": "L2750",
-      "community": 2,
+      "community": 1,
       "norm_label": "readstoredids()",
       "id": "science_animal_app_readstoredids"
     },
@@ -3941,7 +3959,7 @@
       "file_type": "code",
       "source_file": "app.js",
       "source_location": "L2760",
-      "community": 1,
+      "community": 14,
       "norm_label": "readboolean()",
       "id": "science_animal_app_readboolean"
     },
@@ -3950,7 +3968,7 @@
       "file_type": "code",
       "source_file": "app.js",
       "source_location": "L2770",
-      "community": 7,
+      "community": 26,
       "norm_label": "safesetstorage()",
       "id": "science_animal_app_safesetstorage"
     },
@@ -3959,7 +3977,7 @@
       "file_type": "code",
       "source_file": "app.js",
       "source_location": "L2780",
-      "community": 7,
+      "community": 26,
       "norm_label": "saferemovestorage()",
       "id": "science_animal_app_saferemovestorage"
     },
@@ -3968,7 +3986,7 @@
       "file_type": "code",
       "source_file": "app.js",
       "source_location": "L2790",
-      "community": 7,
+      "community": 26,
       "norm_label": "showtoast()",
       "id": "science_animal_app_showtoast"
     },
@@ -3977,7 +3995,7 @@
       "file_type": "code",
       "source_file": "app.js",
       "source_location": "L2803",
-      "community": 1,
+      "community": 14,
       "norm_label": "debounce()",
       "id": "science_animal_app_debounce"
     },
@@ -3986,7 +4004,7 @@
       "file_type": "code",
       "source_file": "app.js",
       "source_location": "L2811",
-      "community": 7,
+      "community": 26,
       "norm_label": "togglesound()",
       "id": "science_animal_app_togglesound"
     },
@@ -3995,7 +4013,7 @@
       "file_type": "code",
       "source_file": "app.js",
       "source_location": "L2818",
-      "community": 7,
+      "community": 26,
       "norm_label": "updatesoundtoggle()",
       "id": "science_animal_app_updatesoundtoggle"
     },
@@ -4004,7 +4022,7 @@
       "file_type": "code",
       "source_file": "app.js",
       "source_location": "L2826",
-      "community": 5,
+      "community": 3,
       "norm_label": "ensureaudiocontext()",
       "id": "science_animal_app_ensureaudiocontext"
     },
@@ -4013,7 +4031,7 @@
       "file_type": "code",
       "source_file": "app.js",
       "source_location": "L2837",
-      "community": 5,
+      "community": 3,
       "norm_label": "playsound()",
       "id": "science_animal_app_playsound"
     },
@@ -4022,7 +4040,7 @@
       "file_type": "code",
       "source_file": "app.js",
       "source_location": "L2867",
-      "community": 13,
+      "community": 7,
       "norm_label": "shuffle()",
       "id": "science_animal_app_shuffle"
     },
@@ -4031,7 +4049,7 @@
       "file_type": "code",
       "source_file": "app.js",
       "source_location": "L2876",
-      "community": 2,
+      "community": 1,
       "norm_label": "wikiurl()",
       "id": "science_animal_app_wikiurl"
     },
@@ -4040,7 +4058,7 @@
       "file_type": "code",
       "source_file": "app.js",
       "source_location": "L2880",
-      "community": 8,
+      "community": 5,
       "norm_label": "normalizeappconfig()",
       "id": "science_animal_app_normalizeappconfig"
     },
@@ -4049,7 +4067,7 @@
       "file_type": "code",
       "source_file": "app.js",
       "source_location": "L2904",
-      "community": 8,
+      "community": 5,
       "norm_label": "normalizehttpurl()",
       "id": "science_animal_app_normalizehttpurl"
     },
@@ -4058,7 +4076,7 @@
       "file_type": "code",
       "source_file": "app.js",
       "source_location": "L2916",
-      "community": 16,
+      "community": 15,
       "norm_label": "escapehtml()",
       "id": "science_animal_app_escapehtml"
     },
@@ -4076,7 +4094,7 @@
       "file_type": "code",
       "source_file": "app.js",
       "source_location": "L2932",
-      "community": 7,
+      "community": 20,
       "norm_label": "openguidemodal()",
       "id": "science_animal_app_openguidemodal"
     },
@@ -4085,7 +4103,7 @@
       "file_type": "code",
       "source_file": "app.js",
       "source_location": "L2936",
-      "community": 7,
+      "community": 20,
       "norm_label": "closeguidemodal()",
       "id": "science_animal_app_closeguidemodal"
     },
@@ -4094,7 +4112,7 @@
       "file_type": "code",
       "source_file": "app.js",
       "source_location": "L2940",
-      "community": 7,
+      "community": 20,
       "norm_label": "openqrexpand()",
       "id": "science_animal_app_openqrexpand"
     },
@@ -4103,7 +4121,7 @@
       "file_type": "code",
       "source_file": "app.js",
       "source_location": "L2948",
-      "community": 7,
+      "community": 20,
       "norm_label": "closeqrexpand()",
       "id": "science_animal_app_closeqrexpand"
     },
@@ -4112,7 +4130,7 @@
       "file_type": "code",
       "source_file": "app.js",
       "source_location": "L2952",
-      "community": 2,
+      "community": 1,
       "norm_label": "downloadqrexpandimage()",
       "id": "science_animal_app_downloadqrexpandimage"
     },
@@ -4121,7 +4139,7 @@
       "file_type": "code",
       "source_file": "app.js",
       "source_location": "L2968",
-      "community": 2,
+      "community": 1,
       "norm_label": "confirmnavigatetoquestion()",
       "id": "science_animal_app_confirmnavigatetoquestion"
     },
@@ -4130,7 +4148,7 @@
       "file_type": "code",
       "source_file": "app.js",
       "source_location": "L2976",
-      "community": 2,
+      "community": 1,
       "norm_label": "closeconfirmpopup()",
       "id": "science_animal_app_closeconfirmpopup"
     },
@@ -4139,7 +4157,7 @@
       "file_type": "code",
       "source_file": "app.js",
       "source_location": "L2981",
-      "community": 8,
+      "community": 5,
       "norm_label": "opensourceconfirm()",
       "id": "science_animal_app_opensourceconfirm"
     },
@@ -4148,7 +4166,7 @@
       "file_type": "code",
       "source_file": "app.js",
       "source_location": "L2992",
-      "community": 2,
+      "community": 1,
       "norm_label": "confirmnavigatetosource()",
       "id": "science_animal_app_confirmnavigatetosource"
     },
@@ -4157,7 +4175,7 @@
       "file_type": "code",
       "source_file": "app.js",
       "source_location": "L3000",
-      "community": 2,
+      "community": 1,
       "norm_label": "closesourceconfirm()",
       "id": "science_animal_app_closesourceconfirm"
     },
@@ -4166,7 +4184,7 @@
       "file_type": "code",
       "source_file": "gamified-animal-encyclopedia-webapp/vite.config.ts",
       "source_location": "L1",
-      "community": 32,
+      "community": 36,
       "norm_label": "vite.config.ts",
       "id": "gamified_animal_encyclopedia_webapp_vite_config_ts"
     },
@@ -4175,7 +4193,7 @@
       "file_type": "code",
       "source_file": "gamified-animal-encyclopedia-webapp/src/App.tsx",
       "source_location": "L1",
-      "community": 5,
+      "community": 3,
       "norm_label": "app.tsx",
       "id": "gamified_animal_encyclopedia_webapp_src_app_tsx"
     },
@@ -4184,7 +4202,7 @@
       "file_type": "code",
       "source_file": "gamified-animal-encyclopedia-webapp/src/App.tsx",
       "source_location": "L394",
-      "community": 5,
+      "community": 3,
       "norm_label": "shuffle()",
       "id": "src_app_shuffle"
     },
@@ -4193,7 +4211,7 @@
       "file_type": "code",
       "source_file": "gamified-animal-encyclopedia-webapp/src/App.tsx",
       "source_location": "L405",
-      "community": 5,
+      "community": 3,
       "norm_label": "pickoptions()",
       "id": "src_app_pickoptions"
     },
@@ -4202,7 +4220,7 @@
       "file_type": "code",
       "source_file": "gamified-animal-encyclopedia-webapp/src/App.tsx",
       "source_location": "L410",
-      "community": 5,
+      "community": 3,
       "norm_label": "loadsave()",
       "id": "src_app_loadsave"
     },
@@ -4211,7 +4229,7 @@
       "file_type": "code",
       "source_file": "gamified-animal-encyclopedia-webapp/src/App.tsx",
       "source_location": "L458",
-      "community": 5,
+      "community": 3,
       "norm_label": "createquizquestions()",
       "id": "src_app_createquizquestions"
     },
@@ -4220,7 +4238,7 @@
       "file_type": "code",
       "source_file": "gamified-animal-encyclopedia-webapp/src/App.tsx",
       "source_location": "L495",
-      "community": 5,
+      "community": 3,
       "norm_label": "createinitialboards()",
       "id": "src_app_createinitialboards"
     },
@@ -4229,7 +4247,7 @@
       "file_type": "code",
       "source_file": "gamified-animal-encyclopedia-webapp/src/App.tsx",
       "source_location": "L504",
-      "community": 5,
+      "community": 3,
       "norm_label": "buildpromptcontent()",
       "id": "src_app_buildpromptcontent"
     },
@@ -4238,7 +4256,7 @@
       "file_type": "code",
       "source_file": "gamified-animal-encyclopedia-webapp/src/App.tsx",
       "source_location": "L733",
-      "community": 5,
+      "community": 3,
       "norm_label": "closequiz()",
       "id": "src_app_closequiz"
     },
@@ -4247,7 +4265,7 @@
       "file_type": "code",
       "source_file": "gamified-animal-encyclopedia-webapp/src/App.tsx",
       "source_location": "L741",
-      "community": 5,
+      "community": 3,
       "norm_label": "openquiz()",
       "id": "src_app_openquiz"
     },
@@ -4256,7 +4274,7 @@
       "file_type": "code",
       "source_file": "gamified-animal-encyclopedia-webapp/src/App.tsx",
       "source_location": "L750",
-      "community": 5,
+      "community": 3,
       "norm_label": "finishquiz()",
       "id": "src_app_finishquiz"
     },
@@ -4265,7 +4283,7 @@
       "file_type": "code",
       "source_file": "gamified-animal-encyclopedia-webapp/src/App.tsx",
       "source_location": "L763",
-      "community": 5,
+      "community": 3,
       "norm_label": "handlequizanswer()",
       "id": "src_app_handlequizanswer"
     },
@@ -4274,7 +4292,7 @@
       "file_type": "code",
       "source_file": "gamified-animal-encyclopedia-webapp/src/App.tsx",
       "source_location": "L795",
-      "community": 5,
+      "community": 3,
       "norm_label": "handleselectregion()",
       "id": "src_app_handleselectregion"
     },
@@ -4283,7 +4301,7 @@
       "file_type": "code",
       "source_file": "gamified-animal-encyclopedia-webapp/src/App.tsx",
       "source_location": "L809",
-      "community": 5,
+      "community": 3,
       "norm_label": "handleselectanimal()",
       "id": "src_app_handleselectanimal"
     },
@@ -4292,7 +4310,7 @@
       "file_type": "code",
       "source_file": "gamified-animal-encyclopedia-webapp/src/App.tsx",
       "source_location": "L814",
-      "community": 5,
+      "community": 3,
       "norm_label": "handleclaimreward()",
       "id": "src_app_handleclaimreward"
     },
@@ -4301,7 +4319,7 @@
       "file_type": "code",
       "source_file": "gamified-animal-encyclopedia-webapp/src/App.tsx",
       "source_location": "L833",
-      "community": 5,
+      "community": 3,
       "norm_label": "handlecloseonboarding()",
       "id": "src_app_handlecloseonboarding"
     },
@@ -4310,7 +4328,7 @@
       "file_type": "code",
       "source_file": "gamified-animal-encyclopedia-webapp/src/App.tsx",
       "source_location": "L840",
-      "community": 5,
+      "community": 3,
       "norm_label": "handlereset()",
       "id": "src_app_handlereset"
     },
@@ -4319,7 +4337,7 @@
       "file_type": "code",
       "source_file": "gamified-animal-encyclopedia-webapp/src/App.tsx",
       "source_location": "L875",
-      "community": 5,
+      "community": 3,
       "norm_label": "moveclassificationcard()",
       "id": "src_app_moveclassificationcard"
     },
@@ -4328,7 +4346,7 @@
       "file_type": "code",
       "source_file": "gamified-animal-encyclopedia-webapp/src/App.tsx",
       "source_location": "L885",
-      "community": 5,
+      "community": 3,
       "norm_label": "handleclassificationdrop()",
       "id": "src_app_handleclassificationdrop"
     },
@@ -4337,7 +4355,7 @@
       "file_type": "code",
       "source_file": "gamified-animal-encyclopedia-webapp/src/App.tsx",
       "source_location": "L894",
-      "community": 5,
+      "community": 3,
       "norm_label": "handleclassificationcheck()",
       "id": "src_app_handleclassificationcheck"
     },
@@ -4346,7 +4364,7 @@
       "file_type": "code",
       "source_file": "gamified-animal-encyclopedia-webapp/src/App.tsx",
       "source_location": "L917",
-      "community": 5,
+      "community": 3,
       "norm_label": "handleresetclassification()",
       "id": "src_app_handleresetclassification"
     },
@@ -4355,7 +4373,7 @@
       "file_type": "code",
       "source_file": "gamified-animal-encyclopedia-webapp/src/App.tsx",
       "source_location": "L928",
-      "community": 5,
+      "community": 3,
       "norm_label": "completemastery()",
       "id": "src_app_completemastery"
     },
@@ -4364,7 +4382,7 @@
       "file_type": "code",
       "source_file": "gamified-animal-encyclopedia-webapp/src/main.tsx",
       "source_location": "L1",
-      "community": 33,
+      "community": 37,
       "norm_label": "main.tsx",
       "id": "gamified_animal_encyclopedia_webapp_src_main_tsx"
     },
@@ -4373,7 +4391,7 @@
       "file_type": "code",
       "source_file": "gamified-animal-encyclopedia-webapp/src/utils/cn.ts",
       "source_location": "L1",
-      "community": 5,
+      "community": 3,
       "norm_label": "cn.ts",
       "id": "gamified_animal_encyclopedia_webapp_src_utils_cn_ts"
     },
@@ -4382,7 +4400,7 @@
       "file_type": "code",
       "source_file": "gamified-animal-encyclopedia-webapp/src/utils/cn.ts",
       "source_location": "L4",
-      "community": 5,
+      "community": 3,
       "norm_label": "cn()",
       "id": "utils_cn_cn"
     },
@@ -4395,7 +4413,7 @@
       "captured_at": "2026-05-04T00:00:00Z",
       "author": null,
       "contributor": null,
-      "community": 26,
+      "community": 30,
       "norm_label": "main html entry point",
       "id": "index_html"
     },
@@ -4408,7 +4426,7 @@
       "captured_at": "2026-05-04T00:00:00Z",
       "author": null,
       "contributor": null,
-      "community": 26,
+      "community": 30,
       "norm_label": "no-question student version",
       "id": "no_question_html"
     },
@@ -4421,7 +4439,7 @@
       "captured_at": "2026-05-04T00:00:00Z",
       "author": null,
       "contributor": null,
-      "community": 26,
+      "community": 30,
       "norm_label": "image credits page",
       "id": "credits_html"
     },
@@ -4434,7 +4452,7 @@
       "captured_at": "2026-05-04T00:00:00Z",
       "author": null,
       "contributor": null,
-      "community": 26,
+      "community": 30,
       "norm_label": "react version entry point",
       "id": "gamified_animal_encyclopedia_webapp_index_html"
     },
@@ -4447,7 +4465,7 @@
       "captured_at": "2026-05-04T00:00:00Z",
       "author": null,
       "contributor": null,
-      "community": 9,
+      "community": 8,
       "norm_label": "p0 detailed roadmap",
       "id": "roadmap_p0_details_20260430_md"
     },
@@ -4460,7 +4478,7 @@
       "captured_at": "2026-05-04T00:00:00Z",
       "author": null,
       "contributor": null,
-      "community": 9,
+      "community": 8,
       "norm_label": "ui redesign v2 changes",
       "id": "ui_redesign_v2_changes_md"
     },
@@ -4473,7 +4491,7 @@
       "captured_at": "2026-05-04T00:00:00Z",
       "author": null,
       "contributor": null,
-      "community": 9,
+      "community": 8,
       "norm_label": "integrated development plan",
       "id": "\ub3d9\ubb3c\ub3c4\uac1054_\ud1b5\ud569_\uac1c\ubc1c\uacc4\ud68d\uc11c_md"
     },
@@ -4486,7 +4504,7 @@
       "captured_at": "2026-05-04T00:00:00Z",
       "author": null,
       "contributor": null,
-      "community": 9,
+      "community": 8,
       "norm_label": "game mobile ux draft",
       "id": "game_mobile_ux_draft_md"
     },
@@ -4499,7 +4517,7 @@
       "captured_at": "2026-05-04T00:00:00Z",
       "author": null,
       "contributor": null,
-      "community": 9,
+      "community": 8,
       "norm_label": "2nd improvement plan",
       "id": "2\ucc28_\uac1c\uc120\uacc4\ud68d_md"
     },
@@ -4512,7 +4530,7 @@
       "captured_at": "2026-05-04T00:00:00Z",
       "author": null,
       "contributor": null,
-      "community": 9,
+      "community": 8,
       "norm_label": "3rd progress report",
       "id": "3\ucc28_\ubcf4\uace0\uc11c_md"
     },
@@ -4525,7 +4543,7 @@
       "captured_at": "2026-05-04T00:00:00Z",
       "author": null,
       "contributor": null,
-      "community": 9,
+      "community": 8,
       "norm_label": "improvement plan",
       "id": "improvement_plan_md"
     },
@@ -4538,7 +4556,7 @@
       "captured_at": "2026-05-04T00:00:00Z",
       "author": null,
       "contributor": null,
-      "community": 9,
+      "community": 8,
       "norm_label": "ux evaluation and improvement plan",
       "id": "ux_evaluation_and_improvement_plan_md"
     },
@@ -4551,7 +4569,7 @@
       "captured_at": "2026-05-04T00:00:00Z",
       "author": null,
       "contributor": null,
-      "community": 9,
+      "community": 8,
       "norm_label": "ux evaluation",
       "id": "ux_evaluation_md"
     },
@@ -4564,7 +4582,7 @@
       "captured_at": "2026-05-04T00:00:00Z",
       "author": null,
       "contributor": null,
-      "community": 9,
+      "community": 8,
       "norm_label": "regional reward ui and merge/deployment",
       "id": "\uc9c0\uc5ed\ubcf4\uc0c1_\uba38\uc9c0\ubc30\ud3ec_md"
     },
@@ -4577,7 +4595,7 @@
       "captured_at": "2026-05-04T00:00:00Z",
       "author": null,
       "contributor": null,
-      "community": 9,
+      "community": 8,
       "norm_label": "pre-class qa checklist",
       "id": "qa_checklist_md"
     },
@@ -4590,7 +4608,7 @@
       "captured_at": "2026-05-04T00:00:00Z",
       "author": null,
       "contributor": null,
-      "community": 9,
+      "community": 8,
       "norm_label": "current improvement roadmap",
       "id": "roadmap_md"
     },
@@ -4603,7 +4621,7 @@
       "captured_at": "2026-05-04T00:00:00Z",
       "author": null,
       "contributor": null,
-      "community": 9,
+      "community": 8,
       "norm_label": "document index",
       "id": "index_md"
     },
@@ -4616,7 +4634,7 @@
       "captured_at": "2026-05-04T00:00:00Z",
       "author": null,
       "contributor": null,
-      "community": 9,
+      "community": 8,
       "norm_label": "project readme",
       "id": "readme_md"
     },
@@ -4629,7 +4647,7 @@
       "captured_at": "2026-05-04T00:00:00Z",
       "author": null,
       "contributor": null,
-      "community": 9,
+      "community": 8,
       "norm_label": "changelog",
       "id": "changelog_md"
     },
@@ -4642,7 +4660,7 @@
       "captured_at": "2026-05-04T00:00:00Z",
       "author": null,
       "contributor": null,
-      "community": 9,
+      "community": 8,
       "norm_label": "development rules and project structure",
       "id": "agents_md"
     },
@@ -4655,7 +4673,7 @@
       "captured_at": "2026-05-04T00:00:00Z",
       "author": null,
       "contributor": null,
-      "community": 9,
+      "community": 8,
       "norm_label": "graphify instructions",
       "id": "gemini_md"
     },
@@ -4668,7 +4686,7 @@
       "captured_at": "2026-05-04T00:00:00Z",
       "author": null,
       "contributor": null,
-      "community": 9,
+      "community": 8,
       "norm_label": "session recording animation addition",
       "id": "session_ses_268b_md"
     },
@@ -4681,7 +4699,7 @@
       "captured_at": "2026-05-04T00:00:00Z",
       "author": null,
       "contributor": null,
-      "community": 9,
+      "community": 8,
       "norm_label": "demo recorder skill",
       "id": "demo_recorder_skill"
     },
@@ -4699,7 +4717,7 @@
           "region_mission_progress"
         ]
       },
-      "community": 10,
+      "community": 9,
       "norm_label": "",
       "id": "sidebar"
     },
@@ -4714,7 +4732,7 @@
           "progress_display"
         ]
       },
-      "community": 10,
+      "community": 9,
       "norm_label": "",
       "id": "mission_system"
     },
@@ -4729,7 +4747,7 @@
           "animal_collection_count"
         ]
       },
-      "community": 10,
+      "community": 9,
       "norm_label": "",
       "id": "progress_bar"
     },
@@ -4756,7 +4774,7 @@
           "earthworm"
         ]
       },
-      "community": 10,
+      "community": 9,
       "norm_label": "",
       "id": "animal_card"
     },
@@ -4774,7 +4792,7 @@
           "knowledge_assessment"
         ]
       },
-      "community": 10,
+      "community": 9,
       "norm_label": "",
       "id": "animal_quiz"
     },
@@ -4786,7 +4804,7 @@
         "tracking": "total_collected",
         "visual": "grid_layout"
       },
-      "community": 10,
+      "community": 9,
       "norm_label": "",
       "id": "animal_collection"
     },
@@ -4806,7 +4824,7 @@
           "continue_exploration_button"
         ]
       },
-      "community": 10,
+      "community": 9,
       "norm_label": "",
       "id": "region_completion_reward"
     },
@@ -4824,7 +4842,7 @@
           "reward_grant"
         ]
       },
-      "community": 10,
+      "community": 9,
       "norm_label": "",
       "id": "completion_star"
     },
@@ -4840,7 +4858,7 @@
           "final_reward_popup"
         ]
       },
-      "community": 10,
+      "community": 9,
       "norm_label": "",
       "id": "encyclopedia_master"
     },
@@ -4861,7 +4879,7 @@
           "progress_display"
         ]
       },
-      "community": 10,
+      "community": 9,
       "norm_label": "",
       "id": "game_ui"
     },
@@ -4877,7 +4895,7 @@
           "visual_feedback"
         ]
       },
-      "community": 10,
+      "community": 9,
       "norm_label": "",
       "id": "animal_registration"
     },
@@ -4894,7 +4912,7 @@
           "completion_confirmation"
         ]
       },
-      "community": 10,
+      "community": 9,
       "norm_label": "",
       "id": "reward_badge"
     },
@@ -4914,7 +4932,7 @@
           "immersion"
         ]
       },
-      "community": 10,
+      "community": 9,
       "norm_label": "",
       "id": "sound_effect"
     },
@@ -4934,7 +4952,7 @@
           "auditory"
         ]
       },
-      "community": 10,
+      "community": 9,
       "norm_label": "",
       "id": "feedback_visual"
     },
@@ -4950,7 +4968,7 @@
           "restart"
         ]
       },
-      "community": 10,
+      "community": 9,
       "norm_label": "",
       "id": "final_mission"
     },
@@ -4966,7 +4984,7 @@
         ],
         "context": "final_game_state"
       },
-      "community": 10,
+      "community": 9,
       "norm_label": "",
       "id": "final_mission_preview"
     },
@@ -4988,7 +5006,7 @@
           "sea"
         ]
       },
-      "community": 10,
+      "community": 9,
       "norm_label": "",
       "id": "region_mission"
     },
@@ -5006,7 +5024,7 @@
           "ui_summary"
         ]
       },
-      "community": 10,
+      "community": 9,
       "norm_label": "",
       "id": "image_creator"
     },
@@ -5020,7 +5038,7 @@
         "rendering": "watercolor/cartoon",
         "purpose": "background habitat atmosphere"
       },
-      "community": 21,
+      "community": 27,
       "norm_label": "",
       "id": "forest_bg_sprite"
     },
@@ -5032,7 +5050,7 @@
         "elements": "trees, blue mountains, stream, grassy clearing, forest paths",
         "wildlife": "deer, squirrel, fox, birds"
       },
-      "community": 21,
+      "community": 27,
       "norm_label": "",
       "id": "forest_background"
     },
@@ -5048,7 +5066,7 @@
           "birds"
         ]
       },
-      "community": 21,
+      "community": 27,
       "norm_label": "",
       "id": "forest_wildlife"
     },
@@ -5067,7 +5085,7 @@
         ],
         "purpose": "in-game UI reward and feedback icons"
       },
-      "community": 21,
+      "community": 27,
       "norm_label": "",
       "id": "game_icons_sprite"
     },
@@ -5099,7 +5117,7 @@
           "unlockable rewards"
         ]
       },
-      "community": 21,
+      "community": 27,
       "norm_label": "",
       "id": "game_ui_icons"
     },
@@ -5112,7 +5130,7 @@
         "character": "brown-and-cream owl with explorer hat",
         "poses": 4
       },
-      "community": 21,
+      "community": 27,
       "norm_label": "",
       "id": "owl_mascot_sprite"
     },
@@ -5124,7 +5142,7 @@
         "appearance": "small brown-and-cream owl, large expressive eyes, pink cheeks",
         "accessory": "explorer/detective hat with green leaf emblem"
       },
-      "community": 21,
+      "community": 27,
       "norm_label": "",
       "id": "owl_character"
     },
@@ -5156,7 +5174,7 @@
           }
         ]
       },
-      "community": 21,
+      "community": 27,
       "norm_label": "",
       "id": "owl_poses"
     },
@@ -5179,7 +5197,7 @@
         ],
         "purpose": "habitat selection for animal encyclopedia"
       },
-      "community": 21,
+      "community": 27,
       "norm_label": "",
       "id": "regions_badges_sprite"
     },
@@ -5216,7 +5234,7 @@
           }
         ]
       },
-      "community": 21,
+      "community": 27,
       "norm_label": "",
       "id": "habitat_categories"
     },
@@ -5229,55 +5247,55 @@
         "has_hat": true,
         "has_feet": true
       },
-      "community": 34,
+      "community": 38,
       "norm_label": "owl sprite",
       "id": "owl_sprite"
     },
     {
       "label": "Special Region",
       "type": "sprite_image",
-      "community": 11,
+      "community": 10,
       "norm_label": "special region",
       "id": "region_special"
     },
     {
       "label": "Water/Wetland Region",
       "type": "sprite_image",
-      "community": 11,
+      "community": 10,
       "norm_label": "water/wetland region",
       "id": "region_water"
     },
     {
       "label": "Forest Region",
       "type": "sprite_image",
-      "community": 11,
+      "community": 10,
       "norm_label": "forest region",
       "id": "region_forest"
     },
     {
       "label": "Sea/Ocean Region",
       "type": "sprite_image",
-      "community": 11,
+      "community": 10,
       "norm_label": "sea/ocean region",
       "id": "region_sea"
     },
     {
       "label": "Around-Town/Residential Region",
       "type": "sprite_image",
-      "community": 11,
+      "community": 10,
       "norm_label": "around-town/residential region",
       "id": "region_around"
     },
     {
       "label": "Sprite Collection",
       "type": "resource",
-      "community": 11,
+      "community": 10,
       "norm_label": "sprite collection",
       "id": "sprite_collection"
     },
     {
       "type": "category",
-      "community": 11,
+      "community": 10,
       "norm_label": "",
       "id": "ui_icon"
     },
@@ -5285,7 +5303,7 @@
       "type": "ui_icon",
       "label": "shield_badge",
       "description": "Golden shield badge with paw print center, suggesting achievement, protection, or status icon tied to animals/pets",
-      "community": 11,
+      "community": 10,
       "norm_label": "shield_badge",
       "id": "icon_shield"
     },
@@ -5293,7 +5311,7 @@
       "type": "ui_icon",
       "label": "gem_item",
       "description": "Stylized purple gemstone icon on purple rounded-square background, representing collectible, reward, or premium item",
-      "community": 11,
+      "community": 10,
       "norm_label": "gem_item",
       "id": "icon_gem"
     },
@@ -5301,7 +5319,7 @@
       "type": "ui_icon",
       "label": "star_icon",
       "description": "Large five-pointed gold/yellow star with sparkles, commonly associated with favorites, achievements, or success/progress",
-      "community": 11,
+      "community": 10,
       "norm_label": "star_icon",
       "id": "icon_star"
     },
@@ -5309,7 +5327,7 @@
       "type": "ui_icon",
       "label": "treasure_chest",
       "description": "Colorful treasure chest with gems, coins, and lock, representing rewards, collectibles, or prizes",
-      "community": 11,
+      "community": 10,
       "norm_label": "treasure_chest",
       "id": "icon_chest"
     },
@@ -5317,7 +5335,7 @@
       "type": "ui_icon",
       "label": "capture_ball",
       "description": "Red-and-white capture ball resembling Pok\u00e9 Ball, representing catch, collect, or capture functionality",
-      "community": 11,
+      "community": 10,
       "norm_label": "capture_ball",
       "id": "icon_catch_ball"
     },
@@ -5325,7 +5343,7 @@
       "type": "game_element",
       "label": "achievement_badge",
       "description": "Badge or status indicator representing completed achievements or milestones",
-      "community": 11,
+      "community": 10,
       "norm_label": "achievement_badge",
       "id": "achievement_badge"
     },
@@ -5333,7 +5351,7 @@
       "type": "game_element",
       "label": "collectible_item",
       "description": "Items that can be collected, gathered, or accumulated in the application",
-      "community": 11,
+      "community": 10,
       "norm_label": "collectible_item",
       "id": "collectible_item"
     },
@@ -5341,7 +5359,7 @@
       "type": "game_element",
       "label": "reward",
       "description": "Incentives or benefits given to users for completing actions or milestones",
-      "community": 11,
+      "community": 10,
       "norm_label": "reward",
       "id": "reward"
     },
@@ -5349,7 +5367,7 @@
       "type": "feature",
       "label": "capture_functionality",
       "description": "Mechanism for catching, collecting, or gathering items or animals",
-      "community": 11,
+      "community": 10,
       "norm_label": "capture_functionality",
       "id": "capture_functionality"
     },
@@ -5357,7 +5375,7 @@
       "type": "application",
       "label": "animal_encyclopedia",
       "description": "Korean elementary-school animal encyclopedia application",
-      "community": 11,
+      "community": 10,
       "norm_label": "animal_encyclopedia",
       "id": "animal_encyclopedia"
     },
@@ -5365,7 +5383,7 @@
       "type": "design_pattern",
       "label": "gamification_element",
       "description": "Elements that incorporate game-like mechanics into non-game contexts",
-      "community": 11,
+      "community": 10,
       "norm_label": "gamification_element",
       "id": "gamification_element"
     }
@@ -7040,6 +7058,26 @@
       "confidence_score": 1.0,
       "source": "app_js",
       "target": "animal_encyclopedia_app_positionmapplayer"
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "app.js",
+      "source_location": "L3130",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "app_js",
+      "target": "animal_encyclopedia_app_animatemapplayer"
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "app.js",
+      "source_location": "L3156",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "app_js",
+      "target": "animal_encyclopedia_app_queuemapplayertravel"
     },
     {
       "relation": "contains",
@@ -10730,17 +10768,6 @@
       "context": "call",
       "confidence": "EXTRACTED",
       "source_file": "app.js",
-      "source_location": "L3183",
-      "weight": 1.0,
-      "confidence_score": 1.0,
-      "source": "animal_encyclopedia_app_traveltoregion",
-      "target": "animal_encyclopedia_app_setview"
-    },
-    {
-      "relation": "calls",
-      "context": "call",
-      "confidence": "EXTRACTED",
-      "source_file": "app.js",
       "source_location": "L3194",
       "weight": 1.0,
       "confidence_score": 1.0,
@@ -10767,6 +10794,17 @@
       "weight": 1.0,
       "confidence_score": 1.0,
       "source": "animal_encyclopedia_app_resetprogressfromreward",
+      "target": "animal_encyclopedia_app_setview"
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "app.js",
+      "source_location": "L3183",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "animal_encyclopedia_app_traveltoregion",
       "target": "animal_encyclopedia_app_setview"
     },
     {
@@ -12952,6 +12990,17 @@
       "context": "call",
       "confidence": "EXTRACTED",
       "source_file": "app.js",
+      "source_location": "L2967",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "animal_encyclopedia_app_awardregionbadge",
+      "target": "animal_encyclopedia_app_getnextmissionfilter"
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "app.js",
       "source_location": "L2964",
       "weight": 1.0,
       "confidence_score": 1.0,
@@ -13029,6 +13078,17 @@
       "context": "call",
       "confidence": "EXTRACTED",
       "source_file": "app.js",
+      "source_location": "L3222",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "animal_encyclopedia_app_traveltoregion",
+      "target": "animal_encyclopedia_app_getactivequestregion"
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "app.js",
       "source_location": "L3041",
       "weight": 1.0,
       "confidence_score": 1.0,
@@ -13056,6 +13116,17 @@
       "confidence_score": 1.0,
       "source": "animal_encyclopedia_app_renderadventuremap",
       "target": "animal_encyclopedia_app_rendermaptrail"
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "app.js",
+      "source_location": "L3054",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "animal_encyclopedia_app_renderadventuremap",
+      "target": "animal_encyclopedia_app_animatemapplayer"
     },
     {
       "relation": "calls",
@@ -13106,6 +13177,28 @@
       "context": "call",
       "confidence": "EXTRACTED",
       "source_file": "app.js",
+      "source_location": "L3138",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "animal_encyclopedia_app_animatemapplayer",
+      "target": "animal_encyclopedia_app_positionmapplayer"
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "app.js",
+      "source_location": "L3223",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "animal_encyclopedia_app_traveltoregion",
+      "target": "animal_encyclopedia_app_queuemapplayertravel"
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "app.js",
       "source_location": "L3133",
       "weight": 1.0,
       "confidence_score": 1.0,
@@ -13150,17 +13243,6 @@
       "context": "call",
       "confidence": "EXTRACTED",
       "source_file": "app.js",
-      "source_location": "L3184",
-      "weight": 1.0,
-      "confidence_score": 1.0,
-      "source": "animal_encyclopedia_app_traveltoregion",
-      "target": "animal_encyclopedia_app_showtoast"
-    },
-    {
-      "relation": "calls",
-      "context": "call",
-      "confidence": "EXTRACTED",
-      "source_file": "app.js",
       "source_location": "L3199",
       "weight": 1.0,
       "confidence_score": 1.0,
@@ -13177,6 +13259,17 @@
       "confidence_score": 1.0,
       "source": "animal_encyclopedia_app_confirmlockedregiontravel",
       "target": "animal_encyclopedia_app_traveltoregion"
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "app.js",
+      "source_location": "L3184",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "animal_encyclopedia_app_traveltoregion",
+      "target": "animal_encyclopedia_app_showtoast"
     },
     {
       "relation": "calls",
@@ -18599,5 +18692,5 @@
     }
   ],
   "hyperedges": [],
-  "built_at_commit": "a51c334565b251995f6f7afbc976510d0196bb08"
+  "built_at_commit": "955dfb73a301e85c32deb5c0f3f36dbfadb437e5"
 }

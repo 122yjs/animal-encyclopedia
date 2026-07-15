@@ -95,8 +95,8 @@ test("generated no-question.html keeps student-only question config and shared a
     'id="sourceConfirmModal"',
     'id="onboardingModal"',
     'id="rewardModal"',
-    '<link rel="stylesheet" href="./styles.css?v=20260712-region-navigation">',
-    '<script src="./app.js?v=20260712-region-navigation"></script>'
+    '<link rel="stylesheet" href="./styles.css?v=20260714-map-quick-action-v3">',
+    '<script src="./app.js?v=20260714-map-quick-action-v3"></script>'
   ];
 
   for (const needle of requiredNeedles) {

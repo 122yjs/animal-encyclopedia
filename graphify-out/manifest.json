@@ -8,8 +8,8 @@
     "hash": "a9b166bbfcc425c8ffd975c9197240ce"
   },
   "/Users/junier/Projects/animal-encyclopedia/app.js": {
-    "mtime": 1783862202.0159328,
-    "hash": "f7c74636ceee7acbf3679897a266ce2e"
+    "mtime": 1784121780.9402514,
+    "hash": "e71a033266f89de4cefe3396924542bc"
   },
   "/Users/junier/Projects/animal-encyclopedia/scripts/record-demo.mjs": {
     "mtime": 1783802215.9761896,
@@ -20,8 +20,8 @@
     "hash": "638b45781bbca568cf2172e8ac9b652e"
   },
   "/Users/junier/Projects/animal-encyclopedia/scripts/phase1-mission-contract.test.mjs": {
-    "mtime": 1783862248.5349865,
-    "hash": "1b2a6a37165a3c99f9640cc566f7f2bf"
+    "mtime": 1783863659.512575,
+    "hash": "165cbcc1a86afdc0c87b7bd763bb4354"
   },
   "/Users/junier/Projects/animal-encyclopedia/scripts/download-local-images.js": {
     "mtime": 1783802215.9750745,
@@ -36,24 +36,24 @@
     "hash": "21c0bac590b922d6bd9320bcf6bfa4c1"
   },
   "/Users/junier/Projects/animal-encyclopedia/scripts/phase3-contract.test.mjs": {
-    "mtime": 1783860811.7438552,
-    "hash": "5c50cf9eca2fe59bb18c3a8016a13e2d"
+    "mtime": 1783969843.1903007,
+    "hash": "a479ec3451d0c9aad56a604b5e70f917"
   },
   "/Users/junier/Projects/animal-encyclopedia/scripts/generate-no-question.js": {
     "mtime": 1783802215.9752483,
     "hash": "390d9cbbbeb38baa357987f62be5237d"
   },
   "/Users/junier/Projects/animal-encyclopedia/scripts/phase0-ux-contract.test.mjs": {
-    "mtime": 1783860176.6215014,
-    "hash": "bdb305e57a318060c7b160555bb81af5"
+    "mtime": 1784121801.6467478,
+    "hash": "74cfde8f0b67ca2f96162817c664c3cd"
   },
   "/Users/junier/Projects/animal-encyclopedia/vendor/qrcode.js": {
     "mtime": 1776417429.8434937,
     "hash": "6e6189e2b177b3d014321edad68fd73c"
   },
   "/Users/junier/Projects/animal-encyclopedia/index.html": {
-    "mtime": 1783860855.4610503,
-    "hash": "4654d3e3b834df0d87c4f48adf271e55"
+    "mtime": 1783969843.187726,
+    "hash": "1b930679b80cf9944cf4c604270bd216"
   },
   "/Users/junier/Projects/animal-encyclopedia/CHANGELOG.md": {
     "mtime": 1783802215.884322,
@@ -64,19 +64,19 @@
     "hash": "33244edd95112be74a51d26158c51c69"
   },
   "/Users/junier/Projects/animal-encyclopedia/no-question.html": {
-    "mtime": 1783862337.6116364,
-    "hash": "1783e735cbb75fc895c664510e2fa9bd"
+    "mtime": 1784121812.177914,
+    "hash": "0e47dec29437601f0424c156deee99ed"
   },
   "/Users/junier/Projects/animal-encyclopedia/DESIGN.md": {
-    "mtime": 1783860855.461363,
-    "hash": "1b6cfb01d16079246c7d00b609d6c3cd"
+    "mtime": 1784121574.2532387,
+    "hash": "c116426fd5438f043cba64b8c8ff9a2b"
   },
   "/Users/junier/Projects/animal-encyclopedia/AGENTS.md": {
     "mtime": 1783802215.884189,
     "hash": "2706b34b6d84f73fcce58b8d8cec718d"
   },
   "/Users/junier/Projects/animal-encyclopedia/credits.html": {
-    "mtime": 1783862337.6025696,
+    "mtime": 1784121812.1687205,
     "hash": "859b4292cfc800534c5ba48b9317ee46"
   },
   "/Users/junier/Projects/animal-encyclopedia/devlog/_plan/260712_h5_status_text_contrast/00_plan.md": {
