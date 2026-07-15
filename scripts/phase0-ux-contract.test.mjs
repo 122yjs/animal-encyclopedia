@@ -27,6 +27,38 @@ test("entry pages warn students before opening external source links", () => {
   }
 });
 
+test("external-link confirmations use dialog semantics and the modal focus stack", () => {
+  const html = read("index.html");
+  const appJs = read("app.js");
+  assert.ok(html.includes('role="dialog"'));
+  assert.ok(html.includes('aria-modal="true"'));
+  assert.ok(html.includes('aria-labelledby="questionConfirmTitle"'));
+  assert.ok(html.includes('aria-labelledby="sourceConfirmTitle"'));
+  assert.ok(appJs.includes("enterModalFocus(els.confirmPopup)"));
+  assert.ok(appJs.includes("exitModalFocus(els.confirmPopup)"));
+  assert.ok(appJs.includes("enterModalFocus(els.sourceConfirmModal)"));
+  assert.ok(appJs.includes("exitModalFocus(els.sourceConfirmModal)"));
+  assert.ok(appJs.includes("modalReturnFocusStack"));
+  assert.ok(appJs.includes("returnFocus?.isConnected"));
+  assert.ok(appJs.includes("options.fallbackFocus"));
+  assert.ok(appJs.includes("card.dataset.animalId"));
+  assert.ok(appJs.includes("const wasTop ="));
+  assert.ok(appJs.includes('card.classList.add("selected")'));
+});
+
+test("mobile map keeps the current quest action ahead of long map copy", () => {
+  const html = read("index.html");
+  const styles = read("styles.css");
+  assert.ok(html.includes('id="mapQuestCard"'));
+  assert.ok(styles.includes("@media (max-width: 680px)"));
+  const mobile = styles.slice(styles.lastIndexOf("@media (max-width: 680px)"));
+  const questRule = mobile.match(/\.map-quest-card \{[\s\S]*?\n  \}/)?.[0] ?? "";
+  const copyRule = mobile.match(/\.map-header-copy \{[\s\S]*?\n  \}/)?.[0] ?? "";
+  assert.ok(questRule.includes("order: -2"));
+  assert.ok(questRule.includes("position: sticky"));
+  assert.ok(copyRule.includes("order: -1"));
+});
+
 test("reset control is worded for shared classroom tablets", () => {
   for (const fileName of ["index.html", "no-question.html"]) {
     const html = read(fileName);
@@ -225,7 +257,7 @@ test("map player travels once from a newly earned badge to the next mission", ()
   const nextRegionStart = appJs.indexOf("function goToNextRewardRegion()");
   const nextRegionEnd = appJs.indexOf("function resetProgressFromReward()", nextRegionStart);
   const nextRegionCode = appJs.slice(nextRegionStart, nextRegionEnd);
-  assert.ok(nextRegionCode.includes('setView("map")'), "the badge reward action should reveal the map journey");
+  assert.ok(nextRegionCode.includes('setView("map", { userInitiated: true })'), "the badge reward action should reveal and focus the map journey");
 
   const resetStart = appJs.indexOf("function resetProgress(skipConfirm = false)");
   const resetEnd = appJs.indexOf("function readObservationReady", resetStart);
@@ -251,7 +283,7 @@ test("map player also travels when a student jumps to another region from the ma
   const animatedBranch = travelCode.indexOf("if (shouldAnimateTravel)");
   const animatedReturn = travelCode.indexOf("return;", animatedBranch);
   const finishTravelStart = travelCode.indexOf("const finishTravel");
-  const catalogSwitch = travelCode.indexOf('setView("catalog")');
+  const catalogSwitch = travelCode.indexOf('setView("catalog", { userInitiated: true })');
   assert.ok(
     finishTravelStart >= 0 && catalogSwitch > finishTravelStart && catalogSwitch < animatedBranch
       && animatedBranch >= 0 && animatedReturn > animatedBranch,
@@ -266,7 +298,7 @@ test("map player also travels when a student jumps to another region from the ma
   const mapRenderEnd = appJs.indexOf("function createMapNode", mapRenderStart);
   const mapRenderCode = appJs.slice(mapRenderStart, mapRenderEnd);
   assert.ok(mapRenderCode.includes("travel.autoOpenCatalog"), "reward travel should carry the automatic catalog transition");
-  assert.ok(mapRenderCode.includes('setView("catalog")'), "reward travel should open the next region catalog after arrival");
+  assert.ok(mapRenderCode.includes('setView("catalog", { userInitiated: true })'), "reward travel should open and focus the next region catalog after arrival");
 });
 
 test("travel feedback stays readable above fixed controls on small screens", () => {

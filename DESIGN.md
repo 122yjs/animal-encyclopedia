@@ -2,7 +2,7 @@
 
 ## Source of truth
 - Status: Active
-- Last refreshed: 2026-07-12
+- Last refreshed: 2026-07-16
 - Primary product surfaces: 모험 지도, 지역별 동물 도감, 관찰·퀴즈 상세창, 분류 연습, 교사용 설정
 - Evidence reviewed: `README.md`, `docs/ROADMAP.md`, `docs/QA_CHECKLIST.md`, `index.html`, `styles.css`, `app.js`, `assets/sprites/`, `graphify-out/GRAPH_REPORT.md`, `graphify-out/wiki/index.md`
 
@@ -28,7 +28,7 @@
 
 ## Design principles
 - 상태는 데이터와 일치해야 한다: 지역 그림의 채색은 방문이 아니라 배지 획득을 뜻한다.
-- 다음 행동은 한눈에 보여야 한다: 현재 위치는 테두리·광택·문구로 나타내고 완료 색상과 구분한다.
+- 다음 행동은 한눈에 보여야 한다: 현재 위치는 테두리·광택·문구로 나타내고, 미션 보드에는 현재 상태에서 실제로 이동하는 주 행동만 하나 노출한다.
 - 작은 화면에서도 핵심 목표가 잘리지 않아야 한다: 지도 첫 노드, 현재 플레이어, 마지막 마스터 노드를 컨테이너 안전 영역 안에 둔다.
 - 진행 순서를 벗어나는 이동은 상태를 바꾸기 전에 학생에게 대상 지역을 명시하고 확인받는다.
 - Tradeoffs: 장식보다 진행 상태의 명확성과 44px 이상 터치 영역을 우선한다.
@@ -49,14 +49,14 @@
 
 ## Accessibility
 - Target standard: WCAG 2.1 AA에 준하는 대비와 키보드·터치 사용성
-- Keyboard/focus behavior: 모든 지도 노드는 실제 `button`이며 명확한 `:focus-visible` 표시를 유지한다.
+- Keyboard/focus behavior: 모든 지도 노드는 실제 `button`이며 명확한 `:focus-visible` 표시를 유지한다. 사용자 조작으로 화면이 바뀌면 새 화면 제목으로 포커스를 옮기고, 중첩 모달은 하나의 포커스 스택으로 관리하며 닫을 때 열기 버튼으로 돌아간다.
 - Contrast/readability: 상태는 색상뿐 아니라 `진행 중`, `예고`, `배지 도전`, `배지 획득` 문구와 아이콘으로 함께 표시한다.
-- Screen-reader semantics: 지도 노드의 `aria-label`에 지역명, 상태, 수집 진행도를 포함한다.
+- Screen-reader semantics: 지도 노드의 `aria-label`에 지역명, 상태, 수집 진행도를 포함한다. 모드와 게임 카드의 선택 상태는 `aria-pressed`로, 검색 입력과 결과는 현재 미션 또는 전체 도감 범위로 명시한다.
 - Reduced motion and sensory considerations: 모션 감소 환경에서 플레이어·도전 애니메이션을 끈다.
 
 ## Responsive behavior
 - Supported breakpoints/devices: 데스크톱, 1080px 이하 태블릿, 680px 이하 세로 화면
-- Layout adaptations: 지도 노드와 배지 크기를 줄이되 첫·마지막 노드 전체가 지도 안에 남도록 한다. 모바일 지도에서는 현재 미션 카드를 스크롤 상단에 고정해 지역 행동을 계속 찾을 수 있게 한다.
+- Layout adaptations: 지도 노드와 배지 크기를 줄이되 첫·마지막 노드 전체가 지도 안에 남도록 한다. 모바일 지도에서는 긴 소개문보다 현재 미션 카드를 먼저 배치하고 스크롤 상단에 고정해 지역 행동을 계속 찾을 수 있게 한다.
 - Touch/hover differences: 터치에 의존하지 않는 상태 문구를 제공하고, hover는 보조 효과로만 사용한다.
 
 ## Interaction states

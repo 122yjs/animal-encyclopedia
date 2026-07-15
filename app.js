@@ -252,11 +252,10 @@ const state = {
   },
   quiz: null,
   onboardingIndex: 0,
-  lastFocus: null,
-  settingsLastFocus: null,
   questionUrlPlaceholder: "",
   questionUrlDefaultPlaceholder: "",
   modalFocusStack: [],
+  modalReturnFocusStack: [],
   lastLevel: null
 };
 
@@ -406,6 +405,9 @@ function setModalBackgroundDisabled(element, disabled) {
 
 function enterModalFocus(modalElement) {
   const appLayout = document.querySelector(".app-layout");
+  const returnFocus = document.activeElement instanceof HTMLElement && document.activeElement !== document.body
+    ? document.activeElement
+    : null;
   if (state.modalFocusStack.length === 0 && appLayout) {
     setModalBackgroundDisabled(appLayout, true);
   }
@@ -414,6 +416,8 @@ function enterModalFocus(modalElement) {
     setModalBackgroundDisabled(prevModal, true);
   }
   state.modalFocusStack.push(modalElement);
+  state.modalReturnFocusStack.push(returnFocus);
+  document.body.classList.add("modal-open");
   setModalBackgroundDisabled(modalElement, false);
   modalElement.hidden = false;
   requestAnimationFrame(() => {
@@ -422,21 +426,38 @@ function enterModalFocus(modalElement) {
   });
 }
 
-function exitModalFocus(modalElement) {
+function exitModalFocus(modalElement, options = {}) {
   const idx = state.modalFocusStack.lastIndexOf(modalElement);
-  if (idx !== -1) state.modalFocusStack.splice(idx, 1);
+  const wasTop = idx !== -1 && idx === state.modalFocusStack.length - 1;
+  const returnFocus = idx !== -1 ? state.modalReturnFocusStack[idx] : null;
+  if (idx !== -1) {
+    state.modalFocusStack.splice(idx, 1);
+    state.modalReturnFocusStack.splice(idx, 1);
+  }
   modalElement.hidden = true;
   const appLayout = document.querySelector(".app-layout");
   if (state.modalFocusStack.length === 0) {
     setModalBackgroundDisabled(appLayout, false);
+    document.body.classList.remove("modal-open");
   } else {
     const topModal = state.modalFocusStack[state.modalFocusStack.length - 1];
     setModalBackgroundDisabled(topModal, false);
-    requestAnimationFrame(() => {
-      const focusables = getFocusableElements(topModal);
-      if (focusables.length > 0) focusables[0].focus();
-    });
   }
+  requestAnimationFrame(() => {
+    const fallbackFocus = typeof options.fallbackFocus === "function" ? options.fallbackFocus() : null;
+    const focusTarget = wasTop ? returnFocus?.isConnected ? returnFocus : fallbackFocus : null;
+    if (focusTarget?.isConnected && focusTarget.offsetParent !== null && !focusTarget.closest("[hidden]")) {
+      focusTarget.focus();
+      return;
+    }
+    const topModal = state.modalFocusStack[state.modalFocusStack.length - 1];
+    const focusables = topModal ? getFocusableElements(topModal) : [];
+    if (focusables.length > 0) {
+      focusables[0].focus();
+      return;
+    }
+    focusViewHeading(state.view);
+  });
 }
 
 function makeAnimal(name, wiki, categories, habitat, move, body, point, relation, flags, page) {
@@ -503,7 +524,7 @@ function init() {
         const url = questionBtn.dataset.questionUrl;
         if (url && els.confirmPopup) {
           pendingQuestionUrl = url;
-          els.confirmPopup.hidden = false;
+          enterModalFocus(els.confirmPopup);
         }
       }
       const sourceBtn = event.target.closest("[data-source-url]");
@@ -514,7 +535,7 @@ function init() {
     });
   }
   if (els.backToCatalog) {
-    els.backToCatalog.addEventListener("click", () => setView("catalog"));
+    els.backToCatalog.addEventListener("click", () => setView("catalog", { userInitiated: true }));
   }
   document.addEventListener("keydown", event => {
     if (event.key === "Escape") {
@@ -526,10 +547,10 @@ function init() {
         else if (topModal === els.qrExpandModal) closeQrExpand();
         else if (topModal === els.onboardingModal) completeOnboarding();
         else if (topModal === els.rewardModal) closeReward();
+        else if (topModal === els.sourceConfirmModal) closeSourceConfirm();
+        else if (topModal === els.confirmPopup) closeConfirmPopup();
+        else if (topModal === els.regionLockedPopup) closeRegionLockedPopup();
       }
-      if (els.sourceConfirmModal && !els.sourceConfirmModal.hidden) closeSourceConfirm();
-      if (els.confirmPopup && !els.confirmPopup.hidden) closeConfirmPopup();
-      if (els.regionLockedPopup && !els.regionLockedPopup.hidden) closeRegionLockedPopup();
     }
     handleModalKeydown(event);
   });
@@ -666,7 +687,7 @@ function bindViewTabs() {
       if (view === "game" && state.game.mode === "challenge") {
         exitChallengeMode();
       }
-      setView(view);
+      setView(view, { userInitiated: true });
     });
   });
 }
@@ -689,7 +710,7 @@ function bindMissionPanel() {
       return;
     }
     if (action.dataset.catalogMode === "map") {
-      setView("map");
+      setView("map", { userInitiated: true });
       return;
     }
     if (action.dataset.catalogMode === "all") {
@@ -704,6 +725,7 @@ function bindMissionPanel() {
     renderMissionPanel();
     renderFilters();
     renderAnimals();
+    focusViewHeading("catalog");
   });
 }
 
@@ -981,7 +1003,18 @@ function parseCompactBase36Code(code) {
   return parseInt(value, 36);
 }
 
-function setView(view) {
+function focusViewHeading(view) {
+  const target = view === "map"
+    ? els.mapView?.querySelector("h2")
+    : view === "catalog"
+      ? els.missionPanel?.querySelector("h2")
+      : els.gameTitle;
+  if (!target) return;
+  target.setAttribute("tabindex", "-1");
+  requestAnimationFrame(() => target.focus());
+}
+
+function setView(view, options = {}) {
   if (view !== "map" && mapTravelTimer) {
     window.clearTimeout(mapTravelTimer);
     mapTravelTimer = 0;
@@ -1010,7 +1043,10 @@ function setView(view) {
 
   els.modeButtons.forEach(button => {
     button.classList.toggle("active", button.dataset.view === view);
+    button.setAttribute("aria-pressed", String(button.dataset.view === view));
   });
+
+  if (options.userInitiated) focusViewHeading(view);
 }
 
 const onboardingSteps = [
@@ -1130,6 +1166,7 @@ function renderFilters() {
         renderMissionPanel();
         renderFilters();
         renderAnimals();
+        focusViewHeading("catalog");
         return;
       }
       requestRegionTravel(filter.id);
@@ -1149,7 +1186,9 @@ function renderMissionPanel() {
   const progress = getFilterProgress(panelFilter.id);
   const percent = progress.total ? Math.round((progress.collected / progress.total) * 100) : 0;
   const isCurrentMission = !isAllMode && state.filter === nextMissionId;
-  const isFinished = nextMissionId === "all" && areAllBadgesEarned();
+  const isMasterComplete = nextMissionId === "all"
+    && areAllBadgesEarned()
+    && getCollectedProgramCount() === getProgramTotal();
   const isRegionPanel = !isAllMode && panelFilter.id !== "all";
   const isBadgeEarned = isRegionPanel && hasRegionBadge(panelFilter.id);
   const isChallengeReady = isRegionPanel && !isBadgeEarned && isRegionCollectionComplete(panelFilter.id);
@@ -1158,7 +1197,7 @@ function renderMissionPanel() {
     ? "all"
     : isChallengeReady
       ? "challenge"
-      : isFinished || isBadgeEarned
+      : isMasterComplete || isBadgeEarned
         ? "complete"
         : isCurrentMission
           ? "current"
@@ -1180,14 +1219,18 @@ function renderMissionPanel() {
           ? "현재 탐험"
           : "지역 미리보기";
   const title = isAllMode
-    ? `전체 ${getProgramTotal()}마리 도감`
-    : isFinished && isBadgeEarned
+    ? isMasterComplete
+      ? "🏆 도감 마스터 전체 도감"
+      : `전체 ${getProgramTotal()}마리 도감`
+    : isMasterComplete && isBadgeEarned
       ? "도감 마스터 모험 완료"
       : isChallengeReady
         ? `🏅 ${panelFilter.label} 배지 도전`
         : `${panelFilter.icon} ${panelFilter.label} 탐험 미션`;
   const body = isAllMode
-    ? "모든 동물을 한눈에 둘러볼 수 있어요. 수업 흐름은 현재 미션으로 언제든 돌아갈 수 있습니다."
+    ? isMasterComplete
+      ? "모든 지역의 동물과 배지를 모았어요. 완성한 도감을 둘러보며 동물의 특징을 비교해 보세요."
+      : "모든 동물을 한눈에 둘러볼 수 있어요. 현재 미션을 열어 수업 흐름으로 돌아갈 수 있습니다."
     : isChallengeReady
       ? `${panelFilter.label} 동물을 모두 모았어요! 카드를 기준에 맞게 나누는 배지 도전에 성공하면 ${panelFilter.label} 배지를 받아요.`
       : hasNextMission
@@ -1202,7 +1245,9 @@ function renderMissionPanel() {
     : hasNextMission
       ? "다음 미션으로 넘어갈 수 있어요."
       : isAllMode
-        ? `${currentMission.icon} ${currentMission.label} 미션으로 돌아가 수업을 이어가요.`
+        ? isMasterComplete
+          ? "완성한 동물 카드를 둘러보며 특징을 비교해 봐요."
+          : `${currentMission.icon} ${currentMission.label} 미션을 열어 수업을 이어가요.`
         : isBadgeEarned
           ? "전체 도감을 둘러보며 동물의 특징을 비교해 봐요."
           : isCurrentMission
@@ -1210,18 +1255,18 @@ function renderMissionPanel() {
             : "지금은 미리보기예요. 전체 지도에서 탐험 순서를 확인해요.";
   const regionSprite = uiSprites.regions[panelFilter.id];
   const primaryAction = isChallengeReady
-    ? `<button class="mission-toggle" type="button" data-catalog-mode="badge-challenge">🏅 배지 도전 시작</button>`
+    ? `<button class="mission-toggle" type="button" data-catalog-mode="badge-challenge"><span aria-hidden="true">🏅</span> 배지 도전 시작</button>`
     : hasNextMission
-      ? `<button class="mission-toggle" type="button" data-catalog-mode="next-mission">🧭 다음 지역으로 출발</button>`
+      ? `<button class="mission-toggle" type="button" data-catalog-mode="next-mission"><span aria-hidden="true">🧭</span> 다음 지역으로 출발</button>`
       : isAllMode
-        ? `<button class="mission-toggle" type="button" data-catalog-mode="mission">현재 미션으로 돌아가기</button>`
-        : "";
-  const secondaryAction = hasNextMission
-    ? `<button class="mission-secondary-action" type="button" data-catalog-mode="mission">완료한 미션 다시 보기</button>`
-    : isChallengeReady
-      ? `<button class="mission-secondary-action" type="button" data-catalog-mode="mission">카드 다시 살펴보기</button>`
-      : "";
-  const persistentActions = `<button class="mission-secondary-action" type="button" data-catalog-mode="all">📖 전체 도감 보기</button><button class="mission-secondary-action" type="button" data-catalog-mode="map">🗺️ 전체 지도로 돌아가기</button>`;
+        ? isMasterComplete
+          ? ""
+          : `<button class="mission-toggle" type="button" data-catalog-mode="mission"><span aria-hidden="true">🧭</span> 현재 미션 열기</button>`
+        : isMasterComplete && isBadgeEarned
+          ? `<button class="mission-toggle" type="button" data-catalog-mode="all"><span aria-hidden="true">📖</span> 전체 도감 둘러보기</button>`
+          : !isCurrentMission
+            ? `<button class="mission-toggle" type="button" data-catalog-mode="map"><span aria-hidden="true">🗺️</span> 현재 지도로 돌아가기</button>`
+            : "";
 
   els.missionPanel.innerHTML = `
     <div class="${boardClass}">
@@ -1240,8 +1285,6 @@ function renderMissionPanel() {
       </div>
       <div class="mission-actions">
         ${primaryAction}
-        ${secondaryAction}
-        ${persistentActions}
       </div>
     </div>
   `;
@@ -1260,9 +1303,13 @@ function renderGameCriterionOptions() {
 function renderAnimals() {
   const visible = getVisibleAnimals();
   const isSearching = Boolean(state.query);
+  const isMissionMode = state.catalogMode === "mission";
+  const searchScope = isMissionMode ? "현재 미션" : "전체 도감";
   els.animalGrid.innerHTML = "";
+  els.searchInput.setAttribute("aria-label", `${searchScope} 검색`);
+  els.searchInput.placeholder = `${searchScope} 검색: 동물 이름, 사는 곳, 특징`;
   els.resultCount.textContent = isSearching
-    ? `전체 도감 검색 결과 ${visible.length}마리`
+    ? `${searchScope} 검색 결과 ${visible.length}마리`
     : state.catalogMode === "all"
     ? `전체 ${visible.length}마리`
     : `미션 카드 ${visible.length}마리`;
@@ -1279,9 +1326,13 @@ function renderAnimals() {
     const card = document.createElement("button");
     card.type = "button";
     card.className = "animal-card";
+    card.dataset.animalId = animal.id;
     if (state.collected.has(animal.id)) card.classList.add("collected");
     if (state.selectedAnimal === animal.id) card.classList.add("selected");
-    card.addEventListener("click", () => openAnimal(animal));
+    card.addEventListener("click", () => {
+      card.classList.add("selected");
+      openAnimal(animal);
+    });
 
     const imageFrame = document.createElement("div");
     imageFrame.className = "image-frame card-photo-frame";
@@ -1391,14 +1442,17 @@ function openAnimal(animal) {
   setImage(animal, els.detailImage, els.detailPhoto, "detail");
   renderAnimalInfo(animal);
   enterModalFocus(els.detailModal);
-  renderAnimals();
 }
 
 function closeDetail() {
+  const animalId = state.selectedAnimal;
   state.selectedAnimal = null;
   state.quiz = null;
   clearHintHighlight();
-  exitModalFocus(els.detailModal);
+  exitModalFocus(els.detailModal, {
+    fallbackFocus: () => Array.from(els.animalGrid.querySelectorAll(".animal-card"))
+      .find(card => card.dataset.animalId === animalId)
+  });
   renderAnimals();
 }
 
@@ -1623,7 +1677,6 @@ function isSharedStudentView() {
 function openSettings() {
   if (!canOpenQuestionSettings()) return;
   if (!els.questionUrlInput || !els.settingsMessage || !els.settingsModal) return;
-  state.settingsLastFocus = document.activeElement;
   els.questionUrlInput.value = appConfig.questionTool.url || "";
   els.questionUrlInput.placeholder = getQuestionUrlPlaceholder() || getDefaultQuestionUrlPlaceholder();
   els.settingsMessage.textContent = "";
@@ -1637,9 +1690,6 @@ function closeSettings() {
   if (!els.settingsModal) return;
   exitModalFocus(els.settingsModal);
   markSettingsModalSeen();
-  if (state.settingsLastFocus && typeof state.settingsLastFocus.focus === "function") {
-    state.settingsLastFocus.focus();
-  }
 }
 
 function hasSeenSettingsModal() {
@@ -2565,7 +2615,7 @@ function startBadgeChallenge(regionId) {
   if (els.gameCriterion) els.gameCriterion.value = criterion.id;
   dealRound(pool);
   playSound("select");
-  setView("game");
+  setView("game", { userInitiated: true });
 }
 
 function updateChallengeUi() {
@@ -2632,6 +2682,7 @@ function createGameToken(animal) {
   button.className = "game-token";
   button.draggable = true;
   button.dataset.animal = animal.id;
+  button.setAttribute("aria-pressed", String(state.game.selected === animal.id));
   if (state.game.selected === animal.id) button.classList.add("selected");
 
   if (state.game.checked && state.game.placements[animal.id] !== "pool") {
@@ -3066,7 +3117,7 @@ function renderAdventureMap() {
         mapTravelTimer = window.setTimeout(() => {
           mapTravelTimer = 0;
           if (state.view !== "map") return;
-          setView("catalog");
+          setView("catalog", { userInitiated: true });
           showToast(`${filter.icon} ${filter.label} 지역에 도착했어요! 동물 카드를 눌러 관찰을 시작해요.`);
         }, MAP_TRAVEL_DURATION_MS);
       }
@@ -3243,7 +3294,7 @@ function travelToRegion(regionId) {
   activateMissionRegion(regionId, { shouldRender: true, updateUrl: true });
   const finishTravel = () => {
     mapTravelTimer = 0;
-    setView("catalog");
+    setView("catalog", { userInitiated: true });
     showToast(`${filter.icon} ${filter.label} 지역에 도착했어요! 동물 카드를 눌러 관찰을 시작해요.`);
   };
   if (shouldAnimateTravel) {
@@ -3273,7 +3324,7 @@ function openMasterDex() {
   renderMissionPanel();
   renderFilters();
   renderAnimals();
-  setView("catalog");
+  setView("catalog", { userInitiated: true });
 }
 
 function getNextMissionFilter() {
@@ -3457,7 +3508,7 @@ function goToNextRewardRegion() {
   if (nextMissionId !== "all") {
     activateMissionRegion(nextMissionId, { shouldRender: false, updateUrl: true });
   }
-  setView("map");
+  setView("map", { userInitiated: true });
   renderMissionPanel();
   renderFilters();
   renderAnimals();
@@ -3466,7 +3517,7 @@ function goToNextRewardRegion() {
 function resetProgressFromReward() {
   closeReward();
   resetProgress(true);
-  setView("map");
+  setView("map", { userInitiated: true });
 }
 
 function saveCompletedMilestones() {
@@ -3735,7 +3786,7 @@ function downloadQrExpandImage() {
 }
 
 function confirmNavigateToQuestion() {
-  if (els.confirmPopup) els.confirmPopup.hidden = true;
+  if (els.confirmPopup && !els.confirmPopup.hidden) exitModalFocus(els.confirmPopup);
   if (pendingQuestionUrl) {
     window.open(pendingQuestionUrl, "_blank", "noopener,noreferrer");
     pendingQuestionUrl = null;
@@ -3743,7 +3794,7 @@ function confirmNavigateToQuestion() {
 }
 
 function closeConfirmPopup() {
-  if (els.confirmPopup) els.confirmPopup.hidden = true;
+  if (els.confirmPopup && !els.confirmPopup.hidden) exitModalFocus(els.confirmPopup);
   pendingQuestionUrl = null;
 }
 
@@ -3751,7 +3802,7 @@ function openSourceConfirm(url) {
   pendingSourceUrl = normalizeHttpUrl(url);
   if (!pendingSourceUrl) return;
   if (els.sourceConfirmModal) {
-    els.sourceConfirmModal.hidden = false;
+    enterModalFocus(els.sourceConfirmModal);
     return;
   }
   window.open(pendingSourceUrl, "_blank", "noopener,noreferrer");
@@ -3759,7 +3810,7 @@ function openSourceConfirm(url) {
 }
 
 function confirmNavigateToSource() {
-  if (els.sourceConfirmModal) els.sourceConfirmModal.hidden = true;
+  if (els.sourceConfirmModal && !els.sourceConfirmModal.hidden) exitModalFocus(els.sourceConfirmModal);
   if (pendingSourceUrl) {
     window.open(pendingSourceUrl, "_blank", "noopener,noreferrer");
     pendingSourceUrl = null;
@@ -3767,7 +3818,7 @@ function confirmNavigateToSource() {
 }
 
 function closeSourceConfirm() {
-  if (els.sourceConfirmModal) els.sourceConfirmModal.hidden = true;
+  if (els.sourceConfirmModal && !els.sourceConfirmModal.hidden) exitModalFocus(els.sourceConfirmModal);
   pendingSourceUrl = null;
 }
 

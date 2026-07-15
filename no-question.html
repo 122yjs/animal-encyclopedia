@@ -45,9 +45,9 @@
       <div class="sidebar-section">
         <h2 class="sidebar-section-title">모드</h2>
         <div class="mode-buttons">
-          <button class="mode-button active" type="button" data-view="map">🗺️ 모험 지도</button>
-          <button class="mode-button" type="button" data-view="catalog">🔍 도감 탐험</button>
-          <button class="mode-button" type="button" data-view="game">🎮 분류 연습</button>
+          <button class="mode-button active" type="button" data-view="map" aria-pressed="true">🗺️ 모험 지도</button>
+          <button class="mode-button" type="button" data-view="catalog" aria-pressed="false">🔍 도감 탐험</button>
+          <button class="mode-button" type="button" data-view="game" aria-pressed="false">🎮 분류 연습</button>
         </div>
       </div>
       <button id="openSettings" class="settings-button" type="button" hidden aria-hidden="true" style="display:none">교사용 설정</button>
@@ -114,7 +114,7 @@
           <p id="resultCount" class="result-count"></p>
           <label class="search-field">
             <span class="search-icon" aria-hidden="true">&#128269;</span>
-            <input id="searchInput" type="search" placeholder="전체 도감 검색: 개, 거미, 바다, 다리" autocomplete="off">
+            <input id="searchInput" type="search" aria-label="전체 도감 검색" placeholder="전체 도감 검색: 개, 거미, 바다, 다리" autocomplete="off">
           </label>
         </div>
       </div>
@@ -179,9 +179,9 @@
   </div>
 
   <div id="sourceConfirmModal" class="confirm-popup" hidden>
-    <div class="confirm-popup-content">
-      <h3>🌐 사진 출처를 볼까요?</h3>
-      <p>위키백과가 새 창에서 열립니다. 도감으로 돌아오려면 새 창을 닫으면 됩니다.</p>
+    <div class="confirm-popup-content" role="dialog" aria-modal="true" aria-labelledby="sourceConfirmTitle" aria-describedby="sourceConfirmMessage">
+      <h3 id="sourceConfirmTitle">🌐 사진 출처를 볼까요?</h3>
+      <p id="sourceConfirmMessage">위키백과가 새 창에서 열립니다. 도감으로 돌아오려면 새 창을 닫으면 됩니다.</p>
       <div class="confirm-popup-actions">
         <button class="primary-button" type="button" id="sourceContinue">계속 보기</button>
         <button class="cancel-button" type="button" id="sourceCancel">도감에 있을래요</button>

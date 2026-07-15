@@ -143,6 +143,18 @@ test("modal focus uses an inert fallback for older tablets", () => {
   assert.equal(appJs.includes("appLayout.inert = true"), false);
 });
 
+test("sticky progress cannot cover active modal layers", () => {
+  const styles = read(path.join(rootDir, "styles.css"));
+  const appJs = read(appPath);
+  const modalRule = styles.match(/body\.modal-open \.sticky-progress \{[\s\S]*?\n\}/)?.[0] ?? "";
+  const floatingRule = styles.match(/body\.modal-open \.floating-exp-text \{[\s\S]*?\n\}/)?.[0] ?? "";
+  assert.ok(modalRule.includes("visibility: hidden"));
+  assert.ok(modalRule.includes("pointer-events: none"));
+  assert.ok(floatingRule.includes("visibility: hidden"));
+  assert.ok(appJs.includes('document.body.classList.add("modal-open")'));
+  assert.ok(appJs.includes('document.body.classList.remove("modal-open")'));
+});
+
 test("local image bundle stays classroom-friendly in size", () => {
   const imageDir = path.join(rootDir, "images");
   const files = [];

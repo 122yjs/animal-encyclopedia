@@ -308,26 +308,60 @@ test("region preview returns to the full adventure map", () => {
 
   for (const needle of [
     'action.dataset.catalogMode === "map"',
-    'setView("map")',
+    'setView("map", { userInitiated: true })',
     'data-catalog-mode="map"',
-    "🗺️ 전체 지도로 돌아가기",
+    "현재 지도로 돌아가기",
     "전체 지도에서 탐험 순서를 확인해요."
   ]) {
     assert.ok(appJs.includes(needle), `app.js should include ${needle}`);
   }
 });
 
-test("mission panel always shows both full-encyclopedia and map buttons as persistent actions", () => {
+test("mission panel keeps actions contextual and omits redundant self-links", () => {
   const appJs = read("app.js");
+  assert.equal(appJs.includes("const persistentActions ="), false);
+  assert.equal(appJs.includes("const secondaryAction ="), false);
+  assert.ok(appJs.includes("현재 미션 열기"));
+  assert.ok(appJs.includes("배지 도전 시작"));
+  assert.ok(appJs.includes("다음 지역으로 출발"));
+  assert.ok(appJs.includes("전체 도감 둘러보기"));
+  assert.ok(appJs.includes("현재 지도로 돌아가기"));
+  assert.equal(appJs.includes('data-catalog-mode="mission">현재 미션으로 돌아가기'), false);
+  assert.equal(appJs.includes("${persistentActions}"), false);
+});
 
-  for (const needle of [
-    'const persistentActions =',
-    'data-catalog-mode="all">📖 전체 도감 보기',
-    'data-catalog-mode="map">🗺️ 전체 지도로 돌아가기',
-    "${persistentActions}"
-  ]) {
-    assert.ok(appJs.includes(needle), `app.js should include ${needle}`);
-  }
+test("catalog copy distinguishes mission scope from the full encyclopedia", () => {
+  const appJs = read("app.js");
+  assert.ok(appJs.includes('const isMissionMode = state.catalogMode === "mission"'));
+  assert.ok(appJs.includes('const searchScope = isMissionMode ? "현재 미션" : "전체 도감"'));
+  assert.ok(appJs.includes('els.searchInput.setAttribute("aria-label", `${searchScope} 검색`)'));
+  assert.ok(appJs.includes('`${searchScope} 검색 결과 ${visible.length}마리`'));
+});
+
+test("mode buttons and game tokens expose their selected state", () => {
+  const html = read("index.html");
+  const appJs = read("app.js");
+  assert.ok(html.includes('class="mode-button active" type="button" data-view="map" aria-pressed="true"'));
+  assert.ok(appJs.includes('button.setAttribute("aria-pressed", String(button.dataset.view === view))'));
+  assert.ok(appJs.includes('className = "game-token"'));
+  assert.ok(appJs.includes('button.setAttribute("aria-pressed", String(state.game.selected === animal.id))'));
+});
+
+test("setView focuses destinations only for user transitions, not initialization", () => {
+  const appJs = read("app.js");
+  assert.ok(appJs.includes("function setView(view, options = {})"));
+  assert.ok(appJs.includes("options.userInitiated"));
+  assert.ok(appJs.includes("setView(view, { userInitiated: true })"));
+  assert.ok(appJs.includes('setView("map")'));
+  assert.ok(appJs.includes("focus()"));
+});
+
+test("full-encyclopedia filter hands focus to the rerendered catalog heading", () => {
+  const appJs = read("app.js");
+  const filterStart = appJs.indexOf("function renderFilters()");
+  const filterEnd = appJs.indexOf("function renderMissionPanel()", filterStart);
+  const filterCode = appJs.slice(filterStart, filterEnd);
+  assert.ok(filterCode.includes('focusViewHeading("catalog")'));
 });
 
 test("mission panel exposes readable state classes for current, completed, and next missions", () => {
@@ -337,8 +371,7 @@ test("mission panel exposes readable state classes for current, completed, and n
   for (const needle of [
     "mission-board status-current",
     "mission-board status-complete",
-    "mission-board status-next",
-    "mission-secondary-action"
+    "mission-board status-next"
   ]) {
     assert.ok(appJs.includes(needle), `app.js should include ${needle}`);
   }
@@ -346,8 +379,7 @@ test("mission panel exposes readable state classes for current, completed, and n
   for (const needle of [
     ".mission-board.status-current",
     ".mission-board.status-complete",
-    ".mission-board.status-next",
-    ".mission-secondary-action"
+    ".mission-board.status-next"
   ]) {
     assert.ok(styles.includes(needle), `styles.css should include ${needle}`);
   }

@@ -1,16 +1,16 @@
-# Graph Report - animal-encyclopedia  (2026-07-15)
+# Graph Report - animal-encyclopedia  (2026-07-16)
 
 ## Corpus Check
-- 13 files · ~526,477 words
+- 13 files · ~497,568 words
 - Verdict: corpus is large enough that graph structure adds value.
 
 ## Summary
-- 559 nodes · 1278 edges · 32 communities detected
+- 560 nodes · 1286 edges · 32 communities detected
 - Extraction: 96% EXTRACTED · 1% INFERRED · 0% AMBIGUOUS · INFERRED: 8 edges (avg confidence: 0.82)
 - Token cost: 0 input · 0 output
 
 ## Graph Freshness
-- Built from commit: `955dfb73`
+- Built from commit: `5611584e`
 - Run `git rev-parse HEAD` and compare to check if the graph is stale.
 - Run `graphify update .` after code changes (no API cost).
 
@@ -51,14 +51,14 @@
 ## God Nodes (most connected - your core abstractions)
 1. `init()` - 24 edges
 2. `init()` - 21 edges
-3. `updateProgress()` - 16 edges
-4. `renderMissionPanel()` - 15 edges
+3. `renderMissionPanel()` - 16 edges
+4. `updateProgress()` - 16 edges
 5. `Current Improvement Roadmap` - 15 edges
-6. `playSound()` - 14 edges
-7. `normalizeHttpUrl()` - 14 edges
-8. `activateMissionRegion()` - 13 edges
-9. `getProgramTotal()` - 13 edges
-10. `renderAnimalInfo()` - 13 edges
+6. `exitModalFocus()` - 14 edges
+7. `playSound()` - 14 edges
+8. `normalizeHttpUrl()` - 14 edges
+9. `activateMissionRegion()` - 13 edges
+10. `getProgramTotal()` - 13 edges
 
 ## Surprising Connections (you probably didn't know these)
 - `openQuiz()` --calls--> `playSound()`  [INFERRED]
@@ -76,39 +76,39 @@
 
 ### Community 0 - "Community 0"
 Cohesion: 0.06
-Nodes (78): activateMissionRegion(), animateMapPlayer(), applyInitialMissionSettings(), areAllBadgesEarned(), awardRegionBadge(), bindAdventureMap(), bindMissionPanel(), bindTeacherMissionControls() (+70 more)
+Nodes (74): activateMissionRegion(), animateMapPlayer(), applyInitialMissionSettings(), areAllBadgesEarned(), awardRegionBadge(), bindAdventureMap(), bindMissionPanel(), bindTeacherMissionControls() (+66 more)
 
 ### Community 1 - "Community 1"
-Cohesion: 0.07
-Nodes (16): getCompactMissionSelectionEntries(), getFocusableElements(), handleModalKeydown(), makeAnimal(), readCollected(), readStoredIds(), updateMissionUrl(), wikiUrl() (+8 more)
+Cohesion: 0.06
+Nodes (38): answerQuestion(), applyImageFallback(), buildObservationDetails(), clearHintHighlight(), closeDetail(), createGameToken(), createImagePlaceholder(), dedupeSources() (+30 more)
 
 ### Community 2 - "Community 2"
+Cohesion: 0.08
+Nodes (20): getFocusableElements(), handleModalKeydown(), makeAnimal(), readCollected(), readStoredIds(), spawnFloatingText(), updateMissionUrl(), wikiUrl() (+12 more)
+
+### Community 3 - "Community 3"
+Cohesion: 0.11
+Nodes (29): applyQuestionToolMode(), buildQuestionRoomUrlFromCode(), buildShareLink(), canOpenQuestionSettings(), clearQuestionSettings(), getCompactMissionRegionCode(), getCompactMissionSelectionEntries(), getCompactQuestionRoomCode() (+21 more)
+
+### Community 4 - "Community 4"
 Cohesion: 0.12
 Nodes (22): assertHttpUrl(), buildConfig(), copyStaticDirectory(), copyStaticFiles(), hasLocalImageAssets(), main(), parseArgs(), readJson() (+14 more)
 
-### Community 3 - "Community 3"
+### Community 5 - "Community 5"
 Cohesion: 0.09
 Nodes (20): checkGame(), ensureAudioContext(), moveGameToken(), playSound(), renderGameBoard(), updateGameScore(), closeQuiz(), createInitialBoards() (+12 more)
 
-### Community 4 - "Community 4"
-Cohesion: 0.13
-Nodes (27): applyQuestionToolMode(), buildQuestionRoomUrlFromCode(), buildShareLink(), canOpenQuestionSettings(), clearQuestionSettings(), getCompactMissionRegionCode(), getCompactQuestionRoomCode(), getDefaultQuestionUrlPlaceholder() (+19 more)
-
-### Community 5 - "Community 5"
-Cohesion: 0.15
-Nodes (20): buildShareLink(), clearQuestionSettings(), getQuestionUrlFromPageUrl(), getShareLinkCopy(), getShareLinkTargetPath(), hasCustomMissionSelections(), hydrateQuestionToolConfig(), isSharedStudentView() (+12 more)
-
 ### Community 6 - "Community 6"
-Cohesion: 0.13
-Nodes (19): buildDistinctiveFeatureQuestion(), buildQuestions(), buildSpecialEnvironmentQuestion(), getFeatureComparisonText(), getFeatureDistractorScore(), getHabitatDistractors(), getMeaningfulTokenOverlap(), getMeaningfulTokens() (+11 more)
+Cohesion: 0.1
+Nodes (22): clearOnboardingHighlights(), closeConfirmPopup(), closeGuideModal(), closeQrExpand(), closeRegionLockedPopup(), closeSourceConfirm(), completeOnboarding(), confirmLockedRegionTravel() (+14 more)
 
 ### Community 7 - "Community 7"
 Cohesion: 0.13
-Nodes (19): buildDistinctiveFeatureQuestion(), buildQuestions(), buildSpecialEnvironmentQuestion(), getFeatureComparisonText(), getFeatureDistractorScore(), getHabitatDistractors(), getMeaningfulTokenOverlap(), getMeaningfulTokens() (+11 more)
+Nodes (19): 2nd Improvement Plan, 3rd Progress Report, Development Rules and Project Structure, Changelog, Demo Recorder Skill, Game Mobile UX Draft, Graphify Instructions, Improvement Plan (+11 more)
 
 ### Community 8 - "Community 8"
-Cohesion: 0.13
-Nodes (19): 2nd Improvement Plan, 3rd Progress Report, Development Rules and Project Structure, Changelog, Demo Recorder Skill, Game Mobile UX Draft, Graphify Instructions, Improvement Plan (+11 more)
+Cohesion: 0.17
+Nodes (18): buildShareLink(), clearQuestionSettings(), getQuestionUrlFromPageUrl(), getShareLinkCopy(), getShareLinkTargetPath(), hasCustomMissionSelections(), hydrateQuestionToolConfig(), isSharedStudentView() (+10 more)
 
 ### Community 9 - "Community 9"
 Cohesion: 0.3
@@ -119,8 +119,8 @@ Cohesion: 0.13
 Nodes (18): achievement_badge, animal_encyclopedia, capture_functionality, collectible_item, gamification_element, capture_ball, treasure_chest, gem_item (+10 more)
 
 ### Community 11 - "Community 11"
-Cohesion: 0.13
-Nodes (17): clearOnboardingHighlights(), closeGuideModal(), closeQrExpand(), closeRegionLockedPopup(), completeOnboarding(), confirmLockedRegionTravel(), enterModalFocus(), exitModalFocus() (+9 more)
+Cohesion: 0.23
+Nodes (16): activateMissionRegion(), closeReward(), getCompletedRegionCount(), getNextMissionFilter(), goToNextRewardRegion(), renderAnimals(), renderCompletionStars(), renderFilters() (+8 more)
 
 ### Community 12 - "Community 12"
 Cohesion: 0.16
@@ -135,60 +135,60 @@ Cohesion: 0.15
 Nodes (15): applyQuestionToolMode(), bindMissionPanel(), bindTeacherMissionControls(), bindViewTabs(), canOpenQuestionSettings(), debounce(), hasSeenSettingsModal(), init() (+7 more)
 
 ### Community 15 - "Community 15"
-Cohesion: 0.16
-Nodes (14): buildObservationDetails(), escapeAttribute(), escapeHTML(), lifeBrief(), lifestyleExplanation(), readObservationReady(), renderAnimalEnvironmentNote(), renderAnimalInfo() (+6 more)
+Cohesion: 0.18
+Nodes (15): buildDistinctiveFeatureQuestion(), buildQuestions(), buildSpecialEnvironmentQuestion(), getHabitatDistractors(), getMovementKey(), hasFinalConsonant(), makeDistinctiveFeatureOptions(), makeHabitatOptions() (+7 more)
 
 ### Community 16 - "Community 16"
 Cohesion: 0.16
-Nodes (14): buildObservationDetails(), escapeAttribute(), escapeHTML(), lifeBrief(), lifestyleExplanation(), readObservationReady(), renderAnimalEnvironmentNote(), renderAnimalInfo() (+6 more)
+Nodes (14): applyImageFallback(), createGameToken(), createImagePlaceholder(), dedupeSources(), escapeSvgText(), finishQuiz(), getImageSources(), getLocalImagePath() (+6 more)
 
 ### Community 17 - "Community 17"
-Cohesion: 0.29
-Nodes (14): activateMissionRegion(), closeReward(), getCompletedRegionCount(), getNextMissionFilter(), goToNextRewardRegion(), renderAnimals(), renderCompletionStars(), renderFilters() (+6 more)
+Cohesion: 0.2
+Nodes (14): buildDistinctiveFeatureQuestion(), buildQuestions(), buildSpecialEnvironmentQuestion(), getHabitatDistractors(), getMovementKey(), hasFinalConsonant(), makeDistinctiveFeatureOptions(), makeHabitatOptions() (+6 more)
 
 ### Community 18 - "Community 18"
+Cohesion: 0.18
+Nodes (13): buildObservationDetails(), escapeAttribute(), lifeBrief(), lifestyleExplanation(), readObservationReady(), renderAnimalEnvironmentNote(), renderAnimalInfo(), renderAnimalRegionBadges() (+5 more)
+
+### Community 19 - "Community 19"
 Cohesion: 0.29
 Nodes (11): download(), downloadLocalImages(), downloadWithFallback(), getExtension(), lookupWikipediaImage(), parseAnimals(), parseImageSources(), parseWiki() (+3 more)
 
-### Community 19 - "Community 19"
+### Community 20 - "Community 20"
 Cohesion: 0.22
 Nodes (13): applyInitialMissionSettings(), getCurrentMissionPreset(), getDefaultMissionAnimalIds(), getMissionAnimalIdsFromPageUrl(), getMissionAnimalsParam(), getMissionCandidateAnimals(), getMissionPreset(), getMissionRegionFromPageUrl() (+5 more)
 
-### Community 20 - "Community 20"
-Cohesion: 0.18
-Nodes (13): clearOnboardingHighlights(), closeDetail(), closeGuideModal(), closeQrExpand(), completeOnboarding(), enterModalFocus(), exitModalFocus(), nextOnboardingStep() (+5 more)
-
 ### Community 21 - "Community 21"
 Cohesion: 0.2
-Nodes (12): applyImageFallback(), createGameToken(), createImagePlaceholder(), dedupeSources(), escapeSvgText(), getImageSources(), getLocalImagePath(), isGamePlacementCorrect() (+4 more)
+Nodes (12): clearOnboardingHighlights(), closeGuideModal(), closeQrExpand(), completeOnboarding(), enterModalFocus(), exitModalFocus(), nextOnboardingStep(), openGuideModal() (+4 more)
 
 ### Community 22 - "Community 22"
-Cohesion: 0.21
-Nodes (12): answerQuestion(), clearHintHighlight(), finishQuiz(), nextQuestion(), renderFeedback(), renderObservationSummary(), renderQuickFacts(), renderQuiz() (+4 more)
+Cohesion: 0.2
+Nodes (10): closeSettings(), markSettingsModalSeen(), migrateLegacyBadges(), safeSetStorage(), saveBadges(), saveCollected(), saveObservationReady(), toggleSound() (+2 more)
 
 ### Community 23 - "Community 23"
-Cohesion: 0.21
-Nodes (12): answerQuestion(), clearHintHighlight(), finishQuiz(), nextQuestion(), renderFeedback(), renderObservationSummary(), renderQuickFacts(), renderQuiz() (+4 more)
+Cohesion: 0.27
+Nodes (10): answerQuestion(), clearHintHighlight(), escapeHTML(), renderFeedback(), renderObservationSummary(), renderQuickFacts(), renderQuiz(), resumeQuiz() (+2 more)
 
 ### Community 24 - "Community 24"
-Cohesion: 0.22
-Nodes (11): applyImageFallback(), createGameToken(), createImagePlaceholder(), dedupeSources(), escapeSvgText(), getImageSources(), getLocalImagePath(), isGamePlacementCorrect() (+3 more)
-
-### Community 25 - "Community 25"
-Cohesion: 0.18
-Nodes (11): closeSettings(), markSettingsModalSeen(), migrateLegacyBadges(), safeSetStorage(), saveBadges(), saveCollected(), saveObservationReady(), saveQuestionToolUrl() (+3 more)
-
-### Community 26 - "Community 26"
 Cohesion: 0.2
 Nodes (10): closeSettings(), markSettingsModalSeen(), safeRemoveStorage(), safeSetStorage(), saveCollected(), saveObservationReady(), showToast(), toggleSound() (+2 more)
 
-### Community 27 - "Community 27"
+### Community 25 - "Community 25"
 Cohesion: 0.2
 Nodes (10): forest_background, forest_bg_sprite, forest_wildlife, game_icons_sprite, game_ui_icons, habitat_categories, owl_character, owl_mascot_sprite (+2 more)
 
-### Community 28 - "Community 28"
+### Community 26 - "Community 26"
 Cohesion: 0.6
 Nodes (5): findChromium(), main(), prepareFinalCatch(), quietClick(), startServer()
+
+### Community 27 - "Community 27"
+Cohesion: 0.4
+Nodes (5): getFeatureComparisonText(), getFeatureDistractorScore(), getMeaningfulTokenOverlap(), getMeaningfulTokens(), makeDistinctiveFeatureOption()
+
+### Community 28 - "Community 28"
+Cohesion: 0.67
+Nodes (4): checkGame(), moveGameToken(), renderGameBoard(), updateGameScore()
 
 ### Community 30 - "Community 30"
 Cohesion: 0.5
@@ -202,17 +202,17 @@ Nodes (4): Image Credits Page, React Version Entry Point, Main HTML Entry Point,
 ## Suggested Questions
 _Questions this graph is uniquely positioned to answer:_
 
-- **Why does `playSound()` connect `Community 3` to `Community 1`, `Community 13`, `Community 20`, `Community 21`, `Community 23`, `Community 26`?**
+- **Why does `playSound()` connect `Community 5` to `Community 1`, `Community 2`, `Community 13`, `Community 21`, `Community 24`?**
   _High betweenness centrality (0.059) - this node is a cross-community bridge._
 - **What connects `No-Question Student Version`, `Image Credits Page`, `React Version Entry Point` to the rest of the system?**
   _18 weakly-connected nodes found - possible documentation gaps or missing edges._
 - **Should `Community 0` be split into smaller, more focused modules?**
   _Cohesion score 0.06 - nodes in this community are weakly interconnected._
 - **Should `Community 1` be split into smaller, more focused modules?**
-  _Cohesion score 0.07 - nodes in this community are weakly interconnected._
+  _Cohesion score 0.06 - nodes in this community are weakly interconnected._
 - **Should `Community 2` be split into smaller, more focused modules?**
-  _Cohesion score 0.12 - nodes in this community are weakly interconnected._
+  _Cohesion score 0.08 - nodes in this community are weakly interconnected._
 - **Should `Community 3` be split into smaller, more focused modules?**
-  _Cohesion score 0.09 - nodes in this community are weakly interconnected._
+  _Cohesion score 0.11 - nodes in this community are weakly interconnected._
 - **Should `Community 4` be split into smaller, more focused modules?**
-  _Cohesion score 0.13 - nodes in this community are weakly interconnected._
+  _Cohesion score 0.12 - nodes in this community are weakly interconnected._
