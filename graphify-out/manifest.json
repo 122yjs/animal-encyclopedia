@@ -8,8 +8,8 @@
     "hash": "a9b166bbfcc425c8ffd975c9197240ce"
   },
   "/Users/junier/Projects/animal-encyclopedia/app.js": {
-    "mtime": 1783819019.6859918,
-    "hash": "ee835710f779e080768e6f88687ade43"
+    "mtime": 1784121780.9402514,
+    "hash": "e71a033266f89de4cefe3396924542bc"
   },
   "/Users/junier/Projects/animal-encyclopedia/scripts/record-demo.mjs": {
     "mtime": 1783802215.9761896,
@@ -20,8 +20,8 @@
     "hash": "638b45781bbca568cf2172e8ac9b652e"
   },
   "/Users/junier/Projects/animal-encyclopedia/scripts/phase1-mission-contract.test.mjs": {
-    "mtime": 1783802215.9755764,
-    "hash": "d89dbf511c59163710d1f67f2243b15c"
+    "mtime": 1783863659.512575,
+    "hash": "165cbcc1a86afdc0c87b7bd763bb4354"
   },
   "/Users/junier/Projects/animal-encyclopedia/scripts/download-local-images.js": {
     "mtime": 1783802215.9750745,
@@ -32,28 +32,28 @@
     "hash": "79ead0930ad8dfaca1e74e61a5a1323b"
   },
   "/Users/junier/Projects/animal-encyclopedia/scripts/build.js": {
-    "mtime": 1783802215.9749677,
+    "mtime": 1783856749.620734,
     "hash": "21c0bac590b922d6bd9320bcf6bfa4c1"
   },
   "/Users/junier/Projects/animal-encyclopedia/scripts/phase3-contract.test.mjs": {
-    "mtime": 1783802215.9758687,
-    "hash": "5c73910aae6fa45e1001679735c61d6f"
+    "mtime": 1783969843.1903007,
+    "hash": "a479ec3451d0c9aad56a604b5e70f917"
   },
   "/Users/junier/Projects/animal-encyclopedia/scripts/generate-no-question.js": {
     "mtime": 1783802215.9752483,
     "hash": "390d9cbbbeb38baa357987f62be5237d"
   },
   "/Users/junier/Projects/animal-encyclopedia/scripts/phase0-ux-contract.test.mjs": {
-    "mtime": 1783802215.9754868,
-    "hash": "756355813a68e6b9adc95def26e5fa2a"
+    "mtime": 1784121801.6467478,
+    "hash": "74cfde8f0b67ca2f96162817c664c3cd"
   },
   "/Users/junier/Projects/animal-encyclopedia/vendor/qrcode.js": {
     "mtime": 1776417429.8434937,
     "hash": "6e6189e2b177b3d014321edad68fd73c"
   },
   "/Users/junier/Projects/animal-encyclopedia/index.html": {
-    "mtime": 1783809103.3049557,
-    "hash": "3e284a97fc7daa8cd421ce789f05885e"
+    "mtime": 1783969843.187726,
+    "hash": "1b930679b80cf9944cf4c604270bd216"
   },
   "/Users/junier/Projects/animal-encyclopedia/CHANGELOG.md": {
     "mtime": 1783802215.884322,
@@ -64,19 +64,23 @@
     "hash": "33244edd95112be74a51d26158c51c69"
   },
   "/Users/junier/Projects/animal-encyclopedia/no-question.html": {
-    "mtime": 1783819103.0661042,
-    "hash": "12c305f9a9fa6ec72c7d362354a2be6d"
+    "mtime": 1784121812.177914,
+    "hash": "0e47dec29437601f0424c156deee99ed"
+  },
+  "/Users/junier/Projects/animal-encyclopedia/DESIGN.md": {
+    "mtime": 1784121574.2532387,
+    "hash": "c116426fd5438f043cba64b8c8ff9a2b"
   },
   "/Users/junier/Projects/animal-encyclopedia/AGENTS.md": {
     "mtime": 1783802215.884189,
     "hash": "2706b34b6d84f73fcce58b8d8cec718d"
   },
   "/Users/junier/Projects/animal-encyclopedia/credits.html": {
-    "mtime": 1783819103.051773,
+    "mtime": 1784121812.1687205,
     "hash": "859b4292cfc800534c5ba48b9317ee46"
   },
   "/Users/junier/Projects/animal-encyclopedia/devlog/_plan/260712_h5_status_text_contrast/00_plan.md": {
-    "mtime": 1783819094.4875746,
+    "mtime": 1783820623.7704375,
     "hash": "08840b064c2b10bd7b88160dc6c0f06c"
   },
   "/Users/junier/Projects/animal-encyclopedia/devlog/_plan/260712_h4_game_theme/00_plan.md": {
@@ -146,6 +150,14 @@
   "/Users/junier/Projects/animal-encyclopedia/docs/archive/2026-04-development-notes/learnings/LEARNINGS.md": {
     "mtime": 1776433704.285292,
     "hash": "c583459a997e74dde96a3bf7cebf831b"
+  },
+  "/Users/junier/Projects/animal-encyclopedia/region-reward-verification.png": {
+    "mtime": 1783855215.3253353,
+    "hash": "54d90abd41171b6da0ecf7d01cb90902"
+  },
+  "/Users/junier/Projects/animal-encyclopedia/completion-stars-aligned.png": {
+    "mtime": 1783855215.3195717,
+    "hash": "7a11e47d2ce207c9214e61dce2a59af4"
   },
   "/Users/junier/Projects/animal-encyclopedia/images/thumbs/\uc0ac\ub9c9\uc5ec\uc6b0.jpg": {
     "mtime": 1783802215.969687,
@@ -666,5 +678,9 @@
   "/Users/junier/Projects/animal-encyclopedia/docs/media/pokeball-catch.webm": {
     "mtime": 1783802215.9411645,
     "hash": "ae481df00f7eb6a281cdf2ba03df28fb"
+  },
+  "/Users/junier/Projects/animal-encyclopedia/videos/pokeball-catch.webm": {
+    "mtime": 1783855215.3148537,
+    "hash": "88bc4c57788a5e66131a27582c4c7139"
   }
 }

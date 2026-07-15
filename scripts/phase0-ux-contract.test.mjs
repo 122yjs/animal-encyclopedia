@@ -168,3 +168,132 @@ test("uncollected card photos keep recognizable silhouettes with question contex
   assert.ok(styles.includes("blur(3px)"));
   assert.ok(styles.includes("card-photo-frame::after"));
 });
+
+test("adventure map keeps the first and master nodes inside its clipped canvas", () => {
+  const appJs = read("app.js");
+  const stopMatches = [...appJs.matchAll(/\{ id: "([^"]+)", x: (\d+), y: (\d+) \}/g)];
+  const stops = Object.fromEntries(stopMatches.map(([, id, x, y]) => [id, { x: Number(x), y: Number(y) }]));
+
+  assert.ok(stops.around, "journeyStops should include the first region");
+  assert.ok(stops.master, "journeyStops should include the master destination");
+  assert.ok(stops.around.y >= 13, "the first node needs enough top clearance for its label and player marker");
+  assert.ok(stops.master.y <= 87, "the master node needs enough bottom clearance for its label");
+});
+
+test("adventure map region art stays uncolored until its badge is earned", () => {
+  const styles = read("styles.css");
+  const unearnedRule = styles.match(/\.map-node:not\(\.map-status-complete\) \.map-node-sprite \{[\s\S]*?\n\}/)?.[0] ?? "";
+  const earnedRule = styles.match(/\.map-node\.map-status-complete \.map-node-sprite \{[\s\S]*?\n\}/)?.[0] ?? "";
+  const playerRule = styles.match(/\.map-player \{[\s\S]*?\n\}/)?.[0] ?? "";
+
+  assert.ok(
+    styles.includes(".map-node:not(.map-status-complete) .map-node-sprite"),
+    "every unearned region sprite should share the muted treatment"
+  );
+  assert.ok(unearnedRule.includes("grayscale(1)"), "unearned region art should be fully grayscale");
+  assert.ok(
+    styles.includes(".map-node.map-status-complete .map-node-sprite"),
+    "earned region sprites should explicitly restore their color"
+  );
+  assert.ok(earnedRule.includes("filter: none"), "earned region art should restore its original color");
+  assert.ok(
+    playerRule.includes("translate(55%, -125%)"),
+    "the colored player marker should sit beside the current region art instead of covering it"
+  );
+});
+
+test("map player travels once from a newly earned badge to the next mission", () => {
+  const appJs = read("app.js");
+  const styles = read("styles.css");
+
+  for (const needle of [
+    "let pendingMapTravel = null",
+    "pendingMapTravel = { from: regionId, to: getNextMissionFilter() }",
+    "pendingMapTravel.autoOpenCatalog = true",
+    'state.view === "map" && pendingMapTravel',
+    "function animateMapPlayer(fromId, toId)",
+    'els.mapPlayer.classList.add("is-traveling")',
+    'window.matchMedia("(prefers-reduced-motion: reduce)")'
+  ]) {
+    assert.ok(appJs.includes(needle), `app.js should include ${needle}`);
+  }
+
+  const travelRule = styles.match(/\.map-player\.is-traveling \{[\s\S]*?\n\}/)?.[0] ?? "";
+  assert.ok(travelRule.includes("animation: none"), "traveling should pause the idle bob animation");
+  assert.ok(travelRule.includes("transition-duration"), "traveling should use a visible one-time transition");
+
+  const nextRegionStart = appJs.indexOf("function goToNextRewardRegion()");
+  const nextRegionEnd = appJs.indexOf("function resetProgressFromReward()", nextRegionStart);
+  const nextRegionCode = appJs.slice(nextRegionStart, nextRegionEnd);
+  assert.ok(nextRegionCode.includes('setView("map")'), "the badge reward action should reveal the map journey");
+
+  const resetStart = appJs.indexOf("function resetProgress(skipConfirm = false)");
+  const resetEnd = appJs.indexOf("function readObservationReady", resetStart);
+  assert.ok(appJs.slice(resetStart, resetEnd).includes("pendingMapTravel = null"), "reset should discard a queued journey");
+});
+
+test("map player also travels when a student jumps to another region from the map", () => {
+  const appJs = read("app.js");
+  const travelStart = appJs.indexOf("function travelToRegion(regionId)");
+  const travelEnd = appJs.indexOf("function requestRegionTravel(regionId)", travelStart);
+  const travelCode = appJs.slice(travelStart, travelEnd);
+
+  assert.ok(appJs.includes("function queueMapPlayerTravel(fromRegionId, toRegionId)"), "app.js should queue map travel from map clicks");
+  for (const needle of [
+    "const fromRegion = getActiveQuestRegion()",
+    "queueMapPlayerTravel(fromRegion, regionId)",
+    "window.setTimeout(finishTravel, MAP_TRAVEL_DURATION_MS)",
+    "지역에 도착했어요!"
+  ]) {
+    assert.ok(travelCode.includes(needle), `travelToRegion should include ${needle}`);
+  }
+
+  const animatedBranch = travelCode.indexOf("if (shouldAnimateTravel)");
+  const animatedReturn = travelCode.indexOf("return;", animatedBranch);
+  const finishTravelStart = travelCode.indexOf("const finishTravel");
+  const catalogSwitch = travelCode.indexOf('setView("catalog")');
+  assert.ok(
+    finishTravelStart >= 0 && catalogSwitch > finishTravelStart && catalogSwitch < animatedBranch
+      && animatedBranch >= 0 && animatedReturn > animatedBranch,
+    "forced map travel should open the destination catalog after the animation"
+  );
+  assert.ok(
+    travelCode.includes("동물 카드를 눌러 관찰을 시작해요."),
+    "arrival feedback should guide students into the destination catalog without another travel click"
+  );
+
+  const mapRenderStart = appJs.indexOf("function renderAdventureMap()");
+  const mapRenderEnd = appJs.indexOf("function createMapNode", mapRenderStart);
+  const mapRenderCode = appJs.slice(mapRenderStart, mapRenderEnd);
+  assert.ok(mapRenderCode.includes("travel.autoOpenCatalog"), "reward travel should carry the automatic catalog transition");
+  assert.ok(mapRenderCode.includes('setView("catalog")'), "reward travel should open the next region catalog after arrival");
+});
+
+test("travel feedback stays readable above fixed controls on small screens", () => {
+  const appJs = read("app.js");
+  const styles = read("styles.css");
+
+  assert.ok(appJs.includes("지역에 도착했어요!"), "travel feedback should name the region naturally");
+
+  const toastRule = styles.match(/\.app-toast \{[\s\S]*?\n\}/)?.[0] ?? "";
+  const popupRule = styles.match(/\.confirm-popup \{[\s\S]*?\n\}/)?.[0] ?? "";
+  const mobileRule = styles.match(/@media \(max-width: 1080px\) \{[\s\S]*?\.app-toast \{[\s\S]*?\n  \}[\s\S]*?\n\}/)?.[0] ?? "";
+
+  assert.ok(toastRule.includes("z-index: 60"), "arrival toast should sit above the sticky progress capsule");
+  assert.ok(popupRule.includes("z-index: 1100"), "travel confirmation should sit above fixed controls");
+  assert.ok(mobileRule.includes("bottom: 84px"), "mobile arrival toast should clear the bottom controls");
+});
+
+test("mobile map keeps the current exploration action visible while scrolling", () => {
+  const appJs = read("app.js");
+  const styles = read("styles.css");
+
+  assert.ok(
+    appJs.includes('>▶ ${filter.label} 탐험 계속하기</button>'),
+    "the map action should name the region it will open"
+  );
+  assert.ok(styles.includes(".map-header {\n    display: contents;"), "mobile map header should let the action card stick to the map scroll container");
+  assert.ok(styles.includes("overflow-y: visible;"), "mobile map should use the page scroll container for the sticky action");
+  assert.ok(styles.includes(".app-layout {\n    overflow: visible;"), "mobile app layout should not clip the page scroll used by the sticky action");
+  assert.ok(styles.includes("position: sticky;\n    top: 8px;\n    z-index: 15;"), "mobile map action card should stay visible above map nodes");
+});

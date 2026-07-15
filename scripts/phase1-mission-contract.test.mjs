@@ -186,8 +186,8 @@ test("detail modal keeps observation checks under explanations and summary under
     "<h3>${question.text}</h3>",
     "renderObservationSummary(quiz.animal)",
     '<details class="observation-summary">',
-    "<summary>관찰 요약 열기</summary>",
-    "renderQuickFacts(animal, \"관찰 요약\")"
+    "<summary>💡 힌트 보기!</summary>",
+    "renderQuickFacts(animal, \"관찰 단서\")"
   ]) {
     assert.ok(appJs.includes(needle), `app.js should include ${needle}`);
   }
@@ -275,13 +275,56 @@ test("master reward wins over final regional reward when all animals are collect
   assert.ok(rewardCode.indexOf("const masterCompleted") < rewardCode.indexOf("completed.find"));
 });
 
-test("manual sidebar mission navigation shows each teacher-selected regional set", () => {
+test("manual region navigation asks before entering an unfinished region out of order", () => {
+  const appJs = read("app.js");
+  const html = read("index.html");
+
+  for (const needle of [
+    "function requestRegionTravel(regionId)",
+    "const currentMissionId = getNextMissionFilter()",
+    "regionId !== currentMissionId && !hasRegionBadge(regionId)",
+    "requestRegionTravel(filter.id)",
+    "requestRegionTravel(regionId)",
+    "openRegionLockedPopup(regionId)",
+    "state.missionAnimalIds = getSelectedMissionAnimalIds(mission.id)",
+    "const missionIds = state.catalogMode === \"mission\" ? new Set(getSelectedMissionAnimalIds(state.missionRegion)) : null"
+  ]) {
+    assert.ok(appJs.includes(needle), `app.js should include ${needle}`);
+  }
+
+  for (const needle of [
+    'role="dialog"',
+    'aria-labelledby="regionLockedTitle"',
+    'id="regionLockedMessage"',
+    "이 지역으로 이동",
+    "현재 순서 유지"
+  ]) {
+    assert.ok(html.includes(needle), `index.html should include ${needle}`);
+  }
+});
+
+test("region preview returns to the full adventure map", () => {
   const appJs = read("app.js");
 
   for (const needle of [
-    "activateMissionRegion(filter.id, { shouldRender: true, updateUrl: true })",
-    "state.missionAnimalIds = getSelectedMissionAnimalIds(mission.id)",
-    "const missionIds = state.catalogMode === \"mission\" ? new Set(getSelectedMissionAnimalIds(state.missionRegion)) : null"
+    'action.dataset.catalogMode === "map"',
+    'setView("map")',
+    'data-catalog-mode="map"',
+    "🗺️ 전체 지도로 돌아가기",
+    "전체 지도에서 탐험 순서를 확인해요."
+  ]) {
+    assert.ok(appJs.includes(needle), `app.js should include ${needle}`);
+  }
+});
+
+test("mission panel always shows both full-encyclopedia and map buttons as persistent actions", () => {
+  const appJs = read("app.js");
+
+  for (const needle of [
+    'const persistentActions =',
+    'data-catalog-mode="all">📖 전체 도감 보기',
+    'data-catalog-mode="map">🗺️ 전체 지도로 돌아가기',
+    "${persistentActions}"
   ]) {
     assert.ok(appJs.includes(needle), `app.js should include ${needle}`);
   }

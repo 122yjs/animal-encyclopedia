@@ -1261,6 +1261,10 @@ button:focus-visible {
   border-radius: 0;
 }
 
+.observation-summary .quick-facts h3 {
+  color: var(--teal-dark) !important;
+}
+
 .observation-checkitem {
   display: flex;
   align-items: center;
@@ -2387,7 +2391,7 @@ button:focus-visible {
   position: fixed;
   left: 50%;
   bottom: 22px;
-  z-index: 40;
+  z-index: 60;
   width: min(520px, calc(100% - 32px));
   padding: 12px 14px;
   color: #fff5d6;
@@ -2429,6 +2433,10 @@ button:focus-visible {
 @media (max-width: 1080px) {
   .sticky-progress {
     display: flex;
+  }
+
+  .app-toast {
+    bottom: 84px;
   }
 
   .app-layout {
@@ -3428,7 +3436,7 @@ body[data-view="game"] .sticky-progress {
 .confirm-popup {
   position: fixed;
   inset: 0;
-  z-index: 30;
+  z-index: 1100;
   display: grid;
   place-items: center;
   padding: 24px;
@@ -4605,6 +4613,16 @@ p.game-source-help {
 
 /* 노드 상태별 표현 */
 
+.map-node:not(.map-status-complete) .map-node-sprite {
+  filter: grayscale(1);
+  opacity: 0.72;
+}
+
+.map-node.map-status-complete .map-node-sprite {
+  filter: none;
+  opacity: 1;
+}
+
 .map-node.map-status-complete .map-node-face {
   border-color: #5cb85c;
   background: radial-gradient(circle, #ffffff 0%, #e2f4dd 100%);
@@ -4634,8 +4652,7 @@ p.game-source-help {
   background: #fff4ca;
 }
 
-.map-node.map-status-locked .map-node-face,
-.map-node.map-status-locked .map-node-sprite {
+.map-node.map-status-locked .map-node-face {
   filter: grayscale(0.85);
   opacity: 0.9;
 }
@@ -4667,12 +4684,21 @@ p.game-source-help {
   z-index: 3;
   width: 56px;
   height: 56px;
+  padding: 3px;
   object-fit: contain;
-  transform: translate(-50%, -132%);
+  transform: translate(55%, -125%);
+  background: #fff4ca;
+  border: 2px solid var(--sun);
+  border-radius: 50%;
   transition: left 0.7s cubic-bezier(0.45, 0, 0.25, 1), top 0.7s cubic-bezier(0.45, 0, 0.25, 1);
   pointer-events: none;
   filter: drop-shadow(0 6px 8px rgba(86, 65, 24, 0.35));
   animation: map-player-bob 1.8s ease-in-out infinite;
+}
+
+.map-player.is-traveling {
+  animation: none;
+  transition-duration: 1.25s;
 }
 
 @keyframes map-player-bob {
@@ -4804,8 +4830,17 @@ p.game-source-help {
 }
 
 @media (max-width: 680px) {
+  .app-layout {
+    overflow: visible;
+  }
+
   .map-view {
     padding: 16px 14px 32px;
+    overflow-y: visible;
+  }
+
+  .map-header {
+    display: contents;
   }
 
   .map-header-copy h2 {
@@ -4813,6 +4848,9 @@ p.game-source-help {
   }
 
   .map-quest-card {
+    position: sticky;
+    top: 8px;
+    z-index: 15;
     flex: 1 1 100%;
     min-width: 0;
   }
