@@ -3,35 +3,86 @@ import Phaser from "phaser";
 
 export const KOREAN_FONT = "Malgun Gothic, 'Segoe UI Emoji', Apple SD Gothic Neo, sans-serif";
 
-/**
- * Sprout Lands 나무 패널 (dialog box 나인슬라이스).
- * 텍스처가 없으면 사각형으로 대체합니다.
- */
-export function createWoodPanel(scene, x, y, width, height, { tint, alpha = 1 } = {}) {
-  let panel;
-  if (scene.textures.exists("ui-dialog")) {
-    panel = scene.add.nineslice(x, y, "ui-dialog", 0, width, height, 14, 14, 14, 14);
-    if (tint) panel.setTint(tint);
-  } else {
-    panel = scene.add.rectangle(x, y, width, height, 0xf0d9a0).setStrokeStyle(3, 0x6b4226);
-  }
-  panel.setAlpha(alpha);
-  return panel;
-}
+// ZEP 퀴즈풍 크림 카드 팔레트 (포켓몬 다이얼로그 톤을 유지하면서 선명하게)
+export const UI_PALETTE = {
+  panelFill: 0xfffdf7,
+  panelStroke: 0x46513f,
+  accentFill: 0xe9f4dc,
+  accentStroke: 0x4d7c50,
+  textPrimary: "#39403a",
+  textMuted: "#5a6355",
+  teal: "#2f7f74",
+  amber: "#9c6a14"
+};
 
 /**
- * 나무 질감 버튼. 터치 친화(눌렀다 떼면 실행, 밖으로 나가면 취소).
+ * 크림 카드 패널. 둥근 모서리와 얇은 그림자로 텍스트 박스가
+ * 물리는 느낌 없이 깔끔하게 보이도록 합니다.
+ * Sprout Lands 나무 텍스처가 필요하면 { skin: "wood" } 를 넘기세요.
+ */
+export function createWoodPanel(scene, x, y, width, height, {
+  tint,
+  alpha = 1,
+  skin = "cream",
+  fill = UI_PALETTE.panelFill,
+  stroke = UI_PALETTE.panelStroke,
+  radius = 10
+} = {}) {
+  if (skin === "wood" && scene.textures.exists("ui-dialog")) {
+    const panel = scene.add.nineslice(x, y, "ui-dialog", 0, width, height, 14, 14, 14, 14);
+    if (tint) panel.setTint(tint);
+    panel.setAlpha(alpha);
+    return panel;
+  }
+
+  // Graphics는 tint를 지원하지 않으므로 tint 요청은 fill 색상으로 처리
+  if (tint) fill = tint;
+
+  const g = scene.add.graphics();
+  // 은은한 그림자 (카드가 배경 위에 떠 있는 느낌)
+  g.fillStyle(0x2c3a26, 0.16 * alpha);
+  g.fillRoundedRect(x - width / 2, y - height / 2 + 3, width, height, radius);
+  g.fillStyle(fill, alpha);
+  g.fillRoundedRect(x - width / 2, y - height / 2, width, height, radius);
+  if (stroke) {
+    g.lineStyle(1.5, stroke, Math.min(1, alpha + 0.05));
+    g.strokeRoundedRect(x - width / 2, y - height / 2, width, height, radius);
+  }
+  g.size = (w, h) => {
+    g.clear();
+    g.fillStyle(0x2c3a26, 0.16 * alpha);
+    g.fillRoundedRect(-w / 2, -h / 2 + 3, w, h, radius);
+    g.fillStyle(fill, alpha);
+    g.fillRoundedRect(-w / 2, -h / 2, w, h, radius);
+    if (stroke) {
+      g.lineStyle(1.5, stroke, Math.min(1, alpha + 0.05));
+      g.strokeRoundedRect(-w / 2, -h / 2, w, h, radius);
+    }
+  };
+  g.setAlpha(alpha);
+  return g;
+}
+
+/** 하위 호환용 별칭 */
+export const createPanel = createWoodPanel;
+
+/**
+ * 크림 카드 버튼. 터치 친화(눌렀다 떼면 실행, 밖으로 나가면 취소).
  */
 export function createWoodButton(scene, x, y, label, onClick, {
   width = 180,
   height = 40,
   fontSize = "15px",
-  textColor = "#3d2410",
+  textColor = UI_PALETTE.textPrimary,
   tint = null,
   depth = 1001
 } = {}) {
   const container = scene.add.container(x, y).setDepth(depth).setScrollFactor(0);
-  const bg = createWoodPanel(scene, 0, 0, width, height, { tint });
+  const bg = createWoodPanel(scene, 0, 0, width, height, {
+    fill: tint ?? UI_PALETTE.accentFill,
+    stroke: UI_PALETTE.accentStroke,
+    radius: Math.min(9, height / 2)
+  });
   bg.setInteractive({ useHandCursor: true });
 
   const text = scene.add.text(0, -1, label, {
@@ -44,12 +95,9 @@ export function createWoodButton(scene, x, y, label, onClick, {
   }).setOrigin(0.5);
 
   const setPressed = (value) => {
+    if (!container.buttonEnabled) return;
     container.setScale(value ? 0.96 : 1);
-    if (bg.setTint) {
-      if (value) bg.setTint(0xd9b98a);
-      else if (tint) bg.setTint(tint);
-      else bg.clearTint();
-    }
+    container.setAlpha(value ? 0.85 : 1);
   };
 
   bg.on("pointerdown", () => setPressed(true));
@@ -63,7 +111,9 @@ export function createWoodButton(scene, x, y, label, onClick, {
   container.add([bg, text]);
   container.buttonBg = bg;
   container.buttonText = text;
+  container.buttonEnabled = true;
   container.setButtonEnabled = (enabled) => {
+    container.buttonEnabled = enabled;
     if (enabled) {
       bg.setInteractive({ useHandCursor: true });
       container.setAlpha(1);

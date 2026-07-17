@@ -12,6 +12,8 @@ const config = {
   width: 640,
   height: 360,
   backgroundColor: "#5a9e3f",
+  // 텍스트가 뿌옇게 깨져 보이지 않도록 렌더 해상도를 기기 픽셀 비율에 맞춥니다
+  resolution: Math.min(window.devicePixelRatio || 1, 2),
   pixelArt: true,
   roundPixels: true,
   physics: {

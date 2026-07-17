@@ -17,6 +17,7 @@ import { collectAnimal, isCollected, regionStatus } from "../systems/ProgressSto
 import { ensureAnimalTexture, ensureBallTexture } from "../world/AnimalSprites.js";
 import {
   KOREAN_FONT,
+  UI_PALETTE,
   createWoodButton,
   createWoodPanel,
   createHeartRow,
@@ -92,8 +93,8 @@ export default class QuizBattleScene extends Phaser.Scene {
     this.add.ellipse(150, 314, 176, 46, 0x639b4d, 0.85);
 
     // ── 적(동물) 카드 ──
-    this.enemyRoot = this.add.container(486, 104);
-    const card = createWoodPanel(this, 0, 0, 134, 134);
+    this.enemyRoot = this.add.container(486, 100);
+    const card = createWoodPanel(this, 0, 0, 126, 126);
     this.enemyPhotoHolder = this.add.container(0, 0);
     // 사진이 오기 전까지는 자체 제작 미니 스프라이트(없으면 이모지)로 표시
     const miniKey = ensureAnimalTexture(this, this.animal.id);
@@ -103,32 +104,51 @@ export default class QuizBattleScene extends Phaser.Scene {
         fontSize: "52px", fontFamily: KOREAN_FONT
       }).setOrigin(0.5);
     this.enemyPhotoHolder.add(this.enemyEmojiText);
-    const plate = createWoodPanel(this, 0, 82, 160, 28, { tint: 0xffe9bd });
-    const nameText = this.add.text(0, 81, `${emoji} ${this.animal.name}`, {
-      fontFamily: KOREAN_FONT, fontSize: "14px", color: "#3d2410", fontStyle: "bold"
+    const plate = createWoodPanel(this, 0, 76, 168, 30, {
+      fill: UI_PALETTE.accentFill, stroke: UI_PALETTE.accentStroke, radius: 8
+    });
+    const nameText = this.add.text(0, 75, `${emoji} ${this.animal.name}`, {
+      fontFamily: KOREAN_FONT, fontSize: "14px", color: UI_PALETTE.textPrimary, fontStyle: "bold"
     }).setOrigin(0.5);
     this.enemyRoot.add([card, this.enemyPhotoHolder, plate, nameText]);
 
-    // 동물 기력(집중력) 게이지
-    this.enemyGaugeLabel = this.add.text(414, 200, "기력", {
-      fontFamily: KOREAN_FONT, fontSize: "11px", color: "#2d4a28", fontStyle: "bold"
+    // 동물 기력(집중력) 게이지 — 카드 바로 아래 칩에 묶어 본문과 겹치지 않게 배치
+    const gaugeChip = this.add.container(486, 196);
+    gaugeChip.add(createWoodPanel(this, 0, 0, 148, 28, {
+      fill: 0xffffff, stroke: UI_PALETTE.accentStroke, radius: 14, alpha: 0.94
+    }));
+    const gaugeLabel = this.add.text(-58, 0, "기력", {
+      fontFamily: KOREAN_FONT, fontSize: "11px", color: UI_PALETTE.teal, fontStyle: "bold"
     }).setOrigin(0, 0.5).setDepth(1002);
-    this.enemyHearts = createHeartRow(this, 448, 200, this.enemyGauge, { size: 22, gap: 3 });
+    gaugeChip.add(gaugeLabel);
+    this.enemyHearts = createHeartRow(this, -30, 0, this.enemyGauge, { size: 20, gap: 3 });
+    this.enemyHearts.container.setDepth(1003);
+    this.enemyHearts.container.setScrollFactor(0);
+    gaugeChip.add(this.enemyHearts.container);
+    gaugeChip.setDepth(1002);
 
     this.loadEnemyPhoto();
 
     // ── 플레이어 ──
     this.playerSprite = this.add.sprite(150, 272, "player", 4).setScale(3).setDepth(5);
     this.playerSprite.play("idle-up");
-    this.add.text(58, 210, "나", {
-      fontFamily: KOREAN_FONT, fontSize: "11px", color: "#2d4a28", fontStyle: "bold"
+    const playerChip = this.add.container(128, 206).setDepth(1002);
+    playerChip.add(createWoodPanel(this, 0, 0, 124, 28, {
+      fill: 0xffffff, stroke: UI_PALETTE.accentStroke, radius: 14, alpha: 0.94
+    }));
+    const playerLabel = this.add.text(-48, 0, "나", {
+      fontFamily: KOREAN_FONT, fontSize: "11px", color: UI_PALETTE.teal, fontStyle: "bold"
     }).setOrigin(0, 0.5).setDepth(1002);
-    this.playerHeartRow = createHeartRow(this, 84, 210, MAX_HEARTS, { size: 24, gap: 4 });
+    playerChip.add(playerLabel);
+    this.playerHeartRow = createHeartRow(this, -22, 0, MAX_HEARTS, { size: 20, gap: 4 });
+    this.playerHeartRow.container.setDepth(1003);
+    this.playerHeartRow.container.setScrollFactor(0);
+    playerChip.add(this.playerHeartRow.container);
 
     // ── 턴 리본 ──
-    this.turnPanel = createWoodPanel(this, width / 2, 20, 250, 30).setDepth(1001);
+    this.turnPanel = createWoodPanel(this, width / 2, 20, 260, 32).setDepth(1001);
     this.turnText = this.add.text(width / 2, 19, "", {
-      fontFamily: KOREAN_FONT, fontSize: "13px", color: "#3d2410", fontStyle: "bold"
+      fontFamily: KOREAN_FONT, fontSize: "13px", color: UI_PALETTE.textPrimary, fontStyle: "bold"
     }).setOrigin(0.5).setDepth(1002);
 
     // 도망 버튼 (승리 후에는 숨김)
@@ -189,7 +209,7 @@ export default class QuizBattleScene extends Phaser.Scene {
     const label = this.track(this.add.text(width / 2, cam.height - height / 2 - 10, text, {
       fontFamily: KOREAN_FONT,
       fontSize: "14px",
-      color: "#3d2410",
+      color: UI_PALETTE.textPrimary,
       align: "center",
       lineSpacing: 4,
       wordWrap: { width: width - 70 }
@@ -228,20 +248,21 @@ export default class QuizBattleScene extends Phaser.Scene {
     const page = pages[this.observePage];
     const checked = this.observeChecks[page.key];
 
-    this.track(createWoodPanel(this, width / 2, height * 0.62, width - 40, 214).setDepth(999));
+    // 큰 크림 카드 안에 제목 → 본문 → 체크 버튼 → 하단 액션을 순서대로 배치
+    this.track(createWoodPanel(this, width / 2, height * 0.62, width - 40, 216).setDepth(999));
 
     const dots = pages.map((p, i) => (this.observeChecks[p.key] ? "●" : (i === this.observePage ? "◎" : "○"))).join(" ");
     this.track(this.add.text(width / 2, height * 0.40, `${page.title}  (${this.observePage + 1}/3)   ${dots}`, {
-      fontFamily: KOREAN_FONT, fontSize: "14px", color: "#0f6f68", fontStyle: "bold"
+      fontFamily: KOREAN_FONT, fontSize: "16px", color: UI_PALETTE.teal, fontStyle: "bold"
     }).setOrigin(0.5).setDepth(1001));
 
     this.track(this.add.text(width / 2, height * 0.55, page.body, {
       fontFamily: KOREAN_FONT,
-      fontSize: "13px",
-      color: "#3d2410",
+      fontSize: "15px",
+      color: UI_PALETTE.textPrimary,
       align: "center",
-      lineSpacing: 4,
-      wordWrap: { width: width - 96 }
+      lineSpacing: 8,
+      wordWrap: { width: width - 120 }
     }).setOrigin(0.5).setDepth(1001));
 
     this.track(createWoodButton(
@@ -254,14 +275,14 @@ export default class QuizBattleScene extends Phaser.Scene {
         playEmote(this, width / 2 + 130, height * 0.66, "happy", { depth: 1100, scrollFactor: 0 });
         this.showObservation();
       },
-      { width: 300, height: 32, fontSize: "13px", tint: checked ? 0xd8f0c0 : null }
+      { width: 300, height: 36, fontSize: "14px", tint: checked ? 0xd8f0c0 : null }
     ));
 
     if (this.observePage > 0) {
       this.track(createWoodButton(this, 76, height * 0.86, "← 이전", () => {
         this.observePage -= 1;
         this.showObservation();
-      }, { width: 92, height: 30, fontSize: "12px" }));
+      }, { width: 96, height: 34, fontSize: "13px" }));
     }
 
     const ready = Object.values(this.observeChecks).every(Boolean);
@@ -269,7 +290,7 @@ export default class QuizBattleScene extends Phaser.Scene {
       this.track(createWoodButton(this, width - 76, height * 0.86, "다음 →", () => {
         this.observePage += 1;
         this.showObservation();
-      }, { width: 92, height: 30, fontSize: "12px" }));
+      }, { width: 96, height: 34, fontSize: "13px" }));
     }
     this.track(createWoodButton(
       this,
@@ -280,7 +301,7 @@ export default class QuizBattleScene extends Phaser.Scene {
         if (!ready) return;
         this.startBattle();
       },
-      { width: 280, height: 34, fontSize: "14px", tint: ready ? 0xffe08a : 0xcccccc }
+      { width: 284, height: 38, fontSize: "15px", tint: ready ? 0xffe08a : 0xe4e4e0 }
     ));
   }
 
@@ -315,14 +336,14 @@ export default class QuizBattleScene extends Phaser.Scene {
     this.setTurnLabel(`내 턴 · 문제 ${this.qIndex + 1}/${this.questions.length} (${typeLabel})`);
 
     this.track(this.add.text(width / 2, 208, `📝 ${this.buildSafeFacts(q.hintKey)}`, {
-      fontFamily: KOREAN_FONT, fontSize: "10px", color: "#41603a",
+      fontFamily: KOREAN_FONT, fontSize: "11px", color: UI_PALETTE.textMuted,
       backgroundColor: "#fff8e7cc", padding: { x: 6, y: 3 },
       align: "center", wordWrap: { width: width - 60 }
     }).setOrigin(0.5).setDepth(1001));
 
-    this.track(createWoodPanel(this, width / 2, 236, width - 16, 38).setDepth(1000));
-    this.track(this.add.text(width / 2, 235, q.text, {
-      fontFamily: KOREAN_FONT, fontSize: "13px", color: "#3d2410", fontStyle: "bold",
+    this.track(createWoodPanel(this, width / 2, 238, width - 16, 42).setDepth(1000));
+    this.track(this.add.text(width / 2, 237, q.text, {
+      fontFamily: KOREAN_FONT, fontSize: "14px", color: UI_PALETTE.textPrimary, fontStyle: "bold",
       align: "center", wordWrap: { width: width - 60 }
     }).setOrigin(0.5).setDepth(1001));
 
@@ -330,10 +351,10 @@ export default class QuizBattleScene extends Phaser.Scene {
       const btn = createWoodButton(
         this,
         width / 2,
-        270 + index * 31,
+        272 + index * 31,
         option,
         () => this.onAnswer(option),
-        { width: width - 24, height: 28, fontSize: "12px" }
+        { width: width - 24, height: 28, fontSize: "13px" }
       );
       this.optionButtons.push(btn);
     });
@@ -447,13 +468,15 @@ export default class QuizBattleScene extends Phaser.Scene {
 
     this.setTurnLabel("단서 다시 보기");
 
-    this.track(createWoodPanel(this, width / 2, height * 0.66, width - 40, 176, { tint: 0xfff0c0 }).setDepth(999));
+    this.track(createWoodPanel(this, width / 2, height * 0.66, width - 40, 176, {
+      fill: 0xfff6da, stroke: 0xc79a3a
+    }).setDepth(999));
     this.track(this.add.text(width / 2, height * 0.50, `🔍 ${section.title}`, {
-      fontFamily: KOREAN_FONT, fontSize: "14px", color: "#8a5a10", fontStyle: "bold"
+      fontFamily: KOREAN_FONT, fontSize: "15px", color: UI_PALETTE.amber, fontStyle: "bold"
     }).setOrigin(0.5).setDepth(1001));
     this.track(this.add.text(width / 2, height * 0.63, section.body, {
-      fontFamily: KOREAN_FONT, fontSize: "13px", color: "#3d2410",
-      align: "center", lineSpacing: 4, wordWrap: { width: width - 90 }
+      fontFamily: KOREAN_FONT, fontSize: "14px", color: UI_PALETTE.textPrimary,
+      align: "center", lineSpacing: 6, wordWrap: { width: width - 100 }
     }).setOrigin(0.5).setDepth(1001));
 
     const waitBtn = this.track(createWoodButton(
@@ -593,8 +616,8 @@ export default class QuizBattleScene extends Phaser.Scene {
     const tick = this.add.text(ball.x, ball.y - 34, "딸깍…", {
       fontFamily: KOREAN_FONT,
       fontSize: "12px",
-      color: "#fff8e7",
-      stroke: "#3a2a18",
+      color: "#fffdf7",
+      stroke: "#46513f",
       strokeThickness: 3
     }).setOrigin(0.5).setDepth(1201);
     this.tweens.add({
@@ -630,7 +653,7 @@ export default class QuizBattleScene extends Phaser.Scene {
       fontSize: "17px",
       color: "#ffd84d",
       fontStyle: "bold",
-      stroke: "#3a2a18",
+      stroke: "#46513f",
       strokeThickness: 4
     }).setOrigin(0.5).setDepth(1301);
 
