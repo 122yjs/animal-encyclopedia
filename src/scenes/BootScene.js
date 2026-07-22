@@ -1,7 +1,8 @@
 // 에셋 로드 → 타이틀로 이동
 // Sprout Lands 타일·오브젝트·UI를 16px/32px/48px 프레임으로 잘라 씁니다.
-import Phaser from "phaser";
+import Phaser from "phaser/dist/phaser-arcade-physics.min.js";
 import { KOREAN_FONT } from "../ui/UiHelpers.js";
+import { preloadAnimalAtlases } from "../world/AnimalSprites.js";
 
 export default class BootScene extends Phaser.Scene {
   constructor() {
@@ -69,6 +70,7 @@ export default class BootScene extends Phaser.Scene {
     this.load.spritesheet("npc-cow", `${base}/sprites/Characters/Free Cow Sprites.png`, {
       frameWidth: 32, frameHeight: 32
     });
+    preloadAnimalAtlases(this);
 
     // ── UI ──
     this.load.image("ui-dialog", `${base}/ui/Sprite sheets/Dialouge UI/dialog box.png`);

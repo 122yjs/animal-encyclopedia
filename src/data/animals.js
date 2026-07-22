@@ -1,5 +1,6 @@
 // 레거시 app.js에서 이식한 동물 데이터 (교육용 도감)
 // 이미지 URL은 Wikimedia, 설명은 초등 과학 수업용입니다.
+import { regions } from "./regions.js";
 
 const imageSources = {
   "무당벌레": "https://upload.wikimedia.org/wikipedia/commons/thumb/3/39/Asian_lady_beetle-%28Harmonia-axyridis%29.jpg/330px-Asian_lady_beetle-%28Harmonia-axyridis%29.jpg",
@@ -33,6 +34,9 @@ const imageSources = {
   "메기": "https://upload.wikimedia.org/wikipedia/commons/thumb/a/af/Silurus.jpg/330px-Silurus.jpg",
   "개구리": "https://upload.wikimedia.org/wikipedia/commons/thumb/5/58/Dark-spotted_Frog_%28Pelophylax_nigromaculatus%29.jpg/960px-Dark-spotted_Frog_%28Pelophylax_nigromaculatus%29.jpg",
   "청둥오리": "https://upload.wikimedia.org/wikipedia/commons/thumb/b/bf/Anas_platyrhynchos_male_female_quadrat.jpg/330px-Anas_platyrhynchos_male_female_quadrat.jpg",
+  "왜가리": "https://commons.wikimedia.org/wiki/Special:Redirect/file/Grey%20heron%20%28Ardea%20cinerea%29.jpg?width=640",
+  "갈매기": "https://commons.wikimedia.org/wiki/Special:Redirect/file/Larus%20argentatus%20%28adult%29.jpg?width=640",
+  "게": "https://commons.wikimedia.org/wiki/Special:Redirect/file/Carcinus%20maenas.jpg?width=640",
   "조개": "https://upload.wikimedia.org/wikipedia/commons/thumb/4/46/Seashells_in_the_basket.jpg/330px-Seashells_in_the_basket.jpg",
   "소라": "https://upload.wikimedia.org/wikipedia/commons/thumb/2/23/Turbo_cornutus_%28horned_turban_snail%29_2_%2825031884946%29.jpg/330px-Turbo_cornutus_%28horned_turban_snail%29_2_%2825031884946%29.jpg",
   "돌돔": "https://upload.wikimedia.org/wikipedia/commons/thumb/8/8f/K231003%EB%8F%8C%EB%8F%94.jpg/330px-K231003%EB%8F%8C%EB%8F%94.jpg",
@@ -40,9 +44,20 @@ const imageSources = {
   "돌고래": "https://upload.wikimedia.org/wikipedia/commons/thumb/1/10/Tursiops_truncatus_01.jpg/330px-Tursiops_truncatus_01.jpg",
   "오징어": "https://upload.wikimedia.org/wikipedia/commons/thumb/d/dd/Loligo_vulgaris.jpg/960px-Loligo_vulgaris.jpg",
   "바다거북": "https://upload.wikimedia.org/wikipedia/commons/thumb/b/bb/Hawaii_turtle_2.JPG/330px-Hawaii_turtle_2.JPG",
+  "사막여우": "https://commons.wikimedia.org/wiki/Special:Redirect/file/Vulpes%20zerda.jpg?width=640",
+  "사막 뱀": "https://commons.wikimedia.org/wiki/Special:Redirect/file/Crotalus%20cerastes%2072264050.jpg?width=640",
   "고등어": "https://upload.wikimedia.org/wikipedia/commons/3/3e/Scomber_japonicus.png",
   "해마": "https://upload.wikimedia.org/wikipedia/commons/thumb/2/25/Hippocampus_hippocampus_%28on_Ascophyllum_nodosum%29.jpg/330px-Hippocampus_hippocampus_%28on_Ascophyllum_nodosum%29.jpg"
 };
+
+const ASSET_BASE_URL = import.meta.env?.BASE_URL || "./";
+const ENCOUNTER_ANIMAL_IDS = new Set(regions.flatMap((region) => region.spawns.map((spawn) => spawn.id)));
+
+function localPhotoPath(name) {
+  if (!ENCOUNTER_ANIMAL_IDS.has(name)) return null;
+  const safeName = encodeURIComponent(name).replaceAll("%", "").toLowerCase();
+  return `${ASSET_BASE_URL}assets/animals/photos/${safeName}.jpg`;
+}
 
 
 function wikiUrl(lang, title) {
@@ -69,7 +84,8 @@ function makeAnimal(name, wiki, categories, habitat, move, body, point, relation
     point,
     relation,
     page,
-    image: imageSources[name],
+    image: localPhotoPath(name),
+    remoteImage: imageSources[name],
     source: wikiUrl(wikiInfo.lang, wikiInfo.title),
     ...flags
   };
@@ -85,10 +101,10 @@ export const animals = [
   makeAnimal("꿀벌", "꿀벌", ["around"], "꽃이 핀 곳", "날개로 날아다녀요.", ["날개", "다리", "몸의 털"], "우리 주변 꽃밭에서 볼 수 있는 동물이에요.", "꽃가루를 옮기며 꽃 사이를 날아다녀요.", { hasLegs: true, hasWings: true, hasFins: false, inWater: false, crawls: false }, "39쪽"),
   makeAnimal("공벌레", "공벌레", ["around"], "돌 밑, 축축한 흙", "여러 다리로 기어가요.", ["여러 개의 다리", "단단한 몸", "동그랗게 말리는 몸"], "주변의 흙이나 돌 아래에서 볼 수 있어요.", "위험하면 몸을 둥글게 말아 자신을 지켜요.", { hasLegs: true, hasWings: false, hasFins: false, inWater: false, crawls: true }, "39쪽"),
   makeAnimal("개", "개", ["around"], "집 주변, 마을", "네 다리로 걷거나 뛰어요.", ["털", "귀", "코", "발"], "우리 주변에서 자주 볼 수 있는 동물이에요.", "잘 발달한 코와 네 다리는 냄새를 맡고 빠르게 움직이는 데 도움을 줘요.", { hasLegs: true, hasWings: false, hasFins: false, inWater: false, crawls: false }, "우리 주변"),
-  makeAnimal("나비", "나비", ["land"], "풀밭, 꽃밭", "날개로 날아요.", ["큰 날개", "더듬이", "가느다란 다리"], "동물 카드로 생김새를 관찰해요.", "날개가 있어 꽃 사이를 날며 생활해요.", { hasLegs: true, hasWings: true, hasFins: false, inWater: false, crawls: false }, "40쪽"),
+  makeAnimal("나비", "나비", ["land"], "풀밭, 꽃밭", "날개로 날아요.", ["큰 날개", "더듬이", "가느다란 다리"], "큰 날개의 무늬와 더듬이, 가느다란 다리를 자세히 관찰해요.", "날개가 있어 꽃 사이를 날며 생활해요.", { hasLegs: true, hasWings: true, hasFins: false, inWater: false, crawls: false }, "40쪽"),
   makeAnimal("참새", "참새", ["land"], "나무, 들판, 마을", "날개로 날고 다리로 걸어요.", ["날개", "부리", "다리"], "참새는 다리와 날개가 있는 동물이에요.", "날개가 있어 빠르게 이동하고 부리로 먹이를 먹어요.", { hasLegs: true, hasWings: true, hasFins: false, inWater: false, crawls: false }, "41쪽"),
   makeAnimal("토끼", "토끼", ["land"], "풀밭, 숲 가장자리", "다리로 뛰어 이동해요.", ["털", "긴 귀", "튼튼한 뒷다리"], "토끼는 털로 덮여 있고 다리가 있어요.", "긴 귀와 튼튼한 다리가 주변을 살피고 빠르게 도망치는 데 도움을 줘요.", { hasLegs: true, hasWings: false, hasFins: false, inWater: false, crawls: false }, "41쪽"),
-  makeAnimal("호랑이", "호랑이", ["land"], "숲, 산", "네 다리로 걷고 뛰어요.", ["털", "발톱", "날카로운 이"], "동물 카드에서 생김새를 비교할 수 있어요.", "강한 다리와 발톱으로 땅에서 먹이를 찾아요.", { hasLegs: true, hasWings: false, hasFins: false, inWater: false, crawls: false }, "40쪽"),
+  makeAnimal("호랑이", "호랑이", ["land"], "숲, 산", "네 다리로 걷고 뛰어요.", ["털", "발톱", "날카로운 이"], "주황빛 털의 검은 줄무늬와 큰 발, 날카로운 발톱을 자세히 관찰해요.", "강한 다리와 발톱으로 땅에서 먹이를 찾아요.", { hasLegs: true, hasWings: false, hasFins: false, inWater: false, crawls: false }, "40쪽"),
   makeAnimal("붕어", "붕어", ["freshwater"], "강이나 호수", "지느러미로 헤엄쳐요.", ["지느러미", "비늘", "아가미"], "붕어는 지느러미와 비늘이 있어요.", "지느러미를 이용해 물속에서 헤엄쳐 이동해요.", { hasLegs: false, hasWings: false, hasFins: true, inWater: true, crawls: false }, "41쪽, 49쪽"),
   makeAnimal("지렁이", "지렁이", ["around", "land"], "축축한 흙", "다리 없이 기어서 이동해요.", ["긴 몸", "다리 없음", "마디"], "지렁이는 다리가 없는 동물로 분류할 수 있어요.", "축축한 땅속에서 몸을 줄였다 늘이며 움직여요.", { hasLegs: false, hasWings: false, hasFins: false, inWater: false, crawls: true }, "39쪽, 45쪽"),
   makeAnimal("뱀", "뱀", ["land"], "풀숲, 숲, 산", "다리 없이 기어서 이동해요.", ["긴 몸", "비늘", "다리 없음"], "뱀은 다리가 없는 동물로 분류할 수 있어요.", "긴 몸과 비늘이 땅 위를 기어 이동하는 데 도움을 줘요.", { hasLegs: false, hasWings: false, hasFins: false, inWater: false, crawls: true }, "40쪽, 45쪽"),

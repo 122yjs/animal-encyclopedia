@@ -1,6 +1,59 @@
-// 자체 제작 미니 픽셀 스프라이트 (12×12) — 오버월드 동물 마커·도감 실루엣용
-// Sprout Lands 팔레트 톤에 맞춘 원본 도트이므로 라이선스 걱정이 없습니다.
+// 생성형 픽셀 아틀라스 + 자체 제작 12×12 폴백 — 오버월드 동물 마커·도감 실루엣용
 // 문자: . 투명 / O 외곽선 / B 몸통 / A 포인트 / W 밝은 부분 / E 눈
+
+export const GENERATED_ANIMAL_ATLASES = Object.freeze([
+  {
+    key: "animal-atlas-around",
+    path: "assets/generated/animals/around.png",
+    frameWidth: 64,
+    frameHeight: 64,
+    animals: ["무당벌레", "꿀벌", "달팽이", "박새", "고양이", "개", "공벌레", "거미"]
+  },
+  {
+    key: "animal-atlas-land",
+    path: "assets/generated/animals/land.png",
+    frameWidth: 64,
+    frameHeight: 64,
+    animals: ["나비", "참새", "딱따구리", "개미", "뱀", "토끼", "노루", "호랑이"]
+  },
+  {
+    key: "animal-atlas-freshwater",
+    path: "assets/generated/animals/freshwater.png",
+    frameWidth: 64,
+    frameHeight: 64,
+    animals: ["왜가리", "청둥오리", "수달", "다슬기", "개구리", "붕어", "송사리", "메기"]
+  },
+  {
+    key: "animal-atlas-sea",
+    path: "assets/generated/animals/sea.png",
+    frameWidth: 72,
+    frameHeight: 48,
+    animals: ["갈매기", "게", "조개", "소라", "돌고래", "바다거북", "돌돔", "해삼"]
+  },
+  {
+    key: "animal-atlas-special",
+    path: "assets/generated/animals/special.png",
+    frameWidth: 64,
+    frameHeight: 64,
+    animals: ["낙타", "사막여우", "사막 뱀", "도루묵도마뱀", "북극곰", "북극여우", "펭귄", "산양"]
+  }
+]);
+
+const GENERATED_FRAME_BY_ANIMAL = new Map(
+  GENERATED_ANIMAL_ATLASES.flatMap((atlas) => atlas.animals.map((animalId, index) => [
+    animalId,
+    { atlas, firstFrame: index * 2 }
+  ]))
+);
+
+export function preloadAnimalAtlases(scene) {
+  GENERATED_ANIMAL_ATLASES.forEach((atlas) => {
+    scene.load.spritesheet(atlas.key, atlas.path, {
+      frameWidth: atlas.frameWidth,
+      frameHeight: atlas.frameHeight
+    });
+  });
+}
 
 const SHAPES = {
   bird: [
@@ -307,17 +360,71 @@ function paintShape(ctx, shape, skin, size) {
   }
 }
 
+function paintGeneratedFrame(scene, canvas, animalId, pose) {
+  const generated = GENERATED_FRAME_BY_ANIMAL.get(animalId);
+  if (!generated || !scene.textures.exists(generated.atlas.key)) return false;
+  const frame = scene.textures.getFrame(generated.atlas.key, generated.firstFrame + pose);
+  if (!frame?.source?.image) return false;
+
+  const size = 48;
+  const padding = 2;
+  const scale = Math.min((size - padding * 2) / frame.cutWidth, (size - padding * 2) / frame.cutHeight);
+  const drawWidth = Math.round(frame.cutWidth * scale);
+  const drawHeight = Math.round(frame.cutHeight * scale);
+  const drawX = Math.round((size - drawWidth) / 2);
+  const drawY = Math.round((size - drawHeight) / 2);
+  const context = canvas.getContext();
+  context.imageSmoothingEnabled = false;
+  context.drawImage(
+    frame.source.image,
+    frame.cutX,
+    frame.cutY,
+    frame.cutWidth,
+    frame.cutHeight,
+    drawX,
+    drawY,
+    drawWidth,
+    drawHeight
+  );
+  return true;
+}
+
 /** 동물 미니 스프라이트 텍스처를 (없으면) 만들고 key를 돌려줍니다 */
-export function ensureAnimalTexture(scene, animalId) {
-  const key = `mini-${animalId}`;
+export function ensureAnimalTexture(scene, animalId, pose = 0) {
+  const framePose = pose === 1 ? 1 : 0;
+  const key = `mini-${animalId}-${framePose}`;
   if (scene.textures.exists(key)) return key;
   const skin = ANIMAL_SKINS[animalId];
-  if (!skin || !SHAPES[skin.shape]) return null;
 
-  const size = 12;
+  const atlasKey = GENERATED_FRAME_BY_ANIMAL.get(animalId)?.atlas.key;
+  const generated = atlasKey && scene.textures.exists(atlasKey);
+  const size = generated ? 48 : 12;
   const canvas = scene.textures.createCanvas(key, size, size);
-  paintShape(canvas.getContext(), SHAPES[skin.shape], skin, size);
+  if (!paintGeneratedFrame(scene, canvas, animalId, framePose)) {
+    if (!skin || !SHAPES[skin.shape]) {
+      scene.textures.remove(key);
+      return null;
+    }
+    paintShape(canvas.getContext(), SHAPES[skin.shape], skin, 12);
+  }
   canvas.refresh();
+  return key;
+}
+
+/** 오버월드 마커용 두 프레임 애니메이션 key */
+export function ensureAnimalAnimation(scene, animalId) {
+  const key = `animal-marker-${animalId}`;
+  if (scene.anims.exists(key)) return key;
+  const first = ensureAnimalTexture(scene, animalId, 0);
+  const second = ensureAnimalTexture(scene, animalId, 1);
+  if (!first || !second) return null;
+  scene.anims.create({
+    key,
+    frames: [{ key: first }, { key: second }],
+    frameRate: isFlying(animalId) ? 4 : 2,
+    repeat: -1,
+    yoyo: true
+  });
   return key;
 }
 
