@@ -73,7 +73,7 @@ export function buildObservationDetails(animal) {
 
   return {
     intro: `${animal.name}${topicParticle(animal.name)} ${animal.habitat}에서 볼 수 있는 동물입니다. ${lifeBrief(animal)}`,
-    appearance: `${animal.name}의 몸에서는 ${visibleParts} 같은 부분이 잘 보입니다. 이 부분들은 몸을 보호하거나 움직이고 먹이를 찾는 데 쓰입니다.`,
+    appearance: `${animal.name}의 몸에서는 ${visibleParts} 같은 부분이 잘 보입니다.\n이 부분들은 몸을 보호하거나 움직이고 먹이를 찾는 데 쓰입니다.`,
     lifestyle: `${animal.move} ${lifestyleExplanation(animal)}`,
     habitatLife: `${animal.habitat}에서 먹이나 쉴 곳을 찾으며 살아갑니다. ${animal.move}`,
     habitatLink: `${animal.relation} 이런 특징 때문에 ${animal.name}${topicParticle(animal.name)} ${animal.habitat}에서 생활하기에 알맞습니다.`
