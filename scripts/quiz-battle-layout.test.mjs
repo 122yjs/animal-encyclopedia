@@ -243,7 +243,7 @@ async function exerciseTouchMovement(page) {
     type: "touchStart",
     touchPoints: [{ x, y, radiusX: 12, radiusY: 12, force: 1, id: 1 }]
   });
-  await page.waitForTimeout(300);
+  await page.waitForFunction((startX) => { const scene = window.__ANIMAL_GAME__?.scene?.getScene("OverworldScene"); return scene?.pad?.getVector?.().x === 1 && scene.player?.x > startX + 8; }, before.playerX, { timeout: 1500 });
   const during = await page.evaluate(() => {
     const scene = window.__ANIMAL_GAME__.scene.getScene("OverworldScene");
     const button = scene.input._list.find((object) => object.type === "Arc" && object.x > 0 && object.parentContainer?.x === 84);
