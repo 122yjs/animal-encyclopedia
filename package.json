@@ -6,6 +6,7 @@
   "scripts": {
     "dev": "vite",
     "build": "vite build",
+    "test:battle-ui": "npm run build && node scripts/quiz-battle-layout.test.mjs",
     "preview": "vite preview",
     "build:internal": "node legacy/scripts/build.js --mode=internal",
     "build:distribution": "node legacy/scripts/build.js --mode=distribution"

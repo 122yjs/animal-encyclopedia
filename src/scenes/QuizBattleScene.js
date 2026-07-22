@@ -2,7 +2,7 @@
 //   내 턴: 관찰 퀴즈에 답해 공격 (정답 = 동물 기력 -1)
 //   동물 턴: 오답이면 "헷갈리기 공격" (내 하트 -1) → 관찰 단서를 다시 읽고 같은 문제 재도전
 //   기력을 모두 빼면 친구가 되어 도감에 등록! 하트가 다 닳으면 잠시 후퇴(불이익 없음).
-import Phaser from "phaser";
+import Phaser from "phaser/dist/phaser-arcade-physics.min.js";
 import { animalById } from "../data/animals.js";
 import { animalEmoji } from "../data/regions.js";
 import { buildQuestions } from "../systems/QuizBuilder.js";
@@ -20,11 +20,47 @@ import {
   createWoodButton,
   createWoodPanel,
   createHeartRow,
+  fitTextToBox,
   playEmote
 } from "../ui/UiHelpers.js";
 
 const MAX_HEARTS = 3;
 const HINT_LOCK_MS = 2500;
+const ENCOUNTER_INTRO_MS = 650;
+const OBSERVATION_AUTO_ADVANCE_MS = 260;
+
+const BATTLE_LAYOUT = Object.freeze({
+  intro: {
+    enemy: { x: 500, y: 92 },
+    player: { x: 150, y: 272, scale: 3 },
+    enemyPlatform: { x: 500, y: 148, width: 144, height: 30 },
+    playerPlatform: { x: 150, y: 314, width: 176, height: 46 }
+  },
+  observe: {
+    enemy: { x: 528, y: 84 },
+    panel: { x: 320, y: 245, width: 600, height: 210 }
+  },
+  overview: {
+    panel: { x: 320, y: 196, width: 600, height: 292 },
+    photo: { x: 320, y: 158, width: 384, height: 176 }
+  },
+  battle: {
+    enemy: { x: 528, y: 88 },
+    player: { x: 130, y: 134, scale: 1.5 },
+    enemyPlatform: { x: 528, y: 148, width: 124, height: 24 },
+    playerPlatform: { x: 130, y: 166, width: 124, height: 16 },
+    enemyStatus: { x: 120, y: 73 },
+    playerStatus: { x: 352, y: 147 }
+  },
+  question: {
+    panel: { x: 320, y: 196, width: 616, height: 52 },
+    optionY: [245, 291, 337],
+    optionHeight: 42
+  },
+  hint: {
+    panel: { x: 320, y: 264, width: 600, height: 172 }
+  }
+});
 
 export default class QuizBattleScene extends Phaser.Scene {
   constructor() {
@@ -40,8 +76,11 @@ export default class QuizBattleScene extends Phaser.Scene {
     this.optionButtons = [];
     this.observePage = 0;
     this.observeChecks = { appearance: false, lifestyle: false, habitat: false };
+    this.observationStage = "overview";
     this.phase = "intro";
     this.busy = false;
+    this.ballThrown = false;
+    this.returningToOverworld = false;
   }
 
   create() {
@@ -73,6 +112,10 @@ export default class QuizBattleScene extends Phaser.Scene {
     this.enemyGauge = this.questions.length;
 
     this.buildStage();
+    this.events.once(Phaser.Scenes.Events.SHUTDOWN, () => {
+      this.cancelObservationAdvance();
+      this.game.canvas.style.imageRendering = "pixelated";
+    });
     this.showIntro();
   }
 
@@ -87,43 +130,54 @@ export default class QuizBattleScene extends Phaser.Scene {
     this.add.rectangle(width / 2, height * 0.82, width, height * 0.36, 0x77b45f);
     this.add.rectangle(width / 2, 10, width, 20, 0xbfe3a0, 0.5);
 
-    // 발판
-    this.add.ellipse(486, 176, 168, 42, 0x639b4d, 0.85);
-    this.add.ellipse(150, 314, 176, 46, 0x639b4d, 0.85);
+    // 발판은 단계별 레이아웃에 맞춰 위치와 노출을 바꿉니다.
+    this.enemyPlatform = this.add.ellipse(0, 0, 144, 30, 0x639b4d, 0.85).setDepth(2);
+    this.playerPlatform = this.add.ellipse(0, 0, 176, 46, 0x639b4d, 0.85).setDepth(2);
 
     // ── 적(동물) 카드 ──
-    this.enemyRoot = this.add.container(486, 104);
-    const card = createWoodPanel(this, 0, 0, 134, 134);
-    this.enemyPhotoHolder = this.add.container(0, 0);
+    this.enemyRoot = this.add.container(0, 0).setDepth(10).setName("enemy-card");
+    this.enemyVisualRoot = this.add.container(0, 0);
+    const card = createWoodPanel(this, 0, 0, 120, 96);
+    const photoBed = this.add.rectangle(0, -8, 104, 64, 0xe7d7b6)
+      .setStrokeStyle(2, 0x8a6640);
+    this.enemyPhotoHolder = this.add.container(0, -8);
     // 사진이 오기 전까지는 자체 제작 미니 스프라이트(없으면 이모지)로 표시
     const miniKey = ensureAnimalTexture(this, this.animal.id);
     this.enemyEmojiText = miniKey
-      ? this.add.image(0, -2, miniKey).setScale(8)
-      : this.add.text(0, -4, emoji, {
-        fontSize: "52px", fontFamily: KOREAN_FONT
+      ? this.add.image(0, 0, miniKey).setDisplaySize(64, 64)
+      : this.add.text(0, 0, emoji, {
+        fontSize: "42px", fontFamily: KOREAN_FONT
       }).setOrigin(0.5);
+    this.enemyEmojiText.setName("enemy-fallback");
     this.enemyPhotoHolder.add(this.enemyEmojiText);
-    const plate = createWoodPanel(this, 0, 82, 160, 28, { tint: 0xffe9bd });
-    const nameText = this.add.text(0, 81, `${emoji} ${this.animal.name}`, {
-      fontFamily: KOREAN_FONT, fontSize: "14px", color: "#3d2410", fontStyle: "bold"
+    const plate = createWoodPanel(this, 0, 34, 104, 22, { tint: 0xffe9bd });
+    const nameText = this.add.text(0, 34, `${emoji} ${this.animal.name}`, {
+      fontFamily: KOREAN_FONT, fontSize: "11px", color: "#3d2410", fontStyle: "bold"
     }).setOrigin(0.5);
-    this.enemyRoot.add([card, this.enemyPhotoHolder, plate, nameText]);
-
-    // 동물 기력(집중력) 게이지
-    this.enemyGaugeLabel = this.add.text(414, 200, "기력", {
-      fontFamily: KOREAN_FONT, fontSize: "11px", color: "#2d4a28", fontStyle: "bold"
-    }).setOrigin(0, 0.5).setDepth(1002);
-    this.enemyHearts = createHeartRow(this, 448, 200, this.enemyGauge, { size: 22, gap: 3 });
+    this.enemyVisualRoot.add([card, photoBed, this.enemyPhotoHolder, plate, nameText]);
+    this.enemyRoot.add(this.enemyVisualRoot);
 
     this.loadEnemyPhoto();
 
     // ── 플레이어 ──
-    this.playerSprite = this.add.sprite(150, 272, "player", 4).setScale(3).setDepth(5);
+    this.playerSprite = this.add.sprite(0, 0, "player", 4).setDepth(5).setName("battle-player");
     this.playerSprite.play("idle-up");
-    this.add.text(58, 210, "나", {
-      fontFamily: KOREAN_FONT, fontSize: "11px", color: "#2d4a28", fontStyle: "bold"
-    }).setOrigin(0, 0.5).setDepth(1002);
-    this.playerHeartRow = createHeartRow(this, 84, 210, MAX_HEARTS, { size: 24, gap: 4 });
+
+    const enemyStatus = this.createStatusCard({
+      name: "enemy-status",
+      label: `${this.animal.name} 기력`,
+      max: this.enemyGauge
+    });
+    this.enemyStatusRoot = enemyStatus.root;
+    this.enemyHearts = enemyStatus.hearts;
+
+    const playerStatus = this.createStatusCard({
+      name: "player-status",
+      label: "나",
+      max: MAX_HEARTS
+    });
+    this.playerStatusRoot = playerStatus.root;
+    this.playerHeartRow = playerStatus.hearts;
 
     // ── 턴 리본 ──
     this.turnPanel = createWoodPanel(this, width / 2, 20, 250, 30).setDepth(1001);
@@ -133,29 +187,136 @@ export default class QuizBattleScene extends Phaser.Scene {
 
     // 도망 버튼 (승리 후에는 숨김)
     this.fleeButton = createWoodButton(this, width - 44, 20, "🏃 도망", () => {
-      if (this.phase === "victory") return;
+      if (this.phase === "victory" || this.returningToOverworld) return;
       this.returnToOverworld();
-    }, { width: 76, height: 28, fontSize: "12px" });
+    }, { width: 76, height: 28, fontSize: "12px" }).setName("battle-flee");
 
-    // 적 카드 둥실둥실
-    this.tweens.add({
-      targets: this.enemyRoot,
-      y: "+=5",
+    // 레이아웃 기준점은 고정하고 내부 시각 요소만 둥실거리게 합니다.
+    this.enemyFloatTween = this.tweens.add({
+      targets: this.enemyVisualRoot,
+      y: "+=3",
       duration: 1400,
       yoyo: true,
       repeat: -1,
       ease: "Sine.easeInOut"
     });
+
+    this.applyPhaseLayout("intro");
+  }
+
+  createStatusCard({ name, label, max }) {
+    const root = this.add.container(0, 0)
+      .setDepth(1002)
+      .setScrollFactor(0)
+      .setName(name);
+    const panel = createWoodPanel(this, 0, 0, 192, 42, { tint: 0xffedc5 });
+    const labelText = this.add.text(-82, 0, label, {
+      fontFamily: KOREAN_FONT,
+      fontSize: "11px",
+      color: "#3d2410",
+      fontStyle: "bold"
+    }).setOrigin(0, 0.5);
+    const hearts = createHeartRow(this, 18, 0, max, { size: 20, gap: 3, depth: 0 });
+    root.add([panel, labelText, hearts.container]);
+    return { root, hearts };
+  }
+
+  setBattleHudVisible(visible) {
+    this.enemyStatusRoot?.setVisible(visible);
+    this.playerStatusRoot?.setVisible(visible);
+  }
+
+  applyPhaseLayout(mode) {
+    const isObserve = mode === "observe";
+    const isOverview = mode === "overview";
+    const isObservation = isObserve || isOverview;
+    const isBattle = mode === "battle" || mode === "hint";
+    const isIntro = mode === "intro";
+    const layout = isIntro ? BATTLE_LAYOUT.intro : BATTLE_LAYOUT.battle;
+    const enemyLayout = isObserve ? BATTLE_LAYOUT.observe.enemy : layout.enemy;
+
+    this.presentationMode = mode;
+    this.game.canvas.style.imageRendering = isOverview ? "auto" : "pixelated";
+    this.enemyRoot?.setPosition(enemyLayout.x, enemyLayout.y).setVisible(!isOverview).setScale(1).setAngle(0);
+
+    if (isBattle) {
+      this.enemyFloatTween?.restart();
+    } else {
+      this.enemyFloatTween?.pause();
+      if (this.enemyVisualRoot) this.enemyVisualRoot.y = 0;
+    }
+
+    if (isObservation) {
+      this.playerSprite?.setVisible(false);
+      this.enemyPlatform?.setVisible(false);
+      this.playerPlatform?.setVisible(false);
+      this.setBattleHudVisible(false);
+      return;
+    }
+
+    this.playerSprite
+      ?.setVisible(true)
+      .setPosition(layout.player.x, layout.player.y)
+      .setScale(layout.player.scale)
+      .clearTint();
+
+    this.enemyPlatform
+      ?.setVisible(true)
+      .setPosition(layout.enemyPlatform.x, layout.enemyPlatform.y)
+      .setDisplaySize(layout.enemyPlatform.width, layout.enemyPlatform.height);
+    this.playerPlatform
+      ?.setVisible(true)
+      .setPosition(layout.playerPlatform.x, layout.playerPlatform.y)
+      .setDisplaySize(layout.playerPlatform.width, layout.playerPlatform.height);
+
+    this.setBattleHudVisible(isBattle);
+    if (isBattle) {
+      this.enemyStatusRoot?.setPosition(BATTLE_LAYOUT.battle.enemyStatus.x, BATTLE_LAYOUT.battle.enemyStatus.y);
+      this.playerStatusRoot?.setPosition(BATTLE_LAYOUT.battle.playerStatus.x, BATTLE_LAYOUT.battle.playerStatus.y);
+    }
   }
 
   loadEnemyPhoto() {
     if (!this.animal.image) return;
+    const expectedAnimalId = this.animal.id;
+    const expectedHolder = this.enemyPhotoHolder;
+    const expectedFallback = this.enemyEmojiText;
     const key = `animal-${this.animal.id}`;
+    this.enemyPhotoKey = key;
     const place = () => {
-      if (!this.textures.exists(key) || !this.scene.isActive()) return;
-      this.enemyEmojiText.setVisible(false);
-      const photo = this.add.image(0, 0, key).setDisplaySize(114, 114);
-      this.enemyPhotoHolder.add(photo);
+      if (
+        !this.textures.exists(key)
+        || !this.scene.isActive()
+        || this.animal?.id !== expectedAnimalId
+        || this.enemyPhotoHolder !== expectedHolder
+        || !expectedHolder.active
+      ) return;
+      this.textures.get(key).setFilter(Phaser.Textures.FilterMode.LINEAR);
+      expectedFallback.setVisible(false);
+      this.enemyCardPhoto?.destroy();
+      const frame = this.textures.getFrame(key);
+      const targetWidth = 104;
+      const targetHeight = 64;
+      const targetRatio = targetWidth / targetHeight;
+      const sourceRatio = frame.width / frame.height;
+      let cropX = 0;
+      let cropY = 0;
+      let cropWidth = frame.width;
+      let cropHeight = frame.height;
+      if (sourceRatio > targetRatio) {
+        cropWidth = frame.height * targetRatio;
+        cropX = (frame.width - cropWidth) / 2;
+      } else {
+        cropHeight = frame.width / targetRatio;
+        cropY = (frame.height - cropHeight) / 2;
+      }
+      const photo = this.add.image(0, 0, key)
+        .setCrop(cropX, cropY, cropWidth, cropHeight)
+        .setDisplaySize(targetWidth, targetHeight)
+        .setName("enemy-photo");
+      this.enemyCardPhoto = photo;
+      expectedHolder.add(photo);
+      this.refreshObservationPhoto();
     };
     if (this.textures.exists(key)) {
       place();
@@ -166,8 +327,47 @@ export default class QuizBattleScene extends Phaser.Scene {
     }
   }
 
+  refreshObservationPhoto() {
+    const holder = this.overviewPhotoHolder;
+    if (!holder?.active) return;
+    holder.removeAll(true);
+
+    if (this.enemyPhotoKey && this.textures.exists(this.enemyPhotoKey)) {
+      const frame = this.textures.getFrame(this.enemyPhotoKey);
+      const maxWidth = BATTLE_LAYOUT.overview.photo.width - 12;
+      const maxHeight = BATTLE_LAYOUT.overview.photo.height - 12;
+      const scale = Math.min(maxWidth / frame.width, maxHeight / frame.height);
+      holder.add(this.add.image(0, 0, this.enemyPhotoKey)
+        .setDisplaySize(frame.width * scale, frame.height * scale)
+        .setName("overview-photo"));
+      return;
+    }
+
+    const fallbackKey = ensureAnimalTexture(this, this.animal.id);
+    const fallback = fallbackKey
+      ? this.add.image(0, -6, fallbackKey).setDisplaySize(112, 112)
+      : this.add.text(0, -6, animalEmoji[this.animal.id] || "❓", {
+        fontFamily: KOREAN_FONT,
+        fontSize: "72px"
+      }).setOrigin(0.5);
+    fallback.setName("overview-photo-fallback");
+    holder.add(fallback);
+    holder.add(this.add.text(0, 68, "전체 사진이 없으면 픽셀 모습으로 관찰해요", {
+      fontFamily: KOREAN_FONT,
+      fontSize: "10px",
+      color: "#6b5a43"
+    }).setOrigin(0.5));
+  }
+
+  cancelObservationAdvance() {
+    this.observationAdvanceTimer?.remove(false);
+    this.observationAdvanceTimer = null;
+    this.observationAdvancePending = false;
+  }
+
   setTurnLabel(text) {
     this.turnText.setText(text);
+    fitTextToBox(this.turnText, { width: 220, height: 20, fontSize: 13, minFontSize: 9 });
   }
 
   clearDynamicUi() {
@@ -194,6 +394,7 @@ export default class QuizBattleScene extends Phaser.Scene {
       lineSpacing: 4,
       wordWrap: { width: width - 70 }
     }).setOrigin(0.5).setDepth(1001));
+    fitTextToBox(label, { width: width - 70, height: height - 24, fontSize: 14, minFontSize: 9 });
     return { panel, label };
   }
 
@@ -201,19 +402,84 @@ export default class QuizBattleScene extends Phaser.Scene {
 
   showIntro() {
     this.phase = "intro";
+    this.applyPhaseLayout("intro");
     this.setTurnLabel("야생 동물 등장!");
     playEmote(this, 486, 24, "surprise", { depth: 1100 });
     this.narrate(`앗! 야생의 ${this.animal.name}이(가) 나타났어요!\n먼저 차분히 관찰해서 특징을 알아내요.`);
 
-    this.time.delayedCall(1600, () => {
-      if (this.phase === "intro") this.showObservation();
+    this.time.delayedCall(ENCOUNTER_INTRO_MS, () => {
+      if (this.phase === "intro") this.showObservationOverview();
     });
+  }
+
+  showObservationOverview() {
+    this.phase = "observe";
+    this.observationStage = "overview";
+    this.cancelObservationAdvance();
+    this.clearDynamicUi();
+    this.applyPhaseLayout("overview");
+    const { width } = this.cameras.main;
+    const overview = BATTLE_LAYOUT.overview;
+    const emoji = animalEmoji[this.animal.id] || "";
+
+    this.setTurnLabel(`전체 모습 관찰 · ${this.animal.name}`);
+    this.track(createWoodPanel(
+      this,
+      overview.panel.x,
+      overview.panel.y,
+      overview.panel.width,
+      overview.panel.height
+    ).setDepth(999).setName("overview-panel"));
+
+    this.track(this.add.text(width / 2, 66, `${emoji} ${this.animal.name}의 전체 모습을 먼저 살펴봐요`, {
+      fontFamily: KOREAN_FONT,
+      fontSize: "15px",
+      color: "#3d2410",
+      fontStyle: "bold"
+    }).setOrigin(0.5).setDepth(1001).setName("overview-heading"));
+
+    this.track(this.add.rectangle(
+      overview.photo.x,
+      overview.photo.y,
+      overview.photo.width,
+      overview.photo.height,
+      0xf7eedb
+    ).setStrokeStyle(3, 0x8a6640).setDepth(1000).setName("overview-photo-frame"));
+    this.overviewPhotoHolder = this.track(this.add.container(
+      overview.photo.x,
+      overview.photo.y
+    ).setDepth(1001).setName("overview-photo-holder"));
+    this.refreshObservationPhoto();
+
+    this.track(this.add.text(width / 2, 270, "사진을 자르지 않고 원래 비율로 보여줘요", {
+      fontFamily: KOREAN_FONT,
+      fontSize: "11px",
+      color: "#6b5a43"
+    }).setOrigin(0.5).setDepth(1001).setName("overview-helper"));
+
+    const startButton = this.track(createWoodButton(
+      this,
+      width / 2,
+      318,
+      "🔍 특징 살펴보기",
+      () => {
+        this.observationStage = "details";
+        this.observePage = 0;
+        this.showObservation();
+      },
+      { width: 260, height: 42, fontSize: "14px", tint: 0xffe08a }
+    ).setName("primary-action"));
+    this.primaryAction = startButton;
   }
 
   showObservation() {
     this.phase = "observe";
+    this.observationStage = "details";
+    this.cancelObservationAdvance();
     this.clearDynamicUi();
-    const { width, height } = this.cameras.main;
+    this.overviewPhotoHolder = null;
+    this.applyPhaseLayout("observe");
+    const { width } = this.cameras.main;
     const obs = this.observation;
 
     this.setTurnLabel(`관찰하기 · ${this.animal.name}`);
@@ -228,60 +494,117 @@ export default class QuizBattleScene extends Phaser.Scene {
     const page = pages[this.observePage];
     const checked = this.observeChecks[page.key];
 
-    this.track(createWoodPanel(this, width / 2, height * 0.62, width - 40, 214).setDepth(999));
+    this.track(createWoodPanel(
+      this,
+      BATTLE_LAYOUT.observe.panel.x,
+      BATTLE_LAYOUT.observe.panel.y,
+      BATTLE_LAYOUT.observe.panel.width,
+      BATTLE_LAYOUT.observe.panel.height
+    ).setDepth(999).setName("observe-panel"));
 
     const dots = pages.map((p, i) => (this.observeChecks[p.key] ? "●" : (i === this.observePage ? "◎" : "○"))).join(" ");
-    this.track(this.add.text(width / 2, height * 0.40, `${page.title}  (${this.observePage + 1}/3)   ${dots}`, {
+    this.track(this.add.text(width / 2, 158, `${page.title}  (${this.observePage + 1}/3)   ${dots}`, {
       fontFamily: KOREAN_FONT, fontSize: "14px", color: "#0f6f68", fontStyle: "bold"
     }).setOrigin(0.5).setDepth(1001));
 
-    this.track(this.add.text(width / 2, height * 0.55, page.body, {
+    const observationCopy = this.track(this.add.text(width / 2, 198, page.body, {
       fontFamily: KOREAN_FONT,
       fontSize: "13px",
       color: "#3d2410",
       align: "center",
       lineSpacing: 4,
-      wordWrap: { width: width - 96 }
+      wordWrap: { width: 520 }
     }).setOrigin(0.5).setDepth(1001));
+    fitTextToBox(observationCopy, { width: 520, height: 54, fontSize: 13, minFontSize: 9 });
 
-    this.track(createWoodButton(
-      this,
+    if (!checked) {
+      const checkButton = this.track(createWoodButton(
+        this,
+        width / 2,
+        248,
+        `🔍 ${page.check}`,
+        () => {
+          if (this.observationAdvancePending) return;
+          this.observeChecks[page.key] = true;
+          checkButton.setText(`✅ ${page.check}`);
+          checkButton.setButtonEnabled(false);
+
+          if (this.observePage < pages.length - 1) {
+            this.observationAdvancePending = true;
+            const checkedPage = this.observePage;
+            this.observationAdvanceTimer = this.time.delayedCall(OBSERVATION_AUTO_ADVANCE_MS, () => {
+              this.observationAdvanceTimer = null;
+              if (
+                !this.scene.isActive()
+                || this.phase !== "observe"
+                || this.observationStage !== "details"
+                || this.observePage !== checkedPage
+              ) return;
+              this.observationAdvancePending = false;
+              this.observePage += 1;
+              this.showObservation();
+            });
+          } else {
+            this.showObservation();
+          }
+        },
+        { width: 300, height: 42, fontSize: "13px", tint: 0xffe08a }
+      ).setName("primary-action"));
+      this.primaryAction = checkButton;
+    } else {
+      const completeStatus = this.track(createWoodButton(
+        this,
+        width / 2,
+        248,
+        `✅ ${page.check}`,
+        () => {},
+        { width: 300, height: 42, fontSize: "13px", tint: 0xd8f0c0 }
+      ).setName("observe-complete-status"));
+      completeStatus.setButtonEnabled(false);
+    }
+
+    this.track(this.add.text(
       width / 2,
-      height * 0.70,
-      checked ? `✅ ${page.check}` : `⬜ ${page.check}`,
-      () => {
-        this.observeChecks[page.key] = true;
-        playEmote(this, width / 2 + 130, height * 0.66, "happy", { depth: 1100, scrollFactor: 0 });
-        this.showObservation();
-      },
-      { width: 300, height: 32, fontSize: "13px", tint: checked ? 0xd8f0c0 : null }
-    ));
+      292,
+      checked
+        ? "관찰 완료! 다음 특징을 살펴봐요."
+        : (this.observePage < pages.length - 1
+          ? "확인하면 다음 특징으로 자동 이동해요."
+          : "마지막 특징을 확인하면 퀴즈 배틀을 시작할 수 있어요."),
+      {
+        fontFamily: KOREAN_FONT,
+        fontSize: "11px",
+        color: "#6b5a43"
+      }
+    ).setOrigin(0.5).setDepth(1001).setName("observe-helper"));
 
-    if (this.observePage > 0) {
-      this.track(createWoodButton(this, 76, height * 0.86, "← 이전", () => {
+    this.track(createWoodButton(this, 76, 326, this.observePage > 0 ? "← 이전" : "← 전체 사진", () => {
+      if (this.observePage > 0) {
         this.observePage -= 1;
         this.showObservation();
-      }, { width: 92, height: 30, fontSize: "12px" }));
-    }
+      } else {
+        this.showObservationOverview();
+      }
+    }, { width: 116, height: 42, fontSize: "12px" }).setName("observe-previous"));
 
     const ready = Object.values(this.observeChecks).every(Boolean);
-    if (this.observePage < pages.length - 1) {
-      this.track(createWoodButton(this, width - 76, height * 0.86, "다음 →", () => {
+    if (checked && this.observePage < pages.length - 1) {
+      const nextButton = this.track(createWoodButton(this, width - 76, 326, "다음 →", () => {
         this.observePage += 1;
         this.showObservation();
-      }, { width: 92, height: 30, fontSize: "12px" }));
+      }, { width: 104, height: 42, fontSize: "12px", tint: 0xffe08a }).setName("primary-action"));
+      this.primaryAction = nextButton;
+    } else if (checked && ready) {
+      const battleButton = this.track(createWoodButton(
+        this,
+        width / 2,
+        326,
+        "⚔️ 퀴즈 배틀 시작!",
+        () => this.startBattle(),
+        { width: 260, height: 42, fontSize: "14px", tint: 0xffe08a }
+      ).setName("primary-action"));
+      this.primaryAction = battleButton;
     }
-    this.track(createWoodButton(
-      this,
-      width / 2,
-      height * 0.86,
-      ready ? "⚔️ 퀴즈 배틀 시작!" : "관찰 체크 3개를 모두 하면 배틀!",
-      () => {
-        if (!ready) return;
-        this.startBattle();
-      },
-      { width: 280, height: 34, fontSize: "14px", tint: ready ? 0xffe08a : 0xcccccc }
-    ));
   }
 
   // ─── 전투 루프 ──────────────────────────────────────────
@@ -307,34 +630,47 @@ export default class QuizBattleScene extends Phaser.Scene {
     this.phase = "battle";
     this.busy = false;
     this.clearDynamicUi();
+    this.applyPhaseLayout("battle");
 
-    const { width, height } = this.cameras.main;
+    const { width } = this.cameras.main;
     const q = this.questions[this.qIndex];
     const typeLabel = getQuestionTypeLabel(q, this.qIndex);
 
     this.setTurnLabel(`내 턴 · 문제 ${this.qIndex + 1}/${this.questions.length} (${typeLabel})`);
 
-    this.track(this.add.text(width / 2, 208, `📝 ${this.buildSafeFacts(q.hintKey)}`, {
-      fontFamily: KOREAN_FONT, fontSize: "10px", color: "#41603a",
-      backgroundColor: "#fff8e7cc", padding: { x: 6, y: 3 },
-      align: "center", wordWrap: { width: width - 60 }
-    }).setOrigin(0.5).setDepth(1001));
+    this.track(createWoodPanel(
+      this,
+      BATTLE_LAYOUT.question.panel.x,
+      BATTLE_LAYOUT.question.panel.y,
+      BATTLE_LAYOUT.question.panel.width,
+      BATTLE_LAYOUT.question.panel.height
+    ).setDepth(1000).setName("question-panel"));
 
-    this.track(createWoodPanel(this, width / 2, 236, width - 16, 38).setDepth(1000));
-    this.track(this.add.text(width / 2, 235, q.text, {
-      fontFamily: KOREAN_FONT, fontSize: "13px", color: "#3d2410", fontStyle: "bold",
+    const factCopy = this.track(this.add.text(width / 2, 190, `📝 ${this.buildSafeFacts(q.hintKey)}`, {
+      fontFamily: KOREAN_FONT, fontSize: "10px", color: "#41603a",
       align: "center", wordWrap: { width: width - 60 }
-    }).setOrigin(0.5).setDepth(1001));
+    }).setOrigin(0.5).setDepth(1001).setName("fact-copy"));
+
+    const questionCopy = this.track(this.add.text(width / 2, 205, q.text, {
+      fontFamily: KOREAN_FONT, fontSize: "12px", color: "#3d2410", fontStyle: "bold",
+      align: "center", lineSpacing: 1, wordWrap: { width: width - 60 }
+    }).setOrigin(0.5).setDepth(1001).setName("question-copy"));
+    fitTextToBox(factCopy, { width: width - 60, height: 14, fontSize: 10, minFontSize: 8 });
+    fitTextToBox(questionCopy, { width: width - 60, height: 20, fontSize: 12, minFontSize: 8 });
+    const copyHeight = factCopy.height + 2 + questionCopy.height;
+    const copyTop = BATTLE_LAYOUT.question.panel.y - copyHeight / 2;
+    factCopy.setY(copyTop + factCopy.height / 2);
+    questionCopy.setY(copyTop + factCopy.height + 2 + questionCopy.height / 2);
 
     q.options.forEach((option, index) => {
       const btn = createWoodButton(
         this,
         width / 2,
-        270 + index * 31,
+        BATTLE_LAYOUT.question.optionY[index],
         option,
         () => this.onAnswer(option),
-        { width: width - 24, height: 28, fontSize: "12px" }
-      );
+        { width: width - 24, height: BATTLE_LAYOUT.question.optionHeight, fontSize: "12px" }
+      ).setName(`answer-option-${index + 1}`);
       this.optionButtons.push(btn);
     });
   }
@@ -359,6 +695,7 @@ export default class QuizBattleScene extends Phaser.Scene {
   playerAttack() {
     const typeLabel = getQuestionTypeLabel(this.questions[this.qIndex], this.qIndex);
     this.clearDynamicUi();
+    this.applyPhaseLayout("battle");
     this.setTurnLabel("공격 성공!");
     this.narrate(`정확한 관찰이에요! ${typeLabel} 공략 성공! ⚡`, { height: 62 });
     playEmote(this, this.playerSprite.x, this.playerSprite.y - 78, "happy", { depth: 1100 });
@@ -390,9 +727,11 @@ export default class QuizBattleScene extends Phaser.Scene {
 
   flashEnemy() {
     const targets = [];
-    this.enemyRoot.iterate((child) => {
+    const collectTintable = (child) => {
       if (child.setTintFill) targets.push(child);
-    });
+      child.iterate?.(collectTintable);
+    };
+    this.enemyRoot.iterate(collectTintable);
     targets.forEach((t) => t.setTintFill(0xffffff));
     this.tweens.add({
       targets: this.enemyRoot,
@@ -410,6 +749,7 @@ export default class QuizBattleScene extends Phaser.Scene {
 
   enemyAttack(question) {
     this.clearDynamicUi();
+    this.applyPhaseLayout("battle");
     this.setTurnLabel(`${this.animal.name}의 턴!`);
     this.narrate(`앗, 빗나갔어요! ${this.animal.name}의 헷갈리기 공격! 💫`, { height: 62 });
 
@@ -442,27 +782,36 @@ export default class QuizBattleScene extends Phaser.Scene {
   showHint(hintKey) {
     this.phase = "hint";
     this.clearDynamicUi();
-    const { width, height } = this.cameras.main;
+    this.applyPhaseLayout("hint");
+    const { width } = this.cameras.main;
     const section = getHintSection(this.animal, hintKey);
 
     this.setTurnLabel("단서 다시 보기");
 
-    this.track(createWoodPanel(this, width / 2, height * 0.66, width - 40, 176, { tint: 0xfff0c0 }).setDepth(999));
-    this.track(this.add.text(width / 2, height * 0.50, `🔍 ${section.title}`, {
+    this.track(createWoodPanel(
+      this,
+      BATTLE_LAYOUT.hint.panel.x,
+      BATTLE_LAYOUT.hint.panel.y,
+      BATTLE_LAYOUT.hint.panel.width,
+      BATTLE_LAYOUT.hint.panel.height,
+      { tint: 0xfff0c0 }
+    ).setDepth(999).setName("hint-panel"));
+    this.track(this.add.text(width / 2, 204, `🔍 ${section.title}`, {
       fontFamily: KOREAN_FONT, fontSize: "14px", color: "#8a5a10", fontStyle: "bold"
     }).setOrigin(0.5).setDepth(1001));
-    this.track(this.add.text(width / 2, height * 0.63, section.body, {
+    const hintCopy = this.track(this.add.text(width / 2, 248, section.body, {
       fontFamily: KOREAN_FONT, fontSize: "13px", color: "#3d2410",
       align: "center", lineSpacing: 4, wordWrap: { width: width - 90 }
     }).setOrigin(0.5).setDepth(1001));
+    fitTextToBox(hintCopy, { width: width - 90, height: 82, fontSize: 13, minFontSize: 9 });
 
     const waitBtn = this.track(createWoodButton(
       this,
       width / 2,
-      height * 0.86,
+      326,
       "단서를 읽는 중이에요…",
       () => {},
-      { width: 260, height: 32, fontSize: "13px" }
+      { width: 260, height: 42, fontSize: "13px" }
     ));
     waitBtn.setButtonEnabled(false);
 
@@ -474,11 +823,11 @@ export default class QuizBattleScene extends Phaser.Scene {
       this.track(createWoodButton(
         this,
         width / 2,
-        height * 0.86,
+        326,
         "💪 같은 문제 다시 도전!",
         () => this.showQuestion(),
-        { width: 260, height: 32, fontSize: "13px", tint: 0xffe08a }
-      ));
+        { width: 260, height: 42, fontSize: "13px", tint: 0xffe08a }
+      ).setName("primary-action"));
     });
   }
 
@@ -489,6 +838,7 @@ export default class QuizBattleScene extends Phaser.Scene {
   onVictory() {
     this.phase = "victory";
     this.clearDynamicUi();
+    this.applyPhaseLayout("cinematic");
     this.setTurnLabel("지금이 기회!");
     this.fleeButton?.setVisible(false);
 
@@ -515,6 +865,7 @@ export default class QuizBattleScene extends Phaser.Scene {
     if (this.phase !== "victory" || this.ballThrown) return;
     this.ballThrown = true;
     this.clearDynamicUi();
+    this.applyPhaseLayout("cinematic");
     this.setTurnLabel("도감볼 던지기!");
     this.narrate("도감볼을 힘껏 던졌다…!", { height: 56 });
 
@@ -558,8 +909,7 @@ export default class QuizBattleScene extends Phaser.Scene {
   absorbIntoBall(ball, x, y) {
     this.cameras.main.flash(150, 255, 240, 190);
     this.flashEnemy();
-    this.enemyHearts.container.setVisible(false);
-    this.enemyGaugeLabel?.setVisible(false);
+    this.setBattleHudVisible(false);
 
     // 동물이 볼 속으로 쏙 빨려 들어감
     this.tweens.add({
@@ -672,6 +1022,7 @@ export default class QuizBattleScene extends Phaser.Scene {
   onRetreat() {
     this.phase = "retreat";
     this.clearDynamicUi();
+    this.applyPhaseLayout("cinematic");
     this.setTurnLabel("잠시 후퇴…");
     playEmote(this, this.playerSprite.x, this.playerSprite.y - 78, "zzz", { depth: 1100 });
     this.narrate(`기운이 다 빠졌어요… 괜찮아요!\n${this.animal.name}은(는) 그 자리에서 기다려요. 단서를 떠올리고 다시 도전!`, { height: 84 });
@@ -680,6 +1031,11 @@ export default class QuizBattleScene extends Phaser.Scene {
   }
 
   returnToOverworld() {
-    this.scene.start("OverworldScene", { returnPos: this.returnPos });
+    if (this.returningToOverworld) return;
+    this.returningToOverworld = true;
+    this.scene.start("OverworldScene", {
+      returnPos: this.returnPos,
+      avoidEncounterId: this.animal?.id || null
+    });
   }
 }

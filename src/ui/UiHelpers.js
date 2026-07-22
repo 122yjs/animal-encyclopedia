@@ -1,7 +1,24 @@
 // Phaser UI 헬퍼 — Sprout Lands 나무 패널·버튼·하트·이모트
-import Phaser from "phaser";
+import Phaser from "phaser/dist/phaser-arcade-physics.min.js";
 
 export const KOREAN_FONT = "Malgun Gothic, 'Segoe UI Emoji', Apple SD Gothic Neo, sans-serif";
+
+/** 실제 렌더링 크기를 기준으로 텍스트를 지정한 영역 안에 맞춥니다. */
+export function fitTextToBox(text, {
+  width,
+  height,
+  fontSize = Number.parseFloat(text.style.fontSize) || 16,
+  minFontSize = 9
+}) {
+  const smallest = Math.min(fontSize, minFontSize);
+  text.setWordWrapWidth(width, true);
+  text.setFontSize(fontSize);
+  for (let size = fontSize; (text.width > width || text.height > height) && size > smallest;) {
+    size -= 1;
+    text.setFontSize(size);
+  }
+  return text;
+}
 
 /**
  * Sprout Lands 나무 패널 (dialog box 나인슬라이스).
@@ -32,9 +49,9 @@ export function createWoodButton(scene, x, y, label, onClick, {
 } = {}) {
   const container = scene.add.container(x, y).setDepth(depth).setScrollFactor(0);
   const bg = createWoodPanel(scene, 0, 0, width, height, { tint });
-  bg.setInteractive({ useHandCursor: true });
+  bg.setScrollFactor(0).setInteractive({ useHandCursor: true });
 
-  const text = scene.add.text(0, -1, label, {
+  const text = scene.add.text(0, 0, label, {
     fontFamily: KOREAN_FONT,
     fontSize,
     color: textColor,
@@ -42,6 +59,13 @@ export function createWoodButton(scene, x, y, label, onClick, {
     align: "center",
     wordWrap: { width: width - 20 }
   }).setOrigin(0.5);
+  const fitLabel = () => fitTextToBox(text, {
+    width: width - 20,
+    height: height - 12,
+    fontSize: Number.parseFloat(fontSize),
+    minFontSize: 9
+  });
+  fitLabel();
 
   const setPressed = (value) => {
     container.setScale(value ? 0.96 : 1);
@@ -63,6 +87,11 @@ export function createWoodButton(scene, x, y, label, onClick, {
   container.add([bg, text]);
   container.buttonBg = bg;
   container.buttonText = text;
+  container.setText = (next) => {
+    text.setText(next);
+    fitLabel();
+    return container;
+  };
   container.setButtonEnabled = (enabled) => {
     if (enabled) {
       bg.setInteractive({ useHandCursor: true });
@@ -201,6 +230,13 @@ export function createDialogPanel(scene, {
     lineSpacing: 4,
     wordWrap: { width: width - 40 }
   }).setOrigin(0.5);
+  const fitLabel = () => fitTextToBox(label, {
+    width: width - 40,
+    height: height - 24,
+    fontSize: 15,
+    minFontSize: 10
+  });
+  fitLabel();
 
   container.add([bg, label]);
 
@@ -208,6 +244,7 @@ export function createDialogPanel(scene, {
     panel: container,
     setText(next) {
       label.setText(next);
+      fitLabel();
     },
     destroy() {
       container.destroy(true);
@@ -226,9 +263,11 @@ export function createVirtualPad(scene) {
 
   const root = scene.add.container(baseX, baseY).setDepth(2000).setScrollFactor(0).setAlpha(0.82);
 
-  const makeDir = (dx, dy, label, ox, oy) => {
+  const makeDir = (direction, dx, dy, label, ox, oy) => {
     const btn = scene.add.circle(ox, oy, 21, 0x3d2410, 0.72)
       .setStrokeStyle(2, 0xf0d9a0)
+      .setScrollFactor(0)
+      .setName(`virtual-pad-${direction}`)
       .setInteractive({ useHandCursor: true });
     const t = scene.add.text(ox, oy, label, {
       fontSize: "13px",
@@ -239,6 +278,8 @@ export function createVirtualPad(scene) {
       if (dx > 0) keys.right = v;
       if (dy < 0) keys.up = v;
       if (dy > 0) keys.down = v;
+      btn.setFillStyle(v ? 0xe8a838 : 0x3d2410, v ? 0.95 : 0.72);
+      t.setColor(v ? "#3d2410" : "#fff8e7");
     };
     btn.on("pointerdown", () => press(true));
     btn.on("pointerup", () => press(false));
@@ -246,10 +287,10 @@ export function createVirtualPad(scene) {
     root.add([btn, t]);
   };
 
-  makeDir(0, -1, "▲", 0, -38);
-  makeDir(0, 1, "▼", 0, 38);
-  makeDir(-1, 0, "◀", -38, 0);
-  makeDir(1, 0, "▶", 38, 0);
+  makeDir("up", 0, -1, "▲", 0, -38);
+  makeDir("down", 0, 1, "▼", 0, 38);
+  makeDir("left", -1, 0, "◀", -38, 0);
+  makeDir("right", 1, 0, "▶", 38, 0);
 
   return {
     getVector() {
