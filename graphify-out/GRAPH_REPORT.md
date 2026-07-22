@@ -1,48 +1,79 @@
-# Graph Report - .  (2026-05-04)
+# Graph Report - animal-encyclopedia  (2026-07-22)
 
 ## Corpus Check
-- Large corpus: 173 files · ~558,492 words. Semantic extraction will be expensive (many Claude tokens). Consider running on a subfolder, or use --no-semantic to run AST-only.
+- 31 files · ~719,253 words
+- Verdict: corpus is large enough that graph structure adds value.
 
 ## Summary
-- 336 nodes · 667 edges · 22 communities detected
-- Extraction: 92% EXTRACTED · 1% INFERRED · 0% AMBIGUOUS · INFERRED: 8 edges (avg confidence: 0.82)
-- Token cost: 35,931 input · 5,127 output
+- 803 nodes · 1854 edges · 47 communities detected
+- Extraction: 93% EXTRACTED · 5% INFERRED · 0% AMBIGUOUS · INFERRED: 91 edges (avg confidence: 0.8)
+- Token cost: 0 input · 0 output
+
+## Graph Freshness
+- Built from commit: `8738dd50`
+- Run `git rev-parse HEAD` and compare to check if the graph is stale.
+- Run `graphify update .` after code changes (no API cost).
 
 ## Community Hubs (Navigation)
-- [[_COMMUNITY_Main App UI Logic|Main App UI Logic]]
-- [[_COMMUNITY_Gamified Webapp & Game|Gamified Webapp & Game]]
-- [[_COMMUNITY_Core App Functions|Core App Functions]]
-- [[_COMMUNITY_Share Link & Question Tool|Share Link & Question Tool]]
-- [[_COMMUNITY_Build System|Build System]]
-- [[_COMMUNITY_Development Docs & Plans|Development Docs & Plans]]
-- [[_COMMUNITY_Animal UI Components|Animal UI Components]]
-- [[_COMMUNITY_Gamification & Icons|Gamification & Icons]]
-- [[_COMMUNITY_Question Generation|Question Generation]]
-- [[_COMMUNITY_Content Rendering|Content Rendering]]
-- [[_COMMUNITY_Mission Settings|Mission Settings]]
-- [[_COMMUNITY_Image Download Script|Image Download Script]]
-- [[_COMMUNITY_Image Handling|Image Handling]]
-- [[_COMMUNITY_Quiz Flow|Quiz Flow]]
-- [[_COMMUNITY_Onboarding & Storage|Onboarding & Storage]]
-- [[_COMMUNITY_Modal Management|Modal Management]]
-- [[_COMMUNITY_No-Question Gen & Tests|No-Question Gen & Tests]]
-- [[_COMMUNITY_Game Sprites|Game Sprites]]
-- [[_COMMUNITY_Demo Recording|Demo Recording]]
-- [[_COMMUNITY_Phase 2 Tests|Phase 2 Tests]]
-- [[_COMMUNITY_HTML Entry Points|HTML Entry Points]]
-- [[_COMMUNITY_Owl Sprite|Owl Sprite]]
+- [[_COMMUNITY_Community 0|Community 0]]
+- [[_COMMUNITY_Community 1|Community 1]]
+- [[_COMMUNITY_Community 2|Community 2]]
+- [[_COMMUNITY_Community 3|Community 3]]
+- [[_COMMUNITY_Community 4|Community 4]]
+- [[_COMMUNITY_Community 5|Community 5]]
+- [[_COMMUNITY_Community 6|Community 6]]
+- [[_COMMUNITY_Community 7|Community 7]]
+- [[_COMMUNITY_Community 8|Community 8]]
+- [[_COMMUNITY_Community 9|Community 9]]
+- [[_COMMUNITY_Community 10|Community 10]]
+- [[_COMMUNITY_Community 11|Community 11]]
+- [[_COMMUNITY_Community 12|Community 12]]
+- [[_COMMUNITY_Community 13|Community 13]]
+- [[_COMMUNITY_Community 14|Community 14]]
+- [[_COMMUNITY_Community 15|Community 15]]
+- [[_COMMUNITY_Community 16|Community 16]]
+- [[_COMMUNITY_Community 17|Community 17]]
+- [[_COMMUNITY_Community 18|Community 18]]
+- [[_COMMUNITY_Community 19|Community 19]]
+- [[_COMMUNITY_Community 20|Community 20]]
+- [[_COMMUNITY_Community 21|Community 21]]
+- [[_COMMUNITY_Community 22|Community 22]]
+- [[_COMMUNITY_Community 23|Community 23]]
+- [[_COMMUNITY_Community 24|Community 24]]
+- [[_COMMUNITY_Community 25|Community 25]]
+- [[_COMMUNITY_Community 26|Community 26]]
+- [[_COMMUNITY_Community 27|Community 27]]
+- [[_COMMUNITY_Community 28|Community 28]]
+- [[_COMMUNITY_Community 29|Community 29]]
+- [[_COMMUNITY_Community 30|Community 30]]
+- [[_COMMUNITY_Community 31|Community 31]]
+- [[_COMMUNITY_Community 32|Community 32]]
+- [[_COMMUNITY_Community 33|Community 33]]
+- [[_COMMUNITY_Community 34|Community 34]]
+- [[_COMMUNITY_Community 35|Community 35]]
+- [[_COMMUNITY_Community 36|Community 36]]
+- [[_COMMUNITY_Community 37|Community 37]]
+- [[_COMMUNITY_Community 38|Community 38]]
+- [[_COMMUNITY_Community 39|Community 39]]
+- [[_COMMUNITY_Community 40|Community 40]]
+- [[_COMMUNITY_Community 41|Community 41]]
+- [[_COMMUNITY_Community 42|Community 42]]
+- [[_COMMUNITY_Community 43|Community 43]]
+- [[_COMMUNITY_Community 44|Community 44]]
+- [[_COMMUNITY_Community 45|Community 45]]
+- [[_COMMUNITY_Community 54|Community 54]]
 
 ## God Nodes (most connected - your core abstractions)
-1. `init()` - 21 edges
-2. `Current Improvement Roadmap` - 15 edges
-3. `renderAnimalInfo()` - 13 edges
-4. `playSound()` - 13 edges
-5. `game_ui` - 13 edges
-6. `activateMissionRegion()` - 12 edges
-7. `renderMissionPanel()` - 11 edges
-8. `updateProgress()` - 11 edges
-9. `renderShareLinkPanel()` - 10 edges
-10. `resetProgress()` - 10 edges
+1. `WorldMap` - 41 edges
+2. `QuizBattleScene` - 35 edges
+3. `OverworldScene` - 28 edges
+4. `init()` - 21 edges
+5. `createWoodPanel()` - 21 edges
+6. `init()` - 21 edges
+7. `createWoodButton()` - 20 edges
+8. `WorldMapScene` - 20 edges
+9. `TitleScene` - 16 edges
+10. `Current Improvement Roadmap` - 15 edges
 
 ## Surprising Connections (you probably didn't know these)
 - `openQuiz()` --calls--> `playSound()`  [INFERRED]
@@ -53,110 +84,182 @@
   gamified-animal-encyclopedia-webapp/src/App.tsx → app.js
 - `handleSelectAnimal()` --calls--> `playSound()`  [INFERRED]
   gamified-animal-encyclopedia-webapp/src/App.tsx → app.js
-- `Main HTML Entry Point` --generates--> `No-Question Student Version`  [INFERRED]
-  index.html → no-question.html
+- `chromePath()` --calls--> `walk()`  [INFERRED]
+  scripts/quiz-battle-layout.test.mjs → legacy/scripts/phase2-contract.test.mjs
 
-## Communities (29 total, 2 thin omitted)
+## Communities (55 total, 9 thin omitted)
 
-### Community 0 - "Main App UI Logic"
-Cohesion: 0.09
-Nodes (44): activateMissionRegion(), applyQuestionToolMode(), bindMissionPanel(), bindTeacherMissionControls(), bindViewTabs(), canOpenQuestionSettings(), closeReward(), debounce() (+36 more)
+### Community 0 - "Community 0"
+Cohesion: 0.07
+Nodes (35): buildObservationDetails(), escapeAttribute(), escapeHTML(), getCompactMissionSelectionEntries(), getFeatureComparisonText(), getFeatureDistractorScore(), getFocusableElements(), getMeaningfulTokenOverlap() (+27 more)
 
-### Community 1 - "Gamified Webapp & Game"
-Cohesion: 0.09
-Nodes (20): checkGame(), ensureAudioContext(), moveGameToken(), playSound(), renderGameBoard(), updateGameScore(), closeQuiz(), createInitialBoards() (+12 more)
+### Community 2 - "Community 2"
+Cohesion: 0.08
+Nodes (32): applyImageFallback(), checkGame(), createGameToken(), createImagePlaceholder(), dedupeSources(), escapeSvgText(), finishQuiz(), getFeatureComparisonText() (+24 more)
 
-### Community 2 - "Core App Functions"
+### Community 3 - "Community 3"
+Cohesion: 0.18
+Nodes (3): QuizBattleScene, fitTextToBox(), playEmote()
+
+### Community 4 - "Community 4"
+Cohesion: 0.13
+Nodes (29): activateMissionRegion(), applyQuestionToolMode(), bindMissionPanel(), bindTeacherMissionControls(), bindViewTabs(), canOpenQuestionSettings(), closeReward(), debounce() (+21 more)
+
+### Community 5 - "Community 5"
 Cohesion: 0.12
-Nodes (14): buildObservationDetails(), getFeatureComparisonText(), getFeatureDistractorScore(), getFocusableElements(), getMeaningfulTokenOverlap(), getMeaningfulTokens(), handleModalKeydown(), lifeBrief() (+6 more)
+Nodes (28): applyQuestionToolMode(), buildQuestionRoomUrlFromCode(), buildShareLink(), canOpenQuestionSettings(), clearQuestionSettings(), getCompactMissionRegionCode(), getCompactQuestionRoomCode(), getDefaultQuestionUrlPlaceholder() (+20 more)
 
-### Community 3 - "Share Link & Question Tool"
+### Community 6 - "Community 6"
+Cohesion: 0.11
+Nodes (16): ensureAudioContext(), playSound(), closeQuiz(), createInitialBoards(), createQuizQuestions(), finishQuiz(), handleClassificationDrop(), handleQuizAnswer() (+8 more)
+
+### Community 7 - "Community 7"
+Cohesion: 0.16
+Nodes (24): activateMissionRegion(), bindMissionPanel(), bindTeacherMissionControls(), bindViewTabs(), closeReward(), debounce(), getCompletedRegionCount(), getExplorerLevel() (+16 more)
+
+### Community 8 - "Community 8"
+Cohesion: 0.2
+Nodes (20): countAnimalRecords(), read(), walk(), activateNamedButton(), activateSceneButton(), assertContained(), assertHidden(), assertInCanvas() (+12 more)
+
+### Community 9 - "Community 9"
+Cohesion: 0.14
+Nodes (3): regionAtTile(), totalSpawnCount(), OverworldScene
+
+### Community 10 - "Community 10"
+Cohesion: 0.1
+Nodes (23): clearOnboardingHighlights(), closeDetail(), closeGuideModal(), closeQrExpand(), closeSettings(), completeOnboarding(), enterModalFocus(), exitModalFocus() (+15 more)
+
+### Community 11 - "Community 11"
+Cohesion: 0.21
+Nodes (12): directionParticle(), findNewBadgeRegion(), hasBadge(), isGateOpen(), masterStatus(), regionStatus(), createDialogPanel(), createHeartRow() (+4 more)
+
+### Community 12 - "Community 12"
+Cohesion: 0.11
+Nodes (23): answerQuestion(), buildObservationDetails(), clearHintHighlight(), escapeAttribute(), escapeHTML(), lifeBrief(), lifestyleExplanation(), readObservationReady() (+15 more)
+
+### Community 13 - "Community 13"
+Cohesion: 0.14
+Nodes (21): applyInitialMissionSettings(), decodeCompactMissionAnimalMask(), encodeCompactMissionAnimalMask(), getAnimalsForFilter(), getCurrentMissionPreset(), getDefaultMissionAnimalIds(), getMissionAnimalIdsFromPageUrl(), getMissionAnimalsParam() (+13 more)
+
+### Community 14 - "Community 14"
+Cohesion: 0.23
+Nodes (17): assertHttpUrl(), buildConfig(), copyStaticDirectory(), copyStaticFiles(), hasLocalImageAssets(), main(), parseArgs(), readJson() (+9 more)
+
+### Community 16 - "Community 16"
 Cohesion: 0.15
 Nodes (20): buildShareLink(), clearQuestionSettings(), getQuestionUrlFromPageUrl(), getShareLinkCopy(), getShareLinkTargetPath(), hasCustomMissionSelections(), hydrateQuestionToolConfig(), isSharedStudentView() (+12 more)
 
-### Community 4 - "Build System"
-Cohesion: 0.19
-Nodes (15): assertHttpUrl(), buildConfig(), copyStaticDirectory(), copyStaticFiles(), hasLocalImageAssets(), main(), parseArgs(), readJson() (+7 more)
-
-### Community 5 - "Development Docs & Plans"
+### Community 17 - "Community 17"
 Cohesion: 0.13
 Nodes (19): 2nd Improvement Plan, 3rd Progress Report, Development Rules and Project Structure, Changelog, Demo Recorder Skill, Game Mobile UX Draft, Graphify Instructions, Improvement Plan (+11 more)
 
-### Community 6 - "Animal UI Components"
+### Community 18 - "Community 18"
 Cohesion: 0.3
 Nodes (18): animal_card, animal_collection, animal_quiz, animal_registration, completion_star, encyclopedia_master, feedback_visual, final_mission (+10 more)
 
-### Community 7 - "Gamification & Icons"
+### Community 19 - "Community 19"
 Cohesion: 0.13
 Nodes (18): achievement_badge, animal_encyclopedia, capture_functionality, collectible_item, gamification_element, capture_ball, treasure_chest, gem_item (+10 more)
 
-### Community 8 - "Question Generation"
+### Community 21 - "Community 21"
+Cohesion: 0.27
+Nodes (15): buildDistinctiveFeatureQuestion(), buildQuestions(), buildSpecialEnvironmentQuestion(), getFeatureComparisonText(), getFeatureDistractorScore(), getHabitatDistractors(), getMeaningfulTokenOverlap(), getMeaningfulTokens() (+7 more)
+
+### Community 22 - "Community 22"
 Cohesion: 0.2
 Nodes (14): buildDistinctiveFeatureQuestion(), buildQuestions(), buildSpecialEnvironmentQuestion(), getHabitatDistractors(), getMovementKey(), hasFinalConsonant(), makeDistinctiveFeatureOptions(), makeHabitatOptions() (+6 more)
 
-### Community 9 - "Content Rendering"
-Cohesion: 0.18
-Nodes (13): escapeAttribute(), escapeHTML(), readObservationReady(), renderAnimalEnvironmentNote(), renderAnimalInfo(), renderAnimalRegionBadges(), renderCollectedAction(), renderObservationCheckItem() (+5 more)
+### Community 23 - "Community 23"
+Cohesion: 0.38
+Nodes (12): download(), downloadLocalImages(), downloadWithFallback(), getExtension(), lookupWikipediaImage(), parseAnimals(), parseArgs(), parseImageSources() (+4 more)
 
-### Community 10 - "Mission Settings"
+### Community 24 - "Community 24"
+Cohesion: 0.2
+Nodes (14): buildDistinctiveFeatureQuestion(), buildQuestions(), buildSpecialEnvironmentQuestion(), getHabitatDistractors(), getMovementKey(), hasFinalConsonant(), makeDistinctiveFeatureOptions(), makeHabitatOptions() (+6 more)
+
+### Community 25 - "Community 25"
+Cohesion: 0.26
+Nodes (8): encounterSurface(), colorFor(), ensureAnimalAnimation(), ensureAnimalTexture(), ensureBallTexture(), isFlying(), paintGeneratedFrame(), paintShape()
+
+### Community 26 - "Community 26"
+Cohesion: 0.29
+Nodes (10): buildObservationDetails(), buildQuickFacts(), getHintSection(), getQuestionTypeLabel(), hasFinalConsonant(), lifeBrief(), lifestyleExplanation(), subjectParticle() (+2 more)
+
+### Community 27 - "Community 27"
 Cohesion: 0.22
 Nodes (13): applyInitialMissionSettings(), getCurrentMissionPreset(), getDefaultMissionAnimalIds(), getMissionAnimalIdsFromPageUrl(), getMissionAnimalsParam(), getMissionCandidateAnimals(), getMissionPreset(), getMissionRegionFromPageUrl() (+5 more)
 
-### Community 11 - "Image Download Script"
-Cohesion: 0.29
-Nodes (11): download(), downloadLocalImages(), downloadWithFallback(), getExtension(), lookupWikipediaImage(), parseAnimals(), parseImageSources(), parseWiki() (+3 more)
+### Community 28 - "Community 28"
+Cohesion: 0.18
+Nodes (13): clearOnboardingHighlights(), closeDetail(), closeGuideModal(), closeQrExpand(), completeOnboarding(), enterModalFocus(), exitModalFocus(), nextOnboardingStep() (+5 more)
 
-### Community 12 - "Image Handling"
+### Community 29 - "Community 29"
+Cohesion: 0.22
+Nodes (13): getAnimalsForFilter(), getCollectedProgramCount(), getCompletedMilestones(), getFilterProgress(), getProgramAnimals(), getStageStatus(), getVisibleAnimals(), renderMasterReward() (+5 more)
+
+### Community 30 - "Community 30"
+Cohesion: 0.23
+Nodes (12): answerQuestion(), clearHintHighlight(), ensureAudioContext(), finishQuiz(), nextQuestion(), playSound(), renderFeedback(), renderQuiz() (+4 more)
+
+### Community 31 - "Community 31"
 Cohesion: 0.2
 Nodes (12): applyImageFallback(), createGameToken(), createImagePlaceholder(), dedupeSources(), escapeSvgText(), getImageSources(), getLocalImagePath(), isGamePlacementCorrect() (+4 more)
 
-### Community 13 - "Quiz Flow"
-Cohesion: 0.21
-Nodes (12): answerQuestion(), clearHintHighlight(), finishQuiz(), nextQuestion(), renderFeedback(), renderObservationSummary(), renderQuickFacts(), renderQuiz() (+4 more)
-
-### Community 14 - "Onboarding & Storage"
-Cohesion: 0.2
-Nodes (11): clearOnboardingHighlights(), completeOnboarding(), nextOnboardingStep(), openOnboarding(), renderOnboarding(), safeRemoveStorage(), safeSetStorage(), saveCollected() (+3 more)
-
-### Community 15 - "Modal Management"
-Cohesion: 0.2
-Nodes (10): closeDetail(), closeGuideModal(), closeQrExpand(), closeSettings(), enterModalFocus(), exitModalFocus(), markSettingsModalSeen(), openGuideModal() (+2 more)
-
-### Community 16 - "No-Question Gen & Tests"
+### Community 32 - "Community 32"
 Cohesion: 0.36
-Nodes (7): escapeRegExp(), generateNoQuestion(), insertReplacement(), removeMarkedBlock(), replaceExactlyOnce(), generateToTemp(), readHtml()
+Nodes (8): escapeRegExp(), generateNoQuestion(), insertReplacement(), removeMarkedBlock(), replaceExactlyOnce(), countOccurrences(), generateToTemp(), readHtml()
 
-### Community 17 - "Game Sprites"
+### Community 34 - "Community 34"
+Cohesion: 0.38
+Nodes (10): awardBadge(), collectAnimal(), isCollected(), readBadgeMap(), readCollected(), resetAll(), safeGetItem(), safeParseIds() (+2 more)
+
+### Community 35 - "Community 35"
+Cohesion: 0.27
+Nodes (10): getCollectedProgramCount(), getCompletedMilestones(), getFilterProgress(), getStageStatus(), renderMasterReward(), renderRegionReward(), renderUiSprite(), saveCompletedMilestones() (+2 more)
+
+### Community 36 - "Community 36"
+Cohesion: 0.2
+Nodes (10): closeSettings(), markSettingsModalSeen(), safeRemoveStorage(), safeSetStorage(), saveCollected(), saveObservationReady(), showToast(), toggleSound() (+2 more)
+
+### Community 37 - "Community 37"
 Cohesion: 0.2
 Nodes (10): forest_background, forest_bg_sprite, forest_wildlife, game_icons_sprite, game_ui_icons, habitat_categories, owl_character, owl_mascot_sprite (+2 more)
 
-### Community 18 - "Demo Recording"
-Cohesion: 0.6
+### Community 39 - "Community 39"
+Cohesion: 0.67
 Nodes (5): findChromium(), main(), prepareFinalCatch(), quietClick(), startServer()
 
-### Community 20 - "HTML Entry Points"
+### Community 40 - "Community 40"
+Cohesion: 0.4
+Nodes (6): checkGame(), moveGameToken(), renderGameBoard(), startNewRound(), updateGameHints(), updateGameScore()
+
+### Community 41 - "Community 41"
+Cohesion: 0.6
+Nodes (3): localPhotoPath(), makeAnimal(), wikiUrl()
+
+### Community 44 - "Community 44"
 Cohesion: 0.5
 Nodes (4): Image Credits Page, React Version Entry Point, Main HTML Entry Point, No-Question Student Version
 
 ## Knowledge Gaps
 - **18 isolated node(s):** `No-Question Student Version`, `Image Credits Page`, `React Version Entry Point`, `Integrated Development Plan`, `Game Mobile UX Draft` (+13 more)
   These have ≤1 connection - possible missing edges or undocumented components.
-- **2 thin communities (<3 nodes) omitted from report** — run `graphify query` to explore isolated nodes.
+- **9 thin communities (<3 nodes) omitted from report** — run `graphify query` to explore isolated nodes.
 
 ## Suggested Questions
 _Questions this graph is uniquely positioned to answer:_
 
-- **Why does `playSound()` connect `Gamified Webapp & Game` to `Main App UI Logic`, `Core App Functions`, `Image Handling`, `Quiz Flow`, `Onboarding & Storage`?**
-  _High betweenness centrality (0.073) - this node is a cross-community bridge._
-- **Are the 4 inferred relationships involving `playSound()` (e.g. with `openQuiz()` and `handleQuizAnswer()`) actually correct?**
-  _`playSound()` has 4 INFERRED edges - model-reasoned connections that need verification._
+- **Why does `buildQuestions()` connect `Community 21` to `Community 8`, `Community 26`?**
+  _High betweenness centrality (0.014) - this node is a cross-community bridge._
+- **Why does `playSound()` connect `Community 6` to `Community 2`, `Community 36`, `Community 12`, `Community 28`, `Community 29`?**
+  _High betweenness centrality (0.013) - this node is a cross-community bridge._
+- **Why does `createWoodPanel()` connect `Community 11` to `Community 33`, `Community 3`, `Community 9`, `Community 15`, `Community 20`, `Community 26`?**
+  _High betweenness centrality (0.011) - this node is a cross-community bridge._
+- **Are the 13 inferred relationships involving `createWoodPanel()` (e.g. with `.buildStage()` and `.createStatusCard()`) actually correct?**
+  _`createWoodPanel()` has 13 INFERRED edges - model-reasoned connections that need verification._
 - **What connects `No-Question Student Version`, `Image Credits Page`, `React Version Entry Point` to the rest of the system?**
   _18 weakly-connected nodes found - possible documentation gaps or missing edges._
-- **Should `Main App UI Logic` be split into smaller, more focused modules?**
-  _Cohesion score 0.09 - nodes in this community are weakly interconnected._
-- **Should `Gamified Webapp & Game` be split into smaller, more focused modules?**
-  _Cohesion score 0.09 - nodes in this community are weakly interconnected._
-- **Should `Core App Functions` be split into smaller, more focused modules?**
+- **Should `Community 0` be split into smaller, more focused modules?**
+  _Cohesion score 0.07 - nodes in this community are weakly interconnected._
+- **Should `Community 1` be split into smaller, more focused modules?**
   _Cohesion score 0.12 - nodes in this community are weakly interconnected._
-- **Should `Development Docs & Plans` be split into smaller, more focused modules?**
-  _Cohesion score 0.13 - nodes in this community are weakly interconnected._
