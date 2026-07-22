@@ -1,7 +1,7 @@
 // 오버월드 — 5개 서식지를 잇는 모험 맵
 // 동물 마커에 닿으면 턴제 퀴즈 배틀로, 지역 동물을 모두 모으면 배지와 함께 다음 문이 열립니다.
-import Phaser from "phaser";
-import { TILE, PATH_Y, regions, regionAtTile, regionById, gates, animalEmoji } from "../data/regions.js";
+import Phaser from "phaser/dist/phaser-arcade-physics.min.js";
+import { TILE, MAP_H, PATH_Y, regions, regionAtTile, regionById, gates, animalEmoji } from "../data/regions.js";
 import { animalById } from "../data/animals.js";
 import {
   isCollected,
@@ -13,7 +13,7 @@ import {
   isGateOpen
 } from "../systems/ProgressStore.js";
 import WorldMap from "../world/WorldMap.js";
-import { ensureAnimalTexture, isFlying } from "../world/AnimalSprites.js";
+import { ensureAnimalAnimation, ensureAnimalTexture, isFlying } from "../world/AnimalSprites.js";
 import {
   KOREAN_FONT,
   createWoodButton,
@@ -25,6 +25,18 @@ import {
 import { directionParticle } from "../systems/ObservationBuilder.js";
 
 const PLAYER_SPEED = 150;
+const PLAYER_SCALE = 1.65;
+const ENCOUNTER_WANDER_RADIUS = Object.freeze({
+  land: 3,
+  water: 4,
+  shore: 6
+});
+
+function encounterSurface(animal) {
+  if (!animal?.inWater) return "land";
+  if (!animal.hasLegs && !animal.hasWings) return "water";
+  return "shore";
+}
 
 export default class OverworldScene extends Phaser.Scene {
   constructor() {
@@ -33,10 +45,13 @@ export default class OverworldScene extends Phaser.Scene {
 
   init(data = {}) {
     this.returnPos = data.returnPos || null;
+    this.startRegionId = data.startRegionId || null;
+    this.avoidEncounterId = data.avoidEncounterId || null;
   }
 
   create() {
     this.encounterLocked = false;
+    this._navigating = false;
     this.gateToastAt = 0;
     this.createdAt = this.time.now;
     this.encounterZones = [];
@@ -73,10 +88,14 @@ export default class OverworldScene extends Phaser.Scene {
   // ─── 플레이어 ───────────────────────────────────────────
 
   createPlayer() {
-    const startX = this.returnPos?.x ?? 8 * TILE;
+    const startRegion = regionById[this.startRegionId] || regions[0];
+    const regionStartTile = startRegion.id === regions[0].id ? 8 : startRegion.x0 + 3;
+    const startX = this.returnPos?.x ?? regionStartTile * TILE;
     const startY = this.returnPos?.y ?? (PATH_Y[0] + 1) * TILE;
 
-    this.player = this.physics.add.sprite(startX, startY, "player", 0);
+    this.player = this.physics.add.sprite(startX, startY, "player", 0)
+      .setScale(PLAYER_SCALE)
+      .setName("overworld-player");
     this.player.setCollideWorldBounds(true);
     this.player.setDepth(20);
     this.player.body.setSize(16, 12);
@@ -134,24 +153,39 @@ export default class OverworldScene extends Phaser.Scene {
       region.spawns.forEach((spawn) => {
         const animal = animalById[spawn.id];
         if (!animal) return;
-        this.world.unblock(spawn.tx, spawn.ty);
+        // 물속 스폰에 육상 통행 구멍을 만들지 않습니다.
+        if (!this.world.isWaterTile(spawn.tx, spawn.ty)) this.world.unblock(spawn.tx, spawn.ty);
         this.buildMarker(region, spawn, isCollected(spawn.id));
       });
     });
   }
 
   buildMarker(region, spawn, collected) {
-    const { x, y } = this.world.tileCenter(spawn.tx, spawn.ty);
+    const animal = animalById[spawn.id];
+    const surface = encounterSurface(animal);
+    const wanderTiles = this.collectEncounterWanderTiles(region, spawn, surface);
+    const startTile = this.pickEncounterStartTile(spawn, wanderTiles, surface);
+    const { x, y } = this.world.tileCenter(startTile.tx, startTile.ty);
     const flying = isFlying(spawn.id);
     const texKey = ensureAnimalTexture(this, spawn.id);
 
     const parts = [];
+    let ring = null;
+    if (!collected) {
+      ring = this.add.circle(0, 0, 15, 0xe8a838, 0)
+        .setStrokeStyle(2, 0xe8a838);
+      parts.push(ring);
+    }
     parts.push(this.add.ellipse(0, 11, 26, 9, 0x2d1b0e, 0.2));
 
     let body;
     if (texKey) {
-      body = this.add.image(0, flying ? -8 : -2, texKey).setScale(2.2);
+      body = this.add.sprite(0, flying ? -10 : -4, texKey)
+        .setDisplaySize(flying ? 34 : 38, flying ? 34 : 38)
+        .setName(`animal-sprite-${spawn.id}`);
       if (spawn.tx % 2 === 0) body.setFlipX(true);
+      const animationKey = ensureAnimalAnimation(this, spawn.id);
+      if (animationKey) body.play(animationKey);
       parts.push(body);
     } else {
       body = this.add.text(0, -2, animalEmoji[spawn.id] || "❓", {
@@ -167,7 +201,7 @@ export default class OverworldScene extends Phaser.Scene {
       }).setOrigin(0.5));
     }
 
-    parts.push(this.add.text(0, 22, collected ? `${spawn.id} ✓` : spawn.id, {
+    parts.push(this.add.text(0, 27, collected ? `${spawn.id} ✓` : spawn.id, {
       fontFamily: KOREAN_FONT,
       fontSize: "10px",
       color: collected ? "#2d5a28" : "#3d2410",
@@ -175,7 +209,11 @@ export default class OverworldScene extends Phaser.Scene {
       padding: { x: 4, y: 2 }
     }).setOrigin(0.5));
 
-    const marker = this.add.container(x, y, parts).setDepth(10);
+    const marker = this.add.container(x, y, parts).setDepth(10).setName(`animal-marker-${spawn.id}`);
+    marker.animalBody = body;
+    marker.wanderSurface = surface;
+    marker.wanderTiles = wanderTiles;
+    marker.currentWanderTile = startTile;
     marker.setAlpha(collected ? 0.9 : 1);
 
     // 살아있는 느낌 — 둥실(나는 동물) / 콩콩(그 외)
@@ -190,8 +228,6 @@ export default class OverworldScene extends Phaser.Scene {
     });
 
     if (!collected) {
-      const ring = this.add.circle(x, y, 15, 0xe8a838, 0)
-        .setStrokeStyle(2, 0xe8a838).setDepth(9);
       this.tweens.add({
         targets: ring,
         scale: 1.7,
@@ -206,16 +242,104 @@ export default class OverworldScene extends Phaser.Scene {
       });
       marker.pulseRing = ring;
 
-      const zone = this.add.zone(x, y, 42, 42);
+      const zoneSize = surface === "water" ? 60 : (surface === "shore" ? 52 : 42);
+      const zone = this.add.zone(x, y, zoneSize, zoneSize)
+        .setName(`animal-encounter-zone-${spawn.id}`);
       this.physics.add.existing(zone, true);
       // 도망/후퇴 직후 같은 자리에서 곧바로 다시 배틀에 빨려들지 않도록,
       // 플레이어가 마커에서 한 번 떨어진 뒤에만 조우가 무장됩니다.
       zone.setData("armed", false);
+      if (spawn.id === this.avoidEncounterId && this.returnPos) {
+        zone.setData("armOrigin", { x: this.returnPos.x, y: this.returnPos.y });
+        zone.setData("armAfter", this.time.now + 1200);
+      }
       this.encounterZones.push(zone);
+      marker.encounterZone = zone;
       this.physics.add.overlap(this.player, zone, () => {
         this.tryEncounter(spawn.id, region.id, zone, marker);
       });
+      this.scheduleEncounterWander(marker, animal);
     }
+  }
+
+  collectEncounterWanderTiles(region, spawn, surface) {
+    const tiles = [];
+    const radius = ENCOUNTER_WANDER_RADIUS[surface];
+    const x0 = Math.max(region.x0, spawn.tx - radius);
+    const x1 = Math.min(region.x1, spawn.tx + radius);
+    const y0 = Math.max(1, spawn.ty - radius);
+    const y1 = Math.min(MAP_H - 2, spawn.ty + radius);
+
+    for (let ty = y0; ty <= y1; ty += 1) {
+      for (let tx = x0; tx <= x1; tx += 1) {
+        const land = this.world.isWalkableLandTile(tx, ty);
+        const water = this.world.isShoreWaterTile(tx, ty);
+        const allowed = surface === "water" ? water : (surface === "shore" ? land || water : land);
+        if (allowed) tiles.push({ tx, ty, water });
+      }
+    }
+
+    if (tiles.length > 0) return tiles;
+    return [{ tx: spawn.tx, ty: spawn.ty, water: this.world.isWaterTile(spawn.tx, spawn.ty) }];
+  }
+
+  pickEncounterStartTile(spawn, tiles, surface) {
+    const exact = tiles.find((tile) => tile.tx === spawn.tx && tile.ty === spawn.ty);
+    if (exact && surface !== "water") return exact;
+    return [...tiles].sort((a, b) => {
+      const distanceA = Math.abs(a.tx - spawn.tx) + Math.abs(a.ty - spawn.ty);
+      const distanceB = Math.abs(b.tx - spawn.tx) + Math.abs(b.ty - spawn.ty);
+      return distanceA - distanceB;
+    })[0];
+  }
+
+  scheduleEncounterWander(marker, animal, delay = Phaser.Math.Between(700, 2100)) {
+    if (!marker?.active || !marker.encounterZone?.active || this.encounterLocked) return;
+    marker.wanderTimer?.remove(false);
+    marker.wanderTimer = this.time.delayedCall(delay, () => {
+      if (!marker.active || !marker.encounterZone?.active || this.encounterLocked) return;
+      const current = marker.currentWanderTile;
+      const neighbours = marker.wanderTiles.filter((tile) => (
+        Math.abs(tile.tx - current.tx) + Math.abs(tile.ty - current.ty) === 1
+      ));
+      const choices = neighbours.length > 0 ? neighbours : marker.wanderTiles;
+      const target = Phaser.Utils.Array.GetRandom(choices);
+      this.moveEncounterMarker(marker, target, { animal });
+    });
+  }
+
+  moveEncounterMarker(marker, targetTile, { animal = animalById[marker?.name?.replace("animal-marker-", "")], duration = null, scheduleNext = true } = {}) {
+    if (!marker?.active || !targetTile || !marker.encounterZone?.active) return null;
+    marker.wanderTimer?.remove(false);
+    this.tweens.killTweensOf(marker);
+
+    const target = this.world.tileCenter(targetTile.tx, targetTile.ty);
+    const distance = Phaser.Math.Distance.Between(marker.x, marker.y, target.x, target.y);
+    const pace = animal?.crawls ? 38 : (animal?.hasFins ? 17 : 24);
+    marker.animalBody?.setFlipX?.(target.x > marker.x);
+
+    marker.wanderTween = this.tweens.add({
+      targets: marker,
+      x: target.x,
+      y: target.y,
+      duration: duration ?? Math.max(650, distance * pace),
+      ease: "Sine.easeInOut",
+      onUpdate: () => this.syncEncounterZone(marker),
+      onComplete: () => {
+        if (!marker.active) return;
+        marker.currentWanderTile = targetTile;
+        this.syncEncounterZone(marker);
+        if (scheduleNext) this.scheduleEncounterWander(marker, animal, Phaser.Math.Between(900, 2600));
+      }
+    });
+    return marker.wanderTween;
+  }
+
+  syncEncounterZone(marker) {
+    const zone = marker?.encounterZone;
+    if (!zone?.active) return;
+    zone.setPosition(marker.x, marker.y);
+    zone.body?.updateFromGameObject?.();
   }
 
   tryEncounter(animalId, regionId, zone, marker) {
@@ -226,6 +350,8 @@ export default class OverworldScene extends Phaser.Scene {
     this.encounterLocked = true;
     this.player.setVelocity(0, 0);
     this.player.anims.play(`idle-${this.lastDir}`, true);
+    marker.wanderTimer?.remove(false);
+    this.tweens.killTweensOf(marker);
     zone.destroy();
 
     playEmote(this, this.player.x, this.player.y - 34, "surprise", { depth: 60 });
@@ -283,7 +409,7 @@ export default class OverworldScene extends Phaser.Scene {
   createHud() {
     const cam = this.cameras.main;
 
-    this.hudPanel = createWoodPanel(this, 126, 46, 234, 76).setScrollFactor(0).setDepth(500);
+    this.hudPanel = createWoodPanel(this, 132, 48, 246, 82).setScrollFactor(0).setDepth(500);
     this.hudRegion = this.add.text(24, 20, "", {
       fontFamily: KOREAN_FONT, fontSize: "14px", color: "#3d2410", fontStyle: "bold"
     }).setScrollFactor(0).setDepth(501);
@@ -296,13 +422,19 @@ export default class OverworldScene extends Phaser.Scene {
       fontSize: "14px", fontFamily: KOREAN_FONT
     }).setScrollFactor(0).setDepth(501));
 
-    createWoodButton(this, cam.width - 52, 26, "📖 도감", () => {
-      if (this.encounterLocked) return;
-      this.scene.start("DexScene", {
-        from: "OverworldScene",
-        returnPos: { x: this.player.x, y: this.player.y }
-      });
-    }, { width: 84, height: 32, fontSize: "13px" });
+    this.mapButton = createWoodButton(this, cam.width - 148, 28, "🗺 지도", () => this.openWorldMap(), {
+      width: 88,
+      height: 42,
+      fontSize: "13px",
+      depth: 2200
+    }).setName("overworld-map");
+
+    this.dexButton = createWoodButton(this, cam.width - 50, 28, "📖 도감", () => this.openDex(), {
+      width: 92,
+      height: 42,
+      fontSize: "13px",
+      depth: 2200
+    }).setName("overworld-dex");
 
     this.refreshHud();
   }
@@ -431,11 +563,41 @@ export default class OverworldScene extends Phaser.Scene {
       left: Phaser.Input.Keyboard.KeyCodes.A,
       right: Phaser.Input.Keyboard.KeyCodes.D
     });
+    this.navKeys = this.input.keyboard.addKeys({
+      dex: Phaser.Input.Keyboard.KeyCodes.D,
+      map: Phaser.Input.Keyboard.KeyCodes.M
+    });
     this.pad = createVirtualPad(this);
   }
 
+  openDex() {
+    if (this._navigating || !this.player) return;
+    this._navigating = true;
+    this.player.setVelocity(0, 0);
+    this.scene.start("DexScene", {
+      from: "OverworldScene",
+      returnPos: { x: this.player.x, y: this.player.y },
+      regionId: this.currentRegionId
+    });
+  }
+
+  openWorldMap() {
+    if (this._navigating) return;
+    this._navigating = true;
+    this.player?.setVelocity(0, 0);
+    this.scene.start("WorldMapScene", { selectedRegionId: this.currentRegionId });
+  }
+
   update(_time, delta) {
-    if (!this.player || this.encounterLocked) return;
+    if (this.navKeys && Phaser.Input.Keyboard.JustDown(this.navKeys.dex)) {
+      this.openDex();
+      return;
+    }
+    if (this.navKeys && Phaser.Input.Keyboard.JustDown(this.navKeys.map)) {
+      this.openWorldMap();
+      return;
+    }
+    if (!this.player || this.encounterLocked || this._navigating) return;
 
     let vx = 0;
     let vy = 0;
@@ -476,7 +638,22 @@ export default class OverworldScene extends Phaser.Scene {
     // 조우 무장 — 마커에서 한 번 떨어져야 다시 조우할 수 있음
     for (const zone of this.encounterZones) {
       if (!zone.active || zone.getData("armed")) continue;
-      if (Phaser.Math.Distance.Between(this.player.x, this.player.y, zone.x, zone.y) > 58) {
+      const distanceFromMarker = Phaser.Math.Distance.Between(this.player.x, this.player.y, zone.x, zone.y);
+      const armOrigin = zone.getData("armOrigin");
+      if (armOrigin) {
+        const leftEncounterPoint = Phaser.Math.Distance.Between(
+          this.player.x,
+          this.player.y,
+          armOrigin.x,
+          armOrigin.y
+        ) > 72;
+        if (this.time.now >= zone.getData("armAfter") && leftEncounterPoint && distanceFromMarker > 58) {
+          zone.setData("armOrigin", null);
+          zone.setData("armed", true);
+        }
+        continue;
+      }
+      if (distanceFromMarker > 58) {
         zone.setData("armed", true);
       }
     }

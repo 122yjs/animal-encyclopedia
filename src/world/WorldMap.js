@@ -3,7 +3,7 @@
 //   블롭(섬) 가장자리: TL0 T1 TR2 / L11 C12 R13 / BL22 B23 BR24
 //   평지 채움: 55,56,57,66,67,68  · 꽃 액센트: 60,71
 // Grass.png와 Tilled_Dirt_Wide_v2.png(모래)는 같은 배치를 씁니다.
-import Phaser from "phaser";
+import Phaser from "phaser/dist/phaser-arcade-physics.min.js";
 import { TILE, MAP_W, MAP_H, PATH_Y, regions, gates } from "../data/regions.js";
 import { KOREAN_FONT } from "../ui/UiHelpers.js";
 
@@ -47,6 +47,22 @@ export default class WorldMap {
   isFree(tx, ty) {
     const k = this.key(tx, ty);
     return !this.blocked.has(k) && !this.reserved.has(k) && !this.waterTiles.has(k);
+  }
+
+  isWaterTile(tx, ty) {
+    return this.waterTiles.has(this.key(tx, ty));
+  }
+
+  isWalkableLandTile(tx, ty) {
+    if (tx < 0 || ty < 0 || tx >= MAP_W || ty >= MAP_H) return false;
+    const k = this.key(tx, ty);
+    return !this.blocked.has(k) && !this.waterTiles.has(k);
+  }
+
+  isShoreWaterTile(tx, ty) {
+    if (!this.isWaterTile(tx, ty)) return false;
+    return [[0, -1], [1, 0], [0, 1], [-1, 0]]
+      .some(([dx, dy]) => this.isWalkableLandTile(tx + dx, ty + dy));
   }
 
   isBlockedPx(px, py) {
