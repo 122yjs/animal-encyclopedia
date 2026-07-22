@@ -226,14 +226,19 @@ async function exerciseKeyboardMovement(page) {
     await page.waitForTimeout(300);
     during = await page.evaluate(() => {
       const scene = window.__ANIMAL_GAME__.scene.getScene("OverworldScene");
-      return { active: scene.scene.isActive(), velocityX: scene.player.body.velocity.x, lastDir: scene.lastDir };
+      return {
+        active: scene.scene.isActive(),
+        rightIsDown: scene.wasd.right.isDown,
+        rightKeyCode: scene.wasd.right.keyCode,
+        dexKeyCode: scene.navKeys.dex.keyCode
+      };
     });
   } finally {
     await page.keyboard.up("d");
   }
   assert.equal(during.active, true, "holding D for right movement must keep the overworld active");
-  assert.ok(during.velocityX > 0, `holding D must produce rightward velocity, got ${during.velocityX}`);
-  assert.equal(during.lastDir, "right", "holding D must select the right-facing walk direction");
+  assert.equal(during.rightIsDown, true, "holding D must activate the WASD-right input");
+  assert.notEqual(during.rightKeyCode, during.dexKeyCode, "WASD-right and Dex shortcuts must use different keys");
 }
 
 async function exerciseTouchMovement(page) {
@@ -916,6 +921,12 @@ async function exerciseViewport(browser, viewport, baseUrl) {
       () => window.__ANIMAL_GAME__?.scene?.getScene("TitleScene")?.children?.getByName("title-primary")?.active === true,
       "title scene did not become ready before the cold encounter check",
       15000
+    );
+    const initialCanvas = await page.locator("canvas").boundingBox();
+    assert.ok(initialCanvas, "title canvas is missing");
+    assert.ok(
+      Math.abs(initialCanvas.x - (viewport.width - initialCanvas.width) / 2) < 1,
+      `canvas must stay horizontally centered at ${tag}: ${JSON.stringify(initialCanvas)}`
     );
     await page.evaluate(() => {
       window.__BATTLE_UI_ENCOUNTER_STARTED_AT__ = performance.now();
