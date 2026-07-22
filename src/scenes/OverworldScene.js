@@ -564,7 +564,7 @@ export default class OverworldScene extends Phaser.Scene {
       right: Phaser.Input.Keyboard.KeyCodes.D
     });
     this.navKeys = this.input.keyboard.addKeys({
-      dex: Phaser.Input.Keyboard.KeyCodes.D,
+      dex: Phaser.Input.Keyboard.KeyCodes.C,
       map: Phaser.Input.Keyboard.KeyCodes.M
     });
     this.pad = createVirtualPad(this);

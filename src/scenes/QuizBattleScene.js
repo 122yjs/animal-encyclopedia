@@ -186,10 +186,10 @@ export default class QuizBattleScene extends Phaser.Scene {
     }).setOrigin(0.5).setDepth(1002);
 
     // 도망 버튼 (승리 후에는 숨김)
-    this.fleeButton = createWoodButton(this, width - 44, 20, "🏃 도망", () => {
+    this.fleeButton = createWoodButton(this, width - 26, 22, "도망", () => {
       if (this.phase === "victory" || this.returningToOverworld) return;
       this.returnToOverworld();
-    }, { width: 76, height: 28, fontSize: "12px" }).setName("battle-flee");
+    }, { width: 48, height: 42, fontSize: "12px" }).setName("battle-flee");
 
     // 레이아웃 기준점은 고정하고 내부 시각 요소만 둥실거리게 합니다.
     this.enemyFloatTween = this.tweens.add({
@@ -431,7 +431,7 @@ export default class QuizBattleScene extends Phaser.Scene {
       overview.panel.height
     ).setDepth(999).setName("overview-panel"));
 
-    this.track(this.add.text(width / 2, 66, `${emoji} ${this.animal.name}의 전체 모습을 먼저 살펴봐요`, {
+    this.track(this.add.text(width / 2, 55, `${emoji} ${this.animal.name}의 전체 모습을 먼저 살펴봐요`, {
       fontFamily: KOREAN_FONT,
       fontSize: "15px",
       color: "#3d2410",

@@ -219,6 +219,23 @@ async function clickBounds(page, bounds, { touch = false } = {}) {
   else await page.mouse.click(x, y);
 }
 
+async function exerciseKeyboardMovement(page) {
+  let during;
+  await page.keyboard.down("d");
+  try {
+    await page.waitForTimeout(300);
+    during = await page.evaluate(() => {
+      const scene = window.__ANIMAL_GAME__.scene.getScene("OverworldScene");
+      return { active: scene.scene.isActive(), velocityX: scene.player.body.velocity.x, lastDir: scene.lastDir };
+    });
+  } finally {
+    await page.keyboard.up("d");
+  }
+  assert.equal(during.active, true, "holding D for right movement must keep the overworld active");
+  assert.ok(during.velocityX > 0, `holding D must produce rightward velocity, got ${during.velocityX}`);
+  assert.equal(during.lastDir, "right", "holding D must select the right-facing walk direction");
+}
+
 async function exerciseTouchMovement(page) {
   const before = await page.evaluate(() => {
     const scene = window.__ANIMAL_GAME__.scene.getScene("OverworldScene");
@@ -657,7 +674,10 @@ async function exerciseAdventureNavigation(page, { touch = false } = {}) {
   assertInCanvas(overworld.dex, "overworld-dex");
   assert.ok(!overlaps(overworld.map.bounds, overworld.dex.bounds), "overworld map and dex buttons must not overlap");
 
-  if (touch) await exerciseTouchMovement(page);
+  if (touch) {
+    await exerciseKeyboardMovement(page);
+    await exerciseTouchMovement(page);
+  }
 
   if (touch) await clickBounds(page, overworld.dex.bounds, { touch: true });
   else await activateSceneButton(page, "OverworldScene", "overworld-dex");
@@ -943,6 +963,7 @@ async function exerciseViewport(browser, viewport, baseUrl) {
 
     const overview = await sceneObjects(page);
     const overviewPanel = named(overview, "overview-panel");
+    const overviewHeading = named(overview, "overview-heading");
     const overviewFrame = named(overview, "overview-photo-frame");
     const overviewAction = named(overview, "primary-action");
     assertHidden(overview, "enemy-card");
@@ -950,6 +971,7 @@ async function exerciseViewport(browser, viewport, baseUrl) {
     assertHidden(overview, "player-status");
     assertHidden(overview, "enemy-status");
     assertInCanvas(overviewPanel, "overview-panel");
+    assert.ok(!overlaps(overviewHeading.bounds, overviewFrame.bounds), "overview heading and photo frame must not overlap");
     assertContained(overviewFrame.bounds, overviewPanel.bounds, "overview photo frame", 12);
     assertContained(overviewAction.bounds, overviewPanel.bounds, "overview primary action", 2);
     assert.equal(externalRequests.length, 0, "the game must not make external requests at runtime");
@@ -1057,6 +1079,7 @@ async function exerciseViewport(browser, viewport, baseUrl) {
     }
     await waitForScene(page, () => window.__ANIMAL_GAME__?.scene?.getScene("QuizBattleScene")?.phase === "battle", "battle phase did not render");
     const battle = await sceneObjects(page);
+    const flee = named(battle, "battle-flee");
     const hud = [
       named(battle, "enemy-card"),
       named(battle, "battle-player"),
@@ -1065,6 +1088,9 @@ async function exerciseViewport(browser, viewport, baseUrl) {
       named(battle, "question-panel")
     ];
     hud.forEach((o) => assertInCanvas(o, o.name));
+    assertInCanvas(flee, "battle-flee");
+    assert.ok(flee.bounds.height >= 42, `battle flee target must be at least 42 logical px high, got ${flee.bounds.height}`);
+    assert.ok(!overlaps(flee.bounds, named(battle, "enemy-card").bounds), "battle flee target and enemy card must not overlap");
     for (let i = 0; i < hud.length; i += 1) for (let j = i + 1; j < hud.length; j += 1) assert.ok(!overlaps(hud[i].bounds, hud[j].bounds), `${hud[i].name} and ${hud[j].name} must not overlap`);
     const questionPanel = named(battle, "question-panel");
     const factCopy = named(battle, "fact-copy");
