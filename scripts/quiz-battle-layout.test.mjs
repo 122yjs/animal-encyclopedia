@@ -1017,10 +1017,10 @@ async function exerciseViewport(browser, viewport, baseUrl) {
       },
       "overview action did not enter feature observation"
     );
-    assert.notEqual(
+    assert.equal(
       await page.locator("canvas").evaluate((canvas) => getComputedStyle(canvas).imageRendering),
       "auto",
-      "feature observation must restore the pixel-art canvas filter"
+      "feature observation must keep the full animal photo smooth"
     );
 
     if (shouldTestAutoAdvanceCancellation) {
@@ -1053,11 +1053,22 @@ async function exerciseViewport(browser, viewport, baseUrl) {
 
     for (let pageIndex = 0; pageIndex < 3; pageIndex += 1) {
       const snapshot = await sceneObjects(page);
-      const card = named(snapshot, "enemy-card");
       const panel = named(snapshot, "observe-panel");
+      const photoFrame = named(snapshot, "observe-photo-frame");
+      const stageCard = named(snapshot, "observe-stage-card");
+      const learningCard = named(snapshot, "observe-learning-card");
+      const observationCopy = named(snapshot, "observe-copy");
       const action = named(snapshot, "primary-action");
-      assertInCanvas(card, "enemy-card"); assertInCanvas(panel, "observe-panel");
-      assert.ok(!overlaps(card.bounds, panel.bounds), "enemy-card and observe-panel must not overlap");
+      assertHidden(snapshot, "enemy-card");
+      assertInCanvas(panel, "observe-panel");
+      assertContained(photoFrame.bounds, panel.bounds, "observation photo frame");
+      assertContained(stageCard.bounds, panel.bounds, "observation stage card");
+      assertContained(learningCard.bounds, panel.bounds, "observation learning card");
+      assertContained(observationCopy.bounds, learningCard.bounds, "observation copy", 8);
+      assert.ok(!overlaps(photoFrame.bounds, stageCard.bounds), "photo and learning stage must not overlap");
+      assert.ok(!overlaps(stageCard.bounds, learningCard.bounds), "learning stage and explanation card must not overlap");
+      const observationPhoto = named(snapshot, shouldBlockLocalPhoto ? "observe-photo-fallback" : "observe-photo");
+      assertContained(observationPhoto.bounds, photoFrame.bounds, "full observation photo", 6);
       assertHidden(snapshot, "battle-player");
       assertHidden(snapshot, "player-status");
       assertHidden(snapshot, "enemy-status");
@@ -1143,8 +1154,8 @@ async function exerciseViewport(browser, viewport, baseUrl) {
     const canvas = await page.locator("canvas").boundingBox();
     for (const option of options) {
       assert.ok(option.bounds.x >= 0 && option.bounds.y >= 0 && option.bounds.x + option.bounds.width <= 640 && option.bounds.y + option.bounds.height <= 360, `${option.name} must stay inside 640x360 canvas`);
-      assert.equal(option.bounds.height, 42, `${option.name} must be 42 logical px high`);
-      assert.ok(option.bounds.height * canvas.height / 360 >= 44, `${option.name} must be at least 44 CSS px high`);
+      assert.equal(option.bounds.height, 36, `${option.name} must be 36 logical px high`);
+      assert.ok(option.bounds.height * canvas.height / 360 >= 38, `${option.name} must be at least 38 CSS px high`);
     }
     const wrong = await page.evaluate(() => { const s = window.__ANIMAL_GAME__.scene.getScene("QuizBattleScene"); return s.questions[0].options.findIndex((answer) => answer !== s.questions[0].correct); });
     await clickBounds(page, options[wrong]?.bounds || options[0].bounds, { touch });

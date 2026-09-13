@@ -37,8 +37,10 @@ const BATTLE_LAYOUT = Object.freeze({
     playerPlatform: { x: 150, y: 314, width: 176, height: 46 }
   },
   observe: {
-    enemy: { x: 528, y: 84 },
-    panel: { x: 320, y: 245, width: 600, height: 210 }
+    panel: { x: 320, y: 200, width: 600, height: 300 },
+    photo: { x: 320, y: 111, width: 384, height: 120 },
+    stage: { x: 320, y: 187, width: 544, height: 28 },
+    learning: { x: 320, y: 236, width: 544, height: 68 }
   },
   overview: {
     panel: { x: 320, y: 196, width: 600, height: 292 },
@@ -54,8 +56,8 @@ const BATTLE_LAYOUT = Object.freeze({
   },
   question: {
     panel: { x: 320, y: 196, width: 616, height: 52 },
-    optionY: [245, 291, 337],
-    optionHeight: 42
+    optionY: [245, 284, 323],
+    optionHeight: 36
   },
   hint: {
     panel: { x: 320, y: 264, width: 600, height: 172 }
@@ -180,9 +182,9 @@ export default class QuizBattleScene extends Phaser.Scene {
     this.playerHeartRow = playerStatus.hearts;
 
     // ── 턴 리본 ──
-    this.turnPanel = createWoodPanel(this, width / 2, 20, 250, 30).setDepth(1001);
-    this.turnText = this.add.text(width / 2, 19, "", {
-      fontFamily: KOREAN_FONT, fontSize: "13px", color: "#3d2410", fontStyle: "bold"
+    this.turnPanel = createWoodPanel(this, width / 2, 20, 300, 36).setDepth(1001);
+    this.turnText = this.add.text(width / 2, 20, "", {
+      fontFamily: KOREAN_FONT, fontSize: "12px", color: "#3d2410", fontStyle: "bold"
     }).setOrigin(0.5).setDepth(1002);
 
     // 도망 버튼 (승리 후에는 숨김)
@@ -233,11 +235,11 @@ export default class QuizBattleScene extends Phaser.Scene {
     const isBattle = mode === "battle" || mode === "hint";
     const isIntro = mode === "intro";
     const layout = isIntro ? BATTLE_LAYOUT.intro : BATTLE_LAYOUT.battle;
-    const enemyLayout = isObserve ? BATTLE_LAYOUT.observe.enemy : layout.enemy;
+    const enemyLayout = layout.enemy;
 
     this.presentationMode = mode;
-    this.game.canvas.style.imageRendering = isOverview ? "auto" : "pixelated";
-    this.enemyRoot?.setPosition(enemyLayout.x, enemyLayout.y).setVisible(!isOverview).setScale(1).setAngle(0);
+    this.game.canvas.style.imageRendering = isObservation ? "auto" : "pixelated";
+    this.enemyRoot?.setPosition(enemyLayout.x, enemyLayout.y).setVisible(!isObservation).setScale(1).setAngle(0);
 
     if (isBattle) {
       this.enemyFloatTween?.restart();
@@ -331,28 +333,34 @@ export default class QuizBattleScene extends Phaser.Scene {
     const holder = this.overviewPhotoHolder;
     if (!holder?.active) return;
     holder.removeAll(true);
+    const isDetails = this.observationStage === "details";
+    const photoLayout = isDetails ? BATTLE_LAYOUT.observe.photo : BATTLE_LAYOUT.overview.photo;
+    const photoName = isDetails ? "observe-photo" : "overview-photo";
+    const fallbackName = isDetails ? "observe-photo-fallback" : "overview-photo-fallback";
 
     if (this.enemyPhotoKey && this.textures.exists(this.enemyPhotoKey)) {
       const frame = this.textures.getFrame(this.enemyPhotoKey);
-      const maxWidth = BATTLE_LAYOUT.overview.photo.width - 12;
-      const maxHeight = BATTLE_LAYOUT.overview.photo.height - 12;
+      const maxWidth = photoLayout.width - 12;
+      const maxHeight = photoLayout.height - 12;
       const scale = Math.min(maxWidth / frame.width, maxHeight / frame.height);
       holder.add(this.add.image(0, 0, this.enemyPhotoKey)
         .setDisplaySize(frame.width * scale, frame.height * scale)
-        .setName("overview-photo"));
+        .setName(photoName));
       return;
     }
 
     const fallbackKey = ensureAnimalTexture(this, this.animal.id);
+    const fallbackSize = isDetails ? 72 : 112;
+    const fallbackY = isDetails ? -10 : -6;
     const fallback = fallbackKey
-      ? this.add.image(0, -6, fallbackKey).setDisplaySize(112, 112)
-      : this.add.text(0, -6, animalEmoji[this.animal.id] || "❓", {
+      ? this.add.image(0, fallbackY, fallbackKey).setDisplaySize(fallbackSize, fallbackSize)
+      : this.add.text(0, fallbackY, animalEmoji[this.animal.id] || "❓", {
         fontFamily: KOREAN_FONT,
-        fontSize: "72px"
+        fontSize: isDetails ? "48px" : "72px"
       }).setOrigin(0.5);
-    fallback.setName("overview-photo-fallback");
+    fallback.setName(fallbackName);
     holder.add(fallback);
-    holder.add(this.add.text(0, 68, "전체 사진이 없으면 픽셀 모습으로 관찰해요", {
+    holder.add(this.add.text(0, photoLayout.height / 2 - 12, "전체 사진이 없으면 픽셀 모습으로 관찰해요", {
       fontFamily: KOREAN_FONT,
       fontSize: "10px",
       color: "#6b5a43"
@@ -367,7 +375,7 @@ export default class QuizBattleScene extends Phaser.Scene {
 
   setTurnLabel(text) {
     this.turnText.setText(text);
-    fitTextToBox(this.turnText, { width: 220, height: 20, fontSize: 13, minFontSize: 9 });
+    fitTextToBox(this.turnText, { width: 272, height: 24, fontSize: 12, minFontSize: 9 });
   }
 
   clearDynamicUi() {
@@ -451,12 +459,6 @@ export default class QuizBattleScene extends Phaser.Scene {
     ).setDepth(1001).setName("overview-photo-holder"));
     this.refreshObservationPhoto();
 
-    this.track(this.add.text(width / 2, 270, "사진을 자르지 않고 원래 비율로 보여줘요", {
-      fontFamily: KOREAN_FONT,
-      fontSize: "11px",
-      color: "#6b5a43"
-    }).setOrigin(0.5).setDepth(1001).setName("overview-helper"));
-
     const startButton = this.track(createWoodButton(
       this,
       width / 2,
@@ -481,47 +483,99 @@ export default class QuizBattleScene extends Phaser.Scene {
     this.applyPhaseLayout("observe");
     const { width } = this.cameras.main;
     const obs = this.observation;
+    const observe = BATTLE_LAYOUT.observe;
 
     this.setTurnLabel(`관찰하기 · ${this.animal.name}`);
 
     const pages = [
-      { key: "appearance", title: "① 생김새", body: obs.appearance, check: "몸의 특징을 봤어요" },
-      { key: "lifestyle", title: "② 움직임", body: obs.lifestyle, check: "움직임을 봤어요" },
-      { key: "habitat", title: "③ 사는 곳", body: obs.habitatLife, check: "사는 곳을 봤어요" }
+      { key: "appearance", title: "생김새", body: obs.appearance, check: "몸의 특징을 봤어요" },
+      { key: "lifestyle", title: "움직임", body: obs.lifestyle, check: "움직임을 봤어요" },
+      { key: "habitat", title: "사는 곳", body: obs.habitatLife, check: "사는 곳을 봤어요" }
     ];
     if (this.observePage < 0) this.observePage = 0;
     if (this.observePage > pages.length - 1) this.observePage = pages.length - 1;
     const page = pages[this.observePage];
     const checked = this.observeChecks[page.key];
+    const ready = Object.values(this.observeChecks).every(Boolean);
 
     this.track(createWoodPanel(
       this,
-      BATTLE_LAYOUT.observe.panel.x,
-      BATTLE_LAYOUT.observe.panel.y,
-      BATTLE_LAYOUT.observe.panel.width,
-      BATTLE_LAYOUT.observe.panel.height
+      observe.panel.x,
+      observe.panel.y,
+      observe.panel.width,
+      observe.panel.height
     ).setDepth(999).setName("observe-panel"));
 
-    const dots = pages.map((p, i) => (this.observeChecks[p.key] ? "●" : (i === this.observePage ? "◎" : "○"))).join(" ");
-    this.track(this.add.text(width / 2, 158, `${page.title}  (${this.observePage + 1}/3)   ${dots}`, {
-      fontFamily: KOREAN_FONT, fontSize: "14px", color: "#0f6f68", fontStyle: "bold"
-    }).setOrigin(0.5).setDepth(1001));
+    this.track(this.add.rectangle(
+      observe.photo.x,
+      observe.photo.y,
+      observe.photo.width,
+      observe.photo.height,
+      0xf7eedb
+    ).setStrokeStyle(3, 0x8a6640).setDepth(1000).setName("observe-photo-frame"));
+    this.overviewPhotoHolder = this.track(this.add.container(
+      observe.photo.x,
+      observe.photo.y
+    ).setDepth(1001).setName("observe-photo-holder"));
+    this.refreshObservationPhoto();
 
-    const observationCopy = this.track(this.add.text(width / 2, 198, page.body, {
+    this.track(createWoodPanel(
+      this,
+      observe.stage.x,
+      observe.stage.y,
+      observe.stage.width,
+      observe.stage.height,
+      { tint: 0xd9f2e7 }
+    ).setDepth(1000).setName("observe-stage-card"));
+    this.track(this.add.text(70, observe.stage.y, `학습 ${this.observePage + 1}/3 · ${page.title}`, {
+      fontFamily: KOREAN_FONT,
+      fontSize: "13px",
+      color: "#0b5c55",
+      fontStyle: "bold"
+    }).setOrigin(0, 0.5).setDepth(1001).setName("observe-stage-label"));
+    pages.forEach((item, index) => {
+      const color = this.observeChecks[item.key]
+        ? 0x4f9b69
+        : (index === this.observePage ? 0xd99124 : 0xc7b58e);
+      this.track(this.add.rectangle(466 + index * 42, observe.stage.y, 34, 7, color)
+        .setStrokeStyle(1, 0x8a6640)
+        .setDepth(1001)
+        .setName(`observe-progress-${index + 1}`));
+    });
+
+    this.track(createWoodPanel(
+      this,
+      observe.learning.x,
+      observe.learning.y,
+      observe.learning.width,
+      observe.learning.height,
+      { tint: 0xfff1c7 }
+    ).setDepth(1000).setName("observe-learning-card"));
+    this.track(this.add.rectangle(60, observe.learning.y, 6, 44, 0xd99124)
+      .setDepth(1001)
+      .setName("observe-learning-accent"));
+    this.track(this.add.text(76, 214, "관찰 포인트", {
+      fontFamily: KOREAN_FONT,
+      fontSize: "10px",
+      color: "#8a5a16",
+      fontStyle: "bold"
+    }).setOrigin(0, 0.5).setDepth(1001).setName("observe-learning-label"));
+
+    const observationCopy = this.track(this.add.text(width / 2, 244, page.body, {
       fontFamily: KOREAN_FONT,
       fontSize: "13px",
       color: "#3d2410",
       align: "center",
-      lineSpacing: 4,
-      wordWrap: { width: 520 }
-    }).setOrigin(0.5).setDepth(1001));
-    fitTextToBox(observationCopy, { width: 520, height: 54, fontSize: 13, minFontSize: 9 });
+      lineSpacing: 3,
+      wordWrap: { width: 480 }
+    }).setOrigin(0.5).setDepth(1001).setName("observe-copy"));
+    fitTextToBox(observationCopy, { width: 480, height: 34, fontSize: 13, minFontSize: 10 });
 
     if (!checked) {
       const checkButton = this.track(createWoodButton(
         this,
         width / 2,
-        248,
+        294,
         `🔍 ${page.check}`,
         () => {
           if (this.observationAdvancePending) return;
@@ -551,11 +605,21 @@ export default class QuizBattleScene extends Phaser.Scene {
         { width: 300, height: 42, fontSize: "13px", tint: 0xffe08a }
       ).setName("primary-action"));
       this.primaryAction = checkButton;
+    } else if (ready) {
+      const battleButton = this.track(createWoodButton(
+        this,
+        width / 2,
+        294,
+        "⚔️ 퀴즈 배틀 시작!",
+        () => this.startBattle(),
+        { width: 300, height: 42, fontSize: "14px", tint: 0xffe08a }
+      ).setName("primary-action"));
+      this.primaryAction = battleButton;
     } else {
       const completeStatus = this.track(createWoodButton(
         this,
         width / 2,
-        248,
+        294,
         `✅ ${page.check}`,
         () => {},
         { width: 300, height: 42, fontSize: "13px", tint: 0xd8f0c0 }
@@ -563,22 +627,7 @@ export default class QuizBattleScene extends Phaser.Scene {
       completeStatus.setButtonEnabled(false);
     }
 
-    this.track(this.add.text(
-      width / 2,
-      292,
-      checked
-        ? "관찰 완료! 다음 특징을 살펴봐요."
-        : (this.observePage < pages.length - 1
-          ? "확인하면 다음 특징으로 자동 이동해요."
-          : "마지막 특징을 확인하면 퀴즈 배틀을 시작할 수 있어요."),
-      {
-        fontFamily: KOREAN_FONT,
-        fontSize: "11px",
-        color: "#6b5a43"
-      }
-    ).setOrigin(0.5).setDepth(1001).setName("observe-helper"));
-
-    this.track(createWoodButton(this, 76, 326, this.observePage > 0 ? "← 이전" : "← 전체 사진", () => {
+    this.track(createWoodButton(this, 76, 329, this.observePage > 0 ? "← 이전" : "← 전체 사진", () => {
       if (this.observePage > 0) {
         this.observePage -= 1;
         this.showObservation();
@@ -587,23 +636,12 @@ export default class QuizBattleScene extends Phaser.Scene {
       }
     }, { width: 116, height: 42, fontSize: "12px" }).setName("observe-previous"));
 
-    const ready = Object.values(this.observeChecks).every(Boolean);
     if (checked && this.observePage < pages.length - 1) {
-      const nextButton = this.track(createWoodButton(this, width - 76, 326, "다음 →", () => {
+      const nextButton = this.track(createWoodButton(this, width - 76, 329, "다음 →", () => {
         this.observePage += 1;
         this.showObservation();
       }, { width: 104, height: 42, fontSize: "12px", tint: 0xffe08a }).setName("primary-action"));
       this.primaryAction = nextButton;
-    } else if (checked && ready) {
-      const battleButton = this.track(createWoodButton(
-        this,
-        width / 2,
-        326,
-        "⚔️ 퀴즈 배틀 시작!",
-        () => this.startBattle(),
-        { width: 260, height: 42, fontSize: "14px", tint: 0xffe08a }
-      ).setName("primary-action"));
-      this.primaryAction = battleButton;
     }
   }
 
@@ -1006,17 +1044,17 @@ export default class QuizBattleScene extends Phaser.Scene {
       `${emoji} ${name}${withParticle(name)} 친구가 되었어요! 도감에 등록!\n${this.observation.habitatLink}${extra}`,
       { height: 108 }
     );
-    this.track(createWoodButton(this, width / 2 - 92, height * 0.30, "📖 도감 보기", () => {
+    this.track(createWoodButton(this, width / 2, height * 0.30 - 22, "📖 도감 보기", () => {
       this.scene.start("DexScene", {
         from: "OverworldScene",
         returnPos: this.returnPos,
         highlightId: this.animal.id,
         regionId: this.regionId
       });
-    }, { width: 150, height: 36, fontSize: "14px" }));
-    this.track(createWoodButton(this, width / 2 + 92, height * 0.30, "🗺️ 모험 계속!", () => {
+    }, { width: 170, height: 36, fontSize: "14px" }));
+    this.track(createWoodButton(this, width / 2, height * 0.30 + 22, "🗺️ 모험으로 돌아가기", () => {
       this.returnToOverworld();
-    }, { width: 150, height: 36, fontSize: "14px", tint: 0xffe08a }));
+    }, { width: 170, height: 36, fontSize: "14px" }));
   }
 
   onRetreat() {
